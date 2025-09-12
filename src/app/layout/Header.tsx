@@ -6,6 +6,7 @@ import { MobileMenu } from './MobileMenu'
 const nav = [
   { label: 'Advertise', href: '#advertise' },
   { label: 'Blogs', href: '#blogs' },
+  { label: 'FAQs', href: '#faqs' },
   { label: 'Ethiopian Calendar', href: '#calendar' },
   { label: 'Download App', href: '#download' },
 ]
@@ -48,4 +49,3 @@ export function Header() {
 }
 
 export default Header
-

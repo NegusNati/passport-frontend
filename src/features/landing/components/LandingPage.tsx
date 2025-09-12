@@ -4,6 +4,9 @@ import { VideoTabs } from './VideoTabs'
 import { AdvertiseSection } from './Advertise'
 import { BlogSection } from './Blogs'
 import { Container } from '@/shared/ui/container'
+import { FAQsSection } from './FAQs'
+import { DownloadAppSection } from './DownloadApp'
+import Footer from '@/app/layout/Footer'
 
 export function LandingPage() {
   return (
@@ -20,6 +23,9 @@ export function LandingPage() {
       <VideoTabs />
       <AdvertiseSection />
       <BlogSection />
+      <FAQsSection />
+      <DownloadAppSection />
+      {/* <Footer /> */}
     </div>
   )
 }
