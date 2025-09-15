@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-  const Footer = () => {
+const Footer = () => {
   const services = [
     'Advertisement',
     'Passport Check',
@@ -45,12 +45,12 @@ import { motion } from 'framer-motion';
       whileInView="visible"
       viewport={{ once: true }}
     >
-      {/* Background watermark */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      {/* Background watermark positioned at bottom */}
+      <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center pointer-events-none">
         <motion.div
-          className="text-gray-200 font-bold text-[8rem] md:text-[12rem] lg:text-[16rem] xl:text-[20rem] leading-none select-none"
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
+          className="text-gray-200 font-bold text-[6rem] sm:text-[8rem] md:text-[10rem] lg:text-[12rem] xl:text-[14rem] 2xl:text-[16rem] leading-none select-none "
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
           viewport={{ once: true }}
         >
@@ -58,9 +58,9 @@ import { motion } from 'framer-motion';
         </motion.div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-54 ">
         {/* Main footer content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 mb-8">
           {/* Company Info */}
           <motion.div 
             className="space-y-6"
@@ -138,7 +138,7 @@ import { motion } from 'framer-motion';
 
         {/* Bottom section */}
         <motion.div 
-          className="mt-16 pt-8 border-t border-gray-200"
+          className="pt-8 border-t border-gray-200"
           variants={itemVariants}
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">

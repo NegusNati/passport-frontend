@@ -12,6 +12,7 @@
 - **Mobile-first UI:** Build for small screens first; scale up with Tailwind responsive variants.
 - **Progressive enhancement:** Work without JS where possible; handle slow networks gracefully.
 - **Accessibility & motion:** Ship keyboard + screen-reader friendly UI; honor reduced motion preferences.
+- **SEO-first:** Meet Core Web Vitals (LCP ≤ 2.5s, CLS ≤ 0.1, INP ≤ 200ms). Prefer SSR/SSG or prerender for key pages. Use semantic HTML and rich metadata.
 
 ---
 
@@ -620,5 +621,207 @@ function ProfilePage() {
 
 ---
 
+**You’re set. Build features, keep things modular, and let the tooling work for you.**
 
+
+## 21) SEO Optimization (Performance & Crawlability)
+
+> This is a consumer app: **every feature and component must be SEO- and performance‑minded by default.**
+
+### A) Rendering strategy
+- **Preferred:** SSR/SSG or prerender for critical entry pages (home, top categories, product/detail, blog). Keep SPA navigation after first paint.
+- **Acceptable fallback:** SPA + prerendered HTML for a subset of routes. Always verify indexability in Search Console.
+- **Hydration:** Keep above‑the‑fold HTML meaningful (headings, copy, links) so bots see content before JS.
+
+### B) Head & metadata management
+Use **react-helmet-async** for per‑route `<title>`/meta. Add provider at the app root:
+```tsx
+// src/main.tsx (excerpt)
+import { HelmetProvider } from 'react-helmet-async'
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </HelmetProvider>
+  </React.StrictMode>,
+)
+```
+
+Create a small SEO component:
+```tsx
+// src/shared/ui/Seo.tsx
+import { Helmet } from 'react-helmet-async'
+
+type Props = {
+  title?: string
+  description?: string
+  path?: string // "/products/123"
+  noindex?: boolean
+  ogImage?: string
+  schemaJson?: Record<string, any>
+}
+
+const SITE = import.meta.env.VITE_SITE_URL // e.g., https://example.com
+
+export function Seo({ title, description, path = '', noindex, ogImage, schemaJson }: Props) {
+  const url = (SITE?.replace(/\/$/, '') || '') + path
+  const fullTitle = title ? `${title} · ${import.meta.env.VITE_SITE_NAME ?? ''}` : (import.meta.env.VITE_SITE_NAME ?? '')
+  return (
+    <>
+      <Helmet prioritizeSeoTags>
+        {title && <title>{fullTitle}</title>}
+        {description && <meta name="description" content={description} />}
+        {noindex ? <meta name="robots" content="noindex, nofollow" /> : <meta name="robots" content="index, follow" />}
+        {url && <link rel="canonical" href={url} />}
+        {/* Open Graph / Twitter */}
+        {title && <meta property="og:title" content={fullTitle} />}
+        {description && <meta property="og:description" content={description} />}
+        {url && <meta property="og:url" content={url} />}
+        <meta property="og:type" content="website" />
+        {ogImage && <meta property="og:image" content={ogImage} />}
+        <meta name="twitter:card" content="summary_large_image" />
+      </Helmet>
+      {schemaJson ? (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }} />
+      ) : null}
+    </>
+  )
+}
+```
+
+Route usage example:
+```tsx
+// src/features/home/routes/index.route.tsx
+import { createFileRoute } from '@tanstack/react-router'
+import { Seo } from '@/shared/ui/Seo'
+
+export const Route = createFileRoute('/')({
+  component: () => (
+    <main className="container mx-auto p-4">
+      <Seo title="Home" description="Discover our latest products and stories." path="/" />
+      <h1 className="sr-only">Example App</h1>
+      {/* content */}
+    </main>
+  ),
+})
+```
+
+### C) Structured data (JSON‑LD)
+Provide rich snippets where useful (Product, Article, Breadcrumb):
+```tsx
+<Seo
+  title={product.name}
+  description={product.teaser}
+  path={`/p/${product.slug}`}
+  schemaJson={{
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: product.images[0]?.url,
+    description: product.teaser,
+    sku: product.sku,
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'USD',
+      price: product.price,
+      availability: 'https://schema.org/InStock',
+      url: `${import.meta.env.VITE_SITE_URL}/p/${product.slug}`,
+    },
+  }}
+/>
+```
+
+### D) Links, sitemaps, robots
+- Maintain **canonical URLs** (one URL per piece of content). Avoid duplicate query parameter variants.
+- Generate **sitemap.xml** and **robots.txt** at build time.
+- Add internal links between related routes; keep anchor text descriptive.
+
+Minimal sitemap generator (Node):
+```ts
+// scripts/sitemap.ts
+import { writeFileSync } from 'node:fs'
+const site = process.env.SITE_URL || 'https://example.com'
+const routes = ['/', '/about', '/products'] // extend programmatically
+const xml = `<?xml version="1.0" encoding="UTF-8"?>
+` +
+  `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` +
+  routes.map((r) => `
+  <url><loc>${site}${r}</loc></url>`).join('') +
+  `
+</urlset>`
+writeFileSync('dist/sitemap.xml', xml)
+writeFileSync('dist/robots.txt', `Sitemap: ${site}/sitemap.xml
+User-agent: *
+Allow: /`)
+```
+Add to package.json build pipeline:
+```json
+{
+  "scripts": { "postbuild": "node scripts/sitemap.ts" }
+}
+```
+
+### E) Images & media (LCP friendly)
+- Always set **intrinsic width/height** to avoid CLS.
+- Use `loading="lazy"` for below‑the‑fold, but **eager** + `fetchpriority="high"` for LCP hero.
+- Provide `srcset`/`sizes` and modern formats (WebP/AVIF). Include descriptive `alt`.
+```tsx
+<img
+  src="/media/hero-1200.webp"
+  srcSet="/media/hero-800.webp 800w, /media/hero-1200.webp 1200w, /media/hero-1600.webp 1600w"
+  sizes="(max-width: 768px) 100vw, 1200px"
+  width={1200}
+  height={600}
+  alt="Shop the new collection"
+  decoding="async"
+  loading="eager"
+  fetchPriority="high"
+/>
+```
+
+### F) Fonts
+- Prefer **system fonts**; if using web fonts, self‑host and subset.
+- Preconnect and preload critical font files; ensure `font-display: swap`.
+```html
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="/fonts/Inter-400-subset.woff2" crossorigin>
+```
+
+### G) Component performance checklist
+For every component:
+- Uses **semantic HTML** and accessible names.
+- Avoids layout thrash (batch reads/writes; prefer CSS transforms).
+- Minimal JS on first paint; defer non‑critical effects to `requestIdleCallback`.
+- Images have width/height; list items are virtualized if large.
+- Motion is subtle and disabled on `prefers-reduced-motion`.
+- No blocking `await` in render; fetch in Query with caching.
+- No heavy polyfills on modern browsers; load polyfills conditionally.
+
+### H) Core Web Vitals budgets & CI
+Track budgets and regressions:
+- **Budgets:** LCP ≤ 2.5s, CLS ≤ 0.1, INP ≤ 200ms, TTFB ≤ 0.8s.
+- Add Lighthouse CI to PRs:
+```json
+{
+  "scripts": {
+    "lhci": "lhci autorun --collect.staticDistDir=dist"
+  },
+  "devDependencies": { "@lhci/cli": "^0.13.0" }
+}
+```
+
+### I) Route‑level SEO patterns
+- Public content routes: `<Seo ... />` with canonical + JSON‑LD.
+- Auth/account routes: `<Seo noindex />`.
+- For pagination, use `?page=` with consistent canonical and include `rel=prev/next` via `<Helmet>` for long series.
+
+### J) Caching & delivery
+- Serve static assets via CDN with long **Cache‑Control** and content hashing.
+- API: enable HTTP caching (ETag/Last‑Modified) to help Query avoid refetch.
+- Use `preconnect` to critical origins; avoid unnecessary cross‑origin requests.
+
+---
 
