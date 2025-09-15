@@ -37,14 +37,20 @@ function VerticalMarqueeDual({ items, durationA = 28, durationB = 32 }: { items:
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent" />
 
       <div className="grid h-full grid-cols-1 gap-3 md:grid-cols-2">
-        <ul aria-label="User testimonials column A" className="relative grid gap-2 hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]"
-          style={{ animation: `marqueeY ${durationA}s linear infinite` }}>
+        <ul
+          aria-label="User testimonials column A"
+          className="marquee marquee-pause relative grid gap-2 animate-marquee-y"
+          style={{ ['--marquee-duration' as any]: `${durationA}s` }}
+        >
           {a.map((q, i) => (
             <CardItem key={`a-${q.name}-${i}`} q={q} />
           ))}
         </ul>
-        <ul aria-label="User testimonials column B" className="relative grid gap-2 hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]"
-          style={{ animation: `marqueeYReverse ${durationB}s linear infinite` }}>
+        <ul
+          aria-label="User testimonials column B"
+          className="marquee marquee-pause relative grid gap-2 animate-marquee-y-reverse"
+          style={{ ['--marquee-duration' as any]: `${durationB}s` }}
+        >
           {b.map((q, i) => (
             <CardItem key={`b-${q.name}-${i}`} q={q} />
           ))}
@@ -62,23 +68,29 @@ function HorizontalMarqueeDual({ items, durationA = 22, durationB = 26 }: { item
   const b = React.useMemo(() => [...(rowB.length ? rowB : rowA), ...(rowB.length ? rowB : rowA)], [rowA, rowB])
 
   return (
-    <div className="relative overflow-hidden rounded-xl border border-neutral-200 bg-white p-2">
+    <div className="relative w-full overflow-hidden rounded-xl border border-neutral-200 bg-white p-2">
       {/* left/right fade */}
       <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-white to-transparent" />
       <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-white to-transparent" />
-      <div className="grid gap-3">
-        <ul aria-label="User testimonials row A" className="relative flex w-max gap-3 hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]"
-          style={{ animation: `marqueeX ${durationA}s linear infinite` }}>
+      <div className="w-full overflow-hidden grid gap-3">
+        <ul
+          aria-label="User testimonials row A"
+          className="marquee marquee-pause relative flex w-max gap-3 animate-marquee-x"
+          style={{ ['--marquee-duration' as any]: `${durationA}s` }}
+        >
           {a.map((q, i) => (
-            <li key={`ha-${q.name}-${i}`} className="min-w-[240px] max-w-[320px]">
+            <li key={`ha-${q.name}-${i}`} className="min-w-[200px] max-w-[280px] flex-shrink-0">
               <CardItem q={q} />
             </li>
           ))}
         </ul>
-        <ul aria-label="User testimonials row B" className="relative flex w-max gap-3 hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]"
-          style={{ animation: `marqueeXReverse ${durationB}s linear infinite` }}>
+        <ul
+          aria-label="User testimonials row B"
+          className="marquee marquee-pause relative flex w-max gap-3 animate-marquee-x-reverse"
+          style={{ ['--marquee-duration' as any]: `${durationB}s` }}
+        >
           {b.map((q, i) => (
-            <li key={`hb-${q.name}-${i}`} className="min-w-[240px] max-w-[320px]">
+            <li key={`hb-${q.name}-${i}`} className="min-w-[200px] max-w-[280px] flex-shrink-0">
               <CardItem q={q} />
             </li>
           ))}

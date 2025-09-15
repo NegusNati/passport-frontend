@@ -99,3 +99,11 @@ code {
   0% { transform: translateX(-50%); }
   100% { transform: translateX(0); }
 }
+
+/* Marquee helpers */
+.marquee { will-change: transform; }
+.marquee-pause:hover, .marquee-pause:focus-within { animation-play-state: paused; }
+.animate-marquee-y { animation: marqueeY var(--marquee-duration, 28s) linear infinite; }
+.animate-marquee-y-reverse { animation: marqueeYReverse var(--marquee-duration, 28s) linear infinite; }
+.animate-marquee-x { animation: marqueeX var(--marquee-duration, 24s) linear infinite; }
+.animate-marquee-x-reverse { animation: marqueeXReverse var(--marquee-duration, 24s) linear infinite; }

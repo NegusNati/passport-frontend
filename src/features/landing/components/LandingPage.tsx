@@ -9,7 +9,7 @@ import { DownloadAppSection } from './DownloadApp'
 
 export function LandingPage() {
   return (
-    <div>
+    <div className="w-full overflow-x-hidden">
       <div className="pb-8">
         <div className="grid items-start gap-10 md:grid-cols-[1.5fr_1fr]">
           <Hero />

@@ -41,29 +41,41 @@ export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' 
     <div
       ref={ref}
       className={[
-        'fixed bottom-4 right-4 z-50 flex items-center gap-3 select-none',
+        'fixed bottom-3 right-3 z-[1000] select-none sm:bottom-4 sm:right-4',
         className,
       ].join(' ')}
       aria-label="Support: Buy me a coffee"
     >
-      {/* Vertical label that rotates with scroll */}
-      <div
-        className="hidden md:block origin-center text-[12px] tracking-wider text-neutral-600"
-        style={{ transform: 'rotate(var(--rotate, 0deg))' }}
-      >
-        Buy me a coffee
+      <div className="relative h-14 w-14 sm:h-16 sm:w-16">
+        {/* Rotating text ring */}
+        <div
+          aria-hidden
+          className="absolute inset-0 grid place-items-center"
+          style={{ transform: 'rotate(var(--rotate, 0deg))' }}
+        >
+          <svg viewBox="0 0 100 100" className="h-full w-full">
+            <defs>
+              <path id="bmc-circle" d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" />
+            </defs>
+            <text className="fill-neutral-600 text-[8px] sm:text-[10px] tracking-[0.2em] uppercase">
+              <textPath href="#bmc-circle" startOffset="0">
+                Buy me a coffee • Buy me a coffee •
+              </textPath>
+            </text>
+          </svg>
+        </div>
+        {/* Button in the center */}
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer noopener"
+          className="absolute left-1/2 top-1/2 grid h-10 w-10 sm:h-12 sm:w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-neutral-200 bg-white shadow-sm hover:shadow-md hover:border-neutral-300 transition"
+        >
+          <span role="img" aria-label="coffee" className="text-lg sm:text-xl">☕️</span>
+        </a>
       </div>
-      <a
-        href={href}
-        target="_blank"
-        rel="noreferrer noopener"
-        className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-neutral-200 bg-white shadow-sm hover:shadow-md hover:border-neutral-300 transition"
-      >
-        <span role="img" aria-label="coffee" className="text-xl">☕️</span>
-      </a>
     </div>
   )
 }
 
 export default BuyMeCoffee
-
