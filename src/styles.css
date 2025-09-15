@@ -77,3 +77,25 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+/* ------- App utilities ------- */
+/* Seamless marquee animations used in Testimonials */
+@keyframes marqueeY {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
+}
+
+@keyframes marqueeX {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marqueeYReverse {
+  0% { transform: translateY(-50%); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes marqueeXReverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}

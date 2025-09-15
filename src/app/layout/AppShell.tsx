@@ -1,6 +1,7 @@
 import React from 'react'
 import { Header } from './Header'
 import Footer from './Footer'
+import { BuyMeCoffee } from '@/shared/ui/BuyMeCoffee'
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
@@ -9,6 +10,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <Header />
       <main id="main">{children}</main>
       <Footer />
+      <BuyMeCoffee href="https://buymeacoffee.com" />
     </div>
   )
 }
