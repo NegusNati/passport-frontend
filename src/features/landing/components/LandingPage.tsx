@@ -1,5 +1,6 @@
 import { Hero } from './Hero'
 import { Testimonials } from './Testimonials'
+import { AdBanner } from './AdBanner'
 import { VideoTabs } from './VideoTabs'
 import { AdvertiseSection } from './Advertise'
 import { BlogSection } from './Blogs'
@@ -15,6 +16,8 @@ export function LandingPage() {
           <Testimonials />
         </div>
       </div>
+
+      <AdBanner />
       
       <VideoTabs />
       <AdvertiseSection />
@@ -25,5 +28,4 @@ export function LandingPage() {
     </div>
   )
 }
-
 

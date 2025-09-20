@@ -41,8 +41,8 @@ export function Hero() {
 
       {/* Image Placeholders */}
       <div className="flex space-x-4 my-12">
-        <div className="bg-gray-300 h-24 w-full"></div>
-        <div className="bg-gray-300 h-24 w-full"></div>
+        <div className="bg-neutral-200 h-24 w-full"></div>
+        <div className="bg-neutral-200 h-24 w-full"></div>
       </div>
 
     </section>
