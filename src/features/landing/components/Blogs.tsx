@@ -12,23 +12,30 @@ export function BlogSection() {
   return (
     <section id="blogs" className="py-14 sm:py-16">
       <Container>
-        <div className="mb-6 flex items-end justify-between">
+        <div className="mb-6 flex flex-col justify-center items-center">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight">Blog Posts</h2>
-            <p className="mt-1 text-sm text-neutral-600">Your reliable source for passport news, tips, and travel information.</p>
+            <h2 className="text-2xl font-bold tracking-tight max-w-2xl text-center">Blog Posts</h2>
+            <p className="mt-1 text-sm text-neutral-600 text-center max-w-sm">Your reliable source for passport news, tips, and travel information.</p>
           </div>
-          <Button variant="outline">View All</Button>
+        
         </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 p-0 m-0">
           {POSTS.map((p) => (
-            <Card key={p.id} className="overflow-hidden">
-              <div className="h-40 w-full bg-neutral-100" />
-              <CardContent className="p-4">
-                <h3 className="line-clamp-2 text-base font-medium">{p.title}</h3>
-                <p className="mt-1 text-sm text-neutral-500">{p.date}</p>
-              </CardContent>
-            </Card>
+                <Card key={p.id} className="overflow-hidden rounded-sm p-0 m-0 ">
+                <CardContent className="flex h-full flex-col justify-between p-1  pt-0">
+                  <div className="space-y-2">
+                    <div className="h-40 w-full rounded-sm bg-neutral-100" />
+                    <h3 className="text-lg font-semibold tracking-tight">{p.title}</h3>
+                    <p className="text-sm text-neutral-600">
+                      {p.date}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
           ))}
+        </div>
+        <div className="flex justify-center my-4 md:my-8">
+        <Button size="sm"  className="w-full sm:w-auto bg-black text-white font-semibold">View All</Button>
         </div>
       </Container>
     </section>
