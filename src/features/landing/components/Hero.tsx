@@ -1,45 +1,50 @@
-import { Container } from '@/shared/ui/container'
-import { Badge } from '@/shared/ui/badge'
+
 import { Button } from '@/shared/ui/button'
 import { motion, useReducedMotion } from 'framer-motion'
 import { M } from '@/shared/lib/motion'
+import { ArrowRightIcon } from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 
 export function Hero() {
   const reduce = useReducedMotion()
   return (
-    <section className="relative overflow-hidden pt-10 sm:pt-14 w-full">
-      <Container className="grid items-center gap-10 md:grid-cols-2 w-full">
-        <div>
-          <motion.div initial={{ opacity: 0, y: reduce ? 0 : 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: M.duration, ease: M.ease }}>
-            <Badge className="mb-4">Over 1.5M users, 800k passports issued</Badge>
-            <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl md:text-4xl leading-tight">
-              Tired of endless uncertainty? Instantly know if your Ethiopian passport is ready.
-            </h1>
-            <p className="mt-3 text-sm sm:text-base text-neutral-600 leading-relaxed">
-              Search with your reference number or name and get real-time updates—no more repeated trips to the office.
-            </p>
-            <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto">Check My Passport Status Now</Button>
-              <a href="#telegram" className="inline-flex items-center text-sm font-medium text-neutral-900 underline-offset-4 hover:underline">
-                Join Telegram Group
-              </a>
-            </div>
-          </motion.div>
-        </div>
-        <motion.div
-          initial={{ opacity: 0, y: reduce ? 0 : 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: M.duration + 0.05, ease: M.ease }}
-          className=""
-        >
-          <div className="h-64 rounded-2xl bg-neutral-100 shadow-inner sm:h-80">
-            <div className="h-full w-full rounded-2xl border border-dashed border-neutral-300" aria-hidden />
+    <section className="pt-14 sm:pt-20 grid items-center gap-10 max-w-2xl ">
+      <div>
+        <motion.div initial={{ opacity: 0, y: reduce ? 0 : 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: M.duration, ease: M.ease }} className='space-y-4'>
+          {/* Stats Badge */}
+          <div className="inline-flex items-center px-4 py-2 bg-neutral-100 rounded-full text-sm text-muted-foreground ">
+            Over 1.5 million users, with 800,000 passports confirmed as issued.
           </div>
-          <p className="mt-3 text-center text-sm text-neutral-500">Live results preview • Placeholder</p>
-        </motion.div>
-      </Container>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-white" aria-hidden />
+          <h1 className="text-2xl font-bold sm:text-3xl md:text-3xl max-w-3xl">
+            Tired of endless uncertainty? Instantly know if your Ethiopian passport is ready.
+          </h1>
+          <p className="mt-3 text-sm sm:text-base text-neutral-600 leading-relaxed">
+            Search with your reference number or name and get real-time updates—no more repeated trips to the office.
+          </p>
+          <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row w-full sm:w-auto ">
+            <Button size="sm" className="w-full sm:w-auto py-0 ">
+              <Link to="/">
+                Check My Passport Status Now
+                <ArrowRightIcon className="ml-2 h-4 w-4 inline" aria-hidden="true" />
+              </Link>
+            </Button>
+            <div className="flex items-center gap-2 justify-center ">
+            <p className="text-sm text-neutral-600">or</p>
+            <a href="#telegram" className="inline-flex items-center text-sm font-medium text-neutral-900 underline-offset-4 hover:underline">
+              Join Telegram Group
+            </a>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Image Placeholders */}
+      <div className="flex space-x-4 my-12">
+        <div className="bg-gray-300 h-24 w-full"></div>
+        <div className="bg-gray-300 h-24 w-full"></div>
+      </div>
+
     </section>
   )
 }

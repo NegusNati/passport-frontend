@@ -2,6 +2,7 @@ import React from 'react'
 import { Container } from '@/shared/ui/container'
 import { Button } from '@/shared/ui/button'
 import { MobileMenu } from './MobileMenu'
+import { ArrowRightIcon, ArrowUpRight } from 'lucide-react'
 
 const nav = [
   { label: 'Advertise', href: '#advertise' },
@@ -25,14 +26,21 @@ export function Header() {
 
         <nav className="hidden items-center gap-6 md:flex">
           {nav.map((n) => (
-            <a key={n.label} href={n.href} className="text-sm text-neutral-700 hover:text-neutral-900">
+            n.label === 'Download App' ? (
+              <div className="flex items-center gap-2">
+              <a key={n.label} href={n.href} className="text-sm text-neutral-700 hover:text-neutral-900 font-bold">
+                {n.label}
+                </a>
+                <ArrowUpRight className="size-4 font-bold  " />
+              </div>
+            ) :    <a key={n.label} href={n.href} className="text-sm text-neutral-700 hover:text-neutral-900 font-bold">
               {n.label}
             </a>
           ))}
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Button variant="outline">Register</Button>
+          <Button variant="outline"className='font-bold px-4 py-0' >Register</Button>
           <Button>Login</Button>
         </div>
 

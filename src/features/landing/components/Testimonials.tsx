@@ -16,9 +16,9 @@ const QUOTES: Quote[] = [
 
 function CardItem({ q }: { q: Quote }) {
   return (
-    <li className="rounded-lg border border-neutral-200 bg-white px-3 py-3 md:px-4 md:py-4 shadow-sm">
+    <li className=" hover:border hover:border-neutral-200  bg-neutral-50 hover:bg-white  px-3 py-3 md:px-4 md:py-4 shadow-xs ">
       <p className="text-[13px] leading-relaxed text-neutral-600 italic">“{q.quote}”</p>
-      <p className="mt-2 text-[13px] font-medium text-neutral-900">{q.name}</p>
+      <p className="mt-2 text-[13px] font-medium text-neutral-900 hover:text-black">{q.name}</p>
     </li>
   )
 }
@@ -31,15 +31,16 @@ function VerticalMarqueeDual({ items, durationA = 28, durationB = 32 }: { items:
   const b = React.useMemo(() => [...(colB.length ? colB : colA), ...(colB.length ? colB : colA)], [colA, colB])
 
   return (
-    <div className="relative h-[26rem] overflow-hidden rounded-xl border border-neutral-200 bg-white p-2">
+    <div className="relative h-[36rem] overflow-hidden  p-2   ">
+      
       {/* top/bottom fade */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-white to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent" />
 
-      <div className="grid h-full grid-cols-1 gap-3 md:grid-cols-2">
+      <div className="grid h-full grid-cols-1 gap-4 md:grid-cols-2 items-center">
         <ul
           aria-label="User testimonials column A"
-          className="marquee marquee-pause relative grid gap-2 animate-marquee-y"
+          className="marquee marquee-pause relative grid gap-4 animate-marquee-y"
           style={{ ['--marquee-duration' as any]: `${durationA}s` }}
         >
           {a.map((q, i) => (
@@ -48,7 +49,7 @@ function VerticalMarqueeDual({ items, durationA = 28, durationB = 32 }: { items:
         </ul>
         <ul
           aria-label="User testimonials column B"
-          className="marquee marquee-pause relative grid gap-2 animate-marquee-y-reverse"
+          className="marquee marquee-pause relative grid gap-4 animate-marquee-y-reverse"
           style={{ ['--marquee-duration' as any]: `${durationB}s` }}
         >
           {b.map((q, i) => (
@@ -72,7 +73,7 @@ function HorizontalMarqueeDual({ items, durationA = 22, durationB = 26 }: { item
       {/* left/right fade */}
       <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-white to-transparent" />
       <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-white to-transparent" />
-      <div className="w-full overflow-hidden grid gap-3">
+      <div className="w-full overflow-hidden grid gap-3 items-center">
         <ul
           aria-label="User testimonials row A"
           className="marquee marquee-pause relative flex w-max gap-3 animate-marquee-x"
@@ -102,16 +103,42 @@ function HorizontalMarqueeDual({ items, durationA = 22, durationB = 26 }: { item
 
 export function Testimonials() {
   return (
-    <aside className="mt-6 md:mt-0">
-      {/* Mobile: horizontal marquee */}
-      <div className="md:hidden">
-        <HorizontalMarqueeDual items={QUOTES} />
-      </div>
-      {/* Desktop: vertical marquee */}
-      <div className="hidden md:block">
-        <VerticalMarqueeDual items={QUOTES} />
-      </div>
-    </aside>
+    <aside className="mt-6 md:mt-0 relative">
+    {/* Mobile: horizontal marquee */}
+    <div className="md:hidden relative">
+      {/* left fade */}
+      <div
+        className="pointer-events-none absolute inset-y-0 left-0 w-10
+                   bg-gradient-to-r from-white to-transparent dark:from-neutral-950"
+        aria-hidden
+      />
+      <HorizontalMarqueeDual items={QUOTES} />
+      {/* right fade */}
+      <div
+        className="pointer-events-none absolute inset-y-0 right-0 w-10
+                   bg-gradient-to-l from-white to-transparent dark:from-neutral-950"
+        aria-hidden
+      />
+    </div>
+  
+    {/* Desktop: vertical marquee */}
+    <div className="hidden md:block relative">
+      {/* top fade (fixed) */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-16
+                   bg-gradient-to-b from-white to-transparent dark:from-neutral-950"
+        aria-hidden
+      />
+      <VerticalMarqueeDual items={QUOTES} />
+      {/* bottom fade (make direction consistent) */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-16
+                   bg-gradient-to-t from-white to-transparent dark:from-neutral-950"
+        aria-hidden
+      />
+    </div>
+  </aside>
+  
   )
 }
 
