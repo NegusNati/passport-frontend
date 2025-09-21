@@ -23,7 +23,6 @@ export function MobileMenu({ open, onClose, nav }: { open: boolean; onClose: () 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <div className="absolute inset-0 bg-black/20" onClick={onClose} />
           <motion.aside
             role="dialog"
             aria-modal="true"
@@ -31,39 +30,39 @@ export function MobileMenu({ open, onClose, nav }: { open: boolean; onClose: () 
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-            className="absolute right-0 top-0 flex h-full w-[86%] max-w-xs flex-col border-l border-neutral-200 bg-white"
+            className="absolute right-0 top-0 flex h-full w-full flex-col bg-white"
           >
-            <header className="flex items-center justify-between px-5 py-6">
-              <span className="text-base font-semibold tracking-tight">Passport.ET</span>
+            <header className="flex items-center justify-between px-5 py-6 border-b border-neutral-100">
+              <span className="text-lg font-semibold tracking-tight">Passport.ET</span>
               <button
                 type="button"
                 aria-label="Close menu"
                 onClick={onClose}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-300 text-neutral-700 hover:bg-neutral-100"
+                className="inline-flex h-8 w-8 items-center justify-center text-neutral-600 hover:text-neutral-900 transition-colors"
               >
-                <X className="h-4 w-4" aria-hidden="true" />
+                <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </header>
 
-            <nav className="flex flex-col gap-2 px-5">
+            <nav className="flex flex-col gap-1 px-5 py-4">
               {nav.map((item) => (
                 <a
                   key={item.label}
                   href={item.href}
-                  className="flex items-center justify-between rounded-lg px-2 py-2 text-sm font-medium text-neutral-900 hover:bg-neutral-100"
+                  className="flex items-center justify-between px-4 py-3 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 border-b border-neutral-100 last:border-b-0"
                 >
                   <span>{item.label}</span>
-                  {item.external ? <ArrowUpRight className="h-3.5 w-3.5 text-neutral-400" aria-hidden="true" /> : null}
+                  <ArrowUpRight className="h-4 w-4 text-neutral-400" aria-hidden="true" />
                 </a>
               ))}
             </nav>
 
-            <div className="mt-auto flex flex-col gap-3 px-5 py-6">
+            <div className="mt-auto border-t border-neutral-100 px-5 py-6">
               <div className="flex items-center gap-3">
-                <Button variant="outline" className="w-full text-sm">
+                <Button variant="outline" className="flex-1 h-11 text-sm font-medium">
                   Register
                 </Button>
-                <Button className="w-full text-sm">
+                <Button className="flex-1 h-11 text-sm font-medium bg-neutral-900 hover:bg-neutral-800">
                   Login
                 </Button>
               </div>
