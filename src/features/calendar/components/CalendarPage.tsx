@@ -234,7 +234,7 @@ export function CalendarPage() {
           </div>
 
           <aside className="flex flex-col gap-6">
-            <AdSlot orientation="vertical" className="min-h-[18rem]" label="Banner · 300x600" />
+            <AdSlot orientation="vertical" className="min-h-[18rem]" preset="sponsored" />
 
             <div className=" border border-neutral-200 bg-white p-6 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.35em] text-neutral-400">Selected date</p>
@@ -260,7 +260,7 @@ export function CalendarPage() {
           </aside>
         </div>
 
-        <AdSlot orientation="horizontal" className="min-h-[12rem]" label="Banner · 970x250" />
+        <AdSlot orientation="horizontal" className="min-h-[12rem]" preset="sponsored" />
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
           <section className=" border border-neutral-200 bg-white shadow-sm">
@@ -309,7 +309,7 @@ export function CalendarPage() {
           </section>
 
           <aside className="flex flex-col gap-6">
-            <AdSlot orientation="vertical" className="min-h-[18rem]" label="Banner · 300x600" />
+            <AdSlot orientation="vertical" className="min-h-[18rem]" preset="sponsored" />
             <div className=" border border-neutral-200 bg-white p-6 shadow-sm text-sm text-neutral-600">
               <h3 className="text-base font-semibold tracking-tight text-neutral-900">Reading tips</h3>
               <p className="mt-2">
