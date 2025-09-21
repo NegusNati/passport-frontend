@@ -4,7 +4,6 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { M } from '@/shared/lib/motion'
 import { ArrowRightIcon } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
-import { Container } from '@/shared/ui/container'
 
 export function Hero() {
   const reduce = useReducedMotion()
