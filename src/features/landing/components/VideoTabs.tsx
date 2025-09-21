@@ -57,32 +57,35 @@ export function VideoTabs() {
   return (
     <section className="py-12 sm:py-16" id="videos">
       <Container>
-        <header className="mx-auto max-w-3xl text-center">
+        <header className="mx-auto max-w-5xl text-center">
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Video Demonstrations</h2>
-          <p className="mt-2 text-neutral-600">
+          <p className="mt-2 text-neutral-600 max-w-3xl mx-auto">
             Here is how you can check if your passport is ready or how you can get services provided by
             <span className="block font-semibold tracking-wide text-neutral-800 sm:inline"> Immigration &amp; Nationality Affairs</span>.
           </p>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            {TABS.map((t) => {
-              const isActive = t.key === activeTab.key
-              return (
-                <button
-                  key={t.key}
-                  onClick={() => setTab(t.key)}
-                  className={[
-                    'rounded-full border px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2',
-                    'shadow-sm',
-                    isActive
-                      ? 'border-neutral-900 bg-neutral-900 text-white shadow-sm shadow-neutral-900/20'
-                      : 'border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50',
-                  ].join(' ')}
-                  type="button"
-                >
-                  {t.label}
-                </button>
-              )
-            })}
+          <div className="mt-6 flex items-center justify-center">
+            <div className="flex gap-1 overflow-x-auto  scrollbar-thumb-neutral-300 scrollbar-track-transparent sm:overflow-visible scrollbar-hide px-1 w-full max-w-full sm:justify-center">
+              {TABS.map((t) => {
+                const isActive = t.key === activeTab.key
+                return (
+                  <button
+                    key={t.key}
+                    onClick={() => setTab(t.key)}
+                    className={[
+                      'rounded-full border px-4 py-1 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2',
+                      'shadow-sm',
+                      isActive
+                        ? 'border-neutral-900 bg-neutral-900 text-white shadow-sm shadow-neutral-900/20'
+                        : 'border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50',
+                      'whitespace-nowrap',
+                    ].join(' ')}
+                    type="button"
+                  >
+                    {t.label}
+                  </button>
+                )
+              })}
+            </div>
           </div>
         </header>
 

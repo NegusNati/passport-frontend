@@ -33,9 +33,7 @@ function VerticalMarqueeDual({ items, durationA = 28, durationB = 32 }: { items:
   return (
     <div className="relative h-[36rem] overflow-hidden  p-2   ">
       
-      {/* top/bottom fade */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-white to-transparent" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent" />
+    
 
       <div className="grid h-full grid-cols-1 gap-4 md:grid-cols-2 items-center">
         <ul
@@ -69,7 +67,7 @@ function HorizontalMarqueeDual({ items, durationA = 22, durationB = 26 }: { item
   const b = React.useMemo(() => [...(rowB.length ? rowB : rowA), ...(rowB.length ? rowB : rowA)], [rowA, rowB])
 
   return (
-    <div className="relative w-full overflow-hidden rounded-xl border border-neutral-200 bg-white p-2">
+    <div className="relative w-full overflow-hidden rounded-xl p-2">
       {/* left/right fade */}
       <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-white to-transparent" />
       <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-white to-transparent" />

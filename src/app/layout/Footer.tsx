@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { GithubIcon, LinkedinIcon, TwitterIcon, InstagramIcon, MegaphoneIcon } from 'lucide-react';
 
 const Footer = () => {
   const services = [
@@ -10,10 +11,10 @@ const Footer = () => {
   ];
 
   const socials = [
-    { name: 'GitHub', icon: '🐙', url: '#' },
-    { name: 'X (Formerly Twitter)', icon: '🐦', url: '#' },
-    { name: 'LinkedIn', icon: '💼', url: '#' },
-    { name: 'Instagram', icon: '📷', url: '#' }
+    { name: 'GitHub', icon: <GithubIcon className="size-4" />, url: '#' },
+    { name: 'X (Formerly Twitter)', icon: <TwitterIcon className="size-4" />, url: '#' },
+    { name: 'LinkedIn', icon: <LinkedinIcon className="size-4" />, url: '#' },
+    { name: 'Instagram', icon: <InstagramIcon className="size-4" />, url: '#' }
   ];
 
   const containerVariants = {
@@ -39,16 +40,21 @@ const Footer = () => {
 
   return (
     <motion.footer
-      className="relative bg-gray-50 pt-16 pb-8 overflow-hidden"
+      className="relative border-t border-neutral-200 pt-16 pb-8 overflow-hidden"
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
     >
       {/* Background watermark positioned at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center pointer-events-none">
+      <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center pointer-events-none translate-y-2">
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-16
+                   bg-gradient-to-t from-white to-transparent dark:from-neutral-950"
+        aria-hidden
+      />
         <motion.div
-          className="text-gray-200 font-bold text-[6rem] sm:text-[8rem] md:text-[10rem] lg:text-[12rem] xl:text-[14rem] 2xl:text-[16rem] leading-none select-none "
+          className="text-gray-200 font-bold text-[2rem] sm:text-[4rem] md:text-[6rem] lg:text-[8] xl:text-[10rem] 2xl:text-[12rem] leading-none select-none  "
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
@@ -62,12 +68,12 @@ const Footer = () => {
         {/* Main footer content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 mb-8">
           {/* Company Info */}
-          <motion.div 
+          <motion.div
             className="space-y-6"
             variants={itemVariants}
           >
             <div>
-              <motion.h2 
+              <motion.h2
                 className="text-2xl font-bold text-gray-900 mb-2"
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300 }}
@@ -78,21 +84,21 @@ const Footer = () => {
                 No more wasted trips. Know your passport status instantly.
               </p>
             </div>
-            
+
             <motion.a
               href="#"
-              className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-800 transition-colors duration-300"
+              className="inline-flex items-center space-x-2  hover:text-blue-800 transition-colors duration-300"
               whileHover={{ x: 5 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span>📱</span>
-              <span className="font-medium">Join Telegram Group</span>
+              <span>💬</span>
+              <span className="font-medium ">Join Telegram Group</span>
             </motion.a>
           </motion.div>
 
           {/* Services */}
-          <motion.div 
-            className="space-y-6"
+          <motion.div
+            className="space-y-4"
             variants={itemVariants}
           >
             <h3 className="text-lg font-semibold text-gray-900">Services</h3>
@@ -105,7 +111,13 @@ const Footer = () => {
                     whileHover={{ x: 5, color: "#16a34a" }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    {service}
+                    {service === 'Advertisement' ? (
+                      <span className='flex items-center gap-2 bg-neutral-50 rounded-md py-1 px-4 w-fit border border-neutral-100'>
+                        <MegaphoneIcon className="size-4" style={{ transform: 'scaleX(-1)' }} />
+                        Advertisement
+                      </span>
+
+                    ) : service}
                   </motion.a>
                 </motion.li>
               ))}
@@ -113,7 +125,7 @@ const Footer = () => {
           </motion.div>
 
           {/* Developer Socials */}
-          <motion.div 
+          <motion.div
             className="space-y-6"
             variants={itemVariants}
           >
@@ -137,18 +149,18 @@ const Footer = () => {
         </div>
 
         {/* Bottom section */}
-        <motion.div 
+        <motion.div
           className="pt-8 border-t border-gray-200"
           variants={itemVariants}
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <motion.p 
+            <motion.p
               className="text-sm text-gray-500"
               whileHover={{ scale: 1.02 }}
             >
               ©2025 Passport.ET. All rights reserved.
             </motion.p>
-            
+
             <div className="flex space-x-6">
               <motion.a
                 href="#"
