@@ -7,11 +7,11 @@ type NavItem = { label: string; href: string; external?: boolean }
 
 export function MobileMenu({ open, onClose, nav }: { open: boolean; onClose: () => void; nav: NavItem[] }) {
   React.useEffect(() => {
-    const onEsc = (event: KeyboardEvent) => {
+    const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
     }
-    document.addEventListener('keydown', onEsc)
-    return () => document.removeEventListener('keydown', onEsc)
+    document.addEventListener('keydown', handleEsc)
+    return () => document.removeEventListener('keydown', handleEsc)
   }, [onClose])
 
   return (
@@ -23,6 +23,8 @@ export function MobileMenu({ open, onClose, nav }: { open: boolean; onClose: () 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
+          <div className="absolute inset-0 bg-neutral-900/50" onClick={onClose} />
+
           <motion.aside
             role="dialog"
             aria-modal="true"
@@ -30,17 +32,17 @@ export function MobileMenu({ open, onClose, nav }: { open: boolean; onClose: () 
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-            className="absolute right-0 top-0 flex h-full w-full flex-col bg-white"
+            className="absolute right-0 top-0 flex h-full w-full max-w-xs flex-col bg-white shadow-[0_20px_40px_rgba(15,23,42,0.18)]"
           >
-            <header className="flex items-center justify-between px-5 py-6 border-b border-neutral-100">
-              <span className="text-lg font-semibold tracking-tight">Passport.ET</span>
+            <header className="flex items-center justify-between border-b border-neutral-100 px-5 py-6">
+              <span className="text-base font-semibold tracking-tight">Passport.ET</span>
               <button
                 type="button"
                 aria-label="Close menu"
                 onClick={onClose}
-                className="inline-flex h-8 w-8 items-center justify-center text-neutral-600 hover:text-neutral-900 transition-colors"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-neutral-200 text-neutral-600 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
               >
-                <X className="h-5 w-5" aria-hidden="true" />
+                <X className="h-4 w-4" aria-hidden="true" />
               </button>
             </header>
 
@@ -49,20 +51,20 @@ export function MobileMenu({ open, onClose, nav }: { open: boolean; onClose: () 
                 <a
                   key={item.label}
                   href={item.href}
-                  className="flex items-center justify-between px-4 py-3 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 border-b border-neutral-100 last:border-b-0"
+                  className="flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
                 >
                   <span>{item.label}</span>
-                  <ArrowUpRight className="h-4 w-4 text-neutral-400" aria-hidden="true" />
+                  {item.external ? <ArrowUpRight className="h-4 w-4 text-neutral-400" aria-hidden /> : null}
                 </a>
               ))}
             </nav>
 
             <div className="mt-auto border-t border-neutral-100 px-5 py-6">
               <div className="flex items-center gap-3">
-                <Button variant="outline" className="flex-1 h-11 text-sm font-medium">
+                <Button variant="outline" className="flex-1 text-sm">
                   Register
                 </Button>
-                <Button className="flex-1 h-11 text-sm font-medium bg-neutral-900 hover:bg-neutral-800">
+                <Button className="flex-1 text-sm">
                   Login
                 </Button>
               </div>

@@ -9,13 +9,13 @@ const nav = [
   { label: 'Blogs', href: '#blogs' },
   { label: 'FAQs', href: '#faqs' },
   { label: 'Ethiopian Calendar', href: '#calendar' },
-  { label: 'Download App', href: '#download' },
+  { label: 'Download App', href: '#download', external: true },
 ]
 
 export function Header() {
   const [open, setOpen] = React.useState(false)
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-neutral-200 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+    <header className="sticky top-0 z-40 w-full border-b border-neutral-200 bg-white sm:bg-white/80 sm:backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <Container className="flex h-16 items-center justify-between">
         <div className="flex items-center gap-3">
           <a href="/" className="font-semibold tracking-tight text-neutral-900">
@@ -25,16 +25,14 @@ export function Header() {
         </div>
 
         <nav className="hidden items-center gap-6 md:flex">
-          {nav.map((n) => (
-            n.label === 'Download App' ? (
-              <div className="flex items-center gap-2">
-              <a key={n.label} href={n.href} className="text-sm text-neutral-700 hover:text-neutral-900 font-bold">
-                {n.label}
-                </a>
-                <ArrowUpRight className="size-4 font-bold  " />
-              </div>
-            ) :    <a key={n.label} href={n.href} className="text-sm text-neutral-700 hover:text-neutral-900 font-bold">
-              {n.label}
+          {nav.map((item) => (
+            <a
+              key={item.label}
+              href={item.href}
+              className="inline-flex items-center gap-1 text-sm font-semibold text-neutral-700 transition-colors hover:text-neutral-900"
+            >
+              <span>{item.label}</span>
+              {item.external ? <ArrowUpRight className="h-4 w-4" aria-hidden /> : null}
             </a>
           ))}
         </nav>
