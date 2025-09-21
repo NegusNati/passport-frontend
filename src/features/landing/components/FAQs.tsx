@@ -1,6 +1,8 @@
 import React from 'react'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { Container } from '@/shared/ui/container'
-import { Minus, Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
+import { M } from '@/shared/lib/motion'
 
 const FAQS = [
   {
@@ -13,7 +15,7 @@ const FAQS = [
   },
   {
     q: 'Is Passport.ET an official service?',
-    a: 'Passport.ET is not an official government website. It’s a community tool focused on checking readiness and sharing insights.',
+    a: "Passport.ET is not an official government website. It's a community tool focused on checking readiness and sharing insights.",
   },
   {
     q: 'How accurate is the passport status shown?',
@@ -27,6 +29,7 @@ const FAQS = [
 
 export function FAQsSection() {
   const [activeIndex, setActiveIndex] = React.useState<number | null>(0)
+  const shouldReduceMotion = useReducedMotion()
 
   function toggleIndex(index: number) {
     setActiveIndex((current) => (current === index ? null : index))
@@ -47,12 +50,24 @@ export function FAQsSection() {
             {FAQS.map((faq, index) => {
               const isActive = activeIndex === index
               return (
-                <article
+                <motion.article
                   key={faq.q}
-                  className={[
-                    'rounded-lg  bg-white/90 shadow-sm transition-all duration-300 ease-in-out',
-                    isActive ? 'shadow-lg ring-1 ring-neutral-900/10 bg-neutral-50' : 'hover:shadow-md',
-                  ].join(' ')}
+                  layout={!shouldReduceMotion}
+                  className="rounded-lg bg-white/90 shadow-sm"
+                  animate={{
+                    backgroundColor: isActive ? 'rgb(249 250 251 / 0.9)' : 'rgb(255 255 255 / 0.9)',
+                    boxShadow: isActive 
+                      ? '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)' 
+                      : '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
+                    scale: isActive ? 1.01 : 1
+                  }}
+                  transition={{
+                    duration: shouldReduceMotion ? 0 : M.duration,
+                    ease: M.ease
+                  }}
+                  whileHover={!shouldReduceMotion ? {
+                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
+                  } : {}}
                 >
                   <button
                     type="button"
@@ -63,33 +78,57 @@ export function FAQsSection() {
                     <span className="text-sm font-medium text-neutral-900 sm:text-base">
                       {faq.q}
                     </span>
-                    <div className="relative w-4 h-4 flex items-center justify-center">
+                    <motion.div 
+                      className="relative w-4 h-4 flex items-center justify-center"
+                      animate={{ rotate: isActive ? 45 : 0 }}
+                      transition={{ 
+                        duration: shouldReduceMotion ? 0 : M.duration,
+                        ease: M.ease 
+                      }}
+                    >
                       <Plus
-                        className={`absolute h-4 w-4 text-neutral-700 transition-all duration-200 ${
-                          isActive ? 'rotate-180 opacity-0 scale-75' : 'rotate-0 opacity-100 scale-100'
-                        }`}
+                        className="h-4 w-4 text-neutral-700"
                         aria-hidden="true"
                       />
-                      <Minus
-                        className={`absolute h-4 w-4 text-neutral-700 transition-all duration-200 ${
-                          isActive ? 'rotate-0 opacity-100 scale-100' : '-rotate-180 opacity-0 scale-75'
-                        }`}
-                        aria-hidden="true"
-                      />
-                    </div>
+                    </motion.div>
                   </button>
-                  <div
-                    className={`border-t border-neutral-200 overflow-hidden transition-all duration-300 ease-in-out ${
-                      isActive
-                        ? 'max-h-96 opacity-100 pb-5'
-                        : 'max-h-0 opacity-0'
-                    }`}
-                  >
-                    <div className="px-5 py-4 text-sm text-neutral-600 sm:text-base">
-                      {faq.a}
-                    </div>
-                  </div>
-                </article>
+                  
+                  <AnimatePresence initial={false}>
+                    {isActive && (
+                      <motion.div
+                        key="content"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ 
+                          height: 'auto', 
+                          opacity: 1 
+                        }}
+                        exit={{ 
+                          height: 0, 
+                          opacity: 0 
+                        }}
+                        transition={{
+                          duration: shouldReduceMotion ? 0 : M.duration * 1.5,
+                          ease: M.ease,
+                          opacity: { duration: shouldReduceMotion ? 0 : M.duration }
+                        }}
+                        className="overflow-hidden border-t border-neutral-200"
+                      >
+                        <motion.div 
+                          className="px-5 py-4 text-sm text-neutral-600 sm:text-base"
+                          initial={{ y: shouldReduceMotion ? 0 : -10 }}
+                          animate={{ y: 0 }}
+                          transition={{ 
+                            duration: shouldReduceMotion ? 0 : M.duration,
+                            delay: shouldReduceMotion ? 0 : M.duration * 0.3,
+                            ease: M.ease
+                          }}
+                        >
+                          {faq.a}
+                        </motion.div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.article>
               )
             })}
           </div>

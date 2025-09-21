@@ -40,7 +40,7 @@ const Footer = () => {
 
   return (
     <motion.footer
-      className="relative border-t border-neutral-200 pt-16 pb-8 overflow-hidden"
+      className="relative border-t border-neutral-200 pt-16 pb-4 md:pb-8 overflow-hidden"
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
@@ -54,7 +54,7 @@ const Footer = () => {
         aria-hidden
       />
         <motion.div
-          className="text-gray-200 font-bold text-[2rem] sm:text-[4rem] md:text-[6rem] lg:text-[8] xl:text-[10rem] 2xl:text-[12rem] leading-none select-none  "
+          className="text-gray-200 font-bold text-[4.5rem] sm:text-[6rem] md:text-[8rem] lg:text-[8] xl:text-[10rem] 2xl:text-[12rem] leading-none select-none  "
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}

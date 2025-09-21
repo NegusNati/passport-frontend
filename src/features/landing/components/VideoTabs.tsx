@@ -90,7 +90,7 @@ export function VideoTabs() {
         </header>
 
         <Card className="mx-auto mt-10 w-full max-w-6xl rounded-[32px] border-neutral-200 bg-white/95 shadow-xl shadow-neutral-200/70">
-          <div className="h-full rounded-[32px] bg-gradient-to-b from-neutral-50 via-white to-white px-4 py-6 sm:px-8 sm:py-10">
+          <div className="h-full rounded-[32px] bg-gradient-to-b from-neutral-50 via-white to-white  sm:px-3 sm:py-4">
             <div className="grid gap-6">
              
               <motion.div
@@ -98,7 +98,7 @@ export function VideoTabs() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: M.duration, ease: M.ease }}
-                className="overflow-hidden rounded-2xl border border-neutral-100 shadow-lg"
+                className="overflow-hidden rounded-xl border border-neutral-100 shadow-lg"
               >
                 {embedUrl ? (
                   <div className="relative aspect-video w-full bg-black">
