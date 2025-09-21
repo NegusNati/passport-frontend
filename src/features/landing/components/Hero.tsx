@@ -10,7 +10,7 @@ export function Hero() {
   const reduce = useReducedMotion()
   return (
     <section className="pt-14 sm:pt-20 grid items-center gap-10 max-w-2xl ">
-      <Container>
+      <>
       <div>
         <motion.div initial={{ opacity: 0, y: reduce ? 0 : 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: M.duration, ease: M.ease }} className='space-y-4'>
           {/* Stats Badge */}
@@ -46,7 +46,7 @@ export function Hero() {
         <div className="bg-neutral-200 h-24 w-full"></div>
         <div className="bg-neutral-200 h-24 w-full"></div>
       </div>
-      </Container>
+      </>
 
     </section>
   )

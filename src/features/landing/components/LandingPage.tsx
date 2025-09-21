@@ -11,7 +11,7 @@ export function LandingPage() {
   return (
     <div className="max-w-7xl mx-auto overflow-x-hidden">
       <div className="pb-8">
-        <div className="grid items-start gap-10 md:grid-cols-[1fr_1fr] mx-4 md:my-10">
+        <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-[1fr_1fr] mx-4 md:my-10">
           <Hero />
           <Testimonials />
         </div>
@@ -28,4 +28,3 @@ export function LandingPage() {
     </div>
   )
 }
-
