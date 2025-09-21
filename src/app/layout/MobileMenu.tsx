@@ -51,6 +51,7 @@ export function MobileMenu({ open, onClose, nav }: { open: boolean; onClose: () 
                 <a
                   key={item.label}
                   href={item.href}
+                  onClick={onClose}
                   className="flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium text-neutral-900 transition-colors hover:bg-neutral-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2"
                 >
                   <span>{item.label}</span>
