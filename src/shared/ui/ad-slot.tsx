@@ -19,7 +19,7 @@ export function AdSlot({
   return (
     <div
       className={[
-        'relative flex items-center justify-center rounded-3xl border border-dashed border-neutral-300 bg-neutral-100 text-sm font-medium text-neutral-400 shadow-inner',
+        'relative flex items-center justify-center  border border-dashed border-neutral-300 bg-neutral-100 text-sm font-medium text-neutral-400 shadow-inner',
         orientationClasses[orientation],
         className,
       ].join(' ')}
