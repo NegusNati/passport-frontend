@@ -11,7 +11,6 @@ export type GregorianDate = {
 }
 
 const ETHIOPIAN_EPOCH = 1723856
-const GREGORIAN_EPOCH = 1721426
 
 export const ETHIOPIAN_MONTHS = [
   { number: 1, english: 'Meskerem', amharic: 'መስከረም' },

@@ -9,7 +9,6 @@ import {
   formatGregorianDate,
   getCalendarMatrix,
   getDaysInEthiopianMonth,
-  isEthiopianLeapYear,
   toEthiopian,
   toGeezNumeral,
   toGregorian,

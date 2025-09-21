@@ -41,7 +41,7 @@ export function AdSlot({
   const isSponsored = preset === 'sponsored'
 
   const baseClasses = [
-    'relative flex rounded-3xl border border-dashed border-neutral-300 bg-neutral-100 text-sm font-medium text-neutral-400 shadow-inner',
+    'relative flex  border border-dashed border-neutral-300 bg-neutral-100 text-sm font-medium text-neutral-400 shadow-inner',
     orientationClasses[orientation],
     isSponsored ? 'items-stretch justify-between px-6 py-6 sm:px-8 sm:py-8' : 'items-center justify-center',
     className,
