@@ -2,7 +2,7 @@ import React from 'react'
 import { Container } from '@/shared/ui/container'
 import { Button } from '@/shared/ui/button'
 import { MobileMenu } from './MobileMenu'
-import { ArrowRightIcon, ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight } from 'lucide-react'
 
 const nav = [
   { label: 'Advertise', href: '#advertise' },
