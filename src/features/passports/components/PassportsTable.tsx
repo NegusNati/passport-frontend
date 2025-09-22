@@ -8,6 +8,7 @@ import {
   useReactTable,
   type PaginationState,
 } from '@tanstack/react-table'
+import { useRouter } from '@tanstack/react-router'
 import { Button } from '@/shared/ui/button'
 import {
   Select,
@@ -30,7 +31,7 @@ import { DUMMY_PASSPORTS, DATE_OPTIONS, CITY_OPTIONS } from '../lib/dummy-data'
 
 const columnHelper = createColumnHelper<Passport>()
 
-const columns = [
+const createColumns = (router: any) => [
   columnHelper.accessor('name', {
     header: 'Name',
     cell: (info) => (
@@ -57,8 +58,10 @@ const columns = [
         variant="outline"
         size="sm"
         onClick={() => {
-          // TODO: Implement detail view
-          console.log('View details for:', row.original)
+          router.navigate({ 
+            to: '/passports/$passportId', 
+            params: { passportId: row.original.id } 
+          })
         }}
         className="text-primary hover:text-primary/90"
       >
@@ -74,6 +77,7 @@ interface PassportsTableProps {
 }
 
 export function PassportsTable({ searchQuery, searchMode }: PassportsTableProps) {
+  const router = useRouter()
   const [filters, setFilters] = React.useState<PassportFilters>({
     date: 'all',
     city: 'all',
@@ -113,6 +117,8 @@ export function PassportsTable({ searchQuery, searchMode }: PassportsTableProps)
 
     return data
   }, [searchQuery, searchMode, filters])
+
+  const columns = React.useMemo(() => createColumns(router), [router])
 
   const table = useReactTable({
     data: filteredData,

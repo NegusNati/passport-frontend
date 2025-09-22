@@ -1,6 +1,6 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { PassportsPage } from '@/features/passports/components/PassportsPage'
+import { Outlet, createFileRoute } from '@tanstack/react-router'
 
+// Parent route for /passports. It must render an Outlet for child routes
 export const Route = createFileRoute('/passports')({
-  component: PassportsPage,
+  component: () => <Outlet />,
 })

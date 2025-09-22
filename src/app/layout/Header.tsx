@@ -6,8 +6,8 @@ import { ArrowUpRight } from 'lucide-react'
 
 const nav = [
   { label: 'Advertise', href: '#advertise' },
-  { label: 'Blogs', href: '#blogs' },
-  { label: 'FAQs', href: '#faqs' },
+  { label: 'Passports', href: '/passports' },
+  { label: 'Articles', href: '/articles' },
   { label: 'Ethiopian Calendar', href: '/calendar' },
   { label: 'Download App', href: '#download', external: true },
 ]

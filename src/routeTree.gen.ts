@@ -9,10 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TestRouteImport } from './routes/test'
 import { Route as PassportsRouteImport } from './routes/passports'
 import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PassportsIndexRouteImport } from './routes/passports/index'
+import { Route as PassportsPassportIdRouteImport } from './routes/passports/$passportId'
 
+const TestRoute = TestRouteImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PassportsRoute = PassportsRouteImport.update({
   id: '/passports',
   path: '/passports',
@@ -23,44 +32,100 @@ const CalendarRoute = CalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArticlesRoute = ArticlesRouteImport.update({
+  id: '/articles',
+  path: '/articles',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PassportsIndexRoute = PassportsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PassportsRoute,
+} as any)
+const PassportsPassportIdRoute = PassportsPassportIdRouteImport.update({
+  id: '/$passportId',
+  path: '/$passportId',
+  getParentRoute: () => PassportsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/articles': typeof ArticlesRoute
   '/calendar': typeof CalendarRoute
-  '/passports': typeof PassportsRoute
+  '/passports': typeof PassportsRouteWithChildren
+  '/test': typeof TestRoute
+  '/passports/$passportId': typeof PassportsPassportIdRoute
+  '/passports/': typeof PassportsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/articles': typeof ArticlesRoute
   '/calendar': typeof CalendarRoute
-  '/passports': typeof PassportsRoute
+  '/test': typeof TestRoute
+  '/passports/$passportId': typeof PassportsPassportIdRoute
+  '/passports': typeof PassportsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/articles': typeof ArticlesRoute
   '/calendar': typeof CalendarRoute
-  '/passports': typeof PassportsRoute
+  '/passports': typeof PassportsRouteWithChildren
+  '/test': typeof TestRoute
+  '/passports/$passportId': typeof PassportsPassportIdRoute
+  '/passports/': typeof PassportsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/calendar' | '/passports'
+  fullPaths:
+    | '/'
+    | '/articles'
+    | '/calendar'
+    | '/passports'
+    | '/test'
+    | '/passports/$passportId'
+    | '/passports/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/calendar' | '/passports'
-  id: '__root__' | '/' | '/calendar' | '/passports'
+  to:
+    | '/'
+    | '/articles'
+    | '/calendar'
+    | '/test'
+    | '/passports/$passportId'
+    | '/passports'
+  id:
+    | '__root__'
+    | '/'
+    | '/articles'
+    | '/calendar'
+    | '/passports'
+    | '/test'
+    | '/passports/$passportId'
+    | '/passports/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ArticlesRoute: typeof ArticlesRoute
   CalendarRoute: typeof CalendarRoute
-  PassportsRoute: typeof PassportsRoute
+  PassportsRoute: typeof PassportsRouteWithChildren
+  TestRoute: typeof TestRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/test': {
+      id: '/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/passports': {
       id: '/passports'
       path: '/passports'
@@ -75,6 +140,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/articles': {
+      id: '/articles'
+      path: '/articles'
+      fullPath: '/articles'
+      preLoaderRoute: typeof ArticlesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -82,13 +154,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/passports/': {
+      id: '/passports/'
+      path: '/'
+      fullPath: '/passports/'
+      preLoaderRoute: typeof PassportsIndexRouteImport
+      parentRoute: typeof PassportsRoute
+    }
+    '/passports/$passportId': {
+      id: '/passports/$passportId'
+      path: '/$passportId'
+      fullPath: '/passports/$passportId'
+      preLoaderRoute: typeof PassportsPassportIdRouteImport
+      parentRoute: typeof PassportsRoute
+    }
   }
 }
 
+interface PassportsRouteChildren {
+  PassportsPassportIdRoute: typeof PassportsPassportIdRoute
+  PassportsIndexRoute: typeof PassportsIndexRoute
+}
+
+const PassportsRouteChildren: PassportsRouteChildren = {
+  PassportsPassportIdRoute: PassportsPassportIdRoute,
+  PassportsIndexRoute: PassportsIndexRoute,
+}
+
+const PassportsRouteWithChildren = PassportsRoute._addFileChildren(
+  PassportsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ArticlesRoute: ArticlesRoute,
   CalendarRoute: CalendarRoute,
-  PassportsRoute: PassportsRoute,
+  PassportsRoute: PassportsRouteWithChildren,
+  TestRoute: TestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

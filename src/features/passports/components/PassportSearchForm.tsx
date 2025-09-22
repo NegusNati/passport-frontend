@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useForm } from '@tanstack/react-form'
+import { useRouter } from '@tanstack/react-router'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
@@ -10,7 +11,7 @@ import {
   type PassportSearchByNumber as PassportSearchByNumberType,
   type PassportSearchByName as PassportSearchByNameType 
 } from '../schemas/passport'
-import { SAMPLE_REQUEST_NUMBERS } from '../lib/dummy-data'
+import { SAMPLE_REQUEST_NUMBERS, DUMMY_PASSPORTS } from '../lib/dummy-data'
 
 type SearchMode = 'number' | 'name'
 
@@ -19,6 +20,7 @@ interface PassportSearchFormProps {
 }
 
 export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
+  const router = useRouter()
   const [searchMode, setSearchMode] = React.useState<SearchMode>('number')
 
   const numberForm = useForm({
@@ -28,7 +30,22 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
     onSubmit: async ({ value }) => {
       try {
         const validatedData = PassportSearchByNumber.parse(value)
-        onSearch(validatedData, 'number')
+        
+        // Check if a specific passport is found
+        const foundPassport = DUMMY_PASSPORTS.find(p => 
+          p.requestNumber.toLowerCase() === validatedData.requestNumber.toLowerCase()
+        )
+        
+        if (foundPassport) {
+          // Navigate to detail page
+          router.navigate({ 
+            to: '/passports/$passportId', 
+            params: { passportId: foundPassport.id } 
+          })
+        } else {
+          // Use existing search functionality for partial matches
+          onSearch(validatedData, 'number')
+        }
       } catch (error) {
         console.error('Validation error:', error)
       }
@@ -43,7 +60,23 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
     onSubmit: async ({ value }) => {
       try {
         const validatedData = PassportSearchByName.parse(value)
-        onSearch(validatedData, 'name')
+        
+        // Check if a specific passport is found by name
+        const searchName = `${validatedData.firstName} ${validatedData.lastName}`.toLowerCase()
+        const foundPassport = DUMMY_PASSPORTS.find(p => 
+          p.name.toLowerCase() === searchName
+        )
+        
+        if (foundPassport) {
+          // Navigate to detail page
+          router.navigate({ 
+            to: '/passports/$passportId', 
+            params: { passportId: foundPassport.id } 
+          })
+        } else {
+          // Use existing search functionality for partial matches
+          onSearch(validatedData, 'name')
+        }
       } catch (error) {
         console.error('Validation error:', error)
       }
