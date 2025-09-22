@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestRouteImport } from './routes/test'
-import { Route as PassportsRouteImport } from './routes/passports'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,11 +19,6 @@ import { Route as PassportsPassportIdRouteImport } from './routes/passports/$pas
 const TestRoute = TestRouteImport.update({
   id: '/test',
   path: '/test',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PassportsRoute = PassportsRouteImport.update({
-  id: '/passports',
-  path: '/passports',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CalendarRoute = CalendarRouteImport.update({
@@ -43,24 +37,23 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const PassportsIndexRoute = PassportsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PassportsRoute,
+  id: '/passports/',
+  path: '/passports/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PassportsPassportIdRoute = PassportsPassportIdRouteImport.update({
-  id: '/$passportId',
-  path: '/$passportId',
-  getParentRoute: () => PassportsRoute,
+  id: '/passports/$passportId',
+  path: '/passports/$passportId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRoute
   '/calendar': typeof CalendarRoute
-  '/passports': typeof PassportsRouteWithChildren
   '/test': typeof TestRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
-  '/passports/': typeof PassportsIndexRoute
+  '/passports': typeof PassportsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,7 +68,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRoute
   '/calendar': typeof CalendarRoute
-  '/passports': typeof PassportsRouteWithChildren
   '/test': typeof TestRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
   '/passports/': typeof PassportsIndexRoute
@@ -86,10 +78,9 @@ export interface FileRouteTypes {
     | '/'
     | '/articles'
     | '/calendar'
-    | '/passports'
     | '/test'
     | '/passports/$passportId'
-    | '/passports/'
+    | '/passports'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -103,7 +94,6 @@ export interface FileRouteTypes {
     | '/'
     | '/articles'
     | '/calendar'
-    | '/passports'
     | '/test'
     | '/passports/$passportId'
     | '/passports/'
@@ -113,8 +103,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArticlesRoute: typeof ArticlesRoute
   CalendarRoute: typeof CalendarRoute
-  PassportsRoute: typeof PassportsRouteWithChildren
   TestRoute: typeof TestRoute
+  PassportsPassportIdRoute: typeof PassportsPassportIdRoute
+  PassportsIndexRoute: typeof PassportsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -124,13 +115,6 @@ declare module '@tanstack/react-router' {
       path: '/test'
       fullPath: '/test'
       preLoaderRoute: typeof TestRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/passports': {
-      id: '/passports'
-      path: '/passports'
-      fullPath: '/passports'
-      preLoaderRoute: typeof PassportsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/calendar': {
@@ -156,41 +140,28 @@ declare module '@tanstack/react-router' {
     }
     '/passports/': {
       id: '/passports/'
-      path: '/'
-      fullPath: '/passports/'
+      path: '/passports'
+      fullPath: '/passports'
       preLoaderRoute: typeof PassportsIndexRouteImport
-      parentRoute: typeof PassportsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/passports/$passportId': {
       id: '/passports/$passportId'
-      path: '/$passportId'
+      path: '/passports/$passportId'
       fullPath: '/passports/$passportId'
       preLoaderRoute: typeof PassportsPassportIdRouteImport
-      parentRoute: typeof PassportsRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface PassportsRouteChildren {
-  PassportsPassportIdRoute: typeof PassportsPassportIdRoute
-  PassportsIndexRoute: typeof PassportsIndexRoute
-}
-
-const PassportsRouteChildren: PassportsRouteChildren = {
-  PassportsPassportIdRoute: PassportsPassportIdRoute,
-  PassportsIndexRoute: PassportsIndexRoute,
-}
-
-const PassportsRouteWithChildren = PassportsRoute._addFileChildren(
-  PassportsRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArticlesRoute: ArticlesRoute,
   CalendarRoute: CalendarRoute,
-  PassportsRoute: PassportsRouteWithChildren,
   TestRoute: TestRoute,
+  PassportsPassportIdRoute: PassportsPassportIdRoute,
+  PassportsIndexRoute: PassportsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
