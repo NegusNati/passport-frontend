@@ -2,6 +2,7 @@ import { Container } from '@/shared/ui/container'
 import { Card, CardContent } from '@/shared/ui/card'
 import { Button } from '@/shared/ui/button'
 import CalendarImage from '@/assets/landingImages/calander_image.png'
+import { Link } from '@tanstack/react-router'
 
 
 const POSTS = [
@@ -16,11 +17,11 @@ export function BlogSection() {
       <Container>
         <div className="mb-6 flex flex-col justify-center items-center">
           <div>
-            <h2 className="text-2xl font-bold tracking-tight max-w-2xl text-center">Blog Posts</h2>
-            <p className="mt-1 text-sm text-neutral-600 text-center max-w-sm">Your reliable source for passport news, tips, and travel information.</p>
+              <h2 className="text-2xl font-bold tracking-tight max-w-2xl text-center">Articles</h2>
+            <p className="mt-1 text-sm text-neutral-600 text-center max-w-sm">Your reliable source for passport articles, tips, and travel information.</p>
           </div>
         
-        </div>
+        </div>  
         <div
           className="
             flex gap-6 overflow-x-auto p-1 m-0
@@ -29,7 +30,7 @@ export function BlogSection() {
             scrollbar-thin scrollbar-thumb-neutral-200 scrollbar-track-transparent
           "
           tabIndex={0}
-          aria-label="Blog posts"
+          aria-label="Articles"
         >
           {POSTS.map((p) => (
             <Card
@@ -52,7 +53,9 @@ export function BlogSection() {
           ))}
         </div>
         <div className="flex sm:justify-center my-4 md:my-8">
-        <Button size="sm"  className="  sm:w-auto bg-black text-white font-semibold">View All</Button>
+          <Button size="sm" className="  sm:w-auto bg-black text-white font-semibold">
+            <Link to="/articles"> View All</Link>
+            </Button>
         </div>
       </Container>
     </section>
