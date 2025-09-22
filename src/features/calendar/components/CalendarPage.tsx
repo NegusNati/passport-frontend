@@ -106,23 +106,23 @@ export function CalendarPage() {
   }
 
   return (
-    <section className="bg-neutral-50 py-14 sm:py-20">
+    <section className="bg-muted/30 py-14 sm:py-20">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 sm:px-6 lg:px-8">
         <header className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-neutral-400">Planner</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground">Planner</p>
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Ethiopian Calendar</h1>
-          <p className="max-w-2xl text-sm text-neutral-600 sm:text-base">
+          <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
             Explore every Ethiopian month, keep track of leap years, and quickly swap between Geez numerals and familiar Arabic digits.
           </p>
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.85fr)_minmax(0,1fr)]">
-          <div className="border border-neutral-200 bg-white shadow-sm">
+          <div className="border border-border bg-card text-card-foreground shadow-sm">
             <div className="flex flex-col gap-6 p-5 sm:p-8">
               <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
                 <div className="space-y-1">
                   <h2 className="text-xl font-semibold tracking-tight">{ETHIOPIAN_MONTHS[viewMonth - 1]?.english} {viewYear}</h2>
-                  <p className="text-sm text-neutral-500">
+                  <p className="text-sm text-muted-foreground">
                     Switch months, jump back to today, or display dates using the ancient Geez numeral system.
                   </p>
                 </div>
@@ -141,11 +141,11 @@ export function CalendarPage() {
 
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-wrap items-center gap-3">
-                  <label className="text-xs font-medium uppercase tracking-[0.25em] text-neutral-500">Month</label>
+                  <label className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">Month</label>
                   <select
                     value={viewMonth}
                     onChange={(event) => setViewMonth(Number(event.target.value))}
-                    className=" border border-neutral-200 bg-white px-4 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                    className=" border border-input bg-background px-4 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
                   >
                     {ETHIOPIAN_MONTHS.map((month) => (
                       <option key={month.number} value={month.number} >
@@ -154,11 +154,11 @@ export function CalendarPage() {
                     ))}
                   </select>
 
-                  <label className="text-xs font-medium uppercase tracking-[0.25em] text-neutral-500">Year</label>
+                  <label className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">Year</label>
                   <select
                     value={viewYear}
                     onChange={(event) => setViewYear(Number(event.target.value))}
-                    className=" border border-neutral-200 bg-white px-4 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-neutral-900"
+                    className=" border border-input bg-background px-4 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
                   >
                     {years.map((year) => (
                       <option key={year} value={year}>
@@ -168,19 +168,19 @@ export function CalendarPage() {
                   </select>
                 </div>
 
-                <div className="flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-50 px-2 py-1 text-xs font-medium">
-                  <span className="px-3 py-1 text-neutral-500">Digits</span>
+                <div className="flex items-center gap-2 rounded-full border border-border bg-muted px-2 py-1 text-xs font-medium">
+                  <span className="px-3 py-1 text-muted-foreground">Digits</span>
                   <button
                     type="button"
                     onClick={() => setUseGeezDigits(true)}
-                    className={` px-3 py-1 transition ${useGeezDigits ? 'bg-neutral-900 rounded-full text-white shadow-sm' : 'text-neutral-600 hover:text-neutral-900'}`}
+                    className={` px-3 py-1 transition ${useGeezDigits ? 'bg-primary rounded-full text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     Geez ፩፪፫
                   </button>
                   <button
                     type="button"
                     onClick={() => setUseGeezDigits(false)}
-                    className={`px-3 py-1 transition ${!useGeezDigits ? 'bg-neutral-900 rounded-full text-white shadow-sm' : 'text-neutral-600 hover:text-neutral-900'}`}
+                    className={`px-3 py-1 transition ${!useGeezDigits ? 'bg-primary rounded-full text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     Arabic 1 2 3
                   </button>
@@ -188,7 +188,7 @@ export function CalendarPage() {
               </div>
 
               <div className="space-y-3">
-                <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium uppercase tracking-[0.2em] text-neutral-400">
+                <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
                   {WEEKDAYS.map((day) => (
                     <span key={day}>{day}</span>
                   ))}
@@ -208,20 +208,20 @@ export function CalendarPage() {
                         type="button"
                     onClick={() => setSelectedDate({ ...date })}
                         className={[
-                          'relative flex min-h-[72px] flex-col justify-between  px-2 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2',
+                          'relative flex min-h-[72px] flex-col justify-between  px-2 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                           isSelected
-                            ? 'border-neutral-900 bg-neutral-900 text-white shadow '
+                            ? 'border-primary bg-primary text-primary-foreground shadow '
                             : isToday
-                              ? 'border-neutral-900/60 bg-neutral-50'
-                              : 'border-neutral-200 bg-white hover:bg-neutral-50',
-                          !isCurrentMonth && !isSelected ? 'text-neutral-300' : '',
+                              ? 'border-border bg-muted'
+                              : 'border-border bg-card hover:bg-muted',
+                          !isCurrentMonth && !isSelected ? 'text-muted-foreground' : '',
                         ].join(' ')}
                         aria-pressed={isSelected}
                       >
                         <span className="text-base font-medium leading-tight">
                           {dayDisplay}
                         </span>
-                        <span className={`text-[11px] font-medium ${isSelected ? 'text-white/80' : 'text-neutral-400'}`}>
+                        <span className={`text-[11px] font-medium ${isSelected ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
                           {gregDay}
                         </span>
                       </button>

@@ -41,7 +41,7 @@ export function FAQsSection() {
         <div className="grid gap-12 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.15fr)] lg:items-start">
           <div className="space-y-3">
             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">FAQs</h2>
-            <p className="max-w-sm text-sm text-neutral-600 sm:text-base">
+            <p className="max-w-sm text-sm text-muted-foreground sm:text-base">
               Find reliable information about how Passport.ET works and what to expect.
             </p>
           </div>
@@ -53,7 +53,7 @@ export function FAQsSection() {
                 <motion.article
                   key={faq.q}
                   layout={!shouldReduceMotion}
-                  className="rounded-lg bg-white/90 shadow-sm"
+                  className="rounded-lg bg-card/90 text-card-foreground shadow-sm"
                   animate={{
                     backgroundColor: isActive ? 'rgb(249 250 251 / 0.9)' : 'rgb(255 255 255 / 0.9)',
                     boxShadow: isActive 
@@ -73,9 +73,9 @@ export function FAQsSection() {
                     type="button"
                     onClick={() => toggleIndex(index)}
                     aria-expanded={isActive}
-                    className="flex w-full items-center justify-between gap-4 rounded-xl px-5 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2 bg-neutral-50"
+                    className="flex w-full items-center justify-between gap-4 rounded-xl px-5 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-muted"
                   >
-                    <span className="text-sm font-medium text-neutral-900 sm:text-base">
+                    <span className="text-sm font-medium text-foreground sm:text-base">
                       {faq.q}
                     </span>
                     <motion.div 
@@ -87,7 +87,7 @@ export function FAQsSection() {
                       }}
                     >
                       <Plus
-                        className="h-4 w-4 text-neutral-700"
+                        className="h-4 w-4 text-muted-foreground"
                         aria-hidden="true"
                       />
                     </motion.div>
@@ -111,10 +111,10 @@ export function FAQsSection() {
                           ease: M.ease,
                           opacity: { duration: shouldReduceMotion ? 0 : M.duration }
                         }}
-                        className="overflow-hidden border-t border-neutral-200"
+                        className="overflow-hidden border-t border-border"
                       >
                         <motion.div 
-                          className="px-5 py-4 text-sm text-neutral-600 sm:text-base"
+                          className="px-5 py-4 text-sm text-muted-foreground sm:text-base"
                           initial={{ y: shouldReduceMotion ? 0 : -10 }}
                           animate={{ y: 0 }}
                           transition={{ 

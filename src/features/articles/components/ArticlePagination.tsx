@@ -71,7 +71,7 @@ export function ArticlePagination({
         {visiblePages.map((page, index) => (
           <React.Fragment key={index}>
             {page === '...' ? (
-              <span className="px-3 py-2 text-sm text-neutral-500" aria-hidden="true">
+              <span className="px-3 py-2 text-sm text-muted-foreground" aria-hidden="true">
                 ...
               </span>
             ) : (
@@ -82,8 +82,8 @@ export function ArticlePagination({
                 className={[
                   'min-w-[2.5rem]',
                   currentPage === page 
-                    ? 'bg-black text-white hover:bg-black/90' 
-                    : 'hover:bg-neutral-50'
+                    ? '' 
+                    : 'hover:bg-accent hover:text-accent-foreground'
                 ].join(' ')}
                 aria-label={`Go to page ${page}`}
                 aria-current={currentPage === page ? 'page' : undefined}

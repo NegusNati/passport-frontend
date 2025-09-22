@@ -14,7 +14,7 @@ export function Skeleton({ className = '', width, height, ...props }: SkeletonPr
   return (
     <div
       className={[
-        'animate-pulse rounded-md bg-neutral-200',
+        'animate-pulse rounded-md bg-muted',
         className
       ].join(' ')}
       style={style}
@@ -25,7 +25,7 @@ export function Skeleton({ className = '', width, height, ...props }: SkeletonPr
 
 export function ArticleCardSkeleton() {
   return (
-    <div className="rounded-xl border border-neutral-200 bg-white shadow-sm p-4 sm:p-6">
+    <div className="rounded-xl border border-border bg-card text-card-foreground shadow-sm p-4 sm:p-6">
       {/* Image skeleton */}
       <Skeleton className="h-48 w-full mb-4 rounded-lg" />
       

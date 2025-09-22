@@ -73,7 +73,7 @@ export function ArticleSearchForm({ onSearch, initialQuery = '' }: ArticleSearch
                       />
                       <Button 
                         type="submit" 
-                        className="bg-foreground hover:bg-foreground/90 px-6"
+                        className="px-6"
                         disabled={!field.state.value.trim()}
                       >
                         Search Article

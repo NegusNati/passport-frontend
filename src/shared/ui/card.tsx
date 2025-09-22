@@ -3,7 +3,7 @@ import React from 'react'
 export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Card({ className = '', ...props }: CardProps) {
-  return <div className={["rounded-xl border border-neutral-200 bg-white shadow-sm", className].join(' ')} {...props} />
+  return <div className={["rounded-xl border border-border bg-card text-card-foreground shadow-sm", className].join(' ')} {...props} />
 }
 
 export function CardHeader({ className = '', ...props }: React.HTMLAttributes<HTMLDivElement>) {

@@ -39,13 +39,13 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
   if (!passport) {
     return (
       <div className="container mx-auto py-12 text-center">
-        <h1 className="text-2xl font-bold text-gray-900">Passport Not Found</h1>
-        <p className="mt-4 text-gray-600">
+        <h1 className="text-2xl font-bold text-foreground">Passport Not Found</h1>
+        <p className="mt-4 text-muted-foreground">
           The requested passport could not be found. Please check the request number and try again.
         </p>
         <button
           onClick={handleCheckAnother}
-          className="mt-6 rounded-md bg-black px-6 py-2 text-white hover:bg-gray-800"
+          className="mt-6 rounded-md bg-primary px-6 py-2 text-primary-foreground hover:opacity-90"
         >
           Back to Search
         </button>

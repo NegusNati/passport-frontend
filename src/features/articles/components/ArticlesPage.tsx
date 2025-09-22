@@ -79,7 +79,7 @@ export function ArticlesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* Search Section */}
       <ArticleSearchForm 
         onSearch={handleSearch} 
@@ -87,7 +87,7 @@ export function ArticlesPage() {
       />
 
       {/* Ad Banner Section */}
-      <section className="py-6 border-b border-neutral-200">
+      <section className="py-6 border-b border-border">
         <Container>
           <AdSlot 
             preset="sponsored" 
@@ -108,7 +108,7 @@ export function ArticlesPage() {
         <Container>
           {/* Results info */}
           <div className="mb-6 flex items-center justify-between">
-            <div className="text-sm text-neutral-600">
+            <div className="text-sm text-muted-foreground">
               {searchQuery && (
                 <span>Search results for "{searchQuery}" • </span>
               )}
@@ -124,7 +124,7 @@ export function ArticlesPage() {
                   setIsLoading(true)
                   setTimeout(() => setIsLoading(false), 200)
                 }}
-                className="text-sm text-neutral-500 underline hover:text-neutral-700"
+                className="text-sm text-muted-foreground underline hover:text-foreground"
               >
                 Clear search
               </button>
@@ -153,11 +153,11 @@ export function ArticlesPage() {
               ) : (
                 // No results state
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <div className="mb-4 text-4xl text-neutral-300">📄</div>
-                  <h3 className="mb-2 text-lg font-semibold text-neutral-900">
+                  <div className="mb-4 text-4xl text-muted-foreground">📄</div>
+                  <h3 className="mb-2 text-lg font-semibold text-foreground">
                     No articles found
                   </h3>
-                  <p className="text-sm text-neutral-600 max-w-md">
+                  <p className="text-sm text-muted-foreground max-w-md">
                     {searchQuery 
                       ? `No articles match your search for "${searchQuery}". Try different keywords or clear your search.`
                       : 'No articles match your current filters. Try adjusting your filters or clearing them.'
@@ -171,7 +171,7 @@ export function ArticlesPage() {
                       setIsLoading(true)
                       setTimeout(() => setIsLoading(false), 200)
                     }}
-                    className="mt-4 text-sm text-blue-600 underline hover:text-blue-700"
+                    className="mt-4 text-sm text-primary underline hover:opacity-90"
                   >
                     Show all articles
                   </button>

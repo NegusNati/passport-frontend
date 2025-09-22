@@ -288,3 +288,12 @@ Files prefixed with `demo` can be safely deleted. They are there to provide a st
 # Learn More
 
 You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+
+## Theme Modes
+
+The app supports system, light, and dark themes via `next-themes`.
+
+- Provider: `src/shared/components/theme-provider.tsx`, wired in `src/main.tsx`.
+- No-flash: prepaint script in `index.html` sets initial `class="dark"` when appropriate.
+- Tokens: Tailwind v4 maps CSS variables defined in `src/styles.css` to classes like `bg-background`, `text-foreground`, `border-border`, `bg-card`, `text-card-foreground`, `bg-accent`, `text-muted-foreground`, etc.
+- Toggle: `src/shared/components/theme-toggle.tsx`, already included in the header.

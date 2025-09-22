@@ -13,13 +13,13 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 function baseClasses(variant: ButtonVariant, disabled?: boolean) {
   const common =
     'inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60 disabled:pointer-events-none'
-  const ring = ' focus-visible:ring-black/30 ring-offset-background'
+  const ring = ' focus-visible:ring-ring ring-offset-background'
   const v = {
-    primary: 'bg-black text-white hover:bg-black/90',
-    secondary: 'bg-neutral-200 text-neutral-900 hover:bg-neutral-300',
+    primary: 'bg-primary text-primary-foreground hover:opacity-90',
+    secondary: 'bg-secondary text-secondary-foreground hover:opacity-90',
     outline:
-      'border border-neutral-300 text-neutral-900 hover:bg-neutral-100 bg-transparent',
-    ghost: 'text-neutral-900 hover:bg-neutral-100',
+      'border border-input text-foreground hover:bg-accent hover:text-accent-foreground bg-transparent',
+    ghost: 'text-foreground hover:bg-accent hover:text-accent-foreground',
   } as const
   return [common, ring, v[variant], disabled ? 'opacity-60' : ''].join(' ')
 }

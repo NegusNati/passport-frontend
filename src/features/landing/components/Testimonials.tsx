@@ -16,9 +16,9 @@ const QUOTES: Quote[] = [
 
 function CardItem({ q }: { q: Quote }) {
   return (
-    <li className=" hover:border hover:border-neutral-200  bg-neutral-50 hover:bg-white  px-3 py-3 md:px-4 md:py-4 shadow-xs ">
-      <p className="text-[13px] leading-relaxed text-neutral-600 italic">“{q.quote}”</p>
-      <p className="mt-2 text-[13px] font-medium text-neutral-900 hover:text-black">{q.name}</p>
+    <li className=" hover:border hover:border-border  bg-muted hover:bg-card  px-3 py-3 md:px-4 md:py-4 shadow-xs ">
+      <p className="text-[13px] leading-relaxed text-muted-foreground italic">“{q.quote}”</p>
+      <p className="mt-2 text-[13px] font-medium text-foreground hover:text-primary">{q.name}</p>
     </li>
   )
 }
@@ -107,14 +107,14 @@ export function Testimonials() {
       {/* left fade */}
       <div
         className="pointer-events-none absolute inset-y-0 left-0 w-10
-                   bg-gradient-to-r from-white to-transparent dark:from-neutral-950"
+                   bg-gradient-to-r from-background to-transparent"
         aria-hidden
       />
       <HorizontalMarqueeDual items={QUOTES} />
       {/* right fade */}
       <div
         className="pointer-events-none absolute inset-y-0 right-0 w-10
-                   bg-gradient-to-l from-white to-transparent dark:from-neutral-950"
+                   bg-gradient-to-l from-background to-transparent"
         aria-hidden
       />
     </div>
@@ -124,14 +124,14 @@ export function Testimonials() {
       {/* top fade (fixed) */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-16
-                   bg-gradient-to-b from-white to-transparent dark:from-neutral-950"
+                   bg-gradient-to-b from-background to-transparent"
         aria-hidden
       />
       <VerticalMarqueeDual items={QUOTES} />
       {/* bottom fade (make direction consistent) */}
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 h-16
-                   bg-gradient-to-t from-white to-transparent dark:from-neutral-950"
+                   bg-gradient-to-t from-background to-transparent"
         aria-hidden
       />
     </div>

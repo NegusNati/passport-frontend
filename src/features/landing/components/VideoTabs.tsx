@@ -59,12 +59,12 @@ export function VideoTabs() {
       <Container>
         <header className="mx-auto max-w-5xl text-center">
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Video Demonstrations</h2>
-          <p className="mt-2 text-neutral-600 max-w-3xl mx-auto">
+          <p className="mt-2 text-muted-foreground max-w-3xl mx-auto">
             Here is how you can check if your passport is ready or how you can get services provided by
             <span className="block font-semibold tracking-wide text-neutral-800 sm:inline"> Immigration &amp; Nationality Affairs</span>.
           </p>
           <div className="mt-6 flex items-center justify-center">
-            <div className="flex gap-1 overflow-x-auto  scrollbar-thumb-neutral-300 scrollbar-track-transparent sm:overflow-visible scrollbar-hide px-1 w-full max-w-full sm:justify-center">
+            <div className="flex gap-1 overflow-x-auto  scrollbar-thumb-muted scrollbar-track-transparent sm:overflow-visible scrollbar-hide px-1 w-full max-w-full sm:justify-center">
               {TABS.map((t) => {
                 const isActive = t.key === activeTab.key
                 return (
@@ -72,11 +72,11 @@ export function VideoTabs() {
                     key={t.key}
                     onClick={() => setTab(t.key)}
                     className={[
-                      'rounded-full border px-4 py-1 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 focus-visible:ring-offset-2',
+                      'rounded-full border px-4 py-1 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
                       'shadow-sm',
                       isActive
-                        ? 'border-neutral-900 bg-neutral-900 text-white shadow-sm shadow-neutral-900/20'
-                        : 'border-neutral-200 bg-white text-neutral-800 hover:bg-neutral-50',
+                        ? 'border-primary bg-primary text-primary-foreground'
+                        : 'border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground',
                       'whitespace-nowrap',
                     ].join(' ')}
                     type="button"
@@ -89,8 +89,8 @@ export function VideoTabs() {
           </div>
         </header>
 
-        <Card className="mx-auto mt-10 w-full max-w-6xl rounded-[32px] border-neutral-200 bg-white/95 shadow-xl shadow-neutral-200/70">
-          <div className="h-full rounded-[32px] bg-gradient-to-b from-neutral-50 via-white to-white  sm:px-3 sm:py-4">
+        <Card className="mx-auto mt-10 w-full max-w-6xl rounded-[32px]">
+          <div className="h-full rounded-[32px] bg-gradient-to-b from-muted via-card to-card  sm:px-3 sm:py-4">
             <div className="grid gap-6">
              
               <motion.div
@@ -98,7 +98,7 @@ export function VideoTabs() {
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: M.duration, ease: M.ease }}
-                className="overflow-hidden rounded-xl border border-neutral-100 shadow-lg"
+                className="overflow-hidden rounded-xl border border-border shadow-lg"
               >
                 {embedUrl ? (
                   <div className="relative aspect-video w-full bg-black">

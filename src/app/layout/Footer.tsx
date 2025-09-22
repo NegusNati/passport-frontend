@@ -40,7 +40,7 @@ const Footer = () => {
 
   return (
     <motion.footer
-      className="relative border-t border-neutral-200 pt-16 pb-4 md:pb-8 overflow-hidden"
+      className="relative border-t border-border pt-16 pb-4 md:pb-8 overflow-hidden"
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
@@ -50,11 +50,11 @@ const Footer = () => {
       <div className="absolute bottom-0 left-0 right-0 flex items-end justify-center pointer-events-none translate-y-2">
       <div
         className="pointer-events-none absolute inset-x-0 bottom-0 h-16
-                   bg-gradient-to-t from-white to-transparent dark:from-neutral-950"
+                   bg-gradient-to-t from-background to-transparent"
         aria-hidden
       />
         <motion.div
-          className="text-gray-200 font-bold text-[4.5rem] sm:text-[6rem] md:text-[8rem] lg:text-[8] xl:text-[10rem] 2xl:text-[12rem] leading-none select-none  "
+          className="text-muted-foreground/30 font-bold text-[4.5rem] sm:text-[6rem] md:text-[8rem] lg:text-[8] xl:text-[10rem] 2xl:text-[12rem] leading-none select-none  "
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
@@ -73,14 +73,14 @@ const Footer = () => {
             variants={itemVariants}
           >
             <div>
-              <motion.h2
-                className="text-2xl font-bold text-gray-900 mb-2"
+            <motion.h2
+                className="text-2xl font-bold text-foreground mb-2"
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 Passport.ET
               </motion.h2>
-              <p className="text-gray-600 text-sm leading-relaxed">
+              <p className="text-muted-foreground text-sm leading-relaxed">
                 No more wasted trips. Know your passport status instantly.
               </p>
             </div>
@@ -101,18 +101,18 @@ const Footer = () => {
             className="space-y-4"
             variants={itemVariants}
           >
-            <h3 className="text-lg font-semibold text-gray-900">Services</h3>
+            <h3 className="text-lg font-semibold text-foreground">Services</h3>
             <ul className="space-y-3">
               {services.map((service, index) => (
                 <motion.li key={index}>
                   <motion.a
                     href="#"
-                    className="text-gray-600 hover:text-green-600 transition-colors duration-300 block"
+                    className="text-muted-foreground hover:text-primary transition-colors duration-300 block"
                     whileHover={{ x: 5, color: "#16a34a" }}
                     whileTap={{ scale: 0.95 }}
                   >
                     {service === 'Advertisement' ? (
-                      <span className='flex items-center gap-2 bg-neutral-50 rounded-md py-1 px-4 w-fit border border-neutral-100'>
+                      <span className='flex items-center gap-2 bg-muted rounded-md py-1 px-4 w-fit border border-border'>
                         <MegaphoneIcon className="size-4" style={{ transform: 'scaleX(-1)' }} />
                         Advertisement
                       </span>
@@ -129,13 +129,13 @@ const Footer = () => {
             className="space-y-6"
             variants={itemVariants}
           >
-            <h3 className="text-lg font-semibold text-gray-900">Developer Socials</h3>
+            <h3 className="text-lg font-semibold text-foreground">Developer Socials</h3>
             <ul className="space-y-3">
               {socials.map((social, index) => (
                 <motion.li key={index}>
                   <motion.a
                     href={social.url}
-                    className="flex items-center space-x-2 text-gray-600 hover:text-yellow-600 transition-colors duration-300"
+                    className="flex items-center space-x-2 text-muted-foreground hover:text-primary transition-colors duration-300"
                     whileHover={{ x: 5, color: "#ca8a04" }}
                     whileTap={{ scale: 0.95 }}
                   >
@@ -150,12 +150,12 @@ const Footer = () => {
 
         {/* Bottom section */}
         <motion.div
-          className="pt-8 border-t border-gray-200"
+          className="pt-8 border-t border-border"
           variants={itemVariants}
         >
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <motion.p
-              className="text-sm text-gray-500"
+              className="text-sm text-muted-foreground"
               whileHover={{ scale: 1.02 }}
             >
               ©2025 Passport.ET. All rights reserved.
@@ -164,7 +164,7 @@ const Footer = () => {
             <div className="flex space-x-6">
               <motion.a
                 href="#"
-                className="text-sm text-gray-500 hover:text-gray-900 transition-colors duration-300 border-b border-transparent hover:border-gray-900"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300 border-b border-transparent hover:border-foreground"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -172,7 +172,7 @@ const Footer = () => {
               </motion.a>
               <motion.a
                 href="#"
-                className="text-sm text-gray-500 hover:text-gray-900 transition-colors duration-300 border-b border-transparent hover:border-gray-900"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-300 border-b border-transparent hover:border-foreground"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >

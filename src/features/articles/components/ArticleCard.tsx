@@ -12,12 +12,12 @@ export function ArticleCard({ article, onClick }: ArticleCardProps) {
     <Card 
       className={[
         'group cursor-pointer transition-all duration-200 hover:shadow-lg hover:-translate-y-1',
-        'border-neutral-200 bg-white overflow-hidden'
+        'border-border bg-card text-card-foreground overflow-hidden'
       ].join(' ')}
       onClick={onClick}
     >
       {/* Article Image */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-neutral-100">
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-muted">
         {article.imageUrl ? (
           <img
             src={article.imageUrl}
@@ -26,8 +26,8 @@ export function ArticleCard({ article, onClick }: ArticleCardProps) {
             loading="lazy"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-neutral-200">
-            <div className="text-neutral-400">
+          <div className="flex h-full w-full items-center justify-center bg-muted">
+            <div className="text-muted-foreground">
               <svg 
                 className="h-12 w-12" 
                 fill="none" 
@@ -49,7 +49,7 @@ export function ArticleCard({ article, onClick }: ArticleCardProps) {
         <div className="absolute left-3 top-3">
           <Badge 
             variant="secondary" 
-            className="bg-white/90 text-neutral-900 text-xs font-medium"
+            className="bg-card/90 text-card-foreground text-xs font-medium"
           >
             {article.category}
           </Badge>
@@ -57,17 +57,17 @@ export function ArticleCard({ article, onClick }: ArticleCardProps) {
       </div>
 
       <CardHeader className="pb-2">
-        <h3 className="text-lg font-semibold leading-tight text-neutral-900 group-hover:text-neutral-700 line-clamp-2">
+        <h3 className="text-lg font-semibold leading-tight text-foreground group-hover:text-muted-foreground line-clamp-2">
           {article.title}
         </h3>
       </CardHeader>
 
       <CardContent className="pt-0">
-        <p className="mb-4 text-sm text-neutral-600 line-clamp-2 leading-relaxed">
+        <p className="mb-4 text-sm text-muted-foreground line-clamp-2 leading-relaxed">
           {article.excerpt}
         </p>
 
-        <div className="flex items-center justify-between text-xs text-neutral-500">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-2">
             <span className="font-medium">{article.author}</span>
             <span>•</span>
@@ -83,7 +83,7 @@ export function ArticleCard({ article, onClick }: ArticleCardProps) {
               <Badge 
                 key={tag}
                 variant="outline" 
-                className="text-xs border-neutral-300 text-neutral-600 hover:bg-neutral-50"
+                className="text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               >
                 {tag}
               </Badge>
@@ -91,7 +91,7 @@ export function ArticleCard({ article, onClick }: ArticleCardProps) {
             {article.tags.length > 3 && (
               <Badge 
                 variant="outline" 
-                className="text-xs border-neutral-300 text-neutral-500"
+                className="text-xs text-muted-foreground"
               >
                 +{article.tags.length - 3}
               </Badge>

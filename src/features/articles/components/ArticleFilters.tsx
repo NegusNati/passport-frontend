@@ -17,10 +17,10 @@ export function ArticleFilters({ filters, onFiltersChange }: ArticleFiltersProps
   }
 
   return (
-    <section className="py-6 border-b border-neutral-200">
+    <section className="py-6 border-b border-border">
       <Container>
         <div className="space-y-4">
-          <div className="text-sm font-medium text-neutral-700">
+          <div className="text-sm font-medium text-foreground">
             Filter by
           </div>
           
@@ -33,10 +33,10 @@ export function ArticleFilters({ filters, onFiltersChange }: ArticleFiltersProps
                 onClick={() => handleCategoryChange(category)}
                 className={[
                   'rounded-md border px-3 py-1 text-xs transition-colors',
-                  'hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-black/20',
+                  'hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring',
                   filters.category === category
-                    ? 'border-black bg-black text-white hover:bg-black/90'
-                    : 'border-neutral-300 bg-white text-neutral-700'
+                    ? 'border-primary bg-primary text-primary-foreground'
+                    : 'border-input bg-background text-foreground'
                 ].join(' ')}
               >
                 {category === 'all' ? 'All Categories' : category}
@@ -48,16 +48,16 @@ export function ArticleFilters({ filters, onFiltersChange }: ArticleFiltersProps
           {filters.category !== 'all' && (
             <div className="flex flex-wrap gap-2">
               {SAMPLE_TAGS.map((tag) => (
-                <button
+              <button
                   key={tag}
                   type="button"
                   onClick={() => handleTagChange(tag)}
                   className={[
-                    'rounded-md border px-3 py-1 text-xs transition-colors',
-                    'hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-black/20',
-                    filters.tag === tag
-                      ? 'border-neutral-400 bg-neutral-100 text-neutral-900'
-                      : 'border-neutral-300 bg-white text-neutral-600'
+                  'rounded-md border px-3 py-1 text-xs transition-colors',
+                  'hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-ring',
+                  filters.tag === tag
+                    ? 'border-border bg-muted text-foreground'
+                    : 'border-input bg-background text-muted-foreground'
                   ].join(' ')}
                 >
                   {tag === 'all' ? 'All Tags' : tag}
@@ -68,22 +68,22 @@ export function ArticleFilters({ filters, onFiltersChange }: ArticleFiltersProps
 
           {/* Active filters indicator */}
           {(filters.category !== 'all' || filters.tag !== 'all') && (
-            <div className="flex items-center gap-2 text-sm text-neutral-600">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span>Active filters:</span>
               {filters.category !== 'all' && (
-                <span className="rounded bg-neutral-100 px-2 py-1 text-xs">
+                <span className="rounded bg-muted px-2 py-1 text-xs">
                   Category: {filters.category}
                 </span>
               )}
               {filters.tag !== 'all' && (
-                <span className="rounded bg-neutral-100 px-2 py-1 text-xs">
+                <span className="rounded bg-muted px-2 py-1 text-xs">
                   Tag: {filters.tag}
                 </span>
               )}
               <button
                 type="button"
                 onClick={() => onFiltersChange({ category: 'all', tag: 'all', dateRange: 'all' })}
-                className="text-xs text-neutral-500 underline hover:text-neutral-700"
+                className="text-xs text-muted-foreground underline hover:text-foreground"
               >
                 Clear all
               </button>
