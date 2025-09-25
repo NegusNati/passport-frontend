@@ -1,17 +1,19 @@
-import * as React from 'react'
 import { useForm } from '@tanstack/react-form'
 import { useRouter } from '@tanstack/react-router'
+import * as React from 'react'
+
 import { Button } from '@/shared/ui/button'
+import { Container } from '@/shared/ui/container'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
-import { Container } from '@/shared/ui/container'
-import { 
-  PassportSearchByNumber, 
+
+import { DUMMY_PASSPORTS, SAMPLE_REQUEST_NUMBERS } from '../lib/dummy-data'
+import {
   PassportSearchByName,
+  type PassportSearchByName as PassportSearchByNameType,
+  PassportSearchByNumber,
   type PassportSearchByNumber as PassportSearchByNumberType,
-  type PassportSearchByName as PassportSearchByNameType 
 } from '../schemas/passport'
-import { SAMPLE_REQUEST_NUMBERS, DUMMY_PASSPORTS } from '../lib/dummy-data'
 
 type SearchMode = 'number' | 'name'
 
@@ -30,17 +32,17 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
     onSubmit: async ({ value }) => {
       try {
         const validatedData = PassportSearchByNumber.parse(value)
-        
+
         // Check if a specific passport is found
-        const foundPassport = DUMMY_PASSPORTS.find(p => 
-          p.requestNumber.toLowerCase() === validatedData.requestNumber.toLowerCase()
+        const foundPassport = DUMMY_PASSPORTS.find(
+          (p) => p.requestNumber.toLowerCase() === validatedData.requestNumber.toLowerCase(),
         )
-        
+
         if (foundPassport) {
           // Navigate to detail page
-          router.navigate({ 
-            to: '/passports/$passportId', 
-            params: { passportId: foundPassport.id } 
+          router.navigate({
+            to: '/passports/$passportId',
+            params: { passportId: foundPassport.id },
           })
         } else {
           // Use existing search functionality for partial matches
@@ -60,18 +62,16 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
     onSubmit: async ({ value }) => {
       try {
         const validatedData = PassportSearchByName.parse(value)
-        
+
         // Check if a specific passport is found by name
         const searchName = `${validatedData.firstName} ${validatedData.lastName}`.toLowerCase()
-        const foundPassport = DUMMY_PASSPORTS.find(p => 
-          p.name.toLowerCase() === searchName
-        )
-        
+        const foundPassport = DUMMY_PASSPORTS.find((p) => p.name.toLowerCase() === searchName)
+
         if (foundPassport) {
           // Navigate to detail page
-          router.navigate({ 
-            to: '/passports/$passportId', 
-            params: { passportId: foundPassport.id } 
+          router.navigate({
+            to: '/passports/$passportId',
+            params: { passportId: foundPassport.id },
           })
         } else {
           // Use existing search functionality for partial matches
@@ -92,11 +92,12 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
       <Container>
         <div className="mx-auto max-w-2xl text-center">
           {/* Header */}
-          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
             Check your passport
           </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Search with your reference number or name and get real-time updates—no more repeated trips to the office.
+          <p className="text-muted-foreground mt-4 text-lg">
+            Search with your reference number or name and get real-time updates—no more repeated
+            trips to the office.
           </p>
 
           {/* Search Form */}
@@ -134,8 +135,8 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
                           className="flex-1"
                           aria-invalid={field.state.meta.errors.length > 0}
                         />
-                        <Button 
-                          type="submit" 
+                        <Button
+                          type="submit"
                           className="bg-foreground hover:bg-foreground/90"
                           disabled={!field.state.value.trim()}
                         >
@@ -143,9 +144,7 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
                         </Button>
                       </div>
                       {field.state.meta.errors.length > 0 && (
-                        <p className="text-sm text-destructive">
-                          {field.state.meta.errors[0]}
-                        </p>
+                        <p className="text-destructive text-sm">{field.state.meta.errors[0]}</p>
                       )}
                     </div>
                   )}
@@ -171,9 +170,7 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
                   >
                     {(field) => (
                       <div className="space-y-2">
-                        <Label htmlFor="firstName">
-                          First Name
-                        </Label>
+                        <Label htmlFor="firstName">First Name</Label>
                         <Input
                           id="firstName"
                           type="text"
@@ -184,9 +181,7 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
                           aria-invalid={field.state.meta.errors.length > 0}
                         />
                         {field.state.meta.errors.length > 0 && (
-                          <p className="text-sm text-destructive">
-                            {field.state.meta.errors[0]}
-                          </p>
+                          <p className="text-destructive text-sm">{field.state.meta.errors[0]}</p>
                         )}
                       </div>
                     )}
@@ -203,9 +198,7 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
                   >
                     {(field) => (
                       <div className="space-y-2">
-                        <Label htmlFor="lastName">
-                          Last Name
-                        </Label>
+                        <Label htmlFor="lastName">Last Name</Label>
                         <Input
                           id="lastName"
                           type="text"
@@ -216,19 +209,14 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
                           aria-invalid={field.state.meta.errors.length > 0}
                         />
                         {field.state.meta.errors.length > 0 && (
-                          <p className="text-sm text-destructive">
-                            {field.state.meta.errors[0]}
-                          </p>
+                          <p className="text-destructive text-sm">{field.state.meta.errors[0]}</p>
                         )}
                       </div>
                     )}
                   </nameForm.Field>
                 </div>
 
-                <Button 
-                  type="submit" 
-                  className="w-full bg-foreground hover:bg-foreground/90"
-                >
+                <Button type="submit" className="bg-foreground hover:bg-foreground/90 w-full">
                   Check Passport
                 </Button>
               </form>
@@ -238,14 +226,14 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
             <button
               type="button"
               onClick={handleToggleMode}
-              className="mt-4 text-sm text-primary underline underline-offset-4 hover:no-underline"
+              className="text-primary mt-4 text-sm underline underline-offset-4 hover:no-underline"
             >
               {searchMode === 'number' ? 'Use name instead' : 'Use request number instead'}
             </button>
 
             {/* Sample Request Numbers (only shown in number mode) */}
             {searchMode === 'number' && (
-              <div className="mt-6 flex flex-wrap justify-center gap-2 text-sm text-muted-foreground">
+              <div className="text-muted-foreground mt-6 flex flex-wrap justify-center gap-2 text-sm">
                 {SAMPLE_REQUEST_NUMBERS.map((number) => (
                   <button
                     key={number}
@@ -253,7 +241,7 @@ export function PassportSearchForm({ onSearch }: PassportSearchFormProps) {
                     onClick={() => {
                       numberForm.setFieldValue('requestNumber', number)
                     }}
-                    className="rounded-md border border-border bg-muted/50 px-3 py-1 text-xs hover:bg-muted"
+                    className="border-border bg-muted/50 hover:bg-muted rounded-md border px-3 py-1 text-xs"
                   >
                     {number}
                   </button>

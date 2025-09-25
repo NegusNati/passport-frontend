@@ -85,11 +85,7 @@ export const DUMMY_PASSPORTS: Passport[] = [
 ]
 
 // Sample request numbers for the search examples
-export const SAMPLE_REQUEST_NUMBERS = [
-  'AAL7326089',
-  'AAL7326678', 
-  'AAL7326054'
-]
+export const SAMPLE_REQUEST_NUMBERS = ['AAL7326089', 'AAL7326678', 'AAL7326054']
 
 // Filter options
 export const DATE_OPTIONS = [

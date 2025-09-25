@@ -1,8 +1,10 @@
 import { useForm } from '@tanstack/react-form'
+
 import { Button } from '@/shared/ui/button'
+import { Container } from '@/shared/ui/container'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
-import { Container } from '@/shared/ui/container'
+
 import { ArticleSearch, type ArticleSearch as ArticleSearchType } from '../schemas/article'
 
 interface ArticleSearchFormProps {
@@ -30,10 +32,10 @@ export function ArticleSearchForm({ onSearch, initialQuery = '' }: ArticleSearch
       <Container>
         <div className="mx-auto max-w-2xl text-center">
           {/* Header */}
-          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
             Search for Articles
           </h1>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <p className="text-muted-foreground mt-4 text-lg">
             Search for article post by article title
           </p>
 
@@ -71,18 +73,12 @@ export function ArticleSearchForm({ onSearch, initialQuery = '' }: ArticleSearch
                         className="flex-1 text-base"
                         aria-invalid={field.state.meta.errors.length > 0}
                       />
-                      <Button 
-                        type="submit" 
-                        className="px-6"
-                        disabled={!field.state.value.trim()}
-                      >
+                      <Button type="submit" className="px-6" disabled={!field.state.value.trim()}>
                         Search Article
                       </Button>
                     </div>
                     {field.state.meta.errors.length > 0 && (
-                      <p className="text-sm text-destructive">
-                        {field.state.meta.errors[0]}
-                      </p>
+                      <p className="text-destructive text-sm">{field.state.meta.errors[0]}</p>
                     )}
                   </div>
                 )}

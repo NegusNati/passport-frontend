@@ -1,8 +1,9 @@
-import React from 'react'
-import { Container } from '@/shared/ui/container'
-import { Card } from '@/shared/ui/card'
 import { motion } from 'framer-motion'
+import { useMemo, useState } from 'react'
+
 import { M } from '@/shared/lib/motion'
+import { Card } from '@/shared/ui/card'
+import { Container } from '@/shared/ui/container'
 
 const TABS = [
   {
@@ -50,21 +51,28 @@ function toEmbedUrl(url?: string) {
 }
 
 export function VideoTabs() {
-  const [tab, setTab] = React.useState<(typeof TABS)[number]['key']>(TABS[0]?.key)
-  const activeTab = React.useMemo(() => TABS.find((t) => t.key === tab) ?? TABS[0], [tab])
-  const embedUrl = React.useMemo(() => toEmbedUrl(activeTab?.youtubeLink), [activeTab?.youtubeLink])
+  const [tab, setTab] = useState<(typeof TABS)[number]['key']>(TABS[0]?.key)
+  const activeTab = useMemo(() => TABS.find((t) => t.key === tab) ?? TABS[0], [tab])
+  const embedUrl = useMemo(() => toEmbedUrl(activeTab?.youtubeLink), [activeTab?.youtubeLink])
 
   return (
     <section className="py-12 sm:py-16" id="videos">
       <Container>
         <header className="mx-auto max-w-5xl text-center">
-          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Video Demonstrations</h2>
-          <p className="mt-2 text-muted-foreground max-w-3xl mx-auto">
-            Here is how you can check if your passport is ready or how you can get services provided by
-            <span className="block font-semibold tracking-wide text-neutral-800 sm:inline"> Immigration &amp; Nationality Affairs</span>.
+          <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
+            Video Demonstrations
+          </h2>
+          <p className="text-muted-foreground mx-auto mt-2 max-w-3xl">
+            Here is how you can check if your passport is ready or how you can get services provided
+            by
+            <span className="block font-semibold tracking-wide text-neutral-800 sm:inline">
+              {' '}
+              Immigration &amp; Nationality Affairs
+            </span>
+            .
           </p>
           <div className="mt-6 flex items-center justify-center">
-            <div className="flex gap-1 overflow-x-auto  scrollbar-thumb-muted scrollbar-track-transparent sm:overflow-visible scrollbar-hide px-1 w-full max-w-full sm:justify-center">
+            <div className="scrollbar-thumb-muted scrollbar-track-transparent scrollbar-hide flex w-full max-w-full gap-1 overflow-x-auto px-1 sm:justify-center sm:overflow-visible">
               {TABS.map((t) => {
                 const isActive = t.key === activeTab.key
                 return (
@@ -72,7 +80,7 @@ export function VideoTabs() {
                     key={t.key}
                     onClick={() => setTab(t.key)}
                     className={[
-                      'rounded-full border px-4 py-1 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                      'focus-visible:ring-ring rounded-full border px-4 py-1 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                       'shadow-sm',
                       isActive
                         ? 'border-primary bg-primary text-primary-foreground'
@@ -90,15 +98,14 @@ export function VideoTabs() {
         </header>
 
         <Card className="mx-auto mt-10 w-full max-w-6xl rounded-[32px]">
-          <div className="h-full rounded-[32px] bg-gradient-to-b from-muted via-card to-card  sm:px-3 sm:py-4">
+          <div className="from-muted via-card to-card h-full rounded-[32px] bg-gradient-to-b sm:px-3 sm:py-4">
             <div className="grid gap-6">
-             
               <motion.div
                 key={activeTab.key}
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: M.duration, ease: M.ease }}
-                className="overflow-hidden rounded-xl border border-border shadow-lg"
+                className="border-border overflow-hidden rounded-xl border shadow-lg"
               >
                 {embedUrl ? (
                   <div className="relative aspect-video w-full bg-black">

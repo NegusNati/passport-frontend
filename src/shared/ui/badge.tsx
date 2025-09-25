@@ -1,6 +1,6 @@
-import React from 'react'
+import { type HTMLAttributes } from 'react'
 
-export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
+export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: 'default' | 'secondary' | 'outline'
 }
 
@@ -23,4 +23,3 @@ export function Badge({ className = '', variant = 'default', ...props }: BadgePr
 }
 
 export default Badge
-

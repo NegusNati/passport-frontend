@@ -1,8 +1,9 @@
-import React from 'react'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import { Container } from '@/shared/ui/container'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Plus } from 'lucide-react'
+import { useState } from 'react'
+
 import { M } from '@/shared/lib/motion'
+import { Container } from '@/shared/ui/container'
 
 const FAQS = [
   {
@@ -28,7 +29,7 @@ const FAQS = [
 ]
 
 export function FAQsSection() {
-  const [activeIndex, setActiveIndex] = React.useState<number | null>(0)
+  const [activeIndex, setActiveIndex] = useState<number | null>(0)
   const shouldReduceMotion = useReducedMotion()
 
   function toggleIndex(index: number) {
@@ -37,11 +38,11 @@ export function FAQsSection() {
 
   return (
     <section id="faqs" className="py-16 sm:py-20">
-      <Container className='my-4'>
+      <Container className="my-4">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.15fr)] lg:items-start">
           <div className="space-y-3">
             <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">FAQs</h2>
-            <p className="max-w-sm text-sm text-muted-foreground sm:text-base">
+            <p className="text-muted-foreground max-w-sm text-sm sm:text-base">
               Find reliable information about how Passport.ET works and what to expect.
             </p>
           </div>
@@ -53,74 +54,76 @@ export function FAQsSection() {
                 <motion.article
                   key={faq.q}
                   layout={!shouldReduceMotion}
-                  className="rounded-lg bg-card/90 text-card-foreground shadow-sm"
+                  className="bg-card/90 text-card-foreground rounded-lg shadow-sm"
                   animate={{
                     backgroundColor: isActive ? 'rgb(249 250 251 / 0.9)' : 'rgb(255 255 255 / 0.9)',
-                    boxShadow: isActive 
-                      ? '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)' 
+                    boxShadow: isActive
+                      ? '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)'
                       : '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-                    scale: isActive ? 1.01 : 1
+                    scale: isActive ? 1.01 : 1,
                   }}
                   transition={{
                     duration: shouldReduceMotion ? 0 : M.duration,
-                    ease: M.ease
+                    ease: M.ease,
                   }}
-                  whileHover={!shouldReduceMotion ? {
-                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
-                  } : {}}
+                  whileHover={
+                    !shouldReduceMotion
+                      ? {
+                          boxShadow:
+                            '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
+                        }
+                      : {}
+                  }
                 >
                   <button
                     type="button"
                     onClick={() => toggleIndex(index)}
                     aria-expanded={isActive}
-                    className="flex w-full items-center justify-between gap-4 rounded-xl px-5 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-muted"
+                    className="focus-visible:ring-ring bg-muted flex w-full items-center justify-between gap-4 rounded-xl px-5 py-4 text-left focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                   >
-                    <span className="text-sm font-medium text-foreground sm:text-base">
+                    <span className="text-foreground text-sm font-medium sm:text-base">
                       {faq.q}
                     </span>
-                    <motion.div 
-                      className="relative w-4 h-4 flex items-center justify-center"
+                    <motion.div
+                      className="relative flex h-4 w-4 items-center justify-center"
                       animate={{ rotate: isActive ? 45 : 0 }}
-                      transition={{ 
+                      transition={{
                         duration: shouldReduceMotion ? 0 : M.duration,
-                        ease: M.ease 
+                        ease: M.ease,
                       }}
                     >
-                      <Plus
-                        className="h-4 w-4 text-muted-foreground"
-                        aria-hidden="true"
-                      />
+                      <Plus className="text-muted-foreground h-4 w-4" aria-hidden="true" />
                     </motion.div>
                   </button>
-                  
+
                   <AnimatePresence initial={false}>
                     {isActive && (
                       <motion.div
                         key="content"
                         initial={{ height: 0, opacity: 0 }}
-                        animate={{ 
-                          height: 'auto', 
-                          opacity: 1 
+                        animate={{
+                          height: 'auto',
+                          opacity: 1,
                         }}
-                        exit={{ 
-                          height: 0, 
-                          opacity: 0 
+                        exit={{
+                          height: 0,
+                          opacity: 0,
                         }}
                         transition={{
                           duration: shouldReduceMotion ? 0 : M.duration * 1.5,
                           ease: M.ease,
-                          opacity: { duration: shouldReduceMotion ? 0 : M.duration }
+                          opacity: { duration: shouldReduceMotion ? 0 : M.duration },
                         }}
-                        className="overflow-hidden border-t border-border"
+                        className="border-border overflow-hidden border-t"
                       >
-                        <motion.div 
-                          className="px-5 py-4 text-sm text-muted-foreground sm:text-base"
+                        <motion.div
+                          className="text-muted-foreground px-5 py-4 text-sm sm:text-base"
                           initial={{ y: shouldReduceMotion ? 0 : -10 }}
                           animate={{ y: 0 }}
-                          transition={{ 
+                          transition={{
                             duration: shouldReduceMotion ? 0 : M.duration,
                             delay: shouldReduceMotion ? 0 : M.duration * 0.3,
-                            ease: M.ease
+                            ease: M.ease,
                           }}
                         >
                           {faq.a}

@@ -1,194 +1,174 @@
-import React from 'react'
-import { Container } from '@/shared/ui/container'
+import { useMemo, useState } from 'react'
+
+import {
+  useArticlesQuery,
+  useCategoriesQuery,
+  useTagsQuery,
+} from '@/features/articles/lib/ArticlesQuery'
+import type { ArticleApiItem } from '@/features/articles/lib/ArticlesSchema'
 import { AdSlot } from '@/shared/ui/ad-slot'
+import { Container } from '@/shared/ui/container'
+import { Seo } from '@/shared/ui/Seo'
 import { ArticleGridSkeleton } from '@/shared/ui/skeleton'
-import { ArticleSearchForm } from './ArticleSearchForm'
-import { ArticleFilters } from './ArticleFilters'
-import { ArticleCard } from './ArticleCard'
-import { ArticlePagination } from './ArticlePagination'
-import { 
-  DUMMY_ARTICLES, 
-  filterArticlesByCategory, 
-  filterArticlesByTag, 
-  searchArticles, 
-  paginateArticles 
-} from '../lib/dummy-data'
+
 import type { ArticleFilters as ArticleFiltersType, ArticleSearch } from '../schemas/article'
+import { ArticleCard } from './ArticleCard'
+import { ArticleFilters } from './ArticleFilters'
+import { ArticlePagination } from './ArticlePagination'
+import { ArticleSearchForm } from './ArticleSearchForm'
 
 export function ArticlesPage() {
-  const [searchQuery, setSearchQuery] = React.useState('')
-  const [filters, setFilters] = React.useState<ArticleFiltersType>({
+  const [searchQuery, setSearchQuery] = useState('')
+  const [filters, setFilters] = useState<ArticleFiltersType>({
     category: 'all',
     tag: 'all',
-    dateRange: 'all'
+    dateRange: 'all',
   })
-  const [currentPage, setCurrentPage] = React.useState(1)
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const perPage = 12
 
-  const pageSize = 12
+  const params = useMemo(() => ({
+    per_page: perPage,
+    page: currentPage,
+    sort: 'published_at' as const,
+    sort_dir: 'desc' as const,
+    ...(searchQuery.trim() && { q: searchQuery.trim() }),
+    ...(filters.category !== 'all' && { category: filters.category }),
+    ...(filters.tag !== 'all' && { tag: filters.tag }),
+  }), [searchQuery, filters, currentPage, perPage])
 
-  // Apply filters and search
-  const filteredArticles = React.useMemo(() => {
-    let articles = DUMMY_ARTICLES
+  const { data, isLoading } = useArticlesQuery(params)
+  const categories = useCategoriesQuery()
+  const tags = useTagsQuery()
 
-    // Apply search query
-    if (searchQuery.trim()) {
-      articles = searchArticles(articles, searchQuery)
-    }
+  const rows: ArticleApiItem[] = data?.data ?? []
+  const meta = data?.meta
 
-    // Apply category filter
-    articles = filterArticlesByCategory(articles, filters.category)
-
-    // Apply tag filter
-    articles = filterArticlesByTag(articles, filters.tag)
-
-    return articles
-  }, [searchQuery, filters])
-
-  // Paginate results
-  const paginationResult = React.useMemo(() => {
-    return paginateArticles(filteredArticles, currentPage, pageSize)
-  }, [filteredArticles, currentPage, pageSize])
-
-  // Reset to first page when filters change
-  React.useEffect(() => {
+  const handleSearch = (d: ArticleSearch) => {
+    setSearchQuery(d.query)
     setCurrentPage(1)
-  }, [searchQuery, filters])
-
-  const handleSearch = (data: ArticleSearch) => {
-    setIsLoading(true)
-    setSearchQuery(data.query)
-    // Simulate loading
-    setTimeout(() => setIsLoading(false), 300)
   }
 
   const handleFiltersChange = (newFilters: ArticleFiltersType) => {
-    setIsLoading(true)
     setFilters(newFilters)
-    // Simulate loading
-    setTimeout(() => setIsLoading(false), 200)
+    setCurrentPage(1)
   }
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
-    // Scroll to top of results
-    document.querySelector('[data-articles-grid]')?.scrollIntoView({ 
-      behavior: 'smooth', 
-      block: 'start' 
-    })
+    document
+      .querySelector('[data-articles-grid]')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
+  const mapToUi = (a: ArticleApiItem) => ({
+    id: String(a.id),
+    title: a.title,
+    excerpt: a.excerpt ?? '',
+    content: a.content ?? '',
+    author: a.author?.name ?? '—',
+    publishedDate: a.published_at
+      ? new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(a.published_at))
+      : '',
+    category: a.categories[0]?.name ?? 'General',
+    tags: a.tags.map((t) => t.slug),
+    readTime: a.reading_time ?? 0,
+    imageUrl: a.featured_image_url ?? undefined,
+    featured: false,
+  })
+
   return (
-    <div className="min-h-screen bg-background">
-      {/* Search Section */}
-      <ArticleSearchForm 
-        onSearch={handleSearch} 
-        initialQuery={searchQuery}
+    <div className="bg-background min-h-screen">
+      <Seo
+        title="Articles"
+        description="Discover our latest products and stories."
+        path="/articles"
+        extraLinks={getFeedLinks()}
       />
 
-      {/* Ad Banner Section */}
-      <section className="py-6 border-b border-border">
+      <ArticleSearchForm onSearch={handleSearch} initialQuery={searchQuery} />
+
+      <section className="border-border border-b py-6">
         <Container>
-          <AdSlot 
-            preset="sponsored" 
-            orientation="horizontal" 
-            className="rounded-xl"
-          />
+          <AdSlot preset="sponsored" orientation="horizontal" className="rounded-xl" />
         </Container>
       </section>
 
-      {/* Filters Section */}
-      <ArticleFilters 
+      <ArticleFilters
         filters={filters}
         onFiltersChange={handleFiltersChange}
+        categories={(categories.data?.data ?? []).map((c) => c.slug)}
+        tags={(tags.data?.data ?? []).map((t) => t.slug)}
       />
 
-      {/* Articles Grid Section */}
       <section className="py-12" data-articles-grid>
         <Container>
-          {/* Results info */}
           <div className="mb-6 flex items-center justify-between">
-            <div className="text-sm text-muted-foreground">
-              {searchQuery && (
-                <span>Search results for "{searchQuery}" • </span>
-              )}
-              {paginationResult.totalItems} articles found
+            <div className="text-muted-foreground text-sm">
+              {searchQuery && <span>Search results for &ldquo;{searchQuery}&rdquo; • </span>}
+              {meta?.total ?? 0} articles found
             </div>
-            
-            {/* Clear search button */}
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => {
                   setSearchQuery('')
-                  setIsLoading(true)
-                  setTimeout(() => setIsLoading(false), 200)
+                  setCurrentPage(1)
                 }}
-                className="text-sm text-muted-foreground underline hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground text-sm underline"
               >
                 Clear search
               </button>
             )}
           </div>
 
-          {/* Loading State */}
           {isLoading ? (
             <ArticleGridSkeleton count={6} />
-          ) : (
+          ) : rows.length > 0 ? (
             <>
-              {/* Articles Grid */}
-              {paginationResult.articles.length > 0 ? (
-                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {paginationResult.articles.map((article) => (
-                    <ArticleCard
-                      key={article.id}
-                      article={article}
-                      onClick={() => {
-                        // TODO: Navigate to article detail page
-                        console.log('Navigate to article:', article.id)
-                      }}
-                    />
-                  ))}
-                </div>
-              ) : (
-                // No results state
-                <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <div className="mb-4 text-4xl text-muted-foreground">📄</div>
-                  <h3 className="mb-2 text-lg font-semibold text-foreground">
-                    No articles found
-                  </h3>
-                  <p className="text-sm text-muted-foreground max-w-md">
-                    {searchQuery 
-                      ? `No articles match your search for "${searchQuery}". Try different keywords or clear your search.`
-                      : 'No articles match your current filters. Try adjusting your filters or clearing them.'
-                    }
-                  </p>
-                  <button
-                    type="button"
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {rows.map((a) => (
+                  <ArticleCard
+                    key={a.id}
+                    article={mapToUi(a)}
                     onClick={() => {
-                      setSearchQuery('')
-                      setFilters({ category: 'all', tag: 'all', dateRange: 'all' })
-                      setIsLoading(true)
-                      setTimeout(() => setIsLoading(false), 200)
+                      window.location.href = `/articles/${a.slug}`
                     }}
-                    className="mt-4 text-sm text-primary underline hover:opacity-90"
-                  >
-                    Show all articles
-                  </button>
-                </div>
-              )}
+                  />
+                ))}
+              </div>
 
-              {/* Pagination */}
-              {paginationResult.articles.length > 0 && (
+              {meta && (
                 <ArticlePagination
-                  currentPage={paginationResult.currentPage}
-                  totalPages={paginationResult.totalPages}
-                  hasNextPage={paginationResult.hasNextPage}
-                  hasPrevPage={paginationResult.hasPrevPage}
+                  currentPage={meta.current_page}
+                  totalPages={meta.last_page}
+                  hasNextPage={meta.has_more}
+                  hasPrevPage={meta.current_page > 1}
                   onPageChange={handlePageChange}
                 />
               )}
             </>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <div className="text-muted-foreground mb-4 text-4xl">📄</div>
+              <h3 className="text-foreground mb-2 text-lg font-semibold">No articles found</h3>
+              <p className="text-muted-foreground max-w-md text-sm">
+                {searchQuery
+                  ? `No articles match your search for &ldquo;${searchQuery}&rdquo;. Try different keywords or clear your search.`
+                  : 'No articles match your current filters. Try adjusting your filters or clearing them.'}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQuery('')
+                  setFilters({ category: 'all', tag: 'all', dateRange: 'all' })
+                  setCurrentPage(1)
+                }}
+                className="text-primary mt-4 text-sm underline hover:opacity-90"
+              >
+                Show all articles
+              </button>
+            </div>
           )}
         </Container>
       </section>
@@ -197,3 +177,13 @@ export function ArticlesPage() {
 }
 
 export default ArticlesPage
+
+function getFeedLinks() {
+  const base =
+    (import.meta as { env?: Record<string, string | undefined> }).env?.VITE_API_BASE_URL || ''
+  const clean = String(base).replace(/\/$/, '')
+  return [
+    { rel: 'alternate', href: `${clean}/api/v1/feeds/articles.rss`, type: 'application/rss+xml' },
+    { rel: 'alternate', href: `${clean}/api/v1/feeds/articles.atom`, type: 'application/atom+xml' },
+  ]
+}

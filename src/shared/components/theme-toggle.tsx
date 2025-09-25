@@ -1,6 +1,6 @@
-import * as React from 'react'
-import { useTheme } from 'next-themes'
 import { Moon, Sun } from 'lucide-react'
+import { useTheme } from 'next-themes'
+import * as React from 'react'
 
 export function ThemeToggle({ className = '' }: { className?: string }) {
   const { theme, setTheme, resolvedTheme } = useTheme()
@@ -14,7 +14,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
         aria-label="Toggle theme"
         className={[
           'inline-flex h-9 w-9 items-center justify-center rounded-md border border-neutral-300 bg-white text-neutral-900',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background',
+          'focus-visible:ring-ring ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
           className,
         ].join(' ')}
       >
@@ -23,7 +23,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
     )
   }
 
-  const isDark = (theme === 'dark') || (theme === 'system' && resolvedTheme === 'dark')
+  const isDark = theme === 'dark' || (theme === 'system' && resolvedTheme === 'dark')
 
   return (
     <button
@@ -31,9 +31,9 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       aria-label="Toggle theme"
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       className={[
-        'inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background text-foreground',
+        'border-input bg-background text-foreground inline-flex h-9 w-9 items-center justify-center rounded-md border',
         'hover:bg-accent hover:text-accent-foreground transition-colors',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ring-offset-background',
+        'focus-visible:ring-ring ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
         className,
       ].join(' ')}
     >
@@ -43,5 +43,3 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
 }
 
 export default ThemeToggle
-
-

@@ -5,9 +5,7 @@ function TestRouteComponent() {
 
   return (
     <div style={{ padding: '20px', backgroundColor: 'green', color: 'white' }}>
-      <h1 style={{ fontSize: '32px', marginBottom: '20px' }}>
-        🎯 TEST ROUTE WORKING!
-      </h1>
+      <h1 style={{ fontSize: '32px', marginBottom: '20px' }}>🎯 TEST ROUTE WORKING!</h1>
       <p style={{ fontSize: '18px' }}>
         If you can see this, TanStack Router routing is working correctly.
       </p>

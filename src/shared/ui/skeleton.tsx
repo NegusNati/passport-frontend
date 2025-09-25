@@ -1,6 +1,6 @@
-import React from 'react'
+import { type HTMLAttributes } from 'react'
 
-export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
   width?: string | number
   height?: string | number
 }
@@ -13,10 +13,7 @@ export function Skeleton({ className = '', width, height, ...props }: SkeletonPr
 
   return (
     <div
-      className={[
-        'animate-pulse rounded-md bg-muted',
-        className
-      ].join(' ')}
+      className={['bg-muted animate-pulse rounded-md', className].join(' ')}
       style={style}
       {...props}
     />
@@ -25,18 +22,18 @@ export function Skeleton({ className = '', width, height, ...props }: SkeletonPr
 
 export function ArticleCardSkeleton() {
   return (
-    <div className="rounded-xl border border-border bg-card text-card-foreground shadow-sm p-4 sm:p-6">
+    <div className="border-border bg-card text-card-foreground rounded-xl border p-4 shadow-sm sm:p-6">
       {/* Image skeleton */}
-      <Skeleton className="h-48 w-full mb-4 rounded-lg" />
-      
+      <Skeleton className="mb-4 h-48 w-full rounded-lg" />
+
       {/* Title skeleton */}
-      <Skeleton className="h-6 w-full mb-2" />
-      <Skeleton className="h-6 w-3/4 mb-3" />
-      
+      <Skeleton className="mb-2 h-6 w-full" />
+      <Skeleton className="mb-3 h-6 w-3/4" />
+
       {/* Excerpt skeleton */}
-      <Skeleton className="h-4 w-full mb-2" />
-      <Skeleton className="h-4 w-5/6 mb-3" />
-      
+      <Skeleton className="mb-2 h-4 w-full" />
+      <Skeleton className="mb-3 h-4 w-5/6" />
+
       {/* Author and date skeleton */}
       <div className="flex items-center justify-between">
         <Skeleton className="h-4 w-20" />

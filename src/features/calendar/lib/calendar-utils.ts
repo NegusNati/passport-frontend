@@ -47,7 +47,7 @@ export function gregorianToJulianDay(year: number, month: number, day: number) {
 }
 
 export function julianDayToGregorian(jd: number): GregorianDate {
-  let w = jd + 0.5
+  const w = jd + 0.5
   const z = Math.floor(w)
   const f = w - z
   let a = z
@@ -74,13 +74,7 @@ export function julianDayToGregorian(jd: number): GregorianDate {
 }
 
 export function ethiopianToJulianDay(year: number, month: number, day: number) {
-  return (
-    ETHIOPIAN_EPOCH +
-    365 * (year - 1) +
-    Math.floor(year / 4) +
-    30 * (month - 1) +
-    (day - 1)
-  )
+  return ETHIOPIAN_EPOCH + 365 * (year - 1) + Math.floor(year / 4) + 30 * (month - 1) + (day - 1)
 }
 
 export function julianDayToEthiopian(jd: number): EthiopicDate {
@@ -163,7 +157,12 @@ export function getCalendarMatrix(year: number, month: number) {
   const daysInMonth = getDaysInEthiopianMonth(year, month)
   const firstJd = ethiopianToJulianDay(year, month, 1)
   const firstGregorian = julianDayToGregorian(firstJd)
-  const firstWeekday = (new Date(Date.UTC(firstGregorian.year, firstGregorian.month - 1, firstGregorian.day)).getUTCDay() + 6) % 7
+  const firstWeekday =
+    (new Date(
+      Date.UTC(firstGregorian.year, firstGregorian.month - 1, firstGregorian.day),
+    ).getUTCDay() +
+      6) %
+    7
 
   const cells: Array<{
     date: EthiopicDate

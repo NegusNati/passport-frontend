@@ -41,7 +41,7 @@ export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' 
     <div
       ref={ref}
       className={[
-        'fixed bottom-3 right-3 z-[1000] select-none sm:bottom-4 sm:right-4',
+        'fixed right-3 bottom-3 z-[1000] select-none sm:right-4 sm:bottom-4',
         className,
       ].join(' ')}
       aria-label="Support: Buy me a coffee"
@@ -57,7 +57,7 @@ export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' 
             <defs>
               <path id="bmc-circle" d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" />
             </defs>
-            <text className="fill-[hsl(var(--muted-foreground))] text-[8px] sm:text-[10px] tracking-[0.2em] uppercase">
+            <text className="fill-[hsl(var(--muted-foreground))] text-[8px] tracking-[0.2em] uppercase sm:text-[10px]">
               <textPath href="#bmc-circle" startOffset="0">
                 Buy me a coffee • Buy me a coffee •
               </textPath>
@@ -69,9 +69,11 @@ export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' 
           href={href}
           target="_blank"
           rel="noreferrer noopener"
-          className="absolute left-1/2 top-1/2 grid h-10 w-10 sm:h-12 sm:w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-input bg-background shadow-sm hover:shadow-md hover:border-border transition"
+          className="border-input bg-background hover:border-border absolute top-1/2 left-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border shadow-sm transition hover:shadow-md sm:h-12 sm:w-12"
         >
-          <span role="img" aria-label="coffee" className="text-lg sm:text-xl">☕️</span>
+          <span role="img" aria-label="coffee" className="text-lg sm:text-xl">
+            ☕️
+          </span>
         </a>
       </div>
     </div>

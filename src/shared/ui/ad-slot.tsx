@@ -1,7 +1,8 @@
-import React from 'react'
+import { type HTMLAttributes } from 'react'
+
 import { Button } from '@/shared/ui/button'
 
-interface AdSlotProps extends React.HTMLAttributes<HTMLDivElement> {
+interface AdSlotProps extends HTMLAttributes<HTMLDivElement> {
   label?: string
   orientation?: 'horizontal' | 'vertical'
   preset?: 'sponsored'
@@ -13,15 +14,25 @@ const orientationClasses = {
 } as const
 
 function SponsoredContent({ orientation }: { orientation: 'horizontal' | 'vertical' }) {
-  const alignClasses = orientation === 'vertical' ? 'items-start text-left' : 'items-center text-center'
+  const alignClasses =
+    orientation === 'vertical' ? 'items-start text-left' : 'items-center text-center'
   const textWidth = orientation === 'vertical' ? 'max-w-xs sm:max-w-sm' : 'max-w-sm sm:max-w-md'
 
   return (
-    <div className={['flex w-full flex-col gap-2 text-sm text-muted-foreground', alignClasses].join(' ')}>
-      <span className="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground">Sponsored</span>
-      <h3 className="text-lg font-semibold tracking-tight text-foreground">Advertise with Passport Alerts</h3>
-      <p className={[textWidth, 'text-sm text-muted-foreground'].join(' ')}>
-        Reach thousands of travelers looking for passport updates and related services. Reserve this premium banner for your brand.
+    <div
+      className={['text-muted-foreground flex w-full flex-col gap-2 text-sm', alignClasses].join(
+        ' ',
+      )}
+    >
+      <span className="text-muted-foreground text-xs font-semibold tracking-[0.35em] uppercase">
+        Sponsored
+      </span>
+      <h3 className="text-foreground text-lg font-semibold tracking-tight">
+        Advertise with Passport Alerts
+      </h3>
+      <p className={[textWidth, 'text-muted-foreground text-sm'].join(' ')}>
+        Reach thousands of travelers looking for passport updates and related services. Reserve this
+        premium banner for your brand.
       </p>
       <Button size="sm" className="mt-1 w-full sm:w-auto">
         Promote Your Business
@@ -43,11 +54,17 @@ export function AdSlot({
   const baseClasses = [
     'relative flex  border border-dashed border-border bg-muted text-sm font-medium text-muted-foreground shadow-inner',
     orientationClasses[orientation],
-    isSponsored ? 'items-stretch justify-between px-6 py-6 sm:px-8 sm:py-8' : 'items-center justify-center',
+    isSponsored
+      ? 'items-stretch justify-between px-6 py-6 sm:px-8 sm:py-8'
+      : 'items-center justify-center',
     className,
   ]
 
-  const content = isSponsored ? <SponsoredContent orientation={orientation} /> : children ?? <span>{label}</span>
+  const content = isSponsored ? (
+    <SponsoredContent orientation={orientation} />
+  ) : (
+    (children ?? <span>{label}</span>)
+  )
 
   return (
     <div className={baseClasses.join(' ')} {...props}>

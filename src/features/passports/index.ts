@@ -1,8 +1,7 @@
-export { PassportsPage } from './components/PassportsPage'
-export { PassportSearchForm } from './components/PassportSearchForm'
-export { PassportsTable } from './components/PassportsTable'
-export { PassportDetailPage } from './components/PassportDetailPage'
 export { PassportDetailCard } from './components/PassportDetailCard'
-
-export * from './schemas/passport'
+export { PassportDetailPage } from './components/PassportDetailPage'
+export { PassportSearchForm } from './components/PassportSearchForm'
+export { PassportsPage } from './components/PassportsPage'
+export { PassportsTable } from './components/PassportsTable'
 export * from './lib/dummy-data'
+export * from './schemas/passport'

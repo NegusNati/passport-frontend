@@ -1,4 +1,5 @@
-import React from 'react'
+import { Fragment } from 'react'
+
 import { Button } from '@/shared/ui/button'
 
 interface ArticlePaginationProps {
@@ -9,12 +10,12 @@ interface ArticlePaginationProps {
   onPageChange: (page: number) => void
 }
 
-export function ArticlePagination({ 
-  currentPage, 
-  totalPages, 
-  hasNextPage, 
-  hasPrevPage, 
-  onPageChange 
+export function ArticlePagination({
+  currentPage,
+  totalPages,
+  hasNextPage,
+  hasPrevPage,
+  onPageChange,
 }: ArticlePaginationProps) {
   // Don't render if there's only one page or no pages
   if (totalPages <= 1) return null
@@ -25,7 +26,11 @@ export function ArticlePagination({
     const range = []
     const rangeWithDots = []
 
-    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+    for (
+      let i = Math.max(2, currentPage - delta);
+      i <= Math.min(totalPages - 1, currentPage + delta);
+      i++
+    ) {
       range.push(i)
     }
 
@@ -49,9 +54,9 @@ export function ArticlePagination({
   const visiblePages = getVisiblePages()
 
   return (
-    <nav 
-      className="flex items-center justify-center gap-1 py-8" 
-      role="navigation" 
+    <nav
+      className="flex items-center justify-center gap-1 py-8"
+      role="navigation"
       aria-label="Article pagination"
     >
       {/* Previous button */}
@@ -69,9 +74,9 @@ export function ArticlePagination({
       {/* Page numbers */}
       <div className="flex items-center gap-1">
         {visiblePages.map((page, index) => (
-          <React.Fragment key={index}>
+          <Fragment key={index}>
             {page === '...' ? (
-              <span className="px-3 py-2 text-sm text-muted-foreground" aria-hidden="true">
+              <span className="text-muted-foreground px-3 py-2 text-sm" aria-hidden="true">
                 ...
               </span>
             ) : (
@@ -81,9 +86,7 @@ export function ArticlePagination({
                 onClick={() => typeof page === 'number' && onPageChange(page)}
                 className={[
                   'min-w-[2.5rem]',
-                  currentPage === page 
-                    ? '' 
-                    : 'hover:bg-accent hover:text-accent-foreground'
+                  currentPage === page ? '' : 'hover:bg-accent hover:text-accent-foreground',
                 ].join(' ')}
                 aria-label={`Go to page ${page}`}
                 aria-current={currentPage === page ? 'page' : undefined}
@@ -91,7 +94,7 @@ export function ArticlePagination({
                 {page}
               </Button>
             )}
-          </React.Fragment>
+          </Fragment>
         ))}
       </div>
 

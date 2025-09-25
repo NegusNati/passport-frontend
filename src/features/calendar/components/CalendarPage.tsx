@@ -1,18 +1,20 @@
 import * as React from 'react'
-import { Button } from '@/shared/ui/button'
+
 import { AdSlot } from '@/shared/ui/ad-slot'
+import { Button } from '@/shared/ui/button'
+
 import {
   ETHIOPIAN_MONTHS,
-  GEEZ_NUMERAL_TABLE,
-  WEEKDAYS,
+  type EthiopicDate,
   formatEthiopianDate,
   formatGregorianDate,
+  GEEZ_NUMERAL_TABLE,
   getCalendarMatrix,
   getDaysInEthiopianMonth,
   toEthiopian,
   toGeezNumeral,
   toGregorian,
-  type EthiopicDate,
+  WEEKDAYS,
 } from '../lib/calendar-utils'
 
 const yearOptionsRange = 6
@@ -34,13 +36,15 @@ function getObservances(date: EthiopicDate) {
   if (date.month === 1 && date.day === 1) {
     items.push({
       title: 'Ethiopian New Year (Enkutatash)',
-      description: 'Marks the start of the Ethiopian year on Meskerem 1, often celebrated with fresh flowers and family gatherings.',
+      description:
+        'Marks the start of the Ethiopian year on Meskerem 1, often celebrated with fresh flowers and family gatherings.',
     })
   }
   if (date.month === 13 && date.day === 6) {
     items.push({
       title: 'Leap Day',
-      description: 'Pagume receives a 6th day during Ethiopian leap years, aligning the calendar with the solar cycle.',
+      description:
+        'Pagume receives a 6th day during Ethiopian leap years, aligning the calendar with the solar cycle.',
     })
   }
   return items
@@ -68,11 +72,18 @@ export function CalendarPage() {
       if (prev.year === viewYear && prev.month === viewMonth) {
         return clampDayWithinMonth(prev)
       }
-      return { year: viewYear, month: viewMonth, day: Math.min(prev.day, getDaysInEthiopianMonth(viewYear, viewMonth)) }
+      return {
+        year: viewYear,
+        month: viewMonth,
+        day: Math.min(prev.day, getDaysInEthiopianMonth(viewYear, viewMonth)),
+      }
     })
   }, [viewMonth, viewYear])
 
-  const calendarCells = React.useMemo(() => getCalendarMatrix(viewYear, viewMonth), [viewYear, viewMonth])
+  const calendarCells = React.useMemo(
+    () => getCalendarMatrix(viewYear, viewMonth),
+    [viewYear, viewMonth],
+  )
   const years = React.useMemo(() => createYearOptions(today.year), [today.year])
 
   const selectedGregorian = React.useMemo(() => toGregorian(selectedDate), [selectedDate])
@@ -109,24 +120,30 @@ export function CalendarPage() {
     <section className="bg-muted/30 py-14 sm:py-20">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 sm:px-6 lg:px-8">
         <header className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-muted-foreground">Planner</p>
+          <p className="text-muted-foreground text-xs font-semibold tracking-[0.35em] uppercase">
+            Planner
+          </p>
           <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Ethiopian Calendar</h1>
-          <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
-            Explore every Ethiopian month, keep track of leap years, and quickly swap between Geez numerals and familiar Arabic digits.
+          <p className="text-muted-foreground max-w-2xl text-sm sm:text-base">
+            Explore every Ethiopian month, keep track of leap years, and quickly swap between Geez
+            numerals and familiar Arabic digits.
           </p>
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.85fr)_minmax(0,1fr)]">
-          <div className="border border-border bg-card text-card-foreground shadow-sm">
+          <div className="border-border bg-card text-card-foreground border shadow-sm">
             <div className="flex flex-col gap-6 p-5 sm:p-8">
               <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
                 <div className="space-y-1">
-                  <h2 className="text-xl font-semibold tracking-tight">{ETHIOPIAN_MONTHS[viewMonth - 1]?.english} {viewYear}</h2>
-                  <p className="text-sm text-muted-foreground">
-                    Switch months, jump back to today, or display dates using the ancient Geez numeral system.
+                  <h2 className="text-xl font-semibold tracking-tight">
+                    {ETHIOPIAN_MONTHS[viewMonth - 1]?.english} {viewYear}
+                  </h2>
+                  <p className="text-muted-foreground text-sm">
+                    Switch months, jump back to today, or display dates using the ancient Geez
+                    numeral system.
                   </p>
                 </div>
-                <div className="flex flex-wrap items-center gap-2 ">
+                <div className="flex flex-wrap items-center gap-2">
                   <Button variant="outline" size="sm" onClick={goToPreviousMonth}>
                     Previous
                   </Button>
@@ -141,24 +158,36 @@ export function CalendarPage() {
 
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-wrap items-center gap-3">
-                  <label className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">Month</label>
+                  <label
+                    htmlFor="month-select"
+                    className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase"
+                  >
+                    Month
+                  </label>
                   <select
+                    id="month-select"
                     value={viewMonth}
                     onChange={(event) => setViewMonth(Number(event.target.value))}
-                    className=" border border-input bg-background px-4 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                    className="border-input bg-background focus:ring-ring border px-4 py-2 text-sm shadow-sm focus:ring-2 focus:outline-none"
                   >
                     {ETHIOPIAN_MONTHS.map((month) => (
-                      <option key={month.number} value={month.number} >
+                      <option key={month.number} value={month.number}>
                         {month.english} · {month.amharic}
                       </option>
                     ))}
                   </select>
 
-                  <label className="text-xs font-medium uppercase tracking-[0.25em] text-muted-foreground">Year</label>
+                  <label
+                    htmlFor="year-select"
+                    className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase"
+                  >
+                    Year
+                  </label>
                   <select
+                    id="year-select"
                     value={viewYear}
                     onChange={(event) => setViewYear(Number(event.target.value))}
-                    className=" border border-input bg-background px-4 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                    className="border-input bg-background focus:ring-ring border px-4 py-2 text-sm shadow-sm focus:ring-2 focus:outline-none"
                   >
                     {years.map((year) => (
                       <option key={year} value={year}>
@@ -168,19 +197,19 @@ export function CalendarPage() {
                   </select>
                 </div>
 
-                <div className="flex items-center gap-2 rounded-full border border-border bg-muted px-2 py-1 text-xs font-medium">
-                  <span className="px-3 py-1 text-muted-foreground">Digits</span>
+                <div className="border-border bg-muted flex items-center gap-2 rounded-full border px-2 py-1 text-xs font-medium">
+                  <span className="text-muted-foreground px-3 py-1">Digits</span>
                   <button
                     type="button"
                     onClick={() => setUseGeezDigits(true)}
-                    className={` px-3 py-1 transition ${useGeezDigits ? 'bg-primary rounded-full text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                    className={`px-3 py-1 transition ${useGeezDigits ? 'bg-primary text-primary-foreground rounded-full shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     Geez ፩፪፫
                   </button>
                   <button
                     type="button"
                     onClick={() => setUseGeezDigits(false)}
-                    className={`px-3 py-1 transition ${!useGeezDigits ? 'bg-primary rounded-full text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
+                    className={`px-3 py-1 transition ${!useGeezDigits ? 'bg-primary text-primary-foreground rounded-full shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
                   >
                     Arabic 1 2 3
                   </button>
@@ -188,7 +217,7 @@ export function CalendarPage() {
               </div>
 
               <div className="space-y-3">
-                <div className="grid grid-cols-7 gap-1 text-center text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                <div className="text-muted-foreground grid grid-cols-7 gap-1 text-center text-xs font-medium tracking-[0.2em] uppercase">
                   {WEEKDAYS.map((day) => (
                     <span key={day}>{day}</span>
                   ))}
@@ -199,18 +228,20 @@ export function CalendarPage() {
                     const isSelected = isSameDate(date, selectedDate)
                     const showGeez = useGeezDigits && date.day > 0
                     const dayDisplay = showGeez ? toGeezNumeral(date.day) : String(date.day)
-                    const gregDate = new Date(Date.UTC(gregorian.year, gregorian.month - 1, gregorian.day))
+                    const gregDate = new Date(
+                      Date.UTC(gregorian.year, gregorian.month - 1, gregorian.day),
+                    )
                     const gregDay = gregDate.getUTCDate()
 
                     return (
                       <button
                         key={`${date.year}-${date.month}-${date.day}`}
                         type="button"
-                    onClick={() => setSelectedDate({ ...date })}
+                        onClick={() => setSelectedDate({ ...date })}
                         className={[
-                          'relative flex min-h-[72px] flex-col justify-between  px-2 py-2 text-left text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                          'focus-visible:ring-ring relative flex min-h-[72px] flex-col justify-between px-2 py-2 text-left text-sm transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                           isSelected
-                            ? 'border-primary bg-primary text-primary-foreground shadow '
+                            ? 'border-primary bg-primary text-primary-foreground shadow'
                             : isToday
                               ? 'border-border bg-muted'
                               : 'border-border bg-card hover:bg-muted',
@@ -218,10 +249,10 @@ export function CalendarPage() {
                         ].join(' ')}
                         aria-pressed={isSelected}
                       >
-                        <span className="text-base font-medium leading-tight">
-                          {dayDisplay}
-                        </span>
-                        <span className={`text-[11px] font-medium ${isSelected ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}>
+                        <span className="text-base leading-tight font-medium">{dayDisplay}</span>
+                        <span
+                          className={`text-[11px] font-medium ${isSelected ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}
+                        >
                           {gregDay}
                         </span>
                       </button>
@@ -235,8 +266,10 @@ export function CalendarPage() {
           <aside className="flex flex-col gap-6">
             <AdSlot orientation="vertical" className="min-h-[18rem]" preset="sponsored" />
 
-            <div className=" border border-neutral-200 bg-white p-6 shadow-sm">
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-neutral-400">Selected date</p>
+            <div className="border border-neutral-200 bg-white p-6 shadow-sm">
+              <p className="text-xs font-semibold tracking-[0.35em] text-neutral-400 uppercase">
+                Selected date
+              </p>
               <h3 className="mt-2 text-lg font-semibold tracking-tight text-neutral-900">
                 {formatEthiopianDate(selectedDate, useGeezDigits)}
               </h3>
@@ -246,7 +279,10 @@ export function CalendarPage() {
               <div className="mt-4 space-y-2 text-sm text-neutral-600">
                 {observances.length ? (
                   observances.map((item) => (
-                    <div key={item.title} className=" border border-neutral-200 bg-neutral-50 px-4 py-3">
+                    <div
+                      key={item.title}
+                      className="border border-neutral-200 bg-neutral-50 px-4 py-3"
+                    >
                       <p className="text-sm font-semibold text-neutral-900">{item.title}</p>
                       <p className="mt-1 text-sm text-neutral-600">{item.description}</p>
                     </div>
@@ -262,19 +298,20 @@ export function CalendarPage() {
         <AdSlot orientation="horizontal" className="min-h-[12rem]" preset="sponsored" />
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
-          <section className=" border border-neutral-200 bg-white shadow-sm">
+          <section className="border border-neutral-200 bg-white shadow-sm">
             <div className="flex flex-col gap-6 p-6 sm:p-8">
               <header className="space-y-2">
                 <h2 className="text-2xl font-semibold tracking-tight">Geeʼz Numbering System</h2>
                 <p className="text-sm text-neutral-600">
-                  Geeʼz numerals were introduced in the 4th century CE and remain in daily use across Ethiopian Orthodox texts and calendars. Each
-                  glyph represents a whole number, with digits combined from 1 to 10, 100, and 10,000 to build larger values.
+                  Geeʼz numerals were introduced in the 4th century CE and remain in daily use
+                  across Ethiopian Orthodox texts and calendars. Each glyph represents a whole
+                  number, with digits combined from 1 to 10, 100, and 10,000 to build larger values.
                 </p>
               </header>
 
-              <div className="overflow-hidden  border border-neutral-200">
+              <div className="overflow-hidden border border-neutral-200">
                 <table className="min-w-full divide-y divide-neutral-200 text-sm">
-                  <thead className="bg-neutral-50 text-left text-xs uppercase tracking-[0.25em] text-neutral-500">
+                  <thead className="bg-neutral-50 text-left text-xs tracking-[0.25em] text-neutral-500 uppercase">
                     <tr>
                       <th className="px-4 py-3">Number</th>
                       <th className="px-4 py-3">Symbol</th>
@@ -284,8 +321,12 @@ export function CalendarPage() {
                   <tbody className="divide-y divide-neutral-200 bg-white">
                     {GEEZ_NUMERAL_TABLE.map((row) => (
                       <tr key={row.value}>
-                        <td className="px-4 py-3 text-neutral-700">{row.value.toLocaleString('en-US')}</td>
-                        <td className="px-4 py-3 text-lg font-semibold text-neutral-900">{row.symbol}</td>
+                        <td className="px-4 py-3 text-neutral-700">
+                          {row.value.toLocaleString('en-US')}
+                        </td>
+                        <td className="px-4 py-3 text-lg font-semibold text-neutral-900">
+                          {row.symbol}
+                        </td>
                         <td className="px-4 py-3 text-neutral-600">{row.name}</td>
                       </tr>
                     ))}
@@ -297,7 +338,10 @@ export function CalendarPage() {
                 <h3 className="text-lg font-semibold tracking-tight">Example Numbers</h3>
                 <ul className="grid gap-2 text-sm text-neutral-600 sm:grid-cols-2">
                   {[29, 123, 2017, 10000].map((value) => (
-                    <li key={value} className="flex items-center justify-between  border border-neutral-200 bg-neutral-50 px-4 py-3">
+                    <li
+                      key={value}
+                      className="flex items-center justify-between border border-neutral-200 bg-neutral-50 px-4 py-3"
+                    >
                       <span className="font-semibold text-neutral-900">{toGeezNumeral(value)}</span>
                       <span>= {value.toLocaleString('en-US')}</span>
                     </li>
@@ -309,13 +353,17 @@ export function CalendarPage() {
 
           <aside className="flex flex-col gap-6">
             <AdSlot orientation="vertical" className="min-h-[18rem]" preset="sponsored" />
-            <div className=" border border-neutral-200 bg-white p-6 shadow-sm text-sm text-neutral-600">
-              <h3 className="text-base font-semibold tracking-tight text-neutral-900">Reading tips</h3>
+            <div className="border border-neutral-200 bg-white p-6 text-sm text-neutral-600 shadow-sm">
+              <h3 className="text-base font-semibold tracking-tight text-neutral-900">
+                Reading tips
+              </h3>
               <p className="mt-2">
-                Combine Geeʼz numerals from largest value to smallest. ፳፻፲፫ = 2013 EC: ፳ (20) × ፻ (100) gives 2000, then ፲፫ adds 13.
+                Combine Geeʼz numerals from largest value to smallest. ፳፻፲፫ = 2013 EC: ፳ (20) × ፻
+                (100) gives 2000, then ፲፫ adds 13.
               </p>
               <p className="mt-2">
-                Pagume includes only five days—six on leap years—so it is perfect for highlighting seasonal content before the Ethiopian New Year.
+                Pagume includes only five days—six on leap years—so it is perfect for highlighting
+                seasonal content before the Ethiopian New Year.
               </p>
             </div>
           </aside>

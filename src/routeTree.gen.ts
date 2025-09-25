@@ -15,6 +15,7 @@ import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PassportsIndexRouteImport } from './routes/passports/index'
 import { Route as PassportsPassportIdRouteImport } from './routes/passports/$passportId'
+import { Route as ArticlesSlugRouteImport } from './routes/articles/$slug'
 
 const TestRoute = TestRouteImport.update({
   id: '/test',
@@ -46,29 +47,37 @@ const PassportsPassportIdRoute = PassportsPassportIdRouteImport.update({
   path: '/passports/$passportId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ArticlesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/articles': typeof ArticlesRoute
+  '/articles': typeof ArticlesRouteWithChildren
   '/calendar': typeof CalendarRoute
   '/test': typeof TestRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
   '/passports': typeof PassportsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/articles': typeof ArticlesRoute
+  '/articles': typeof ArticlesRouteWithChildren
   '/calendar': typeof CalendarRoute
   '/test': typeof TestRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
   '/passports': typeof PassportsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/articles': typeof ArticlesRoute
+  '/articles': typeof ArticlesRouteWithChildren
   '/calendar': typeof CalendarRoute
   '/test': typeof TestRoute
+  '/articles/$slug': typeof ArticlesSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
   '/passports/': typeof PassportsIndexRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/articles'
     | '/calendar'
     | '/test'
+    | '/articles/$slug'
     | '/passports/$passportId'
     | '/passports'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/articles'
     | '/calendar'
     | '/test'
+    | '/articles/$slug'
     | '/passports/$passportId'
     | '/passports'
   id:
@@ -95,13 +106,14 @@ export interface FileRouteTypes {
     | '/articles'
     | '/calendar'
     | '/test'
+    | '/articles/$slug'
     | '/passports/$passportId'
     | '/passports/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ArticlesRoute: typeof ArticlesRoute
+  ArticlesRoute: typeof ArticlesRouteWithChildren
   CalendarRoute: typeof CalendarRoute
   TestRoute: typeof TestRoute
   PassportsPassportIdRoute: typeof PassportsPassportIdRoute
@@ -152,12 +164,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PassportsPassportIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/articles/$slug': {
+      id: '/articles/$slug'
+      path: '/$slug'
+      fullPath: '/articles/$slug'
+      preLoaderRoute: typeof ArticlesSlugRouteImport
+      parentRoute: typeof ArticlesRoute
+    }
   }
 }
 
+interface ArticlesRouteChildren {
+  ArticlesSlugRoute: typeof ArticlesSlugRoute
+}
+
+const ArticlesRouteChildren: ArticlesRouteChildren = {
+  ArticlesSlugRoute: ArticlesSlugRoute,
+}
+
+const ArticlesRouteWithChildren = ArticlesRoute._addFileChildren(
+  ArticlesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ArticlesRoute: ArticlesRoute,
+  ArticlesRoute: ArticlesRouteWithChildren,
   CalendarRoute: CalendarRoute,
   TestRoute: TestRoute,
   PassportsPassportIdRoute: PassportsPassportIdRoute,

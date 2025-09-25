@@ -1,13 +1,13 @@
-import React from 'react'
+import { type ButtonHTMLAttributes, forwardRef, type ReactNode } from 'react'
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost'
 type ButtonSize = 'sm' | 'md' | 'lg'
 
-export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant
   size?: ButtonSize
-  leftIcon?: React.ReactNode
-  rightIcon?: React.ReactNode
+  leftIcon?: ReactNode
+  rightIcon?: ReactNode
 }
 
 function baseClasses(variant: ButtonVariant, disabled?: boolean) {
@@ -33,10 +33,17 @@ function sizeClasses(size: ButtonSize) {
   return s[size]
 }
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className = '', variant = 'primary', size = 'md', leftIcon, rightIcon, children, ...props }, ref) => {
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    { className = '', variant = 'primary', size = 'md', leftIcon, rightIcon, children, ...props },
+    ref,
+  ) => {
     return (
-      <button ref={ref} className={[baseClasses(variant, props.disabled), sizeClasses(size), className].join(' ')} {...props}>
+      <button
+        ref={ref}
+        className={[baseClasses(variant!, props.disabled), sizeClasses(size!), className].join(' ')}
+        {...props}
+      >
         {leftIcon ? <span className="-ml-1">{leftIcon}</span> : null}
         <span>{children}</span>
         {rightIcon ? <span className="-mr-1">{rightIcon}</span> : null}
@@ -48,4 +55,3 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = 'Button'
 
 export default Button
-

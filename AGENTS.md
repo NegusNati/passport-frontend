@@ -29,6 +29,7 @@
 - **pnpm** as the package manager (workspaces optional)
 
 **Node & Package Manager**
+
 - Use the `.nvmrc` (or engines field) for Node version. Always run with **pnpm**.
 
 ---
@@ -43,6 +44,7 @@ pnpm preview
 ```
 
 **shadcn/ui** (example):
+
 ```bash
 # initialize (if not already)
 pnpm dlx shadcn-ui@latest init
@@ -89,6 +91,7 @@ public/
 ```
 
 **Naming**
+
 - Files: `kebab-case.ts`, components in `PascalCase.tsx`. Test files `*.test.ts(x)`.
 - Route files end with `.route.tsx`.
 - Query/mutation keys: `['feature', 'entity', params]`.
@@ -130,6 +133,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 ## 6) Routing (TanStack Router)
 
 **Router setup**
+
 ```tsx
 // src/app/router/root.tsx
 import { createRootRoute, Outlet } from '@tanstack/react-router'
@@ -152,11 +156,14 @@ import { routeTree } from './routeTree.gen' // if using file-based plugin, else 
 
 export const router = createRouter({ routeTree: routeTree ?? rootRoute })
 declare module '@tanstack/react-router' {
-  interface Register { router: typeof router }
+  interface Register {
+    router: typeof router
+  }
 }
 ```
 
 **Feature route**
+
 ```tsx
 // src/features/todos/routes/index.route.tsx
 import { createFileRoute } from '@tanstack/react-router'
@@ -180,6 +187,7 @@ function TodosPage() {
 ```
 
 **Params & search validation with Zod**
+
 - Use `validateSearch` / `validateParams` to parse with Zod at the route boundary.
 - Use `loader` for prefetching and redirects (auth), **never** for complex imperative UI logic.
 
@@ -188,12 +196,19 @@ function TodosPage() {
 ## 7) Data Layer (TanStack Query + Fetch)
 
 **HTTP client**
+
 ```ts
 // src/shared/lib/http.ts
 import { z } from 'zod'
 
-export async function http<T> (input: RequestInfo, init?: RequestInit & { schema?: z.ZodSchema<T> }) {
-  const res = await fetch(input, { ...init, headers: { 'Content-Type': 'application/json', ...(init?.headers || {}) } })
+export async function http<T>(
+  input: RequestInfo,
+  init?: RequestInit & { schema?: z.ZodSchema<T> },
+) {
+  const res = await fetch(input, {
+    ...init,
+    headers: { 'Content-Type': 'application/json', ...(init?.headers || {}) },
+  })
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   const data = (await res.json()) as unknown
   return init?.schema ? init.schema.parse(data) : (data as T)
@@ -201,10 +216,15 @@ export async function http<T> (input: RequestInfo, init?: RequestInit & { schema
 ```
 
 **Queries & Mutations**
+
 ```ts
 // src/features/todos/schemas/todo.ts
 import { z } from 'zod'
-export const Todo = z.object({ id: z.number(), title: z.string(), done: z.boolean().default(false) })
+export const Todo = z.object({
+  id: z.number(),
+  title: z.string(),
+  done: z.boolean().default(false),
+})
 export type Todo = z.infer<typeof Todo>
 ```
 
@@ -236,6 +256,7 @@ const { mutate } = useMutation({
 ```
 
 **Best practices**
+
 - Co-locate queries/mutations with their feature.
 - Use typed query keys: `as const` + small helpers if needed.
 - Prefer **invalidations** over manual cache writes unless you have clear invariants.
@@ -253,14 +274,15 @@ const { mutate } = useMutation({
 - **State classes:** Use `data-[state=...]` (Radix) and `aria-*` selectors for accessible states.
 
 **Example**
+
 ```tsx
 import { Button } from '@/shared/ui/button'
 
 export function CTA() {
   return (
-    <section className="container mx-auto p-4 max-w-2xl text-center">
+    <section className="container mx-auto max-w-2xl p-4 text-center">
       <h1 className="text-2xl font-semibold tracking-tight">Welcome</h1>
-      <p className="mt-2 text-muted-foreground">Build fast, ship faster.</p>
+      <p className="text-muted-foreground mt-2">Build fast, ship faster.</p>
       <Button className="mt-4">Get started</Button>
     </section>
   )
@@ -294,7 +316,7 @@ export function Card({ children }: { children: React.ReactNode }) {
       initial={{ opacity: 0, y: reduce ? 0 : 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: M.duration, ease: M.ease }}
-      className="rounded-2xl shadow p-4 bg-background"
+      className="bg-background rounded-2xl p-4 shadow"
     >
       {children}
     </motion.div>
@@ -312,6 +334,7 @@ export function Card({ children }: { children: React.ReactNode }) {
 - Use shadcn/ui **primitives** (`<Label>`, `<Input>`, `<Button>`, etc.). The shadcn `Form` helpers target RHF—skip them and compose primitives directly with TanStack Form.
 
 **Example schema**
+
 ```ts
 // src/features/auth/schemas/login.ts
 import { z } from 'zod'
@@ -323,6 +346,7 @@ export type Login = z.infer<typeof Login>
 ```
 
 **Login form with TanStack Form + Zod + shadcn/ui**
+
 ```tsx
 // src/features/auth/components/LoginForm.tsx
 import * as React from 'react'
@@ -372,7 +396,7 @@ export function LoginForm({ onSubmit }: { onSubmit: (values: Login) => Promise<v
               aria-describedby="email-error"
             />
             {field.state.meta.errors[0] ? (
-              <p id="email-error" className="text-sm text-destructive">
+              <p id="email-error" className="text-destructive text-sm">
                 {field.state.meta.errors[0]}
               </p>
             ) : null}
@@ -395,7 +419,7 @@ export function LoginForm({ onSubmit }: { onSubmit: (values: Login) => Promise<v
               aria-describedby="password-error"
             />
             {field.state.meta.errors[0] ? (
-              <p id="password-error" className="text-sm text-destructive">
+              <p id="password-error" className="text-destructive text-sm">
                 {field.state.meta.errors[0]}
               </p>
             ) : null}
@@ -403,16 +427,20 @@ export function LoginForm({ onSubmit }: { onSubmit: (values: Login) => Promise<v
         )}
       </form.Field>
 
-      <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting, state.isSubmitted, state.submitError] as const}>
+      <form.Subscribe
+        selector={(state) =>
+          [state.canSubmit, state.isSubmitting, state.isSubmitted, state.submitError] as const
+        }
+      >
         {([canSubmit, isSubmitting, isSubmitted, submitError]) => (
           <div className="space-y-2">
             <Button type="submit" disabled={!canSubmit || isSubmitting} className="w-full">
               {isSubmitting ? 'Signing in…' : 'Sign in'}
             </Button>
             {submitError ? (
-              <p className="text-sm text-destructive">{String(submitError)}</p>
+              <p className="text-destructive text-sm">{String(submitError)}</p>
             ) : isSubmitted ? (
-              <p className="text-sm text-muted-foreground">Submitted.</p>
+              <p className="text-muted-foreground text-sm">Submitted.</p>
             ) : null}
           </div>
         )}
@@ -423,6 +451,7 @@ export function LoginForm({ onSubmit }: { onSubmit: (values: Login) => Promise<v
 ```
 
 **Integration with TanStack Query (submit)**
+
 ```tsx
 // src/features/auth/routes/login.route.tsx
 import { createFileRoute } from '@tanstack/react-router'
@@ -431,7 +460,11 @@ import { LoginForm } from '../components/LoginForm'
 import { Login } from '../schemas/login'
 
 async function loginApi(values: Login) {
-  const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(values) })
+  const res = await fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(values),
+  })
   if (!res.ok) throw new Error('Invalid credentials')
 }
 
@@ -442,7 +475,7 @@ export const Route = createFileRoute('/login')({
       <div className="container mx-auto max-w-sm p-4">
         <LoginForm onSubmit={(values) => mutation.mutateAsync(values)} />
         {mutation.error ? (
-          <p className="mt-2 text-sm text-destructive">{String(mutation.error)}</p>
+          <p className="text-destructive mt-2 text-sm">{String(mutation.error)}</p>
         ) : null}
       </div>
     )
@@ -451,6 +484,7 @@ export const Route = createFileRoute('/login')({
 ```
 
 **Best practices**
+
 - Use **Zod shapes** at the field level (e.g., `Login.shape.email`) for immediate feedback; use the full form schema on submit.
 - Keep server errors user-friendly; surface them below the submit button.
 - Mark inputs with `aria-invalid` and connect errors via `aria-describedby`.
@@ -538,7 +572,11 @@ features/
 ```ts
 // features/profile/schemas/profile.ts
 import { z } from 'zod'
-export const Profile = z.object({ id: z.string(), name: z.string(), avatarUrl: z.string().url().nullable() })
+export const Profile = z.object({
+  id: z.string(),
+  name: z.string(),
+  avatarUrl: z.string().url().nullable(),
+})
 export type Profile = z.infer<typeof Profile>
 ```
 
@@ -559,7 +597,8 @@ import { getProfile } from '../api/get-profile'
 import { ProfileCard } from '../components/ProfileCard'
 
 export const Route = createFileRoute('/profile')({
-  loader: async ({ context }) => context.queryClient.prefetchQuery({ queryKey: ['profile'], queryFn: getProfile }),
+  loader: async ({ context }) =>
+    context.queryClient.prefetchQuery({ queryKey: ['profile'], queryFn: getProfile }),
   component: ProfilePage,
 })
 
@@ -623,18 +662,20 @@ function ProfilePage() {
 
 **You’re set. Build features, keep things modular, and let the tooling work for you.**
 
-
 ## 21) SEO Optimization (Performance & Crawlability)
 
 > This is a consumer app: **every feature and component must be SEO- and performance‑minded by default.**
 
 ### A) Rendering strategy
+
 - **Preferred:** SSR/SSG or prerender for critical entry pages (home, top categories, product/detail, blog). Keep SPA navigation after first paint.
 - **Acceptable fallback:** SPA + prerendered HTML for a subset of routes. Always verify indexability in Search Console.
 - **Hydration:** Keep above‑the‑fold HTML meaningful (headings, copy, links) so bots see content before JS.
 
 ### B) Head & metadata management
+
 Use **react-helmet-async** for per‑route `<title>`/meta. Add provider at the app root:
+
 ```tsx
 // src/main.tsx (excerpt)
 import { HelmetProvider } from 'react-helmet-async'
@@ -651,6 +692,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 ```
 
 Create a small SEO component:
+
 ```tsx
 // src/shared/ui/Seo.tsx
 import { Helmet } from 'react-helmet-async'
@@ -668,13 +710,19 @@ const SITE = import.meta.env.VITE_SITE_URL // e.g., https://example.com
 
 export function Seo({ title, description, path = '', noindex, ogImage, schemaJson }: Props) {
   const url = (SITE?.replace(/\/$/, '') || '') + path
-  const fullTitle = title ? `${title} · ${import.meta.env.VITE_SITE_NAME ?? ''}` : (import.meta.env.VITE_SITE_NAME ?? '')
+  const fullTitle = title
+    ? `${title} · ${import.meta.env.VITE_SITE_NAME ?? ''}`
+    : (import.meta.env.VITE_SITE_NAME ?? '')
   return (
     <>
       <Helmet prioritizeSeoTags>
         {title && <title>{fullTitle}</title>}
         {description && <meta name="description" content={description} />}
-        {noindex ? <meta name="robots" content="noindex, nofollow" /> : <meta name="robots" content="index, follow" />}
+        {noindex ? (
+          <meta name="robots" content="noindex, nofollow" />
+        ) : (
+          <meta name="robots" content="index, follow" />
+        )}
         {url && <link rel="canonical" href={url} />}
         {/* Open Graph / Twitter */}
         {title && <meta property="og:title" content={fullTitle} />}
@@ -685,7 +733,10 @@ export function Seo({ title, description, path = '', noindex, ogImage, schemaJso
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
       {schemaJson ? (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJson) }}
+        />
       ) : null}
     </>
   )
@@ -693,6 +744,7 @@ export function Seo({ title, description, path = '', noindex, ogImage, schemaJso
 ```
 
 Route usage example:
+
 ```tsx
 // src/features/home/routes/index.route.tsx
 import { createFileRoute } from '@tanstack/react-router'
@@ -710,7 +762,9 @@ export const Route = createFileRoute('/')({
 ```
 
 ### C) Structured data (JSON‑LD)
+
 Provide rich snippets where useful (Product, Article, Breadcrumb):
+
 ```tsx
 <Seo
   title={product.name}
@@ -735,29 +789,41 @@ Provide rich snippets where useful (Product, Article, Breadcrumb):
 ```
 
 ### D) Links, sitemaps, robots
+
 - Maintain **canonical URLs** (one URL per piece of content). Avoid duplicate query parameter variants.
 - Generate **sitemap.xml** and **robots.txt** at build time.
 - Add internal links between related routes; keep anchor text descriptive.
 
 Minimal sitemap generator (Node):
+
 ```ts
 // scripts/sitemap.ts
 import { writeFileSync } from 'node:fs'
 const site = process.env.SITE_URL || 'https://example.com'
 const routes = ['/', '/about', '/products'] // extend programmatically
-const xml = `<?xml version="1.0" encoding="UTF-8"?>
+const xml =
+  `<?xml version="1.0" encoding="UTF-8"?>
 ` +
   `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` +
-  routes.map((r) => `
-  <url><loc>${site}${r}</loc></url>`).join('') +
+  routes
+    .map(
+      (r) => `
+  <url><loc>${site}${r}</loc></url>`,
+    )
+    .join('') +
   `
 </urlset>`
 writeFileSync('dist/sitemap.xml', xml)
-writeFileSync('dist/robots.txt', `Sitemap: ${site}/sitemap.xml
+writeFileSync(
+  'dist/robots.txt',
+  `Sitemap: ${site}/sitemap.xml
 User-agent: *
-Allow: /`)
+Allow: /`,
+)
 ```
+
 Add to package.json build pipeline:
+
 ```json
 {
   "scripts": { "postbuild": "node scripts/sitemap.ts" }
@@ -765,9 +831,11 @@ Add to package.json build pipeline:
 ```
 
 ### E) Images & media (LCP friendly)
+
 - Always set **intrinsic width/height** to avoid CLS.
 - Use `loading="lazy"` for below‑the‑fold, but **eager** + `fetchpriority="high"` for LCP hero.
 - Provide `srcset`/`sizes` and modern formats (WebP/AVIF). Include descriptive `alt`.
+
 ```tsx
 <img
   src="/media/hero-1200.webp"
@@ -783,15 +851,19 @@ Add to package.json build pipeline:
 ```
 
 ### F) Fonts
+
 - Prefer **system fonts**; if using web fonts, self‑host and subset.
 - Preconnect and preload critical font files; ensure `font-display: swap`.
+
 ```html
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="/fonts/Inter-400-subset.woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" as="font" type="font/woff2" href="/fonts/Inter-400-subset.woff2" crossorigin />
 ```
 
 ### G) Component performance checklist
+
 For every component:
+
 - Uses **semantic HTML** and accessible names.
 - Avoids layout thrash (batch reads/writes; prefer CSS transforms).
 - Minimal JS on first paint; defer non‑critical effects to `requestIdleCallback`.
@@ -801,9 +873,12 @@ For every component:
 - No heavy polyfills on modern browsers; load polyfills conditionally.
 
 ### H) Core Web Vitals budgets & CI
+
 Track budgets and regressions:
+
 - **Budgets:** LCP ≤ 2.5s, CLS ≤ 0.1, INP ≤ 200ms, TTFB ≤ 0.8s.
 - Add Lighthouse CI to PRs:
+
 ```json
 {
   "scripts": {
@@ -814,14 +889,15 @@ Track budgets and regressions:
 ```
 
 ### I) Route‑level SEO patterns
+
 - Public content routes: `<Seo ... />` with canonical + JSON‑LD.
 - Auth/account routes: `<Seo noindex />`.
 - For pagination, use `?page=` with consistent canonical and include `rel=prev/next` via `<Helmet>` for long series.
 
 ### J) Caching & delivery
+
 - Serve static assets via CDN with long **Cache‑Control** and content hashing.
 - API: enable HTTP caching (ETag/Last‑Modified) to help Query avoid refetch.
 - Use `preconnect` to critical origins; avoid unnecessary cross‑origin requests.
 
 ---
-

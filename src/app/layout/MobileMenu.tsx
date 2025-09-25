@@ -1,12 +1,21 @@
-import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Button } from '@/shared/ui/button'
 import { ArrowUpRight, X } from 'lucide-react'
+import { useEffect } from 'react'
+
+import { Button } from '@/shared/ui/button'
 
 type NavItem = { label: string; href: string; external?: boolean }
 
-export function MobileMenu({ open, onClose, nav }: { open: boolean; onClose: () => void; nav: NavItem[] }) {
-  React.useEffect(() => {
+export function MobileMenu({
+  open,
+  onClose,
+  nav,
+}: {
+  open: boolean
+  onClose: () => void
+  nav: NavItem[]
+}) {
+  useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
     }
@@ -23,7 +32,19 @@ export function MobileMenu({ open, onClose, nav }: { open: boolean; onClose: () 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <div className="absolute inset-0 bg-black/50" onClick={onClose} />
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={onClose}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                onClose()
+              }
+            }}
+            tabIndex={-1}
+            role="button"
+            aria-label="Close menu"
+          />
 
           <motion.aside
             role="dialog"
@@ -32,15 +53,15 @@ export function MobileMenu({ open, onClose, nav }: { open: boolean; onClose: () 
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-            className="absolute right-0 top-0 flex h-full w-full max-w-xs flex-col bg-background shadow-[0_20px_40px_rgba(15,23,42,0.18)]"
+            className="bg-background absolute top-0 right-0 flex h-full w-full max-w-xs flex-col shadow-[0_20px_40px_rgba(15,23,42,0.18)]"
           >
-            <header className="flex items-center justify-between border-b border-border px-5 py-6">
+            <header className="border-border flex items-center justify-between border-b px-5 py-6">
               <span className="text-base font-semibold tracking-tight">Passport.ET</span>
               <button
                 type="button"
                 aria-label="Close menu"
                 onClick={onClose}
-                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-input text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                className="border-input text-muted-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-9 w-9 items-center justify-center rounded-full border transition-colors"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -52,22 +73,22 @@ export function MobileMenu({ open, onClose, nav }: { open: boolean; onClose: () 
                   key={item.label}
                   href={item.href}
                   onClick={onClose}
-                  className="flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  className="text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
                   <span>{item.label}</span>
-                  {item.external ? <ArrowUpRight className="h-4 w-4 text-muted-foreground" aria-hidden /> : null}
+                  {item.external ? (
+                    <ArrowUpRight className="text-muted-foreground h-4 w-4" aria-hidden />
+                  ) : null}
                 </a>
               ))}
             </nav>
 
-            <div className="mt-auto border-t border-border px-5 py-6">
+            <div className="border-border mt-auto border-t px-5 py-6">
               <div className="flex items-center gap-3">
                 <Button variant="outline" className="flex-1 text-sm">
                   Register
                 </Button>
-                <Button className="flex-1 text-sm">
-                  Login
-                </Button>
+                <Button className="flex-1 text-sm">Login</Button>
               </div>
             </div>
           </motion.aside>

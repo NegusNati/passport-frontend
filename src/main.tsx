@@ -1,18 +1,32 @@
+import './styles.css'
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
-import ReactDOM from 'react-dom/client'
-import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { createRoot } from 'react-dom/client'
+import { HelmetProvider } from 'react-helmet-async'
+
 import { ThemeProvider } from '@/shared/components/theme-provider'
 
+import reportWebVitals from './reportWebVitals.ts'
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 
-import './styles.css'
-import reportWebVitals from './reportWebVitals.ts'
+// Create a QueryClient
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+})
 
 // Create a new router instance
 const router = createRouter({
   routeTree,
-  context: {},
+  context: { queryClient },
   defaultPreload: 'intent',
   scrollRestoration: true,
   defaultStructuralSharing: true,
@@ -29,11 +43,15 @@ declare module '@tanstack/react-router' {
 // Render the app
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement)
+  const root = createRoot(rootElement)
   root.render(
     <StrictMode>
       <ThemeProvider>
-        <RouterProvider router={router} />
+        <HelmetProvider>
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+          </QueryClientProvider>
+        </HelmetProvider>
       </ThemeProvider>
     </StrictMode>,
   )

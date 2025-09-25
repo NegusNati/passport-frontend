@@ -44,7 +44,7 @@ export type PaginationParams = z.infer<typeof PaginationParams>
 // Category and tag enums for filtering
 export const ARTICLE_CATEGORIES = [
   'Travel',
-  'Passport', 
+  'Passport',
   'Visa',
   'Immigration',
   'Documentation',
@@ -64,5 +64,5 @@ export const ARTICLE_TAGS = [
   'appointment',
 ] as const
 
-export type ArticleCategory = typeof ARTICLE_CATEGORIES[number]
-export type ArticleTag = typeof ARTICLE_TAGS[number]
+export type ArticleCategory = (typeof ARTICLE_CATEGORIES)[number]
+export type ArticleTag = (typeof ARTICLE_TAGS)[number]

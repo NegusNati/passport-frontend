@@ -1,6 +1,7 @@
-import { Link } from "@tanstack/react-router"
-import playStore from '@/assets/landingImages/play_store.svg'
+import { Link } from '@tanstack/react-router'
+
 import appStore from '@/assets/landingImages/app_store.svg'
+import playStore from '@/assets/landingImages/play_store.svg'
 
 export function DownloadAppSection() {
   return (
@@ -10,32 +11,15 @@ export function DownloadAppSection() {
         <p className="text-sm text-neutral-600">
           Check your passport status anytime, anywhere—right from your phone.
         </p>
-        <div className="sm:w-full md:w-auto flex items-center gap-6 my-4">
-          <Link
-            to="/"
-            aria-label="Get it on Google Play"
-          >
-            <img
-              src={playStore}
-              alt="Get it on Google Play"
-              className="h-[35px]"
-            />
+        <div className="my-4 flex items-center gap-6 sm:w-full md:w-auto">
+          <Link to="/" aria-label="Get it on Google Play">
+            <img src={playStore} alt="Get it on Google Play" className="h-[35px]" />
           </Link>
-          <Link
-            to="/"
-            aria-label="Download on the App Store"
-             
-          >
-            <img
-              src={appStore}
-              alt="Download on the App Store"
-              className="h-[35px]"
-            />
+          <Link to="/" aria-label="Download on the App Store">
+            <img src={appStore} alt="Download on the App Store" className="h-[35px]" />
           </Link>
         </div>
       </div>
     </section>
   )
 }
-
-

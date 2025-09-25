@@ -1,6 +1,7 @@
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanstackDevtools } from '@tanstack/react-devtools'
+import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
+
 import { AppShell } from '@/app/layout/AppShell'
 
 export const Route = createRootRoute({

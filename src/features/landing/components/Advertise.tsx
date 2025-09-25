@@ -1,8 +1,9 @@
-import { Container } from '@/shared/ui/container'
-import { Button } from '@/shared/ui/button'
 import { ArrowRight } from 'lucide-react'
-import LookingGuyImage from '@/assets/landingImages/looking_guy.png'
+
 import CalendarImage from '@/assets/landingImages/calander_image.png'
+import LookingGuyImage from '@/assets/landingImages/looking_guy.png'
+import { Button } from '@/shared/ui/button'
+import { Container } from '@/shared/ui/container'
 
 const CARDS = [
   {
@@ -35,48 +36,41 @@ export function AdvertiseSection() {
   return (
     <section id="advertise" className="py-10 sm:py-14">
       <Container>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3  ">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {CARDS.map((card) => {
             switch (card.key) {
               case 'creative-support':
                 return (
-                  
-                    <div className="flex items-center justify-end bg-muted rounded-lg py-4 px-0">
-                      <img
-                        src={card.image as string}
-                        alt={card.imageAlt as string}
-                        className="h-auto w-full max-w-[220px] object-contain drop-shadow-sm translate-x-2"
-                        loading="lazy"
-                      />
-                    </div>
-  
-  
-                );
+                  <div className="bg-muted flex items-center justify-end rounded-lg px-0 py-4">
+                    <img
+                      src={card.image as string}
+                      alt={card.imageAlt as string}
+                      className="h-auto w-full max-w-[220px] translate-x-2 object-contain drop-shadow-sm"
+                      loading="lazy"
+                    />
+                  </div>
+                )
 
               case 'calendar-highlights':
                 return (
-                  <div className="flex items-center justify-center bg-muted rounded-lg py-4 px-0">
-                  <img
-                    src={card.image as string}
-                    alt={card.imageAlt as string}
-                    className="h-auto w-full max-w-[220px] object-contain scale-105 "
-                    loading="lazy"
-                  />
-                </div>
-                );
+                  <div className="bg-muted flex items-center justify-center rounded-lg px-0 py-4">
+                    <img
+                      src={card.image as string}
+                      alt={card.imageAlt as string}
+                      className="h-auto w-full max-w-[220px] scale-105 object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                )
 
               case 'reporting':
-                return (
-                  <div className="flex items-center justify-center bg-muted rounded-lg">
-                  
-                </div>
-                );
+                return <div className="bg-muted flex items-center justify-center rounded-lg"></div>
 
               default:
                 return (
                   <article
                     key={card.key}
-                    className="flex h-full flex-col justify-between rounded-lg bg-muted p-6 shadow-sm backdrop-blur-sm transition-shadow hover:shadow-lg"
+                    className="bg-muted flex h-full flex-col justify-between rounded-lg p-6 shadow-sm backdrop-blur-sm transition-shadow hover:shadow-lg"
                   >
                     <div className="space-y-4">
                       {card.image ? (
@@ -89,44 +83,51 @@ export function AdvertiseSection() {
                           />
                         </div>
                       ) : (
-                        <div className="flex w-full h-full items-center justify-center rounded-lg bg-muted text-center">
+                        <div className="bg-muted flex h-full w-full items-center justify-center rounded-lg text-center">
                           <span className="text-muted-foreground">No image</span>
                         </div>
                       )}
-                      <div className="text-center space-y-2">
-                        <h3 className="text-lg font-semibold text-foreground">{card.title}</h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed">{card.copy}</p>
+                      <div className="space-y-2 text-center">
+                        <h3 className="text-foreground text-lg font-semibold">{card.title}</h3>
+                        <p className="text-muted-foreground text-sm leading-relaxed">{card.copy}</p>
                       </div>
                     </div>
                   </article>
-                );
+                )
             }
           })}
         </div>
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
           <div className="space-y-5 text-center lg:text-left">
-            <h2 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">Advertise with Passport.ET</h2>
-            <p className="text-sm text-muted-foreground sm:text-base max-w-sm">
-              Reach millions of Ethiopian citizens and travelers through the official passport readiness portal. Campaigns include
-              strategic placement, platform-wide promotion, and creative tailored to your brand voice.
+            <h2 className="text-foreground text-2xl font-semibold tracking-tight sm:text-3xl">
+              Advertise with Passport.ET
+            </h2>
+            <p className="text-muted-foreground max-w-sm text-sm sm:text-base">
+              Reach millions of Ethiopian citizens and travelers through the official passport
+              readiness portal. Campaigns include strategic placement, platform-wide promotion, and
+              creative tailored to your brand voice.
             </p>
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-start">
-              <Button size="md" rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}>Contact Us Now</Button>
-              <p className="text-xs font-medium uppercase tracking-[0.3em] text-muted-foreground">Limited slots available</p>
+              <Button size="md" rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}>
+                Contact Us Now
+              </Button>
+              <p className="text-muted-foreground text-xs font-medium tracking-[0.3em] uppercase">
+                Limited slots available
+              </p>
             </div>
           </div>
 
-          <div className="space-y-6 text-sm text-muted-foreground sm:text-base">
+          <div className="text-muted-foreground space-y-6 text-sm sm:text-base">
             <p>
-              Our advertising package delivers top-of-page visibility across Passport.ET with premium placements on the homepage,
-              insights hub, and passport status results pages.
+              Our advertising package delivers top-of-page visibility across Passport.ET with
+              premium placements on the homepage, insights hub, and passport status results pages.
             </p>
             <div className="space-y-2">
-              <p className="font-semibold text-foreground text-xl">Ad Graphics Design Included</p>
+              <p className="text-foreground text-xl font-semibold">Ad Graphics Design Included</p>
               <p>
-                Collaborate with our in-house designers for static or animated creatives complete with copy, CTA, and localization
-                for Amharic- and English-speaking audiences.
+                Collaborate with our in-house designers for static or animated creatives complete
+                with copy, CTA, and localization for Amharic- and English-speaking audiences.
               </p>
             </div>
           </div>

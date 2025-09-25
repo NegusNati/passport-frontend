@@ -1,45 +1,84 @@
-
 import * as React from 'react'
 
 type Quote = { name: string; quote: string }
 
 const QUOTES: Quote[] = [
-  { name: 'Abebe Kebede', quote: 'The online status check saved me so much time. I knew exactly when my passport was ready for collection!' },
-  { name: 'Tigist Haile', quote: 'The process was straightforward and the site was very easy to use. I got my passport faster than I expected.' },
-  { name: 'Yohannes Gebre', quote: "The SMS notification feature is fantastic. I didn’t have to keep checking the website for updates." },
-  { name: 'Dawit Mengistu', quote: 'As a frequent traveler, I appreciate how efficient the process has become and how easy it is to get informed here.' },
-  { name: 'Meron Alemu', quote: 'The customer support team on Telegram was incredibly helpful when I had questions about my application.' },
-  { name: 'Freiwhot Tadesse', quote: 'I was impressed by the user‑friendly interface. It made checking my passport status a breeze.' },
-  { name: 'Natnael Tadesse', quote: "I loved how easy it was to check my passport status. I appreciate the team’s help and support." },
-  { name: 'Bereket Tadesse', quote: 'I appreciate the transparency in the process. The timeline provided was accurate and helpful.' },
+  {
+    name: 'Abebe Kebede',
+    quote:
+      'The online status check saved me so much time. I knew exactly when my passport was ready for collection!',
+  },
+  {
+    name: 'Tigist Haile',
+    quote:
+      'The process was straightforward and the site was very easy to use. I got my passport faster than I expected.',
+  },
+  {
+    name: 'Yohannes Gebre',
+    quote:
+      'The SMS notification feature is fantastic. I didn’t have to keep checking the website for updates.',
+  },
+  {
+    name: 'Dawit Mengistu',
+    quote:
+      'As a frequent traveler, I appreciate how efficient the process has become and how easy it is to get informed here.',
+  },
+  {
+    name: 'Meron Alemu',
+    quote:
+      'The customer support team on Telegram was incredibly helpful when I had questions about my application.',
+  },
+  {
+    name: 'Freiwhot Tadesse',
+    quote:
+      'I was impressed by the user‑friendly interface. It made checking my passport status a breeze.',
+  },
+  {
+    name: 'Natnael Tadesse',
+    quote:
+      'I loved how easy it was to check my passport status. I appreciate the team’s help and support.',
+  },
+  {
+    name: 'Bereket Tadesse',
+    quote:
+      'I appreciate the transparency in the process. The timeline provided was accurate and helpful.',
+  },
 ]
 
 function CardItem({ q }: { q: Quote }) {
   return (
-    <li className=" hover:border hover:border-border  bg-muted hover:bg-card  px-3 py-3 md:px-4 md:py-4 shadow-xs ">
-      <p className="text-[13px] leading-relaxed text-muted-foreground italic">“{q.quote}”</p>
-      <p className="mt-2 text-[13px] font-medium text-foreground hover:text-primary">{q.name}</p>
+    <li className="hover:border-border bg-muted hover:bg-card px-3 py-3 shadow-xs hover:border md:px-4 md:py-4">
+      <p className="text-muted-foreground text-[13px] leading-relaxed italic">“{q.quote}”</p>
+      <p className="text-foreground hover:text-primary mt-2 text-[13px] font-medium">{q.name}</p>
     </li>
   )
 }
 
-function VerticalMarqueeDual({ items, durationA = 28, durationB = 32 }: { items: Quote[]; durationA?: number; durationB?: number }) {
+function VerticalMarqueeDual({
+  items,
+  durationA = 28,
+  durationB = 32,
+}: {
+  items: Quote[]
+  durationA?: number
+  durationB?: number
+}) {
   const half = Math.ceil(items.length / 2)
   const colA = items.slice(0, half)
   const colB = items.slice(half)
   const a = React.useMemo(() => [...colA, ...colA], [colA])
-  const b = React.useMemo(() => [...(colB.length ? colB : colA), ...(colB.length ? colB : colA)], [colA, colB])
+  const b = React.useMemo(
+    () => [...(colB.length ? colB : colA), ...(colB.length ? colB : colA)],
+    [colA, colB],
+  )
 
   return (
-    <div className="relative h-[36rem] overflow-hidden  p-2   ">
-      
-    
-
-      <div className="grid h-full grid-cols-1 gap-4 md:grid-cols-2 items-center">
+    <div className="relative h-[36rem] overflow-hidden p-2">
+      <div className="grid h-full grid-cols-1 items-center gap-4 md:grid-cols-2">
         <ul
           aria-label="User testimonials column A"
-          className="marquee marquee-pause relative grid gap-4 animate-marquee-y"
-          style={{ ['--marquee-duration' as any]: `${durationA}s` }}
+          className="marquee marquee-pause animate-marquee-y relative grid gap-4"
+          style={{ '--marquee-duration': `${durationA}s` } as React.CSSProperties}
         >
           {a.map((q, i) => (
             <CardItem key={`a-${q.name}-${i}`} q={q} />
@@ -47,8 +86,8 @@ function VerticalMarqueeDual({ items, durationA = 28, durationB = 32 }: { items:
         </ul>
         <ul
           aria-label="User testimonials column B"
-          className="marquee marquee-pause relative grid gap-4 animate-marquee-y-reverse"
-          style={{ ['--marquee-duration' as any]: `${durationB}s` }}
+          className="marquee marquee-pause animate-marquee-y-reverse relative grid gap-4"
+          style={{ '--marquee-duration': `${durationB}s` } as React.CSSProperties}
         >
           {b.map((q, i) => (
             <CardItem key={`b-${q.name}-${i}`} q={q} />
@@ -59,37 +98,48 @@ function VerticalMarqueeDual({ items, durationA = 28, durationB = 32 }: { items:
   )
 }
 
-function HorizontalMarqueeDual({ items, durationA = 22, durationB = 26 }: { items: Quote[]; durationA?: number; durationB?: number }) {
+function HorizontalMarqueeDual({
+  items,
+  durationA = 22,
+  durationB = 26,
+}: {
+  items: Quote[]
+  durationA?: number
+  durationB?: number
+}) {
   const half = Math.ceil(items.length / 2)
   const rowA = items.slice(0, half)
   const rowB = items.slice(half)
   const a = React.useMemo(() => [...rowA, ...rowA], [rowA])
-  const b = React.useMemo(() => [...(rowB.length ? rowB : rowA), ...(rowB.length ? rowB : rowA)], [rowA, rowB])
+  const b = React.useMemo(
+    () => [...(rowB.length ? rowB : rowA), ...(rowB.length ? rowB : rowA)],
+    [rowA, rowB],
+  )
 
   return (
     <div className="relative w-full overflow-hidden rounded-xl p-2">
       {/* left/right fade */}
-      <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-gradient-to-r from-white to-transparent" />
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-white to-transparent" />
-      <div className="w-full overflow-hidden grid gap-3 items-center">
+      <div className="pointer-events-none absolute top-0 left-0 h-full w-10 bg-gradient-to-r from-white to-transparent" />
+      <div className="pointer-events-none absolute top-0 right-0 h-full w-10 bg-gradient-to-l from-white to-transparent" />
+      <div className="grid w-full items-center gap-3 overflow-hidden">
         <ul
           aria-label="User testimonials row A"
-          className="marquee marquee-pause relative flex w-max gap-3 animate-marquee-x"
-          style={{ ['--marquee-duration' as any]: `${durationA}s` }}
+          className="marquee marquee-pause animate-marquee-x relative flex w-max gap-3"
+          style={{ '--marquee-duration': `${durationA}s` } as React.CSSProperties}
         >
           {a.map((q, i) => (
-            <li key={`ha-${q.name}-${i}`} className="min-w-[200px] max-w-[280px] flex-shrink-0">
+            <li key={`ha-${q.name}-${i}`} className="max-w-[280px] min-w-[200px] flex-shrink-0">
               <CardItem q={q} />
             </li>
           ))}
         </ul>
         <ul
           aria-label="User testimonials row B"
-          className="marquee marquee-pause relative flex w-max gap-3 animate-marquee-x-reverse"
-          style={{ ['--marquee-duration' as any]: `${durationB}s` }}
+          className="marquee marquee-pause animate-marquee-x-reverse relative flex w-max gap-3"
+          style={{ '--marquee-duration': `${durationB}s` } as React.CSSProperties}
         >
           {b.map((q, i) => (
-            <li key={`hb-${q.name}-${i}`} className="min-w-[200px] max-w-[280px] flex-shrink-0">
+            <li key={`hb-${q.name}-${i}`} className="max-w-[280px] min-w-[200px] flex-shrink-0">
               <CardItem q={q} />
             </li>
           ))}
@@ -101,42 +151,37 @@ function HorizontalMarqueeDual({ items, durationA = 22, durationB = 26 }: { item
 
 export function Testimonials() {
   return (
-    <aside className="mt-6 md:mt-0 relative">
-    {/* Mobile: horizontal marquee */}
-    <div className="md:hidden relative">
-      {/* left fade */}
-      <div
-        className="pointer-events-none absolute inset-y-0 left-0 w-10
-                   bg-gradient-to-r from-background to-transparent"
-        aria-hidden
-      />
-      <HorizontalMarqueeDual items={QUOTES} />
-      {/* right fade */}
-      <div
-        className="pointer-events-none absolute inset-y-0 right-0 w-10
-                   bg-gradient-to-l from-background to-transparent"
-        aria-hidden
-      />
-    </div>
-  
-    {/* Desktop: vertical marquee */}
-    <div className="hidden md:block relative">
-      {/* top fade (fixed) */}
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-16
-                   bg-gradient-to-b from-background to-transparent"
-        aria-hidden
-      />
-      <VerticalMarqueeDual items={QUOTES} />
-      {/* bottom fade (make direction consistent) */}
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-16
-                   bg-gradient-to-t from-background to-transparent"
-        aria-hidden
-      />
-    </div>
-  </aside>
-  
+    <aside className="relative mt-6 md:mt-0">
+      {/* Mobile: horizontal marquee */}
+      <div className="relative md:hidden">
+        {/* left fade */}
+        <div
+          className="from-background pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r to-transparent"
+          aria-hidden
+        />
+        <HorizontalMarqueeDual items={QUOTES} />
+        {/* right fade */}
+        <div
+          className="from-background pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l to-transparent"
+          aria-hidden
+        />
+      </div>
+
+      {/* Desktop: vertical marquee */}
+      <div className="relative hidden md:block">
+        {/* top fade (fixed) */}
+        <div
+          className="from-background pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b to-transparent"
+          aria-hidden
+        />
+        <VerticalMarqueeDual items={QUOTES} />
+        {/* bottom fade (make direction consistent) */}
+        <div
+          className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t to-transparent"
+          aria-hidden
+        />
+      </div>
+    </aside>
   )
 }
 
