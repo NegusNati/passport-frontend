@@ -265,34 +265,37 @@ export function PassportsTable({ searchQuery, searchMode }: PassportsTableProps)
             </div>
 
             <div className="flex items-center gap-2">
+              {/* Prev */}
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => table.previousPage()}
-                disabled={pagination.pageIndex === 0}
+                disabled={currentPage <= 1}
               >
                 Previous
               </Button>
 
-              <div className="flex items-center gap-1">
-                {Array.from({ length: pageCount }, (_, i) => (
+              {/* current-1, current, current+1 */}
+              {([currentPage - 1, currentPage, currentPage + 1] as number[])
+                .filter((n) => n >= 1 && n <= pageCount)
+                .map((n) => (
                   <Button
-                    key={i}
-                    variant={i === pagination.pageIndex ? 'primary' : 'outline'}
+                    key={n}
+                    variant={n === currentPage ? 'primary' : 'outline'}
                     size="sm"
-                    onClick={() => table.setPageIndex(i)}
+                    onClick={() => table.setPageIndex(n - 1)}
                     className="h-8 w-8 p-0"
                   >
-                    {i + 1}
+                    {n}
                   </Button>
                 ))}
-              </div>
 
+              {/* Next */}
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => table.nextPage()}
-                disabled={pagination.pageIndex + 1 >= pageCount}
+                disabled={currentPage >= pageCount}
               >
                 Next
               </Button>

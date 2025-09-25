@@ -12,7 +12,7 @@ export const PassportApiItem = z.object({
   location: z.string(),
   date_of_publish: z.string(), // YYYY-MM-DD
   created_at: z.string(), // ISO string
-  updated_at: z.string(), // ISO string
+  updated_at: z.string().nullable().optional(), // can be null
 })
 export type PassportApiItem = z.infer<typeof PassportApiItem>
 
@@ -31,15 +31,8 @@ export const PaginationMeta = z.object({
   has_more: z.boolean(),
 })
 
-export const SearchFilters = z.object({
-  request_number: z.string().nullable().optional(),
-  first_name: z.string().nullable().optional(),
-  middle_name: z.string().nullable().optional(),
-  last_name: z.string().nullable().optional(),
-  location: z.string().nullable().optional(),
-  published_after: z.string().nullable().optional(),
-  published_before: z.string().nullable().optional(),
-})
+// Some deployments return an empty array for filters; accept any shape
+export const SearchFilters = z.unknown().optional()
 
 export const PassportListResponse = z.object({
   data: z.array(PassportApiItem),

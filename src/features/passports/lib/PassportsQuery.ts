@@ -9,7 +9,7 @@ export const passportsKeys = {
   locations: () => [...passportsKeys.all, 'locations'] as const,
 }
 
-export function usePassportsQuery(params: ListParams, options?: { enabled?: boolean }) {
+export function usePassportsQuery(params: Partial<ListParams>, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: passportsKeys.list(params) as QueryKey,
     queryFn: () => fetchPassports(params),

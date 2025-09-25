@@ -9,11 +9,11 @@ export const ArticleApiItem = z.object({
   title: z.string(),
   excerpt: z.string().nullable().optional(),
   content: z.string().nullable().optional(),
-  featured_image_url: z.string().url().nullable().optional(),
-  canonical_url: z.string().url().nullable().optional(),
+  featured_image_url: z.union([z.string().url(), z.string()]).nullable().optional(),
+  canonical_url: z.union([z.string().url(), z.string()]).nullable().optional(),
   meta_title: z.string().nullable().optional(),
   meta_description: z.string().nullable().optional(),
-  og_image_url: z.string().url().nullable().optional(),
+  og_image_url: z.union([z.string().url(), z.string()]).nullable().optional(),
   status: z.string(),
   published_at: z.string().nullable().optional(),
   reading_time: z.number().int().nullable().optional(),
@@ -45,13 +45,8 @@ export const ArticleListResponse = z.object({
   data: z.array(ArticleApiItem),
   links: PaginationLinks.optional(),
   meta: PaginationMeta,
-  filters: z
-    .object({
-      q: z.string().nullable().optional(),
-      category: z.string().nullable().optional(),
-      tag: z.string().nullable().optional(),
-    })
-    .optional(),
+  // Accept any shape (some deployments return [] for filters)
+  filters: z.unknown().optional(),
 })
 export type ArticleListResponse = z.infer<typeof ArticleListResponse>
 
