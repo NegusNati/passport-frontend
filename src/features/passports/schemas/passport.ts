@@ -2,12 +2,13 @@ import { z } from 'zod'
 
 // Search form schemas
 export const PassportSearchByNumber = z.object({
-  requestNumber: z.string().min(1, 'Request number is required'),
+  requestNumber: z.string().optional().default(''),
 })
 
 export const PassportSearchByName = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
+  firstName: z.string().optional().default(''),
+  middleName: z.string().optional().default(''),
+  lastName: z.string().optional().default(''),
 })
 
 export type PassportSearchByNumber = z.infer<typeof PassportSearchByNumber>

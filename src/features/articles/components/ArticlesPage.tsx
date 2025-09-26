@@ -6,6 +6,7 @@ import {
   useTagsQuery,
 } from '@/features/articles/lib/ArticlesQuery'
 import type { ArticleApiItem } from '@/features/articles/lib/ArticlesSchema'
+import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
 import { AdSlot } from '@/shared/ui/ad-slot'
 import { Container } from '@/shared/ui/container'
 import { Seo } from '@/shared/ui/Seo'
@@ -27,15 +28,18 @@ export function ArticlesPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const perPage = 12
 
+  const debounced = useDebouncedValue(searchQuery, 350)
+
   const params = useMemo(() => ({
     per_page: perPage,
     page: currentPage,
     sort: 'published_at' as const,
     sort_dir: 'desc' as const,
-    ...(searchQuery.trim() && { q: searchQuery.trim() }),
+    // Prefer fast title prefix search; only send when >= 3 chars for performance
+    ...(debounced.trim().length >= 3 && { title: debounced.trim() }),
     ...(filters.category !== 'all' && { category: filters.category }),
     ...(filters.tag !== 'all' && { tag: filters.tag }),
-  }), [searchQuery, filters, currentPage, perPage])
+  }), [debounced, filters, currentPage, perPage])
 
   const { data, isLoading } = useArticlesQuery(params)
   const categories = useCategoriesQuery()
@@ -86,7 +90,11 @@ export function ArticlesPage() {
         extraLinks={getFeedLinks()}
       />
 
-      <ArticleSearchForm onSearch={handleSearch} initialQuery={searchQuery} />
+      <ArticleSearchForm
+        onSearch={handleSearch}
+        initialQuery={searchQuery}
+        onQueryChange={(v) => setSearchQuery(v)}
+      />
 
       <section className="border-border border-b py-6">
         <Container>
@@ -105,7 +113,9 @@ export function ArticlesPage() {
         <Container>
           <div className="mb-6 flex items-center justify-between">
             <div className="text-muted-foreground text-sm">
-              {searchQuery && <span>Search results for &ldquo;{searchQuery}&rdquo; • </span>}
+              {debounced.trim().length >= 3 && (
+                <span>Search results for &ldquo;{debounced}&rdquo; • </span>
+              )}
               {meta?.total ?? 0} articles found
             </div>
             {searchQuery && (

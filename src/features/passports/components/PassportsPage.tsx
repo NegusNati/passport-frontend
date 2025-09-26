@@ -21,19 +21,28 @@ export function PassportsPage() {
       setSearchQuery(numberData.requestNumber)
     } else {
       const nameData = data as PassportSearchByName
-      setSearchQuery(`${nameData.firstName} ${nameData.lastName}`)
+      const q = [nameData.firstName, nameData.middleName?.trim(), nameData.lastName]
+        .filter(Boolean)
+        .join(' ')
+      setSearchQuery(q)
     }
   }
 
   return (
     <div className="min-h-screen">
       {/* Search Form Section */}
-      <PassportSearchForm onSearch={handleSearch} />
+      <PassportSearchForm
+        onSearch={handleSearch}
+        onQueryChange={(q, mode) => {
+          setSearchMode(mode)
+          setSearchQuery(q)
+        }}
+      />
 
       {/* Ad Banner Section */}
       <section className="bg-background py-8">
         <div className="container mx-auto max-w-6xl px-4">
-          <AdSlot preset="sponsored" orientation="horizontal" className="rounded-lg" />
+          <AdSlot preset="sponsored" orientation="horizontal" />
         </div>
       </section>
 

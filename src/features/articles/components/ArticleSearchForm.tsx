@@ -10,9 +10,10 @@ import { ArticleSearch, type ArticleSearch as ArticleSearchType } from '../schem
 interface ArticleSearchFormProps {
   onSearch: (data: ArticleSearchType) => void
   initialQuery?: string
+  onQueryChange?: (value: string) => void
 }
 
-export function ArticleSearchForm({ onSearch, initialQuery = '' }: ArticleSearchFormProps) {
+export function ArticleSearchForm({ onSearch, initialQuery = '', onQueryChange }: ArticleSearchFormProps) {
   const form = useForm({
     defaultValues: {
       query: initialQuery,
@@ -48,15 +49,7 @@ export function ArticleSearchForm({ onSearch, initialQuery = '' }: ArticleSearch
               }}
               className="space-y-4"
             >
-              <form.Field
-                name="query"
-                validators={{
-                  onChange: ({ value }) => {
-                    if (!value || value.trim() === '') return 'Search query is required'
-                    return undefined
-                  },
-                }}
-              >
+              <form.Field name="query">
                 {(field) => (
                   <div className="space-y-2">
                     <Label htmlFor="articleQuery" className="sr-only">
@@ -68,18 +61,22 @@ export function ArticleSearchForm({ onSearch, initialQuery = '' }: ArticleSearch
                         type="text"
                         placeholder="Enter article title"
                         value={field.state.value}
-                        onChange={(e) => field.handleChange(e.target.value)}
+                        onChange={(e) => {
+                          const v = e.target.value
+                          field.handleChange(v)
+                          onQueryChange?.(v)
+                        }}
                         onBlur={field.handleBlur}
                         className="flex-1 text-base"
-                        aria-invalid={field.state.meta.errors.length > 0}
+                        aria-invalid={false}
                       />
                       <Button type="submit" className="px-6" disabled={!field.state.value.trim()}>
                         Search Article
                       </Button>
                     </div>
-                    {field.state.meta.errors.length > 0 && (
-                      <p className="text-destructive text-sm">{field.state.meta.errors[0]}</p>
-                    )}
+                    <p className="text-muted-foreground text-xs">
+                      Tip: Start typing to search (min 3 characters)
+                    </p>
                   </div>
                 )}
               </form.Field>
