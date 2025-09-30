@@ -8,6 +8,8 @@ import { LocationsResponse, PassportDetailResponse, PassportListResponse } from 
 // Query params must match API v1 exactly
 const yyyyMmDd = /^\d{4}-\d{2}-\d{2}$/
 
+const pageSizeSchema = z.number().int().min(1).max(200)
+
 export const ListParams = z.object({
   request_number: z.string().optional(),
   first_name: z.string().optional(),
@@ -16,7 +18,7 @@ export const ListParams = z.object({
   location: z.string().optional(),
   published_after: z.string().regex(yyyyMmDd, 'YYYY-MM-DD').optional(),
   published_before: z.string().regex(yyyyMmDd, 'YYYY-MM-DD').optional(),
-  per_page: z.number().int().min(1).max(200).optional().default(25),
+  page_size: pageSizeSchema.default(25),
   page: z.number().int().min(1).optional().default(1),
   sort: z
     .enum(['dateOfPublish', 'requestNumber', 'created_at'])

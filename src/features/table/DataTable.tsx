@@ -126,6 +126,15 @@ export function DataTable<TData, TValue>({
   });
   const ToolbarComponent = CustomToolbar || DataTableToolbar;
 
+  // Force table section to re-render when server data size or controlled pagination changes.
+  // This guards against cases where upstream keeps previous data during fetches
+  // and React Table's internal memoization could retain the old row model briefly.
+  const renderKey = React.useMemo(() => {
+    const pageIndex = pagination ? pagination.pageIndex : table.getState().pagination.pageIndex;
+    const pageSize = pagination ? pagination.pageSize : table.getState().pagination.pageSize;
+    return `${data.length}-${pageIndex}-${pageSize}`;
+  }, [data.length, pagination, table]);
+
   const handlePaginationChange = (pageIndex: number) => {
     if (pagination) {
       pagination.onPageChange(pageIndex + 1); // Convert 0-based to 1-based for the API
@@ -163,7 +172,7 @@ export function DataTable<TData, TValue>({
           actionTitle={actionTitle}
         />
       )}
-      <div className="rounded-none border">
+      <div className="rounded-none border" key={renderKey}>
         <Table>
           <TableHeader className="rounded-none border-none  bg-accent">
             {table.getHeaderGroups().map((headerGroup) => (
