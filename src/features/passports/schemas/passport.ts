@@ -2,17 +2,41 @@ import { z } from 'zod'
 
 // Search form schemas
 export const PassportSearchByNumber = z.object({
-  requestNumber: z.string().optional().default(''),
+  requestNumber: z
+    .string()
+    .trim()
+    .min(3, 'Enter at least 3 characters')
+    .max(255, 'Keep the request number under 255 characters'),
 })
 
 export const PassportSearchByName = z.object({
-  firstName: z.string().optional().default(''),
-  middleName: z.string().optional().default(''),
-  lastName: z.string().optional().default(''),
-})
+  firstName: z.string().trim().optional().default(''),
+  middleName: z.string().trim().optional().default(''),
+  lastName: z.string().trim().optional().default(''),
+}).refine(
+  (values) =>
+    [values.firstName, values.middleName, values.lastName]
+      .filter(Boolean)
+      .some((value) => !!value && value.trim().length >= 3),
+  {
+    message: 'Enter at least one name with 3 or more characters',
+    path: ['firstName'],
+  },
+)
 
 export type PassportSearchByNumber = z.infer<typeof PassportSearchByNumber>
 export type PassportSearchByName = z.infer<typeof PassportSearchByName>
+
+export const PassportSearchFilters = z.object({
+  request_number: z.string().optional(),
+  first_name: z.string().optional(),
+  middle_name: z.string().optional(),
+  last_name: z.string().optional(),
+  name: z.string().optional(),
+  query: z.string().optional(),
+})
+
+export type PassportSearchFilters = z.infer<typeof PassportSearchFilters>
 
 // Passport data schema
 export const Passport = z.object({

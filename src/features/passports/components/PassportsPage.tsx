@@ -2,41 +2,43 @@ import * as React from 'react'
 
 import { AdSlot } from '@/shared/ui/ad-slot'
 
-import { type PassportSearchByName, type PassportSearchByNumber } from '../schemas/passport'
 import { PassportSearchForm } from './PassportSearchForm'
 import { PassportsTable } from './PassportsTable'
+import type { PassportSearchFilters } from '../schemas/passport'
+
+type SearchMode = 'number' | 'name'
 
 export function PassportsPage() {
-  const [searchQuery, setSearchQuery] = React.useState<string>('')
-  const [searchMode, setSearchMode] = React.useState<'number' | 'name'>('number')
+  const [searchMode, setSearchMode] = React.useState<SearchMode>('number')
+  const [searchFilters, setSearchFilters] = React.useState<PassportSearchFilters>({})
 
-  const handleSearch = (
-    data: PassportSearchByNumber | PassportSearchByName,
-    mode: 'number' | 'name',
-  ) => {
-    setSearchMode(mode)
+  const isSameFilters = React.useCallback(
+    (a: PassportSearchFilters, b: PassportSearchFilters) => {
+      const keys = new Set([...Object.keys(a), ...Object.keys(b)])
+      for (const key of keys) {
+        if ((a as Record<string, string>)[key] !== (b as Record<string, string>)[key]) {
+          return false
+        }
+      }
+      return true
+    },
+    [],
+  )
 
-    if (mode === 'number') {
-      const numberData = data as PassportSearchByNumber
-      setSearchQuery(numberData.requestNumber)
-    } else {
-      const nameData = data as PassportSearchByName
-      const q = [nameData.firstName, nameData.middleName?.trim(), nameData.lastName]
-        .filter(Boolean)
-        .join(' ')
-      setSearchQuery(q)
-    }
-  }
+  const updateFilters = React.useCallback(
+    (filters: PassportSearchFilters, mode: SearchMode) => {
+      setSearchMode(mode)
+      setSearchFilters((prev) => (isSameFilters(prev, filters) ? prev : filters))
+    },
+    [isSameFilters],
+  )
 
   return (
     <div className="min-h-screen">
       {/* Search Form Section */}
       <PassportSearchForm
-        onSearch={handleSearch}
-        onQueryChange={(q, mode) => {
-          setSearchMode(mode)
-          setSearchQuery(q)
-        }}
+        onSearch={updateFilters}
+        onQueryChange={updateFilters}
       />
 
       {/* Ad Banner Section */}
@@ -47,7 +49,7 @@ export function PassportsPage() {
       </section>
 
       {/* Passports Table Section */}
-      <PassportsTable searchQuery={searchQuery} searchMode={searchMode} />
+      <PassportsTable searchFilters={searchFilters} searchMode={searchMode} />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { useForm } from '@tanstack/react-form'
 import { useRouter } from '@tanstack/react-router'
-import { useEffect,useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
 import { Button } from '@/shared/ui/button'
@@ -14,13 +14,14 @@ import {
   type PassportSearchByName as PassportSearchByNameType,
   PassportSearchByNumber,
   type PassportSearchByNumber as PassportSearchByNumberType,
+  type PassportSearchFilters,
 } from '../schemas/passport'
 
 type SearchMode = 'number' | 'name'
 
 interface PassportSearchFormProps {
-  onSearch: (data: PassportSearchByNumberType | PassportSearchByNameType, mode: SearchMode) => void
-  onQueryChange?: (query: string, mode: SearchMode) => void
+  onSearch: (filters: PassportSearchFilters, mode: SearchMode) => void
+  onQueryChange?: (filters: PassportSearchFilters, mode: SearchMode) => void
 }
 
 export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFormProps) {
@@ -39,6 +40,34 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
   )
   const debouncedName = useDebouncedValue(nameQueryRaw, 300)
 
+  const sanitizeRequestNumber = (value: string) =>
+    value
+      .replace(/[^0-9A-Za-z]/g, '')
+      .trim()
+      .toUpperCase()
+
+  const sanitizeNameSegment = (value: string) => {
+    const trimmed = value.trim()
+    if (!trimmed) return ''
+    return trimmed
+      .split(/\s+/)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+      .join(' ')
+  }
+
+  const buildNameFilters = (first: string, middle: string, last: string): PassportSearchFilters => {
+    const filters: PassportSearchFilters = {}
+    const sanitizedFirst = sanitizeNameSegment(first)
+    const sanitizedMiddle = sanitizeNameSegment(middle)
+    const sanitizedLast = sanitizeNameSegment(last)
+
+    if (sanitizedFirst.length >= 3) filters.first_name = sanitizedFirst
+    if (sanitizedMiddle.length >= 3) filters.middle_name = sanitizedMiddle
+    if (sanitizedLast.length >= 3) filters.last_name = sanitizedLast
+
+    return filters
+  }
+
   const numberForm = useForm({
     defaultValues: {
       requestNumber: '',
@@ -46,10 +75,11 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
     onSubmit: async ({ value }) => {
       try {
         const validatedData = PassportSearchByNumber.parse(value)
+        const sanitized = sanitizeRequestNumber(validatedData.requestNumber)
 
         // Check if a specific passport is found
         const foundPassport = DUMMY_PASSPORTS.find(
-          (p) => p.requestNumber.toLowerCase() === validatedData.requestNumber.toLowerCase(),
+          (p) => p.requestNumber.toLowerCase() === sanitized.toLowerCase(),
         )
 
         if (foundPassport) {
@@ -60,7 +90,7 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
           })
         } else {
           // Use existing search functionality for partial matches
-          onSearch(validatedData, 'number')
+          onSearch({ request_number: sanitized }, 'number')
         }
       } catch (error) {
         console.error('Validation error:', error)
@@ -84,20 +114,25 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
           validatedData.middleName?.trim(),
           validatedData.lastName,
         ]
-          .filter(Boolean)
-          .join(' ')
-          .toLowerCase()
-        const foundPassport = DUMMY_PASSPORTS.find((p) => p.name.toLowerCase() === searchName)
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase()
+    const foundPassport = DUMMY_PASSPORTS.find((p) => p.name.toLowerCase() === searchName)
 
-        if (foundPassport) {
-          // Navigate to detail page
-          router.navigate({
+      if (foundPassport) {
+        // Navigate to detail page
+        router.navigate({
             to: '/passports/$passportId',
             params: { passportId: foundPassport.id },
           })
         } else {
           // Use existing search functionality for partial matches
-          onSearch(validatedData, 'name')
+          const filters = buildNameFilters(
+            validatedData.firstName ?? '',
+            validatedData.middleName ?? '',
+            validatedData.lastName ?? '',
+          )
+          onSearch(filters, 'name')
         }
       } catch (error) {
         console.error('Validation error:', error)
@@ -108,21 +143,32 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
   const handleToggleMode = () => {
     const next = searchMode === 'number' ? 'name' : 'number'
     setSearchMode(next)
-    onQueryChange?.('', next)
+    onQueryChange?.({}, next)
   }
 
   // Debounced interactive search: trigger after >=3 characters
   useEffect(() => {
     if (searchMode !== 'number') return
     const q = debouncedNumber.trim()
-    onQueryChange?.(q.length >= 3 ? q : '', 'number')
+    if (!onQueryChange) return
+    const sanitized = sanitizeRequestNumber(q)
+    if (sanitized.length >= 3) {
+      onQueryChange({ request_number: sanitized }, 'number')
+    } else {
+      onQueryChange({}, 'number')
+    }
   }, [debouncedNumber, searchMode, onQueryChange])
 
   useEffect(() => {
     if (searchMode !== 'name') return
-    const q = debouncedName.trim()
-    onQueryChange?.(q.length >= 3 ? q : '', 'name')
-  }, [debouncedName, searchMode, onQueryChange])
+    if (!onQueryChange) return
+    const filters = buildNameFilters(firstInput, middleInput, lastInput)
+    if (Object.keys(filters).length > 0) {
+      onQueryChange(filters, 'name')
+    } else {
+      onQueryChange({}, 'name')
+    }
+  }, [debouncedName, firstInput, middleInput, lastInput, searchMode, onQueryChange])
 
   return (
     <section className="bg-background py-12 md:py-16">
@@ -275,9 +321,10 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
                     key={number}
                     type="button"
                     onClick={() => {
-                      numberForm.setFieldValue('requestNumber', number)
-                      // ensure debounced live search is triggered
-                      setNumberInput(number)
+                     numberForm.setFieldValue('requestNumber', number)
+                     // ensure debounced live search is triggered
+                     setNumberInput(number)
+                    onQueryChange?.({ request_number: sanitizeRequestNumber(number) }, 'number')
                     }}
                     className="border-border bg-muted/50 hover:bg-muted rounded-md border px-3 py-1 text-xs"
                   >

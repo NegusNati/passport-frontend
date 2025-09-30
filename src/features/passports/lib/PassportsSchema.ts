@@ -27,6 +27,7 @@ export const PaginationMeta = z.object({
   current_page: z.number().int().min(1),
   per_page: z.number().int().min(1).optional(),
   page_size: z.number().int().min(1).optional(),
+  page_size_options: z.array(z.number().int().min(1)).optional(),
   total: z.number().int().nonnegative(),
   last_page: z.number().int().min(1),
   has_more: z.boolean(),

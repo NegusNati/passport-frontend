@@ -10,21 +10,35 @@ const yyyyMmDd = /^\d{4}-\d{2}-\d{2}$/
 
 const pageSizeSchema = z.number().int().min(1).max(200)
 
-export const ListParams = z.object({
+const ListParamsBase = z.object({
   request_number: z.string().optional(),
   first_name: z.string().optional(),
   middle_name: z.string().optional(),
   last_name: z.string().optional(),
+  name: z.string().optional(),
+  query: z.string().optional(),
   location: z.string().optional(),
   published_after: z.string().regex(yyyyMmDd, 'YYYY-MM-DD').optional(),
   published_before: z.string().regex(yyyyMmDd, 'YYYY-MM-DD').optional(),
-  page_size: pageSizeSchema.default(25),
+  limit: pageSizeSchema.optional(),
+  per_page: pageSizeSchema.optional(),
+  page_size: pageSizeSchema.optional(),
   page: z.number().int().min(1).optional().default(1),
   sort: z
     .enum(['dateOfPublish', 'requestNumber', 'created_at'])
     .optional()
     .default('dateOfPublish'),
   sort_dir: z.enum(['asc', 'desc']).optional().default('desc'),
+})
+
+export const ListParams = ListParamsBase.transform((value) => {
+  const pageSize = value.page_size ?? value.per_page ?? 25
+  const { per_page, page_size, ...rest } = value
+
+  return {
+    ...rest,
+    page_size: pageSize,
+  }
 })
 
 export type ListParams = z.infer<typeof ListParams>

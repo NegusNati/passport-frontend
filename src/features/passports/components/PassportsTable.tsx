@@ -10,14 +10,39 @@ import type { ListParams } from '@/features/passports/lib/PassportsApi'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
-import { type PassportFilters } from '../schemas/passport'
+import { type PassportFilters, type PassportSearchFilters } from '../schemas/passport'
 
 type PassportsTableProps = {
-  searchQuery?: string
+  searchFilters?: PassportSearchFilters
   searchMode?: 'number' | 'name'
 }
 
 type FilterOption = { value: string; label: string }
+
+type PassportsTableToolbarProps<TData> = {
+  title: string
+  filters: PassportFilters
+  onFilterChange: (key: keyof PassportFilters, value: string) => void
+  dateOptions: FilterOption[]
+  locationOptions: FilterOption[]
+  isLoadingLocations: boolean
+} & Pick<
+  PassportsTableToolbarBaseProps<TData>,
+  'table' | 'filterableColumns' | 'searchKey' | 'onAction' | 'actionTitle' | 'onExport'
+>
+
+type PassportsTableToolbarBaseProps<TData> = {
+  table: Table<TData>
+  filterableColumns: {
+    id: string
+    title: string
+    options: FilterOption[]
+  }[]
+  searchKey?: string
+  onAction?: () => void
+  actionTitle?: string
+  onExport?: () => void
+}
 
 const DATE_PRESETS: FilterOption[] = [
   { value: 'all', label: 'All dates' },
@@ -31,9 +56,8 @@ const DEFAULT_PAGINATION: PaginationState = {
   pageSize: 10,
 }
 
-export function PassportsTable({ searchQuery, searchMode = 'number' }: PassportsTableProps) {
+export function PassportsTable({ searchFilters = {}, searchMode }: PassportsTableProps) {
   const router = useRouter()
-
   const [filters, setFilters] = React.useState<PassportFilters>({ date: 'all', city: 'all' })
   const [pagination, setPagination] = React.useState<PaginationState>(DEFAULT_PAGINATION)
 
@@ -45,23 +69,26 @@ export function PassportsTable({ searchQuery, searchMode = 'number' }: Passports
 
   React.useEffect(() => {
     setPagination((prev) => (prev.pageIndex === 0 ? prev : { ...prev, pageIndex: 0 }))
-  }, [searchQuery, searchMode])
+  }, [searchFilters, searchMode])
 
   const listParams = React.useMemo<Partial<ListParams>>(
     () =>
       buildListParams({
-        searchQuery,
-        searchMode,
+        searchFilters,
         filters,
         pagination,
       }),
-    [filters, pagination, searchMode, searchQuery],
+    [searchFilters, filters, pagination],
   )
 
   const passportsQuery = usePassportsQuery(listParams)
   const { data, isLoading, isError, error } = passportsQuery
 
-  const rows = data?.data ?? []
+  const rows = React.useMemo<PassportApiItem[]>(() => {
+    if (!data?.data) return []
+    return [...data.data]
+  }, [data?.data])
+
   const meta = data?.meta
   const total = meta?.total ?? 0
   const currentPage = meta?.current_page ?? pagination.pageIndex + 1
@@ -177,12 +204,21 @@ export function PassportsTable({ searchQuery, searchMode = 'number' }: Passports
       : new Error('Failed to load passports.')
     : null
 
+  const tableKey = React.useMemo(
+    () =>
+      `${pagination.pageIndex}-${pagination.pageSize}-${rows.length}-${passportsQuery.dataUpdatedAt ?? 0}-${JSON.stringify(
+        searchFilters,
+      )}`,
+    [pagination.pageIndex, pagination.pageSize, rows.length, passportsQuery.dataUpdatedAt, searchFilters],
+  )
+
   return (
     <section className="bg-muted/30 py-12">
       <Container>
         <div className="space-y-6">
           <div className="rounded-lg border bg-background p-6 shadow-sm">
             <DataTable
+              key={tableKey}
               tableTitle="Latest Passports"
               columns={columns}
               data={rows}
@@ -214,31 +250,6 @@ export function PassportsTable({ searchQuery, searchMode = 'number' }: Passports
       </Container>
     </section>
   )
-}
-
-type PassportsTableToolbarProps<TData> = {
-  title: string
-  filters: PassportFilters
-  onFilterChange: (key: keyof PassportFilters, value: string) => void
-  dateOptions: FilterOption[]
-  locationOptions: FilterOption[]
-  isLoadingLocations: boolean
-} & Pick<
-  PassportsTableToolbarBaseProps<TData>,
-  'table' | 'filterableColumns' | 'searchKey' | 'onAction' | 'actionTitle' | 'onExport'
->
-
-type PassportsTableToolbarBaseProps<TData> = {
-  table: Table<TData>
-  filterableColumns: {
-    id: string
-    title: string
-    options: FilterOption[]
-  }[]
-  searchKey?: string
-  onAction?: () => void
-  actionTitle?: string
-  onExport?: () => void
 }
 
 function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) {
@@ -302,13 +313,12 @@ function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) 
 }
 
 type BuildParamsArgs = {
-  searchQuery?: string
-  searchMode?: 'number' | 'name'
+  searchFilters?: PassportSearchFilters
   filters: PassportFilters
   pagination: PaginationState
 }
 
-function buildListParams({ searchQuery, searchMode, filters, pagination }: BuildParamsArgs) {
+function buildListParams({ searchFilters = {}, filters, pagination }: BuildParamsArgs) {
   const params: Partial<ListParams> = {
     page_size: pagination.pageSize,
     page: pagination.pageIndex + 1,
@@ -316,18 +326,9 @@ function buildListParams({ searchQuery, searchMode, filters, pagination }: Build
     sort_dir: 'desc',
   }
 
-  const q = (searchQuery ?? '').trim()
-  if (q) {
-    if (searchMode === 'number') {
-      params.request_number = q
-    } else {
-      const parts = q.split(/\s+/).filter(Boolean)
-      if (parts[0]) params.first_name = parts[0]
-      if (parts.length === 2) params.last_name = parts[1]
-      if (parts.length >= 3) {
-        params.middle_name = parts.slice(1, parts.length - 1).join(' ')
-        params.last_name = parts[parts.length - 1]
-      }
+  for (const [key, value] of Object.entries(searchFilters)) {
+    if (value && typeof value === 'string' && value.trim().length > 0) {
+      ;(params as Record<string, string>)[key] = value.trim()
     }
   }
 
