@@ -13,6 +13,9 @@ export type AdminPassportListParams = {
   page_size: number
   location?: string
   request_number?: string
+  first_name?: string
+  middle_name?: string
+  last_name?: string
 }
 
 export async function fetchAdminPassports(params: AdminPassportListParams) {
