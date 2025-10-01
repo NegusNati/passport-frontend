@@ -178,7 +178,7 @@ export function DataTable<TData, TValue>({
           actionTitle={actionTitle}
         />
       )}
-      <div className="rounded-none border" key={renderKey}>
+      <div className="rounded-none border" key={renderKey} role="region" aria-live="polite">
         <Table>
           <TableHeader className="rounded-none border-none  bg-accent">
             {table.getHeaderGroups().map((headerGroup) => (

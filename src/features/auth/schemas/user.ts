@@ -8,6 +8,9 @@ export const UserSchema = z.object({
   email: z.string().email().optional().nullable(),
   email_verified_at: z.string().datetime({ offset: true }).nullable(),
   plan_type: z.string().nullable(),
+  is_admin: z.boolean().default(false),
+  roles: z.array(z.string()).default([]),
+  permissions: z.array(z.string()).default([]),
   created_at: z.string().datetime({ offset: true }),
   updated_at: z.string().datetime({ offset: true }),
 })

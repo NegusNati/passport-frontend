@@ -1,24 +1,51 @@
 import { redirect } from '@tanstack/react-router'
 
+import { queryClient } from '@/api/queryClient'
+import { authKeys, fetchMe } from '@/features/auth/api'
 import type { User } from '@/features/auth/schemas/user'
 
-export type AdminCandidate = (User & { role?: string | null; is_admin?: boolean | null }) | null | undefined
+export type AdminCandidate =
+  | (User & {
+      role?: string | null
+      roles?: string[] | null
+      permissions?: string[] | null
+    })
+  | null
+  | undefined
 
 export function isAdminUser(candidate: AdminCandidate): candidate is User {
   if (!candidate) return false
-  const role = typeof candidate.role === 'string' ? candidate.role.toLowerCase() : null
-  const flag = typeof candidate.is_admin === 'boolean' ? candidate.is_admin : null
-  if (flag === true) return true
-  if (role === 'admin' || role === 'superadmin') return true
+  if (candidate.is_admin === true) return true
+
+  const roles = Array.isArray(candidate.roles)
+    ? candidate.roles.map((value) => value.toLowerCase())
+    : []
+  if (roles.includes('admin') || roles.includes('superadmin')) {
+    return true
+  }
+
+  const legacyRole = typeof candidate.role === 'string' ? candidate.role.toLowerCase() : null
+  if (legacyRole === 'admin' || legacyRole === 'superadmin') {
+    return true
+  }
+
   return false
+}
+
+export function hasPermission(candidate: AdminCandidate, permission: string) {
+  if (!candidate) return false
+  return Array.isArray(candidate.permissions)
+    ? candidate.permissions.includes(permission)
+    : false
 }
 
 export function ensureAdmin(options: {
   user: AdminCandidate
   redirectTo?: string
   loginRedirect?: string
+  requiredPermission?: string
 }) {
-  const { user, redirectTo = '/', loginRedirect = '/admin' } = options
+  const { user, redirectTo = '/', loginRedirect = '/admin', requiredPermission } = options
   if (!user) {
     throw redirect({
       to: '/login',
@@ -27,8 +54,29 @@ export function ensureAdmin(options: {
   }
 
   if (!isAdminUser(user)) {
+    if (requiredPermission && hasPermission(user, requiredPermission)) {
+      return user
+    }
     throw redirect({ to: redirectTo })
   }
 
   return user
+}
+
+export async function loadAdminUser(options?: {
+  redirectTo?: string
+  loginRedirect?: string
+  requiredPermission?: string
+}) {
+  const user = await queryClient.ensureQueryData({
+    queryKey: authKeys.user(),
+    queryFn: fetchMe,
+  })
+
+  return ensureAdmin({
+    user,
+    redirectTo: options?.redirectTo,
+    loginRedirect: options?.loginRedirect ?? '/admin',
+    requiredPermission: options?.requiredPermission,
+  })
 }

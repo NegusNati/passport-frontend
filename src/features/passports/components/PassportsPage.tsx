@@ -1,10 +1,8 @@
 import * as React from 'react'
 
-import { AdSlot } from '@/shared/ui/ad-slot'
-
+import type { PassportSearchFilters } from '../schemas/passport'
 import { PassportSearchForm } from './PassportSearchForm'
 import { PassportsTable } from './PassportsTable'
-import type { PassportSearchFilters } from '../schemas/passport'
 
 type SearchMode = 'number' | 'name'
 
@@ -35,18 +33,19 @@ export function PassportsPage() {
 
   return (
     <div className="min-h-screen">
+        {/* Ad Banner Section */}
+        {/* <section className="bg-background py-8">
+        <div className="container mx-auto max-w-6xl px-4">
+          <AdSlot preset="sponsored" orientation="horizontal" />
+        </div>
+      </section> */}
       {/* Search Form Section */}
       <PassportSearchForm
         onSearch={updateFilters}
         onQueryChange={updateFilters}
       />
 
-      {/* Ad Banner Section */}
-      <section className="bg-background py-8">
-        <div className="container mx-auto max-w-6xl px-4">
-          <AdSlot preset="sponsored" orientation="horizontal" />
-        </div>
-      </section>
+    
 
       {/* Passports Table Section */}
       <PassportsTable searchFilters={searchFilters} searchMode={searchMode} />

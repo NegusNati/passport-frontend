@@ -10,6 +10,11 @@ export const adminKeys = {
     list: (paramsHash = '{}') => [...adminKeys.passports.all(), 'list', paramsHash] as const,
     detail: (id: string | number) => [...adminKeys.passports.all(), 'detail', String(id)] as const,
   },
+  articles: {
+    all: () => [...adminKeys.all, 'articles'] as const,
+    list: (paramsHash = '{}') => [...adminKeys.articles.all(), 'list', paramsHash] as const,
+    detail: (slug: string) => [...adminKeys.articles.all(), 'detail', slug] as const,
+  },
 }
 
 export function hashParams(value: Record<string, unknown> | undefined | null) {

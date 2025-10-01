@@ -31,7 +31,7 @@ export function Hero() {
             </p>
             <div className="mt-6 flex w-full flex-col items-start gap-3 sm:w-auto sm:flex-row">
               <Button size="sm" className="w-full py-0 sm:w-auto">
-                <Link to="/">
+                <Link to="/passports">
                   Check My Passport Status Now
                   <ArrowRightIcon className="ml-2 inline h-4 w-4" aria-hidden="true" />
                 </Link>
