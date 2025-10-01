@@ -208,24 +208,22 @@ export function DataTable<TData, TValue>({
           ) : (
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row, index) => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                    data-state={row.getIsSelected() && 'selected'}
-                    className={`${
-                      index % 2 === 0 ? 'bg-white' : 'bg-gray-100'
-                    } hover:bg-gray-50 border-b border-gray-200`}
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                  data-state={row.getIsSelected() && 'selected'}
+                  className="odd:bg-muted/30"
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext()
                         )}
                       </TableCell>
                     ))}
-                  </TableRow>
-                ))
+                </TableRow>
+              ))
             ) : (
               <TableRow>
                 <TableCell

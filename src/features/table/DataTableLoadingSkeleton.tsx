@@ -17,16 +17,11 @@ export function DataTableLoadingSkeleton<TData, TValue>({
       {Array.from({ length: rows }).map((_, rowIndex) => (
         <TableRow
           key={rowIndex}
-          className={
-            'h-12 py-4 ' +
-            `${
-              rowIndex % 2 === 0 ? 'bg-white' : 'bg-gray-100'
-            } hover:bg-gray-50 border-b border-gray-200`
-          }
+          className={'h-12 py-4 odd:bg-muted/30'}
         >
           {columns.map((_, colIndex) => (
             <TableCell key={colIndex}>
-              <Skeleton className="h-4 w-[80%] bg-gray-300" />
+              <Skeleton className="h-4 w-[80%]" />
             </TableCell>
           ))}
         </TableRow>

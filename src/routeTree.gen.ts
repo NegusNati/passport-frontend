@@ -15,6 +15,7 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as ArticlesRouteImport } from './routes/articles'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PassportsIndexRouteImport } from './routes/passports/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -59,6 +60,11 @@ const ArticlesRoute = ArticlesRouteImport.update({
   path: '/articles',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -70,9 +76,9 @@ const PassportsIndexRoute = PassportsIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const PassportsPassportIdRoute = PassportsPassportIdRouteImport.update({
   id: '/passports/$passportId',
@@ -85,24 +91,24 @@ const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
   getParentRoute: () => ArticlesRoute,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
-  id: '/admin/users',
-  path: '/admin/users',
-  getParentRoute: () => rootRouteImport,
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminPdfImportRoute = AdminPdfImportRouteImport.update({
-  id: '/admin/pdf-import',
-  path: '/admin/pdf-import',
-  getParentRoute: () => rootRouteImport,
+  id: '/pdf-import',
+  path: '/pdf-import',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminPassportsRoute = AdminPassportsRouteImport.update({
-  id: '/admin/passports',
-  path: '/admin/passports',
-  getParentRoute: () => rootRouteImport,
+  id: '/passports',
+  path: '/passports',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminArticlesRoute = AdminArticlesRouteImport.update({
-  id: '/admin/articles',
-  path: '/admin/articles',
-  getParentRoute: () => rootRouteImport,
+  id: '/articles',
+  path: '/articles',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
   id: '/$userId',
@@ -127,6 +133,7 @@ const AdminArticlesSlugRoute = AdminArticlesSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/articles': typeof ArticlesRouteWithChildren
   '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
@@ -139,7 +146,7 @@ export interface FileRoutesByFullPath {
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/articles/$slug': typeof ArticlesSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
-  '/admin': typeof AdminIndexRoute
+  '/admin/': typeof AdminIndexRoute
   '/passports': typeof PassportsIndexRoute
   '/admin/articles/$slug': typeof AdminArticlesSlugRoute
   '/admin/articles/new': typeof AdminArticlesNewRoute
@@ -170,6 +177,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/articles': typeof ArticlesRouteWithChildren
   '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
@@ -193,6 +201,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/articles'
     | '/calendar'
     | '/login'
@@ -205,7 +214,7 @@ export interface FileRouteTypes {
     | '/admin/users'
     | '/articles/$slug'
     | '/passports/$passportId'
-    | '/admin'
+    | '/admin/'
     | '/passports'
     | '/admin/articles/$slug'
     | '/admin/articles/new'
@@ -235,6 +244,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/articles'
     | '/calendar'
     | '/login'
@@ -257,18 +267,14 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   ArticlesRoute: typeof ArticlesRouteWithChildren
   CalendarRoute: typeof CalendarRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   TestRoute: typeof TestRoute
-  AdminArticlesRoute: typeof AdminArticlesRouteWithChildren
-  AdminPassportsRoute: typeof AdminPassportsRouteWithChildren
-  AdminPdfImportRoute: typeof AdminPdfImportRoute
-  AdminUsersRoute: typeof AdminUsersRouteWithChildren
   PassportsPassportIdRoute: typeof PassportsPassportIdRoute
-  AdminIndexRoute: typeof AdminIndexRoute
   PassportsIndexRoute: typeof PassportsIndexRoute
 }
 
@@ -316,6 +322,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ArticlesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -332,10 +345,10 @@ declare module '@tanstack/react-router' {
     }
     '/admin/': {
       id: '/admin/'
-      path: '/admin'
-      fullPath: '/admin'
+      path: '/'
+      fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/passports/$passportId': {
       id: '/passports/$passportId'
@@ -353,31 +366,31 @@ declare module '@tanstack/react-router' {
     }
     '/admin/users': {
       id: '/admin/users'
-      path: '/admin/users'
+      path: '/users'
       fullPath: '/admin/users'
       preLoaderRoute: typeof AdminUsersRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/pdf-import': {
       id: '/admin/pdf-import'
-      path: '/admin/pdf-import'
+      path: '/pdf-import'
       fullPath: '/admin/pdf-import'
       preLoaderRoute: typeof AdminPdfImportRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/passports': {
       id: '/admin/passports'
-      path: '/admin/passports'
+      path: '/passports'
       fullPath: '/admin/passports'
       preLoaderRoute: typeof AdminPassportsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/articles': {
       id: '/admin/articles'
-      path: '/admin/articles'
+      path: '/articles'
       fullPath: '/admin/articles'
       preLoaderRoute: typeof AdminArticlesRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/admin/users/$userId': {
       id: '/admin/users/$userId'
@@ -409,18 +422,6 @@ declare module '@tanstack/react-router' {
     }
   }
 }
-
-interface ArticlesRouteChildren {
-  ArticlesSlugRoute: typeof ArticlesSlugRoute
-}
-
-const ArticlesRouteChildren: ArticlesRouteChildren = {
-  ArticlesSlugRoute: ArticlesSlugRoute,
-}
-
-const ArticlesRouteWithChildren = ArticlesRoute._addFileChildren(
-  ArticlesRouteChildren,
-)
 
 interface AdminArticlesRouteChildren {
   AdminArticlesSlugRoute: typeof AdminArticlesSlugRoute
@@ -460,20 +461,46 @@ const AdminUsersRouteWithChildren = AdminUsersRoute._addFileChildren(
   AdminUsersRouteChildren,
 )
 
+interface AdminRouteChildren {
+  AdminArticlesRoute: typeof AdminArticlesRouteWithChildren
+  AdminPassportsRoute: typeof AdminPassportsRouteWithChildren
+  AdminPdfImportRoute: typeof AdminPdfImportRoute
+  AdminUsersRoute: typeof AdminUsersRouteWithChildren
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminArticlesRoute: AdminArticlesRouteWithChildren,
+  AdminPassportsRoute: AdminPassportsRouteWithChildren,
+  AdminPdfImportRoute: AdminPdfImportRoute,
+  AdminUsersRoute: AdminUsersRouteWithChildren,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface ArticlesRouteChildren {
+  ArticlesSlugRoute: typeof ArticlesSlugRoute
+}
+
+const ArticlesRouteChildren: ArticlesRouteChildren = {
+  ArticlesSlugRoute: ArticlesSlugRoute,
+}
+
+const ArticlesRouteWithChildren = ArticlesRoute._addFileChildren(
+  ArticlesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   ArticlesRoute: ArticlesRouteWithChildren,
   CalendarRoute: CalendarRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   TestRoute: TestRoute,
-  AdminArticlesRoute: AdminArticlesRouteWithChildren,
-  AdminPassportsRoute: AdminPassportsRouteWithChildren,
-  AdminPdfImportRoute: AdminPdfImportRoute,
-  AdminUsersRoute: AdminUsersRouteWithChildren,
   PassportsPassportIdRoute: PassportsPassportIdRoute,
-  AdminIndexRoute: AdminIndexRoute,
   PassportsIndexRoute: PassportsIndexRoute,
 }
 export const routeTree = rootRouteImport
