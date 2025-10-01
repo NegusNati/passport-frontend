@@ -19,6 +19,9 @@ type NavItem = {
   external?: boolean
 }
 
+// Supported internal paths used in header navigation
+type AppPath = '/passports' | '/articles' | '/calendar'
+
 const nav: ReadonlyArray<NavItem> = [
   { label: 'Advertise', href: '#advertise' },
   { label: 'Passports', href: '/passports' },
@@ -40,7 +43,7 @@ function renderNavItem(item: NavItem) {
   }
 
   return (
-    <Link key={item.label} to={item.href as any} preload="intent" className={className}>
+    <Link key={item.label} to={item.href as AppPath} preload="intent" className={className}>
       <span>{item.label}</span>
     </Link>
   )

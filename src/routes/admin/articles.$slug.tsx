@@ -1,11 +1,11 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import { queryClient } from '@/api/queryClient'
-import { adminKeys } from '@/features/admin/lib/keys'
-import { ArticleForm } from '@/features/admin/articles/components/ArticleForm'
+import { useDeleteAdminArticleMutation } from '@/features/admin/articles/api/delete-article'
 import { fetchAdminArticle, useAdminArticleQuery } from '@/features/admin/articles/api/get-article'
 import { useUpdateAdminArticleMutation } from '@/features/admin/articles/api/update-article'
-import { useDeleteAdminArticleMutation } from '@/features/admin/articles/api/delete-article'
+import { ArticleForm } from '@/features/admin/articles/components/ArticleForm'
+import { adminKeys } from '@/features/admin/lib/keys'
 
 export const Route = createFileRoute('/admin/articles/$slug')({
   loader: async ({ params }) => {

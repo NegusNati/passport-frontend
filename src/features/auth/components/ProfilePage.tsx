@@ -1,8 +1,8 @@
-import { AlertCircle, BadgeCheck, BadgeInfo, LogOut } from 'lucide-react'
 import { Link } from '@tanstack/react-router'
+import { AlertCircle, BadgeCheck, BadgeInfo, LogOut } from 'lucide-react'
 
-import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
+import { Button } from '@/shared/ui/button'
 import { Seo } from '@/shared/ui/Seo'
 
 import { useAuthUser, useLogout } from '../hooks'

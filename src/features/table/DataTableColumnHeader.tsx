@@ -1,13 +1,11 @@
-import { ChevronsUpDown, EyeOff, SortAsc, SortDesc } from 'lucide-react';
+import type { Column } from '@tanstack/react-table'
+import { ChevronsUpDown, EyeOff, SortAsc, SortDesc } from 'lucide-react'
+import type { HTMLAttributes } from 'react'
 
-import { Button } from '@/shared/ui/button';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/utils'
+import { Button } from '@/shared/ui/button'
 
-import type { Column } from '@tanstack/react-table';
-import type React from 'react';
-
-interface DataTableColumnHeaderProps<TData, TValue>
-  extends React.HTMLAttributes<HTMLDivElement> {
+interface DataTableColumnHeaderProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>;
   title: string;
 }

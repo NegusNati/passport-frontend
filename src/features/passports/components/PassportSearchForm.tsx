@@ -1,6 +1,6 @@
 import { useForm } from '@tanstack/react-form'
 import { useRouter } from '@tanstack/react-router'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
 import { Button } from '@/shared/ui/button'
@@ -46,16 +46,16 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
       .trim()
       .toUpperCase()
 
-  const sanitizeNameSegment = (value: string) => {
+  const sanitizeNameSegment = useCallback((value: string) => {
     const trimmed = value.trim()
     if (!trimmed) return ''
     return trimmed
       .split(/\s+/)
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
       .join(' ')
-  }
+  }, [])
 
-  const buildNameFilters = (first: string, middle: string, last: string): PassportSearchFilters => {
+  const buildNameFilters = useCallback((first: string, middle: string, last: string): PassportSearchFilters => {
     const filters: PassportSearchFilters = {}
     const sanitizedFirst = sanitizeNameSegment(first)
     const sanitizedMiddle = sanitizeNameSegment(middle)
@@ -66,7 +66,7 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
     if (sanitizedLast.length >= 3) filters.last_name = sanitizedLast
 
     return filters
-  }
+  }, [sanitizeNameSegment])
 
   const numberForm = useForm({
     defaultValues: {
@@ -168,7 +168,7 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
     } else {
       onQueryChange({}, 'name')
     }
-  }, [debouncedName, firstInput, middleInput, lastInput, searchMode, onQueryChange])
+  }, [debouncedName, firstInput, middleInput, lastInput, searchMode, onQueryChange, buildNameFilters])
 
   return (
     <section className="bg-background py-12 md:py-16">

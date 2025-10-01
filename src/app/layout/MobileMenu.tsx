@@ -7,6 +7,8 @@ import { Button } from '@/shared/ui/button'
 
 type NavItem = { label: string; href: string; external?: boolean }
 
+type AppPath = '/passports' | '/articles' | '/calendar'
+
 type MobileMenuProps = {
   open: boolean
   onClose: () => void
@@ -128,7 +130,7 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
                 return (
                   <Link
                     key={item.label}
-                    to={item.href as any}
+                    to={item.href as AppPath}
                     preload="intent"
                     onClick={onClose}
                     className={className}

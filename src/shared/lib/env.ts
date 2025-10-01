@@ -10,6 +10,7 @@ const EnvSchema = z.object({
   VITE_API_BASE_URL: z.string().url().optional(),
   VITE_SITE_URL: z.string().url().optional(),
   VITE_SITE_NAME: z.string().optional(),
+  VITE_HORIZON_URL: z.string().url().optional(),
 })
 
 type Env = z.infer<typeof EnvSchema>
@@ -33,9 +34,12 @@ function inferApiBaseUrl(env: Partial<Env>): string {
 export const env = (() => {
   const parsed = EnvSchema.safeParse(import.meta.env)
   const values: Env = parsed.success ? parsed.data : {}
+  const apiBase = inferApiBaseUrl(values)
+  const horizonUrl = values.VITE_HORIZON_URL ?? `${apiBase.replace(/\/$/, '')}/horizon`
   return {
     ...values,
-    API_BASE_URL: inferApiBaseUrl(values),
+    API_BASE_URL: apiBase,
+    HORIZON_URL: horizonUrl,
   }
 })()
 

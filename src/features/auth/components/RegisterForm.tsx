@@ -8,7 +8,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 
 import { useRegister } from '../hooks'
-import { RegisterSchema, type RegisterInput } from '../schemas/register'
+import { type RegisterInput,RegisterSchema } from '../schemas/register'
 import type { User } from '../schemas/user'
 
 type RegisterFormProps = {

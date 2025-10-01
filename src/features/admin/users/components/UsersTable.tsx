@@ -1,12 +1,13 @@
-import { useMemo } from 'react'
 import type { ColumnDef } from '@tanstack/react-table'
+import { useMemo } from 'react'
 
 import { DataTable } from '@/features/table/DataTable'
-import type { AdminUser, AdminUsersMeta } from '../schemas/user'
+import { cn } from '@/shared/lib/utils'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
-import { cn } from '@/shared/lib/utils'
+
+import type { AdminUser, AdminUsersMeta } from '../schemas/user'
 
 const roleOptions = [
   { value: 'admin', label: 'Admin' },

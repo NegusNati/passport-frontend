@@ -178,9 +178,8 @@ function PassportsFilters({ filters, onFilterChange }: FilterProps) {
     else if (filters.last_name !== undefined) updates.last_name = undefined
 
     // Only send if something changed
-    const changed = Object.keys(updates).some(
-      (key) => (updates as any)[key] !== (filters as any)[key],
-    )
+    type K = keyof FilterProps['filters']
+    const changed = (Object.keys(updates) as K[]).some((key) => updates[key] !== filters[key])
     if (changed) {
       onFilterChange(updates)
     }

@@ -5,11 +5,11 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 
-import {
-  AdminArticleCreateSchema,
-  type AdminArticleCreateInput,
-} from '../schemas/create'
 import type { AdminArticle } from '../schemas/article'
+import {
+  type AdminArticleCreateInput,
+  AdminArticleCreateSchema,
+} from '../schemas/create'
 
 const statusOptions: AdminArticleCreateInput['status'][] = [
   'draft',

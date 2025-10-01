@@ -3,11 +3,11 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { api } from '@/api/client'
 import { adminKeys, hashParams } from '@/features/admin/lib/keys'
 
-import {
-  AdminUsersListResponseSchema,
-  type AdminUsersListResponse,
-} from '../schemas/user'
 import type { UsersSearchParams } from '../schemas/filters'
+import {
+  type AdminUsersListResponse,
+  AdminUsersListResponseSchema,
+} from '../schemas/user'
 
 export async function fetchAdminUsers(params: UsersSearchParams) {
   const response = await api.get('/api/v1/admin/users', {

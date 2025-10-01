@@ -1,9 +1,9 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import { SectionError, SectionLoading } from '@/features/admin/components/SectionFallback'
+import { useAdminUsersQuery } from '@/features/admin/users/api/get-users'
 import { UsersTable } from '@/features/admin/users/components/UsersTable'
 import { UsersSearchSchema } from '@/features/admin/users/schemas/filters'
-import { useAdminUsersQuery } from '@/features/admin/users/api/get-users'
 
 export const Route = createFileRoute('/admin/users')({
   validateSearch: UsersSearchSchema.parse,

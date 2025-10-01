@@ -4,7 +4,7 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 
-import { PdfUploadSchema, type PdfUploadInput } from '../schemas/upload'
+import { type PdfUploadInput,PdfUploadSchema } from '../schemas/upload'
 
 const defaultState = {
   date: '',

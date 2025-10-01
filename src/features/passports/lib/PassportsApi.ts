@@ -33,7 +33,7 @@ const ListParamsBase = z.object({
 
 export const ListParams = ListParamsBase.transform((value) => {
   const pageSize = value.page_size ?? value.per_page ?? 25
-  const { per_page, page_size, ...rest } = value
+  const { per_page: _per, page_size: _ps, ...rest } = value
 
   return {
     ...rest,

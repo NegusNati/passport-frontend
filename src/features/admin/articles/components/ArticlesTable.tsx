@@ -1,10 +1,11 @@
-import { useMemo } from 'react'
 import type { ColumnDef } from '@tanstack/react-table'
+import { useMemo } from 'react'
 
 import { DataTable } from '@/features/table/DataTable'
+
 import type { AdminArticle, AdminArticlesMeta } from '../schemas/article'
-import { ArticlesFilters } from './ArticlesFilters'
 import type { ArticlesSearchParams } from '../schemas/filters'
+import { ArticlesFilters } from './ArticlesFilters'
 
 const statusColors: Record<string, string> = {
   draft: 'bg-slate-200 text-slate-700',

@@ -1,3 +1,4 @@
+import type { Table } from '@tanstack/react-table';
 import { Plus, X } from 'lucide-react';
 
 import { Button } from '@/shared/ui/button';
@@ -5,8 +6,6 @@ import { Input } from '@/shared/ui/input';
 
 import { DataTableFacetedFilter } from './DataTableFacetedFilter';
 import { DataTableViewOptions } from './DataTableViewOptions';
-
-import type { Table } from '@tanstack/react-table';
 
 interface DataTableToolbarProps<TData> {
   tableTitle?: string;

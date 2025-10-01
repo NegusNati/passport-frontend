@@ -7,7 +7,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 
 import { useLogin } from '../hooks'
-import { LoginSchema, type LoginInput } from '../schemas/login'
+import { type LoginInput,LoginSchema } from '../schemas/login'
 import type { User } from '../schemas/user'
 
 type LoginFormProps = {

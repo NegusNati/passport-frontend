@@ -1,9 +1,8 @@
+import type { Column,Table } from '@tanstack/react-table';
 import { SlidersHorizontal } from 'lucide-react';
 import * as React from 'react';
 
 import { Button } from '@/shared/ui/button';
-
-import type { Table, Column } from '@tanstack/react-table';
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;

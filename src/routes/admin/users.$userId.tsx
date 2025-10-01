@@ -2,9 +2,9 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { queryClient } from '@/api/queryClient'
 import { adminKeys } from '@/features/admin/lib/keys'
-import { UserForm, type UpdateAdminUserFormValues } from '@/features/admin/users/components/UserForm'
 import { fetchAdminUser, useAdminUserQuery } from '@/features/admin/users/api/get-user'
 import { useUpdateAdminUserMutation } from '@/features/admin/users/api/update-user'
+import { type UpdateAdminUserFormValues,UserForm } from '@/features/admin/users/components/UserForm'
 
 export const Route = createFileRoute('/admin/users/$userId')({
   loader: async ({ params }) => {
