@@ -1,13 +1,25 @@
+import { useQueryClient } from '@tanstack/react-query'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowUpRight } from 'lucide-react'
 import { useState } from 'react'
 
+import { getAuthToken } from '@/api/client'
+import { authKeys } from '@/features/auth/api'
+import { useAuthUser } from '@/features/auth/hooks'
+import type { User } from '@/features/auth/schemas/user'
 import { ThemeToggle } from '@/shared/components/theme-toggle'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
 
 import { MobileMenu } from './MobileMenu'
 
-const nav = [
+type NavItem = {
+  label: string
+  href: string
+  external?: boolean
+}
+
+const nav: ReadonlyArray<NavItem> = [
   { label: 'Advertise', href: '#advertise' },
   { label: 'Passports', href: '/passports' },
   { label: 'Articles', href: '/articles' },
@@ -15,37 +27,77 @@ const nav = [
   { label: 'Download App', href: '#download', external: true },
 ]
 
+function renderNavItem(item: NavItem) {
+  const className =
+    'text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm font-semibold transition-colors'
+  if (item.external || item.href.startsWith('#')) {
+    return (
+      <a key={item.label} href={item.href} className={className}>
+        <span>{item.label}</span>
+        {item.external ? <ArrowUpRight className="h-4 w-4" aria-hidden /> : null}
+      </a>
+    )
+  }
+
+  return (
+    <Link key={item.label} to={item.href as any} preload="intent" className={className}>
+      <span>{item.label}</span>
+    </Link>
+  )
+}
+
 export function Header() {
   const [open, setOpen] = useState(false)
+  const navigate = useNavigate()
+  const queryClient = useQueryClient()
+
+  const cachedUser = queryClient.getQueryData(authKeys.user()) as User | undefined
+  const token = getAuthToken()
+
+  const { data: fetchedUser } = useAuthUser({
+    enabled: Boolean(token),
+    initialData: cachedUser,
+    placeholderData: () => cachedUser,
+    retry: false,
+  })
+
+  const user = fetchedUser ?? cachedUser ?? null
+  const isAuthenticated = Boolean(user)
+
   return (
     <header className="border-border bg-background/95 sm:bg-background/80 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full border-b sm:backdrop-blur">
       <Container className="flex h-16 items-center justify-between">
         <div className="flex items-center gap-3">
-          <a href="/" className="text-foreground font-semibold tracking-tight">
+          <Link to="/" preload="intent" className="text-foreground font-semibold tracking-tight">
             Passport.ET
-          </a>
+          </Link>
           <span className="sr-only">Go to homepage</span>
         </div>
 
-        <nav className="hidden items-center gap-6 md:flex">
-          {nav.map((item) => (
-            <a
-              key={item.label}
-              href={item.href}
-              className="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm font-semibold transition-colors"
-            >
-              <span>{item.label}</span>
-              {item.external ? <ArrowUpRight className="h-4 w-4" aria-hidden /> : null}
-            </a>
-          ))}
-        </nav>
+        <nav className="hidden items-center gap-6 md:flex">{nav.map(renderNavItem)}</nav>
 
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
-          <Button variant="outline" className="px-4 py-0 font-bold">
-            Register
-          </Button>
-          <Button>Login</Button>
+          {isAuthenticated ? (
+            <Button
+              variant="outline"
+              className="px-4 py-0 font-bold"
+              onClick={() => navigate({ to: '/profile' })}
+            >
+              My profile
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="outline"
+                className="px-4 py-0 font-bold"
+                onClick={() => navigate({ to: '/register' })}
+              >
+                Register
+              </Button>
+              <Button onClick={() => navigate({ to: '/login' })}>Login</Button>
+            </>
+          )}
         </div>
 
         <button
@@ -68,7 +120,12 @@ export function Header() {
           </div>
         </button>
       </Container>
-      <MobileMenu open={open} onClose={() => setOpen(false)} nav={nav} />
+      <MobileMenu
+        open={open}
+        onClose={() => setOpen(false)}
+        nav={nav}
+        isAuthenticated={isAuthenticated}
+      />
     </header>
   )
 }

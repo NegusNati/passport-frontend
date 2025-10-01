@@ -1,3 +1,4 @@
+import { Link, useNavigate } from '@tanstack/react-router'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight, X } from 'lucide-react'
 import { useEffect } from 'react'
@@ -6,15 +7,16 @@ import { Button } from '@/shared/ui/button'
 
 type NavItem = { label: string; href: string; external?: boolean }
 
-export function MobileMenu({
-  open,
-  onClose,
-  nav,
-}: {
+type MobileMenuProps = {
   open: boolean
   onClose: () => void
-  nav: NavItem[]
-}) {
+  nav: readonly NavItem[]
+  isAuthenticated: boolean
+}
+
+export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuProps) {
+  const navigate = useNavigate()
+
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') onClose()
@@ -22,6 +24,41 @@ export function MobileMenu({
     document.addEventListener('keydown', handleEsc)
     return () => document.removeEventListener('keydown', handleEsc)
   }, [onClose])
+
+  const authButtonGroup = isAuthenticated ? (
+    <Button
+      variant="outline"
+      className="flex-1 text-sm"
+      onClick={() => {
+        onClose()
+        navigate({ to: '/profile' })
+      }}
+    >
+      My profile
+    </Button>
+  ) : (
+    <>
+      <Button
+        variant="outline"
+        className="flex-1 text-sm"
+        onClick={() => {
+          onClose()
+          navigate({ to: '/register' })
+        }}
+      >
+        Register
+      </Button>
+      <Button
+        className="flex-1 text-sm"
+        onClick={() => {
+          onClose()
+          navigate({ to: '/login' })
+        }}
+      >
+        Login
+      </Button>
+    </>
+  )
 
   return (
     <AnimatePresence>
@@ -68,28 +105,42 @@ export function MobileMenu({
             </header>
 
             <nav className="flex flex-col gap-1 px-5 py-4">
-              {nav.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  onClick={onClose}
-                  className="text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                >
-                  <span>{item.label}</span>
-                  {item.external ? (
-                    <ArrowUpRight className="text-muted-foreground h-4 w-4" aria-hidden />
-                  ) : null}
-                </a>
-              ))}
+              {nav.map((item) => {
+                const className =
+                  'text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
+
+                if (item.external || item.href.startsWith('#')) {
+                  return (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      onClick={onClose}
+                      className={className}
+                    >
+                      <span>{item.label}</span>
+                      {item.external ? (
+                        <ArrowUpRight className="text-muted-foreground h-4 w-4" aria-hidden />
+                      ) : null}
+                    </a>
+                  )
+                }
+
+                return (
+                  <Link
+                    key={item.label}
+                    to={item.href as any}
+                    preload="intent"
+                    onClick={onClose}
+                    className={className}
+                  >
+                    <span>{item.label}</span>
+                  </Link>
+                )
+              })}
             </nav>
 
             <div className="border-border mt-auto border-t px-5 py-6">
-              <div className="flex items-center gap-3">
-                <Button variant="outline" className="flex-1 text-sm">
-                  Register
-                </Button>
-                <Button className="flex-1 text-sm">Login</Button>
-              </div>
+              <div className="flex items-center gap-3">{authButtonGroup}</div>
             </div>
           </motion.aside>
         </motion.div>

@@ -1,29 +1,21 @@
 import './styles.css'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { HelmetProvider } from 'react-helmet-async'
 
+import { restoreAuthTokenFromStorage } from '@/api/client'
+import { queryClient } from '@/api/queryClient'
 import { ThemeProvider } from '@/shared/components/theme-provider'
 
 import reportWebVitals from './reportWebVitals.ts'
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 
-// Create a QueryClient
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 30_000,
-      refetchOnWindowFocus: false,
-      retry: 1,
-    },
-  },
-})
-
 // Create a new router instance
+restoreAuthTokenFromStorage()
 const router = createRouter({
   routeTree,
   context: { queryClient },

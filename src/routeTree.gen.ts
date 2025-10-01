@@ -10,6 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestRouteImport } from './routes/test'
+import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,6 +23,21 @@ import { Route as ArticlesSlugRouteImport } from './routes/articles/$slug'
 const TestRoute = TestRouteImport.update({
   id: '/test',
   path: '/test',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CalendarRoute = CalendarRouteImport.update({
@@ -57,6 +75,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRouteWithChildren
   '/calendar': typeof CalendarRoute
+  '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
   '/test': typeof TestRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
@@ -66,6 +87,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRouteWithChildren
   '/calendar': typeof CalendarRoute
+  '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
   '/test': typeof TestRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
@@ -76,6 +100,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/articles': typeof ArticlesRouteWithChildren
   '/calendar': typeof CalendarRoute
+  '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
   '/test': typeof TestRoute
   '/articles/$slug': typeof ArticlesSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
@@ -87,6 +114,9 @@ export interface FileRouteTypes {
     | '/'
     | '/articles'
     | '/calendar'
+    | '/login'
+    | '/profile'
+    | '/register'
     | '/test'
     | '/articles/$slug'
     | '/passports/$passportId'
@@ -96,6 +126,9 @@ export interface FileRouteTypes {
     | '/'
     | '/articles'
     | '/calendar'
+    | '/login'
+    | '/profile'
+    | '/register'
     | '/test'
     | '/articles/$slug'
     | '/passports/$passportId'
@@ -105,6 +138,9 @@ export interface FileRouteTypes {
     | '/'
     | '/articles'
     | '/calendar'
+    | '/login'
+    | '/profile'
+    | '/register'
     | '/test'
     | '/articles/$slug'
     | '/passports/$passportId'
@@ -115,6 +151,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ArticlesRoute: typeof ArticlesRouteWithChildren
   CalendarRoute: typeof CalendarRoute
+  LoginRoute: typeof LoginRoute
+  ProfileRoute: typeof ProfileRoute
+  RegisterRoute: typeof RegisterRoute
   TestRoute: typeof TestRoute
   PassportsPassportIdRoute: typeof PassportsPassportIdRoute
   PassportsIndexRoute: typeof PassportsIndexRoute
@@ -127,6 +166,27 @@ declare module '@tanstack/react-router' {
       path: '/test'
       fullPath: '/test'
       preLoaderRoute: typeof TestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/calendar': {
@@ -190,6 +250,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ArticlesRoute: ArticlesRouteWithChildren,
   CalendarRoute: CalendarRoute,
+  LoginRoute: LoginRoute,
+  ProfileRoute: ProfileRoute,
+  RegisterRoute: RegisterRoute,
   TestRoute: TestRoute,
   PassportsPassportIdRoute: PassportsPassportIdRoute,
   PassportsIndexRoute: PassportsIndexRoute,
