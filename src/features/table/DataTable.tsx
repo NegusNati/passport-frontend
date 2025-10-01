@@ -110,7 +110,12 @@ export function DataTable<TData, TValue>({
     }),
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    ...(pagination
+      ? {}
+      : {
+          // Only apply client-side pagination when not using server-side/manual pagination
+          getPaginationRowModel: getPaginationRowModel(),
+        }),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
@@ -136,18 +141,19 @@ export function DataTable<TData, TValue>({
   }, [data.length, pagination, table]);
 
   const handlePaginationChange = (pageIndex: number) => {
+    // Always update the table state immediately so the UI reflects the change
+    table.setPageIndex(pageIndex);
     if (pagination) {
-      pagination.onPageChange(pageIndex + 1); // Convert 0-based to 1-based for the API
-    } else {
-      table.setPageIndex(pageIndex);
+      // Convert 0-based to 1-based for the API
+      pagination.onPageChange(pageIndex + 1);
     }
   };
 
   const handlePageSizeChange = (pageSize: number) => {
+    // Always update the table state immediately so the UI reflects the change
+    table.setPageSize(pageSize);
     if (pagination) {
       pagination.onPageSizeChange(pageSize);
-    } else {
-      table.setPageSize(pageSize);
     }
   };
 

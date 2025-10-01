@@ -2,14 +2,15 @@ import { useRouter } from '@tanstack/react-router'
 import { type ColumnDef, type PaginationState, type Table } from '@tanstack/react-table'
 import * as React from 'react'
 
-import { DataTable } from '@/features/table/DataTable'
-import { DataTableColumnHeader } from '@/features/table/DataTableColumnHeader'
+import type { ListParams } from '@/features/passports/lib/PassportsApi'
 import { useLocationsQuery, usePassportsQuery } from '@/features/passports/lib/PassportsQuery'
 import type { PassportApiItem } from '@/features/passports/lib/PassportsSchema'
-import type { ListParams } from '@/features/passports/lib/PassportsApi'
+import { DataTable } from '@/features/table/DataTable'
+import { DataTableColumnHeader } from '@/features/table/DataTableColumnHeader'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
+
 import { type PassportFilters, type PassportSearchFilters } from '../schemas/passport'
 
 type PassportsTableProps = {
@@ -98,11 +99,7 @@ export function PassportsTable({ searchFilters = {}, searchMode }: PassportsTabl
   const from = total ? (currentPage - 1) * effectivePageSize + 1 : 0
   const to = Math.min(currentPage * effectivePageSize, total)
 
-  React.useEffect(() => {
-    if (pageSizeFromMeta && pageSizeFromMeta !== pagination.pageSize) {
-      setPagination((prev) => ({ ...prev, pageSize: pageSizeFromMeta }))
-    }
-  }, [pageSizeFromMeta, pagination.pageSize])
+
 
   const handlePageChange = React.useCallback(
     (pageNumber: number) => {

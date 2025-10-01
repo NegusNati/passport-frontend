@@ -61,7 +61,7 @@ export type PassportFilters = z.infer<typeof PassportFilters>
 // Pagination schema
 export const PaginationParams = z.object({
   page: z.number().min(1).default(1),
-  pageSize: z.number().min(1).max(100).default(10),
+  page_size: z.number().min(1).max(100).default(10),
 })
 
 export type PaginationParams = z.infer<typeof PaginationParams>

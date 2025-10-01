@@ -36,7 +36,7 @@ export type ArticleFilters = z.infer<typeof ArticleFilters>
 // Pagination schema
 export const PaginationParams = z.object({
   page: z.number().min(1).default(1),
-  pageSize: z.number().min(1).max(50).default(12),
+  page_size: z.number().min(1).max(50).default(12),
 })
 
 export type PaginationParams = z.infer<typeof PaginationParams>
