@@ -1,11 +1,13 @@
 import { createFileRoute } from '@tanstack/react-router'
 
+
 export const Route = createFileRoute('/admin/')({
   component: AdminOverview,
 })
 
 function AdminOverview() {
   return (
+    
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">Admin dashboard</h1>
@@ -55,6 +57,7 @@ function AdminOverview() {
           </li>
         </ul>
       </div>
-    </div>
+      </div>
+  
   )
 }

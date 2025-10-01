@@ -5,7 +5,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import type { ArticlesSearchParams } from '../schemas/filters'
 
 const statusOptions = [
-  { value: '', label: 'All statuses' },
   { value: 'draft', label: 'Draft' },
   { value: 'published', label: 'Published' },
   { value: 'scheduled', label: 'Scheduled' },
@@ -34,7 +33,7 @@ export function ArticlesFilters({ filters, onFilterChange }: ArticlesFiltersProp
       <div className="grid gap-2">
         <Label htmlFor="article-status">Status</Label>
         <Select
-          value={filters.status ?? ''}
+          value={filters.status ?? undefined}
           onValueChange={(value) =>
             onFilterChange({ status: (value || undefined) as ArticlesSearchParams['status'] })
           }
@@ -43,6 +42,9 @@ export function ArticlesFilters({ filters, onFilterChange }: ArticlesFiltersProp
             <SelectValue placeholder="All statuses" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="__all__" disabled>
+              All statuses
+            </SelectItem>
             {statusOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}

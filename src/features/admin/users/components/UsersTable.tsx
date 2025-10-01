@@ -9,13 +9,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { cn } from '@/shared/lib/utils'
 
 const roleOptions = [
-  { value: '', label: 'All roles' },
   { value: 'admin', label: 'Admin' },
   { value: 'user', label: 'User' },
 ]
 
 const statusOptions = [
-  { value: '', label: 'All statuses' },
   { value: 'active', label: 'Active' },
   { value: 'inactive', label: 'Inactive' },
 ]
@@ -155,13 +153,16 @@ function UsersTableFilters({ filters, onFilterChange }: UsersTableFiltersProps) 
       <div className="grid gap-2">
         <Label htmlFor="user-role">Role</Label>
         <Select
-          value={filters.role ?? ''}
+          value={filters.role ?? undefined}
           onValueChange={(value) => onFilterChange({ role: value || undefined })}
         >
           <SelectTrigger id="user-role">
             <SelectValue placeholder="All roles" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="__all__" disabled>
+              All roles
+            </SelectItem>
             {roleOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
@@ -173,13 +174,16 @@ function UsersTableFilters({ filters, onFilterChange }: UsersTableFiltersProps) 
       <div className="grid gap-2">
         <Label htmlFor="user-status">Status</Label>
         <Select
-          value={filters.status ?? ''}
+          value={filters.status ?? undefined}
           onValueChange={(value) => onFilterChange({ status: value || undefined })}
         >
           <SelectTrigger id="user-status">
             <SelectValue placeholder="All statuses" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="__all__" disabled>
+              All statuses
+            </SelectItem>
             {statusOptions.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
