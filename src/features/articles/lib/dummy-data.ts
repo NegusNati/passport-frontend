@@ -1,198 +1,119 @@
-import { Article, ARTICLE_CATEGORIES, ARTICLE_TAGS } from '../schemas/article'
+import { Article } from '../schemas/article'
 
-// Sample article data based on the Figma design
+const now = new Date('2025-08-24T10:00:00Z')
+
+const toIso = (minutesAgo: number) => new Date(now.getTime() - minutesAgo * 60 * 1000).toISOString()
+
+const makeTaxonomy = (id: number, name: string) => ({ id, name, slug: name.toLowerCase().replace(/\s+/g, '-') })
+
+const sampleCategories = [
+  makeTaxonomy(1, 'Passport'),
+  makeTaxonomy(2, 'Documentation'),
+  makeTaxonomy(3, 'Travel Tips'),
+]
+
+const sampleTags = [
+  makeTaxonomy(11, 'renewal'),
+  makeTaxonomy(12, 'urgent'),
+  makeTaxonomy(13, 'processing-time'),
+  makeTaxonomy(14, 'international'),
+]
+
 export const DUMMY_ARTICLES: Article[] = [
   {
-    id: '1',
+    id: 1,
+    slug: 'collect-ethiopian-passport',
     title: "How to Collect Your Ethiopian Passport Once It's Ready",
     excerpt:
       'A comprehensive guide on the process of collecting your Ethiopian passport after it has been processed.',
-    author: 'Passport Team',
-    publishedDate: 'Aug 24, 2025',
-    category: 'Passport',
-    tags: ['collection', 'ready', 'requirements'],
-    readTime: 5,
-    imageUrl: '/api/placeholder/400/240',
-    featured: true,
-    content: 'Detailed guide on passport collection process...',
+    content: '<p>Detailed guide on passport collection process...</p>',
+    featured_image_url: '/api/placeholder/400/240',
+    canonical_url: null,
+    meta_title: 'Collect your Ethiopian passport',
+    meta_description: 'Steps to collect your passport when it is ready.',
+    og_image_url: null,
+    status: 'published',
+    published_at: toIso(60 * 24),
+    reading_time: 5,
+    word_count: 1200,
+    author: { id: 100, name: 'Passport Team' },
+    tags: [sampleTags[0], sampleTags[2]],
+    categories: [sampleCategories[0]],
+    created_at: toIso(60 * 24 * 2),
+    updated_at: toIso(60 * 24),
   },
   {
-    id: '2',
+    id: 2,
+    slug: 'urgent-vs-regular-passport-applications',
     title: 'Urgent vs. Regular Passport Applications: What You Need to Know',
     excerpt:
       'Understanding the differences between urgent and regular passport applications and when to choose each option.',
-    author: 'Admin Team',
-    publishedDate: 'Aug 24, 2025',
-    category: 'Documentation',
-    tags: ['urgent', 'processing-time', 'fees'],
-    readTime: 7,
-    imageUrl: '/api/placeholder/400/240',
-    featured: true,
-    content: 'Comparison of urgent vs regular applications...',
+    content: '<p>Comparison of urgent vs regular applications...</p>',
+    featured_image_url: '/api/placeholder/400/240',
+    canonical_url: null,
+    meta_title: 'Urgent vs regular passport applications',
+    meta_description: 'When to choose urgent or regular processing.',
+    og_image_url: null,
+    status: 'published',
+    published_at: toIso(60 * 12),
+    reading_time: 7,
+    word_count: 1500,
+    author: { id: 101, name: 'Admin Team' },
+    tags: [sampleTags[1], sampleTags[2]],
+    categories: [sampleCategories[1]],
+    created_at: toIso(60 * 24),
+    updated_at: toIso(60 * 12),
   },
   {
-    id: '3',
+    id: 3,
+    slug: 'mistakes-to-avoid-when-applying-passport',
     title: 'Top 5 Mistakes to Avoid When Applying for Your Passport',
     excerpt: 'Common mistakes that can delay your passport application and how to avoid them.',
-    author: 'Passport Experts',
-    publishedDate: 'Aug 24, 2025',
-    category: 'Tips',
-    tags: ['first-time', 'requirements', 'documents'],
-    readTime: 6,
-    imageUrl: '/api/placeholder/400/240',
-    featured: false,
-    content: 'Top mistakes and how to avoid them...',
-  },
-  {
-    id: '4',
-    title: 'Travel Tips: What to Do If Your Passport is Delayed',
-    excerpt:
-      'Practical advice for travelers facing passport delays and how to manage your travel plans.',
-    author: 'Travel Guide',
-    publishedDate: 'Aug 24, 2025',
-    category: 'Travel',
-    tags: ['processing-time', 'international', 'tips'],
-    readTime: 8,
-    imageUrl: '/api/placeholder/400/240',
-    featured: false,
-    content: 'Managing delayed passport situations...',
-  },
-  {
-    id: '5',
-    title: 'Understanding Visa Requirements for Ethiopian Passport Holders',
-    excerpt:
-      'A complete guide to visa requirements and travel restrictions for Ethiopian passport holders.',
-    author: 'Immigration Team',
-    publishedDate: 'Aug 23, 2025',
-    category: 'Visa',
-    tags: ['international', 'requirements', 'travel'],
-    readTime: 12,
-    imageUrl: '/api/placeholder/400/240',
-    featured: false,
-    content: 'Comprehensive visa requirements guide...',
-  },
-  {
-    id: '6',
-    title: 'Passport Renewal Process: Step by Step Guide',
-    excerpt:
-      'Everything you need to know about renewing your Ethiopian passport, from documents to processing time.',
-    author: 'Renewal Team',
-    publishedDate: 'Aug 23, 2025',
-    category: 'Passport',
-    tags: ['renewal', 'documents', 'processing-time'],
-    readTime: 9,
-    imageUrl: '/api/placeholder/400/240',
-    featured: false,
-    content: 'Step-by-step renewal guide...',
-  },
-  {
-    id: '7',
-    title: 'Required Documents for First-Time Passport Applications',
-    excerpt:
-      'Complete checklist of documents needed for your first Ethiopian passport application.',
-    author: 'Documentation Team',
-    publishedDate: 'Aug 22, 2025',
-    category: 'Documentation',
-    tags: ['first-time', 'documents', 'requirements'],
-    readTime: 4,
-    imageUrl: '/api/placeholder/400/240',
-    featured: false,
-    content: 'First-time application requirements...',
-  },
-  {
-    id: '8',
-    title: 'How to Schedule Your Passport Application Appointment',
-    excerpt: 'Guide to booking and preparing for your passport application appointment.',
-    author: 'Appointment Team',
-    publishedDate: 'Aug 22, 2025',
-    category: 'Tips',
-    tags: ['appointment', 'scheduling', 'preparation'],
-    readTime: 5,
-    imageUrl: '/api/placeholder/400/240',
-    featured: false,
-    content: 'Appointment scheduling guide...',
-  },
-  {
-    id: '9',
-    title: 'Immigration Tips for Ethiopian Citizens Living Abroad',
-    excerpt:
-      'Essential information for Ethiopian citizens residing in other countries regarding passport services.',
-    author: 'Immigration Experts',
-    publishedDate: 'Aug 21, 2025',
-    category: 'Immigration',
-    tags: ['international', 'abroad', 'services'],
-    readTime: 10,
-    imageUrl: '/api/placeholder/400/240',
-    featured: false,
-    content: 'Guide for citizens abroad...',
-  },
-  {
-    id: '10',
-    title: 'Understanding Passport Processing Fees and Payment Methods',
-    excerpt: 'Detailed breakdown of passport fees and available payment options.',
-    author: 'Finance Team',
-    publishedDate: 'Aug 21, 2025',
-    category: 'Documentation',
-    tags: ['fees', 'payment', 'cost'],
-    readTime: 6,
-    imageUrl: '/api/placeholder/400/240',
-    featured: false,
-    content: 'Fees and payment information...',
-  },
-  {
-    id: '11',
-    title: 'Domestic vs International Passport: Which Do You Need?',
-    excerpt:
-      'Understanding the differences between domestic and international Ethiopian passports.',
-    author: 'Passport Advisory',
-    publishedDate: 'Aug 20, 2025',
-    category: 'Passport',
-    tags: ['domestic', 'international', 'types'],
-    readTime: 7,
-    imageUrl: '/api/placeholder/400/240',
-    featured: false,
-    content: 'Passport type comparison...',
-  },
-  {
-    id: '12',
-    title: 'Emergency Passport Services: When and How to Apply',
-    excerpt: 'Information about emergency passport services for urgent travel situations.',
-    author: 'Emergency Services',
-    publishedDate: 'Aug 20, 2025',
-    category: 'Travel',
-    tags: ['urgent', 'emergency', 'travel'],
-    readTime: 8,
-    imageUrl: '/api/placeholder/400/240',
-    featured: false,
-    content: 'Emergency passport procedures...',
+    content: '<p>Top mistakes and how to avoid them...</p>',
+    featured_image_url: '/api/placeholder/400/240',
+    canonical_url: null,
+    meta_title: 'Mistakes to avoid when applying for a passport',
+    meta_description: 'Avoid delays in your passport process.',
+    og_image_url: null,
+    status: 'published',
+    published_at: toIso(60 * 6),
+    reading_time: 6,
+    word_count: 1100,
+    author: { id: 102, name: 'Passport Experts' },
+    tags: [sampleTags[0], sampleTags[3]],
+    categories: [sampleCategories[2]],
+    created_at: toIso(60 * 20),
+    updated_at: toIso(60 * 6),
   },
 ]
 
-// Sample filter options
-export const SAMPLE_CATEGORIES = ['all', ...ARTICLE_CATEGORIES]
-export const SAMPLE_TAGS = ['all', ...ARTICLE_TAGS.slice(0, 8)] // Show first 8 tags
+export const SAMPLE_CATEGORIES = ['all', ...sampleCategories.map((c) => c.slug)] as const
+export const SAMPLE_TAGS = ['all', ...sampleTags.map((t) => t.slug)] as const
 
-// Helper functions for filtering
 export function filterArticlesByCategory(articles: Article[], category: string): Article[] {
   if (category === 'all') return articles
-  return articles.filter((article) => article.category === category)
+  return articles.filter((article) => article.categories.some((cat) => cat.slug === category))
 }
 
 export function filterArticlesByTag(articles: Article[], tag: string): Article[] {
   if (tag === 'all') return articles
-  return articles.filter((article) => article.tags.includes(tag))
+  return articles.filter((article) => article.tags.some((t) => t.slug === tag))
 }
 
 export function searchArticles(articles: Article[], query: string): Article[] {
   if (!query.trim()) return articles
   const lowerQuery = query.toLowerCase()
-  return articles.filter(
-    (article) =>
+  return articles.filter((article) => {
+    const excerpt = article.excerpt ?? ''
+    const tags = article.tags.map((t) => t.name).join(' ')
+    const categories = article.categories.map((c) => c.name).join(' ')
+    return (
       article.title.toLowerCase().includes(lowerQuery) ||
-      article.excerpt.toLowerCase().includes(lowerQuery) ||
-      article.tags.some((tag) => tag.toLowerCase().includes(lowerQuery)) ||
-      article.category.toLowerCase().includes(lowerQuery),
-  )
+      excerpt.toLowerCase().includes(lowerQuery) ||
+      tags.toLowerCase().includes(lowerQuery) ||
+      categories.toLowerCase().includes(lowerQuery)
+    )
+  })
 }
 
 export function paginateArticles(articles: Article[], page: number, pageSize: number) {

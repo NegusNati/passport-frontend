@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import { useCreateAdminArticleMutation } from '@/features/admin/articles/api/create-article'
+import type { AdminArticleCreatePayload, AdminArticleUpdatePayload } from '@/features/admin/articles/schemas/create'
 import { ArticleForm } from '@/features/admin/articles/components/ArticleForm'
 
 export const Route = createFileRoute('/admin/articles/new')({
@@ -11,8 +12,8 @@ function AdminArticleCreatePage() {
   const navigate = useNavigate({ from: '/admin/articles/new' })
   const mutation = useCreateAdminArticleMutation()
 
-  async function handleSubmit(values: Parameters<typeof mutation.mutateAsync>[0]) {
-    const article = await mutation.mutateAsync(values)
+  async function handleSubmit(values: AdminArticleCreatePayload | AdminArticleUpdatePayload) {
+    const article = await mutation.mutateAsync(values as AdminArticleCreatePayload)
     navigate({ to: '/admin/articles/$slug', params: { slug: article.slug }, search: (prev) => prev, replace: true })
   }
 

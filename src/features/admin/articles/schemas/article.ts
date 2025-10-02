@@ -52,8 +52,15 @@ export const AdminArticlesListResponseSchema = z.object({
   filters: z.unknown().optional(),
 })
 
+const AdminArticleMetaSchema = z
+  .object({
+    etag: z.string().optional(),
+  })
+  .passthrough()
+
 export const AdminArticleDetailResponseSchema = z.object({
   data: AdminArticleSchema,
+  meta: AdminArticleMetaSchema.optional(),
 })
 
 export type AdminArticlesListResponse = z.infer<typeof AdminArticlesListResponseSchema>

@@ -25,6 +25,7 @@ import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminPdfImportRouteImport } from './routes/admin/pdf-import'
 import { Route as AdminPassportsRouteImport } from './routes/admin/passports'
 import { Route as AdminArticlesRouteImport } from './routes/admin/articles'
+import { Route as AdminArticlesIndexRouteImport } from './routes/admin/articles.index'
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users.$userId'
 import { Route as AdminPassportsNewRouteImport } from './routes/admin/passports.new'
 import { Route as AdminHorizonDashboardRouteImport } from './routes/admin/horizon.dashboard'
@@ -111,6 +112,11 @@ const AdminArticlesRoute = AdminArticlesRouteImport.update({
   path: '/articles',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminArticlesIndexRoute = AdminArticlesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminArticlesRoute,
+} as any)
 const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
   id: '/$userId',
   path: '/$userId',
@@ -159,6 +165,7 @@ export interface FileRoutesByFullPath {
   '/admin/horizon/dashboard': typeof AdminHorizonDashboardRoute
   '/admin/passports/new': typeof AdminPassportsNewRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/admin/articles/': typeof AdminArticlesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -168,7 +175,6 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/test': typeof TestRoute
-  '/admin/articles': typeof AdminArticlesRouteWithChildren
   '/admin/passports': typeof AdminPassportsRouteWithChildren
   '/admin/pdf-import': typeof AdminPdfImportRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
@@ -181,6 +187,7 @@ export interface FileRoutesByTo {
   '/admin/horizon/dashboard': typeof AdminHorizonDashboardRoute
   '/admin/passports/new': typeof AdminPassportsNewRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/admin/articles': typeof AdminArticlesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -205,6 +212,7 @@ export interface FileRoutesById {
   '/admin/horizon/dashboard': typeof AdminHorizonDashboardRoute
   '/admin/passports/new': typeof AdminPassportsNewRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/admin/articles/': typeof AdminArticlesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -230,6 +238,7 @@ export interface FileRouteTypes {
     | '/admin/horizon/dashboard'
     | '/admin/passports/new'
     | '/admin/users/$userId'
+    | '/admin/articles/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -239,7 +248,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/register'
     | '/test'
-    | '/admin/articles'
     | '/admin/passports'
     | '/admin/pdf-import'
     | '/admin/users'
@@ -252,6 +260,7 @@ export interface FileRouteTypes {
     | '/admin/horizon/dashboard'
     | '/admin/passports/new'
     | '/admin/users/$userId'
+    | '/admin/articles'
   id:
     | '__root__'
     | '/'
@@ -275,6 +284,7 @@ export interface FileRouteTypes {
     | '/admin/horizon/dashboard'
     | '/admin/passports/new'
     | '/admin/users/$userId'
+    | '/admin/articles/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -404,6 +414,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminArticlesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/articles/': {
+      id: '/admin/articles/'
+      path: '/'
+      fullPath: '/admin/articles/'
+      preLoaderRoute: typeof AdminArticlesIndexRouteImport
+      parentRoute: typeof AdminArticlesRoute
+    }
     '/admin/users/$userId': {
       id: '/admin/users/$userId'
       path: '/$userId'
@@ -445,11 +462,13 @@ declare module '@tanstack/react-router' {
 interface AdminArticlesRouteChildren {
   AdminArticlesSlugRoute: typeof AdminArticlesSlugRoute
   AdminArticlesNewRoute: typeof AdminArticlesNewRoute
+  AdminArticlesIndexRoute: typeof AdminArticlesIndexRoute
 }
 
 const AdminArticlesRouteChildren: AdminArticlesRouteChildren = {
   AdminArticlesSlugRoute: AdminArticlesSlugRoute,
   AdminArticlesNewRoute: AdminArticlesNewRoute,
+  AdminArticlesIndexRoute: AdminArticlesIndexRoute,
 }
 
 const AdminArticlesRouteWithChildren = AdminArticlesRoute._addFileChildren(

@@ -36,9 +36,9 @@ export function UserForm({ user, onSubmit, isSubmitting, errorMessage }: UserFor
 
   const form = useForm({
     defaultValues: {
-      role: user.role ?? 'user',
-      status: user.status ?? 'active',
-      is_admin: Boolean(user.is_admin ?? user.role?.toLowerCase() === 'admin'),
+      role: (user.roles?.[0] ?? (user.is_admin ? 'admin' : 'user')) as string,
+      status: (user.email_verified_at ? 'active' : 'inactive') as string,
+      is_admin: Boolean(user.is_admin ?? (user.roles ?? []).includes('admin')),
     } satisfies UpdateAdminUserFormValues,
     onSubmit: async ({ value }) => {
       setFormError(null)

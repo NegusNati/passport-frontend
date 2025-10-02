@@ -7,13 +7,13 @@ describe('UsersSearchSchema', () => {
     const parsed = UsersSearchSchema.parse({})
     expect(parsed.page).toBe(1)
     expect(parsed.page_size).toBe(20)
-    expect(parsed.q).toBeUndefined()
+    expect(parsed.search).toBeUndefined()
   })
 
   it('coerces values from strings and trims text', () => {
     const parsed = UsersSearchSchema.parse({ page: '2', page_size: '50', q: ' test ' })
     expect(parsed.page).toBe(2)
     expect(parsed.page_size).toBe(50)
-    expect(parsed.q).toBe('test')
+    expect(parsed.search).toBe('test')
   })
 })

@@ -1,14 +1,23 @@
 import { z } from 'zod'
 
-// Article search form schema
+import { ArticleApiItem } from '../lib/ArticlesSchema'
+
+const filterValue = z.union([z.literal('all'), z.string().min(1)])
+const dateRangeValue = z.union([z.literal('all'), z.literal('7d'), z.literal('30d'), z.literal('90d')])
+
 export const ArticleSearch = z.object({
-  query: z.string().min(1, 'Search query is required'),
+  query: z
+    .string()
+    .min(1, 'Search query is required')
+    .max(120, 'Please shorten your search query'),
 })
 
 export type ArticleSearch = z.infer<typeof ArticleSearch>
 
-// Article data schema
-export const Article = z.object({
+export const Article = ArticleApiItem
+export type Article = z.infer<typeof Article>
+
+export const ArticleSummary = z.object({
   id: z.string(),
   title: z.string(),
   excerpt: z.string(),
@@ -18,51 +27,23 @@ export const Article = z.object({
   imageUrl: z.string().optional(),
   category: z.string(),
   tags: z.array(z.string()).default([]),
-  readTime: z.number().min(1), // in minutes
+  readTime: z.number().nonnegative(),
   featured: z.boolean().default(false),
 })
 
-export type Article = z.infer<typeof Article>
+export type ArticleSummary = z.infer<typeof ArticleSummary>
 
-// Filter schemas
 export const ArticleFilters = z.object({
-  category: z.string().default('all'),
-  tag: z.string().default('all'),
-  dateRange: z.string().default('all'),
+  category: filterValue.default('all'),
+  tag: filterValue.default('all'),
+  dateRange: dateRangeValue.default('all'),
 })
 
 export type ArticleFilters = z.infer<typeof ArticleFilters>
 
-// Pagination schema
 export const PaginationParams = z.object({
-  page: z.number().min(1).default(1),
-  page_size: z.number().min(1).max(50).default(12),
+  page: z.number().int().min(1).default(1),
+  page_size: z.number().int().min(1).max(50).default(12),
 })
 
 export type PaginationParams = z.infer<typeof PaginationParams>
-
-// Category and tag enums for filtering
-export const ARTICLE_CATEGORIES = [
-  'Travel',
-  'Passport',
-  'Visa',
-  'Immigration',
-  'Documentation',
-  'Tips',
-] as const
-
-export const ARTICLE_TAGS = [
-  'urgent',
-  'renewal',
-  'first-time',
-  'international',
-  'domestic',
-  'requirements',
-  'processing-time',
-  'fees',
-  'documents',
-  'appointment',
-] as const
-
-export type ArticleCategory = (typeof ARTICLE_CATEGORIES)[number]
-export type ArticleTag = (typeof ARTICLE_TAGS)[number]

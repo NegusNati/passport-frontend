@@ -14,10 +14,7 @@ const roleOptions = [
   { value: 'user', label: 'User' },
 ]
 
-const statusOptions = [
-  { value: 'active', label: 'Active' },
-  { value: 'inactive', label: 'Inactive' },
-]
+// status options removed; backend provides email_verified instead
 
 type UsersTableProps = {
   data: AdminUser[]
@@ -26,9 +23,10 @@ type UsersTableProps = {
   isError: boolean
   error: Error | null
   filters: {
-    q?: string
+    search?: string
     role?: string
-    status?: string
+    is_admin?: boolean
+    email_verified?: boolean
   }
   onFilterChange: (updates: Partial<UsersTableProps['filters']>) => void
   onPageChange: (page: number) => void
@@ -64,29 +62,27 @@ export function UsersTable({
         ),
       },
       {
-        accessorKey: 'role',
+        id: 'role',
         header: 'Role',
-        cell: ({ row }) => (
-          <span className="capitalize text-sm text-muted-foreground">{row.original.role ?? 'user'}</span>
-        ),
+        cell: ({ row }) => {
+          const fallback = row.original.is_admin ? 'admin' : 'user'
+          const role = row.original.roles?.[0] ?? fallback
+          return <span className="capitalize text-sm text-muted-foreground">{role}</span>
+        },
       },
       {
-        accessorKey: 'status',
-        header: 'Status',
+        id: 'verified',
+        header: 'Verified',
         cell: ({ row }) => {
-          const status = row.original.status ?? 'unknown'
+          const verified = Boolean(row.original.email_verified_at)
           return (
             <span
               className={cn(
                 'inline-flex items-center rounded-full px-2 py-1 text-xs font-medium',
-                status === 'active'
-                  ? 'bg-emerald-100 text-emerald-700'
-                  : status === 'inactive'
-                    ? 'bg-amber-100 text-amber-700'
-                    : 'bg-slate-100 text-slate-600',
+                verified ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600',
               )}
             >
-              {status}
+              {verified ? 'verified' : 'unverified'}
             </span>
           )
         },
@@ -141,13 +137,13 @@ type UsersTableFiltersProps = {
 
 function UsersTableFilters({ filters, onFilterChange }: UsersTableFiltersProps) {
   return (
-    <div className="grid gap-4 rounded-lg border bg-background p-4 md:grid-cols-3">
+    <div className="grid gap-4 rounded-lg border bg-background p-4 md:grid-cols-4">
       <div className="grid gap-2">
         <Label htmlFor="user-search">Search</Label>
         <Input
           id="user-search"
-          value={filters.q ?? ''}
-          onChange={(event) => onFilterChange({ q: event.target.value || undefined })}
+          value={filters.search ?? ''}
+          onChange={(event) => onFilterChange({ search: event.target.value || undefined })}
           placeholder="Search by name or phone"
         />
       </div>
@@ -173,23 +169,39 @@ function UsersTableFilters({ filters, onFilterChange }: UsersTableFiltersProps) 
         </Select>
       </div>
       <div className="grid gap-2">
-        <Label htmlFor="user-status">Status</Label>
+        <Label htmlFor="user-admin">Admin</Label>
         <Select
-          value={filters.status ?? undefined}
-          onValueChange={(value) => onFilterChange({ status: value || undefined })}
+          value={typeof filters.is_admin === 'boolean' ? String(filters.is_admin) : undefined}
+          onValueChange={(value) => onFilterChange({ is_admin: value ? value === 'true' : undefined })}
         >
-          <SelectTrigger id="user-status">
-            <SelectValue placeholder="All statuses" />
+          <SelectTrigger id="user-admin">
+            <SelectValue placeholder="All users" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="__all__" disabled>
-              All statuses
+              All users
             </SelectItem>
-            {statusOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
+            <SelectItem value="true">Admins</SelectItem>
+            <SelectItem value="false">Non-admins</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="user-verified">Email verified</Label>
+        <Select
+          value={typeof filters.email_verified === 'boolean' ? String(filters.email_verified) : undefined}
+          onValueChange={(value) =>
+            onFilterChange({ email_verified: value ? value === 'true' : undefined })}
+        >
+          <SelectTrigger id="user-verified">
+            <SelectValue placeholder="All" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="__all__" disabled>
+              All
+            </SelectItem>
+            <SelectItem value="true">Verified</SelectItem>
+            <SelectItem value="false">Unverified</SelectItem>
           </SelectContent>
         </Select>
       </div>

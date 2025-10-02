@@ -3,7 +3,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { queryClient } from '@/api/queryClient'
 import { useDeleteAdminArticleMutation } from '@/features/admin/articles/api/delete-article'
 import { fetchAdminArticle, useAdminArticleQuery } from '@/features/admin/articles/api/get-article'
-import { useUpdateAdminArticleMutation } from '@/features/admin/articles/api/update-article'
+import { type UpdateAdminArticleVariables, useUpdateAdminArticleMutation } from '@/features/admin/articles/api/update-article'
 import { ArticleForm } from '@/features/admin/articles/components/ArticleForm'
 import { adminKeys } from '@/features/admin/lib/keys'
 
@@ -22,10 +22,10 @@ function AdminArticleEditPage() {
   const { slug } = Route.useParams()
   const navigate = useNavigate({ from: '/admin/articles/$slug' })
   const articleQuery = useAdminArticleQuery(slug)
-  const updateMutation = useUpdateAdminArticleMutation(slug)
-  const deleteMutation = useDeleteAdminArticleMutation()
-
   const article = articleQuery.data?.data
+  const resourceId = article?.slug ?? slug
+  const updateMutation = useUpdateAdminArticleMutation(resourceId)
+  const deleteMutation = useDeleteAdminArticleMutation()
 
   if (articleQuery.isLoading || !article) {
     return (
@@ -36,13 +36,22 @@ function AdminArticleEditPage() {
     )
   }
 
-  async function handleSubmit(values: Parameters<typeof updateMutation.mutateAsync>[0]) {
-    await updateMutation.mutateAsync(values)
+  async function handleSubmit(values: UpdateAdminArticleVariables['payload']) {
+    const currentEtag = articleQuery.data?.meta?.etag
+    const updated = await updateMutation.mutateAsync({ payload: values, etag: currentEtag })
+    if (updated.slug && updated.slug !== slug) {
+      navigate({
+        to: '/admin/articles/$slug',
+        params: { slug: updated.slug },
+        search: (prev) => prev,
+        replace: true,
+      })
+    }
   }
 
   async function handleDelete() {
     if (!confirm('Delete this article? This action can be undone later via restore.')) return
-    await deleteMutation.mutateAsync(slug)
+    await deleteMutation.mutateAsync(resourceId)
     navigate({ to: '/admin/articles', search: (prev) => prev, replace: true })
   }
 

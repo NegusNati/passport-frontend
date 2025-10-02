@@ -7,11 +7,14 @@ import {
   type AdminArticlesListResponse,
   AdminArticlesListResponseSchema,
 } from '../schemas/article'
-import { type ArticlesSearchParams,sanitizeArticlesQuery } from '../schemas/filters'
+import { type ArticlesSearchParams, sanitizeArticlesQuery } from '../schemas/filters'
 
 export async function fetchAdminArticles(params: ArticlesSearchParams) {
   const response = await api.get('/api/v1/articles', {
-    params: sanitizeArticlesQuery(params),
+    params: {
+      include: 'author,tags,categories',
+      ...sanitizeArticlesQuery(params),
+    },
   })
 
   return AdminArticlesListResponseSchema.parse(response.data)

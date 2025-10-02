@@ -1,37 +1,72 @@
 import { useForm } from '@tanstack/react-form'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
+import { useAdminUsersQuery } from '@/features/admin/users/api/get-users'
+import { useCategoriesQuery, useTagsQuery } from '@/features/articles/lib/ArticlesQuery'
+import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 
 import type { AdminArticle } from '../schemas/article'
-import {
-  type AdminArticleCreateInput,
-  AdminArticleCreateSchema,
-} from '../schemas/create'
+import { type AdminArticleCreatePayload, AdminArticleCreateSchema, type AdminArticleUpdatePayload } from '../schemas/create'
 
-const statusOptions: AdminArticleCreateInput['status'][] = [
-  'draft',
-  'published',
-  'scheduled',
-  'archived',
-]
+const statusOptions = ['draft', 'published', 'scheduled', 'archived'] as const
 
-type ArticleFormValues = AdminArticleCreateInput & {
+type ArticleFormValues = {
+  title: string
+  slug?: string | null
+  excerpt?: string | null
+  content?: string | null
+  featured_image_url?: string | null
+  canonical_url?: string | null
+  meta_title?: string | null
+  meta_description?: string | null
+  og_image_url?: string | null
+  status: 'draft' | 'published' | 'scheduled' | 'archived'
+  published_at?: string | null
+  tags?: string[]
+  categories?: string[]
   tagsInput: string
   categoriesInput: string
+  remove_featured_image?: boolean
+  remove_og_image?: boolean
+  author_id?: number | null
 }
 
 type ArticleFormProps = {
   article?: AdminArticle
-  onSubmit: (values: AdminArticleCreateInput) => Promise<void> | void
+  onSubmit: (values: AdminArticleCreatePayload | AdminArticleUpdatePayload) => Promise<void> | void
   isSubmitting?: boolean
   errorMessage?: string | null
 }
 
 export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: ArticleFormProps) {
   const [formError, setFormError] = useState<string | null>(null)
+  const categoriesQuery = useCategoriesQuery()
+  const tagsQuery = useTagsQuery()
+  const [featuredFile, setFeaturedFile] = useState<File | null>(null)
+  const [ogFile, setOgFile] = useState<File | null>(null)
+  const [authorSearch, setAuthorSearch] = useState('')
+  const debouncedAuthor = useDebouncedValue(authorSearch, 300)
+  const usersQuery = useAdminUsersQuery({
+    page: 1,
+    page_size: 10,
+    search: debouncedAuthor || undefined,
+    role: undefined,
+    is_admin: undefined,
+    email_verified: undefined,
+  })
+
+  const featuredPreview = useMemo(() => {
+    if (featuredFile) return URL.createObjectURL(featuredFile)
+    return article?.featured_image_url ?? ''
+  }, [featuredFile, article?.featured_image_url])
+
+  const ogPreview = useMemo(() => {
+    if (ogFile) return URL.createObjectURL(ogFile)
+    return article?.og_image_url ?? ''
+  }, [ogFile, article?.og_image_url])
 
   const form = useForm({
     defaultValues: {
@@ -48,10 +83,13 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
       published_at: article?.published_at ?? '',
       tagsInput: article?.tags?.map((tag) => tag.slug ?? tag.name).join(', ') ?? '',
       categoriesInput: article?.categories?.map((cat) => cat.slug ?? cat.name).join(', ') ?? '',
+      remove_featured_image: false as boolean,
+      remove_og_image: false as boolean,
+      author_id: article?.author?.id ?? null,
     } satisfies ArticleFormValues,
     onSubmit: async ({ value }) => {
       setFormError(null)
-      const payload: AdminArticleCreateInput = {
+      const textOnly = {
         title: value.title.trim(),
         slug: value.slug?.trim() || undefined,
         excerpt: value.excerpt?.trim() || undefined,
@@ -67,14 +105,24 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
         categories: splitCommaSeparated(value.categoriesInput),
       }
 
-      const parsed = AdminArticleCreateSchema.safeParse(payload)
+      const parsed = AdminArticleCreateSchema.safeParse(textOnly)
       if (!parsed.success) {
         setFormError(parsed.error.issues[0]?.message ?? 'Invalid form data.')
         return
       }
 
       try {
-        await onSubmit(parsed.data)
+        await onSubmit({
+          ...textOnly,
+          featured_image: featuredFile ?? undefined,
+          og_image: ogFile ?? undefined,
+          remove_featured_image: value.remove_featured_image || undefined,
+        remove_og_image: value.remove_og_image || undefined,
+        author_id:
+          typeof value.author_id === 'number' && Number.isFinite(value.author_id)
+            ? value.author_id
+            : undefined,
+      })
       } catch (error) {
         setFormError(
           error instanceof Error ? error.message : 'Failed to save article. Please try again.',
@@ -128,7 +176,8 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
                 id="status"
                 className="h-10 rounded-md border border-input bg-background px-3 text-sm"
                 value={field.state.value}
-                onChange={(event) => field.handleChange(event.target.value as AdminArticleCreateInput['status'])}
+                onChange={(event) =>
+                  field.handleChange(event.target.value as ArticleFormValues['status'])}
               >
                 {statusOptions.map((option) => (
                   <option key={option} value={option}>
@@ -190,13 +239,37 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
               <Label htmlFor="featured_image_url">Featured image URL</Label>
               <Input
                 id="featured_image_url"
-                type="url"
                 value={field.state.value}
                 onChange={(event) => field.handleChange(event.target.value)}
+                placeholder="https://… or stored path"
               />
             </div>
           )}
         </form.Field>
+
+        {/* Featured image upload */}
+        <div className="grid gap-2">
+          <Label htmlFor="featured_image">Featured image</Label>
+          {featuredPreview ? (
+            <img
+              src={featuredPreview}
+              alt="Featured preview"
+              className="h-24 w-24 rounded-md object-cover border"
+            />
+          ) : null}
+          <input
+            id="featured_image"
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            onChange={(e) => {
+              const file = e.currentTarget.files?.[0] ?? null
+              setFeaturedFile(file)
+              if (file) {
+                form.setFieldValue('remove_featured_image', false as const)
+              }
+            }}
+          />
+        </div>
 
         <form.Field name="canonical_url">
           {(field) => (
@@ -245,9 +318,9 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
               <Label htmlFor="og_image_url">OG image URL</Label>
               <Input
                 id="og_image_url"
-                type="url"
                 value={field.state.value}
                 onChange={(event) => field.handleChange(event.target.value)}
+                placeholder="https://… or stored path"
               />
             </div>
           )}
@@ -259,10 +332,18 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
               <Label htmlFor="tags">Tags</Label>
               <Input
                 id="tags"
+                list="tags-list"
                 value={field.state.value}
                 onChange={(event) => field.handleChange(event.target.value)}
                 placeholder="Comma separated tag slugs"
               />
+              <datalist id="tags-list">
+                {(tagsQuery.data?.data ?? []).map((t) => (
+                  <option key={t.slug} value={t.slug}>
+                    {t.name}
+                  </option>
+                ))}
+              </datalist>
             </div>
           )}
         </form.Field>
@@ -273,17 +354,90 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
               <Label htmlFor="categories">Categories</Label>
               <Input
                 id="categories"
+                list="categories-list"
                 value={field.state.value}
                 onChange={(event) => field.handleChange(event.target.value)}
                 placeholder="Comma separated category slugs"
               />
+              <datalist id="categories-list">
+                {(categoriesQuery.data?.data ?? []).map((c) => (
+                  <option key={c.slug} value={c.slug}>
+                    {c.name}
+                  </option>
+                ))}
+              </datalist>
             </div>
           )}
         </form.Field>
       </div>
 
+      {/* Author selection */}
+      <form.Field name="author_id">
+        {(field) => (
+          <div className="grid gap-2 md:max-w-xl">
+            <Label htmlFor="author_search">Author</Label>
+            <Input
+              id="author_search"
+              value={authorSearch}
+              onChange={(e) => setAuthorSearch(e.target.value)}
+              placeholder="Search users by name or email"
+            />
+            <select
+              aria-label="Select author"
+              className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+              value={field.state.value ?? ''}
+              onChange={(e) =>
+                field.handleChange(e.currentTarget.value ? Number(e.currentTarget.value) : null)}
+            >
+              <option value="">
+                {article?.author ? `${article.author.name} (current)` : 'Select author (optional)'}
+              </option>
+              {field.state.value &&
+              !(usersQuery.data?.data ?? []).some((u) => u.id === field.state.value) ? (
+                <option value={field.state.value}>
+                  {article?.author?.name ? `${article.author.name}` : `User #${field.state.value}`}
+                </option>
+              ) : null}
+              {(usersQuery.data?.data ?? []).map((u) => (
+                <option key={u.id} value={u.id}>
+                  {`${u.first_name} ${u.last_name}`}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs text-muted-foreground">
+              {usersQuery.isFetching
+                ? 'Searching…'
+                : debouncedAuthor
+                  ? `Results for "${debouncedAuthor}"`
+                  : 'Type to search'}
+            </p>
+          </div>
+        )}
+      </form.Field>
+
       {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
       {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
+
+      {/* OG image upload row (placed after grid to avoid uneven columns on small screens) */}
+      <div className="grid gap-2 md:max-w-md">
+        <Label htmlFor="og_image">OG image</Label>
+        {ogPreview ? (
+          <img src={ogPreview} alt="OG preview" className="h-24 w-24 rounded-md object-cover border" />
+        ) : null}
+        <input
+          id="og_image"
+          type="file"
+          accept="image/png,image/jpeg,image/webp"
+          onChange={(e) => {
+            const file = e.currentTarget.files?.[0] ?? null
+            setOgFile(file)
+            if (file) {
+              form.setFieldValue('remove_og_image', false as const)
+            }
+          }}
+        />
+    
+      </div>
 
       <form.Subscribe selector={(state) => state.canSubmit}>
         {(canSubmit) => (

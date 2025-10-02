@@ -12,7 +12,11 @@ import { Container } from '@/shared/ui/container'
 import { Seo } from '@/shared/ui/Seo'
 import { ArticleGridSkeleton } from '@/shared/ui/skeleton'
 
-import type { ArticleFilters as ArticleFiltersType, ArticleSearch } from '../schemas/article'
+import type {
+  ArticleFilters as ArticleFiltersType,
+  ArticleSearch,
+  ArticleSummary,
+} from '../schemas/article'
 import { ArticleCard } from './ArticleCard'
 import { ArticleFilters } from './ArticleFilters'
 import { ArticlePagination } from './ArticlePagination'
@@ -65,7 +69,7 @@ export function ArticlesPage() {
       ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  const mapToUi = (a: ArticleApiItem) => ({
+  const mapToUi = (a: ArticleApiItem): ArticleSummary => ({
     id: String(a.id),
     title: a.title,
     excerpt: a.excerpt ?? '',
@@ -76,7 +80,7 @@ export function ArticlesPage() {
       : '',
     category: a.categories[0]?.name ?? 'General',
     tags: a.tags.map((t) => t.slug),
-    readTime: a.reading_time ?? 0,
+    readTime: Math.max(1, a.reading_time ?? 0),
     imageUrl: a.featured_image_url ?? undefined,
     featured: false,
   })

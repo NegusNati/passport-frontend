@@ -46,7 +46,7 @@ export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' 
       ].join(' ')}
       aria-label="Support: Buy me a coffee"
     >
-      <div className="relative h-14 w-14 sm:h-16 sm:w-16">
+      <div className="relative h-20 w-20 sm:h-24 sm:w-24">
         {/* Rotating text ring */}
         <div
           aria-hidden
@@ -57,7 +57,7 @@ export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' 
             <defs>
               <path id="bmc-circle" d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" />
             </defs>
-            <text className="fill-[hsl(var(--muted-foreground))] text-[8px] tracking-[0.2em] uppercase sm:text-[10px]">
+            <text className="fill-[hsl(var(--muted-foreground))] text-[10px] tracking-[0.2em] uppercase sm:text-[12px]">
               <textPath href="#bmc-circle" startOffset="0">
                 Buy me a coffee • Buy me a coffee •
               </textPath>
@@ -69,9 +69,9 @@ export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' 
           href={href}
           target="_blank"
           rel="noreferrer noopener"
-          className="border-input bg-background hover:border-border absolute top-1/2 left-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border shadow-sm transition hover:shadow-md sm:h-12 sm:w-12"
+          className="border-input bg-background hover:border-border absolute top-1/2 left-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border shadow-sm transition hover:shadow-md sm:h-16 sm:w-16"
         >
-          <span role="img" aria-label="coffee" className="text-lg sm:text-xl">
+          <span role="img" aria-label="coffee" className="text-xl sm:text-2xl">
             ☕️
           </span>
         </a>

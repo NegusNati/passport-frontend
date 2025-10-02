@@ -52,7 +52,7 @@ function AdminUsersPage() {
           isLoading={isRefetching}
           isError={Boolean(error)}
           error={error}
-          filters={{ q: search.q, role: search.role, status: search.status }}
+          filters={{ search: search.search, role: search.role, is_admin: search.is_admin, email_verified: search.email_verified }}
           onFilterChange={handleFilterChange}
           onPageChange={(page) => navigate({ search: { ...search, page } })}
           onPageSizeChange={(page_size) => navigate({ search: { ...search, page: 1, page_size } })}
