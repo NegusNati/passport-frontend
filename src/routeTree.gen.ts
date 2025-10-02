@@ -14,10 +14,10 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CalendarRouteImport } from './routes/calendar'
-import { Route as ArticlesRouteImport } from './routes/articles'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PassportsIndexRouteImport } from './routes/passports/index'
+import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as PassportsPassportIdRouteImport } from './routes/passports/$passportId'
 import { Route as ArticlesSlugRouteImport } from './routes/articles/$slug'
@@ -57,11 +57,6 @@ const CalendarRoute = CalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ArticlesRoute = ArticlesRouteImport.update({
-  id: '/articles',
-  path: '/articles',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -77,6 +72,11 @@ const PassportsIndexRoute = PassportsIndexRouteImport.update({
   path: '/passports/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
+  id: '/articles/',
+  path: '/articles/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -88,9 +88,9 @@ const PassportsPassportIdRoute = PassportsPassportIdRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ArticlesRoute,
+  id: '/articles/$slug',
+  path: '/articles/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
@@ -146,7 +146,6 @@ const AdminArticlesSlugRoute = AdminArticlesSlugRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/articles': typeof ArticlesRouteWithChildren
   '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
@@ -159,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/articles/$slug': typeof ArticlesSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/articles': typeof ArticlesIndexRoute
   '/passports': typeof PassportsIndexRoute
   '/admin/articles/$slug': typeof AdminArticlesSlugRoute
   '/admin/articles/new': typeof AdminArticlesNewRoute
@@ -169,7 +169,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/articles': typeof ArticlesRouteWithChildren
   '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
@@ -181,6 +180,7 @@ export interface FileRoutesByTo {
   '/articles/$slug': typeof ArticlesSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
   '/admin': typeof AdminIndexRoute
+  '/articles': typeof ArticlesIndexRoute
   '/passports': typeof PassportsIndexRoute
   '/admin/articles/$slug': typeof AdminArticlesSlugRoute
   '/admin/articles/new': typeof AdminArticlesNewRoute
@@ -193,7 +193,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/articles': typeof ArticlesRouteWithChildren
   '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
@@ -206,6 +205,7 @@ export interface FileRoutesById {
   '/articles/$slug': typeof ArticlesSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
   '/admin/': typeof AdminIndexRoute
+  '/articles/': typeof ArticlesIndexRoute
   '/passports/': typeof PassportsIndexRoute
   '/admin/articles/$slug': typeof AdminArticlesSlugRoute
   '/admin/articles/new': typeof AdminArticlesNewRoute
@@ -219,7 +219,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
-    | '/articles'
     | '/calendar'
     | '/login'
     | '/profile'
@@ -232,6 +231,7 @@ export interface FileRouteTypes {
     | '/articles/$slug'
     | '/passports/$passportId'
     | '/admin/'
+    | '/articles'
     | '/passports'
     | '/admin/articles/$slug'
     | '/admin/articles/new'
@@ -242,7 +242,6 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/articles'
     | '/calendar'
     | '/login'
     | '/profile'
@@ -254,6 +253,7 @@ export interface FileRouteTypes {
     | '/articles/$slug'
     | '/passports/$passportId'
     | '/admin'
+    | '/articles'
     | '/passports'
     | '/admin/articles/$slug'
     | '/admin/articles/new'
@@ -265,7 +265,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
-    | '/articles'
     | '/calendar'
     | '/login'
     | '/profile'
@@ -278,6 +277,7 @@ export interface FileRouteTypes {
     | '/articles/$slug'
     | '/passports/$passportId'
     | '/admin/'
+    | '/articles/'
     | '/passports/'
     | '/admin/articles/$slug'
     | '/admin/articles/new'
@@ -290,13 +290,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  ArticlesRoute: typeof ArticlesRouteWithChildren
   CalendarRoute: typeof CalendarRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   TestRoute: typeof TestRoute
+  ArticlesSlugRoute: typeof ArticlesSlugRoute
   PassportsPassportIdRoute: typeof PassportsPassportIdRoute
+  ArticlesIndexRoute: typeof ArticlesIndexRoute
   PassportsIndexRoute: typeof PassportsIndexRoute
 }
 
@@ -337,13 +338,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/articles': {
-      id: '/articles'
-      path: '/articles'
-      fullPath: '/articles'
-      preLoaderRoute: typeof ArticlesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -365,6 +359,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PassportsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/articles/': {
+      id: '/articles/'
+      path: '/articles'
+      fullPath: '/articles'
+      preLoaderRoute: typeof ArticlesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -381,10 +382,10 @@ declare module '@tanstack/react-router' {
     }
     '/articles/$slug': {
       id: '/articles/$slug'
-      path: '/$slug'
+      path: '/articles/$slug'
       fullPath: '/articles/$slug'
       preLoaderRoute: typeof ArticlesSlugRouteImport
-      parentRoute: typeof ArticlesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/users': {
       id: '/admin/users'
@@ -519,28 +520,17 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
-interface ArticlesRouteChildren {
-  ArticlesSlugRoute: typeof ArticlesSlugRoute
-}
-
-const ArticlesRouteChildren: ArticlesRouteChildren = {
-  ArticlesSlugRoute: ArticlesSlugRoute,
-}
-
-const ArticlesRouteWithChildren = ArticlesRoute._addFileChildren(
-  ArticlesRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  ArticlesRoute: ArticlesRouteWithChildren,
   CalendarRoute: CalendarRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   TestRoute: TestRoute,
+  ArticlesSlugRoute: ArticlesSlugRoute,
   PassportsPassportIdRoute: PassportsPassportIdRoute,
+  ArticlesIndexRoute: ArticlesIndexRoute,
   PassportsIndexRoute: PassportsIndexRoute,
 }
 export const routeTree = rootRouteImport

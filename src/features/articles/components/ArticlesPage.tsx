@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 
 import {
@@ -23,6 +24,7 @@ import { ArticlePagination } from './ArticlePagination'
 import { ArticleSearchForm } from './ArticleSearchForm'
 
 export function ArticlesPage() {
+  // const navigate = useNavigate({ from: '/articles' })
   const [searchQuery, setSearchQuery] = useState('')
   const [filters, setFilters] = useState<ArticleFiltersType>({
     category: 'all',
@@ -142,13 +144,16 @@ export function ArticlesPage() {
             <>
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {rows.map((a) => (
-                  <ArticleCard
-                    key={a.id}
-                    article={mapToUi(a)}
-                    onClick={() => {
-                      window.location.href = `/articles/${a.slug}`
-                    }}
-                  />
+              <Link
+                key={a.id}
+                to="/articles/$slug"
+                params={{ slug: a.slug }}
+                search={(s: Record<string, unknown>) => s}
+                preload="intent"
+                className="block"
+              >
+                    <ArticleCard article={mapToUi(a)} />
+                  </Link>
                 ))}
               </div>
 
