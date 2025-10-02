@@ -8,7 +8,7 @@ export function DownloadAppSection() {
     <section id="download" className="py-14 sm:py-16">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl font-semibold tracking-tight">Download the Passport.ET App</h2>
-        <p className="text-sm text-neutral-600">
+        <p className="text-sm text-muted-foreground">
           Check your passport status anytime, anywhere—right from your phone.
         </p>
         <div className="my-4 flex items-center gap-6 sm:w-full md:w-auto">

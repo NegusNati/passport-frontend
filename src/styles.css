@@ -1,97 +1,172 @@
 @import 'tailwindcss';
 
-/* Theme tokens (shadcn/ui compatible) */
-:root {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
+/* Base: teal-green accent #009966  → hsl(160 100% 30%) */
 
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
+@layer base {
+  :root {
+    /* ——— Surfaces & text (Light) ——— */
+    --background: 0 0% 100%;
+    --foreground: 160 10% 12%;
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 160 10% 12%;
 
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 160 10% 12%;
 
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5% 64.9%;
+    /* Primary = brand / accent */
+    --primary: 160 100% 30%;         /* #009966 */
+    --primary-foreground: 0 0% 100%;
 
-  /* Brand: neutral/black primary */
-  --primary: 0 0% 0%;
-  --primary-foreground: 0 0% 100%;
+    /* Secondary = soft minty surfaces */
+    --secondary: 160 45% 94%;
+    --secondary-foreground: 160 35% 25%;
 
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
+    /* Muted = even softer, for subtle UI */
+    --muted: 160 35% 96%;
+    --muted-foreground: 160 10% 38%;
 
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
+    /* Accent = interactive hover fills, pills */
+    --accent: 160 55% 92%;
+    --accent-foreground: 160 45% 22%;
 
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0% 98%;
+    /* Destructive (kept neutral/red for clarity) */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-  --radius: 0.75rem;
+    /* Borders / Inputs / Focus */
+    --border: 160 22% 85%;           /* row: borders & separators (light) */
+    --input: 160 22% 85%;
+    --ring: 160 77% 38%;             /* vivid teal ring */
+
+    /* Radius (shadcn) */
+    --radius: 0.75rem;
+
+    /* —— Brand scale (Light) ——
+       Mirrors the helper’s rows (1–12). Use these freely.
+       1–3: Backgrounds, 4–6: Interactive, 6–8: Borders, 9–10: Solids, 11–12: Accessible text
+    */
+    --brand-1:  160 60% 98%;
+    --brand-2:  160 55% 96%;
+    --brand-3:  160 50% 92%;
+    --brand-4:  160 48% 88%;
+    --brand-5:  160 46% 82%;
+    --brand-6:  160 42% 74%;
+    --brand-7:  160 30% 66%;
+    --brand-8:  160 22% 58%;
+    --brand-9:  160 100% 30%;  /* solid brand */
+    --brand-10: 160 80% 40%;   /* solid on hover */
+    --brand-11: 160 65% 22%;   /* accessible text on brand tints */
+    --brand-12: 160 70% 14%;   /* highest-contrast brand text on light */
+  }
+
+  .dark {
+    /* ——— Surfaces & text (Dark) ——— */
+    --background: 160 20% 6%;        /* near #0f1916, image shows deep teal-black */
+    --foreground: 160 20% 96%;
+
+    --card: 160 18% 8%;
+    --card-foreground: 160 20% 96%;
+
+    --popover: 160 18% 8%;
+    --popover-foreground: 160 20% 96%;
+
+    /* Primary stays vibrant for buttons/links */
+    --primary: 160 100% 35%;
+    --primary-foreground: 0 0% 8%;   /* near-black text on bright teal */
+
+    /* Secondary = soft raised surfaces in dark */
+    --secondary: 160 14% 16%;
+    --secondary-foreground: 160 18% 80%;
+
+    /* Muted = subtle fills (code blocks, skeletons) */
+    --muted: 160 12% 14%;
+    --muted-foreground: 160 8% 70%;
+
+    /* Accent = hovers/selected in dark */
+    --accent: 160 18% 18%;
+    --accent-foreground: 160 22% 88%;
+
+    /* Destructive */
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders / Inputs / Focus */
+    --border: 160 14% 18%;           /* row: borders & separators (dark) */
+    --input: 160 14% 18%;
+    --ring: 160 77% 38%;
+
+    --radius: 0.75rem;
+
+    /* —— Brand scale (Dark) ——
+       1–3: deep backgrounds, 4–6: interactive, 6–8: borders, 9–10: solids, 11–12: accessible text
+    */
+    --brand-1:  160 25% 7%;
+    --brand-2:  160 22% 9%;
+    --brand-3:  160 20% 12%;
+    --brand-4:  160 18% 15%;
+    --brand-5:  160 16% 19%;
+    --brand-6:  160 15% 23%;
+    --brand-7:  160 14% 28%;
+    --brand-8:  160 13% 35%;
+    --brand-9:  160 100% 35%; /* solid brand in dark */
+    --brand-10: 160 80% 45%;  /* hover */
+    --brand-11: 160 50% 70%;  /* accessible text on dark brand surfaces */
+    --brand-12: 160 60% 93%;  /* highest-contrast minty text (seen in image) */
+  }
+
+  /* Tailwind reset for shadcn components */
+  * {
+    @apply border-[hsl(var(--border))];
+  }
+  body {
+    @apply bg-[hsl(var(--background))] text-[hsl(var(--foreground))];
+  }
 }
 
-.dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
+/* Optional: utilities to access the brand scale as color tokens */
+@layer utilities {
+  .bg-brand-1  { background-color: hsl(var(--brand-1)); }
+  .bg-brand-2  { background-color: hsl(var(--brand-2)); }
+  .bg-brand-3  { background-color: hsl(var(--brand-3)); }
+  .bg-brand-4  { background-color: hsl(var(--brand-4)); }
+  .bg-brand-5  { background-color: hsl(var(--brand-5)); }
+  .bg-brand-6  { background-color: hsl(var(--brand-6)); }
+  .bg-brand-7  { background-color: hsl(var(--brand-7)); }
+  .bg-brand-8  { background-color: hsl(var(--brand-8)); }
+  .bg-brand-9  { background-color: hsl(var(--brand-9)); }
+  .bg-brand-10 { background-color: hsl(var(--brand-10)); }
+  .text-brand-11 { color: hsl(var(--brand-11)); }
+  .text-brand-12 { color: hsl(var(--brand-12)); }
 
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
+  /* Landing: teal hero gradient and blobs */
+  .teal-hero { background: linear-gradient(to bottom, hsl(var(--brand-2)) 0%, transparent 60%); }
+  .teal-blob-left { position: absolute; filter: blur(28px); opacity: .9; background: radial-gradient(closest-side, hsl(var(--brand-9) / .25), hsl(var(--brand-8) / .18) 45%, transparent 65%); }
+  .teal-blob-right { position: absolute; filter: blur(28px); opacity: .9; background: radial-gradient(closest-side, hsl(var(--brand-9) / .22), hsl(var(--brand-7) / .16) 40%, transparent 70%); }
+  .cta-glow::before, .cta-glow::after { content:''; position:absolute; inset:-14px -28px; border-radius:9999px; background: radial-gradient(closest-side, hsl(var(--primary) / .22), transparent 70%); filter: blur(16px); z-index:0; }
+  .cta-glow::after { inset:-6px -12px; background: radial-gradient(closest-side, hsl(var(--primary) / .14), transparent 70%); }
+  .hero-divider { width:1px; background: linear-gradient(to bottom, transparent, hsl(var(--border)), transparent); opacity:.7; }
 
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 240 4.9% 83.9%;
-
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 10% 3.9%;
-
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-}
-
-/* Expose CSS variables via Tailwind tokens */
-@theme {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-  --radius-lg: var(--radius);
-}
-
-/* Base surface and text color */
-html {
-  color-scheme: light dark;
-}
-body {
-  @apply bg-background text-foreground;
+  /* Vertical panel outlines on hero (right side) */
+  .hero-panels { position:absolute; inset:0; pointer-events:none; }
+  .hero-panels::before,
+  .hero-panels::after {
+    content: '';
+    position: absolute;
+    right: clamp(2rem, 8vw, 10rem);
+    top: clamp(5rem, 10vh, 12rem);
+    width: clamp(14rem, 22vw, 24rem);
+    height: clamp(20rem, 44vh, 30rem);
+    border-radius: 24px;
+    border: 1px solid hsl(var(--border));
+    background: linear-gradient(to bottom, hsl(var(--card) / .35), transparent 60%);
+  }
+  .hero-panels::after {
+    right: clamp(0.5rem, 5vw, 6rem);
+    top: clamp(7rem, 14vh, 16rem);
+    width: clamp(12rem, 18vw, 20rem);
+    height: clamp(18rem, 38vh, 26rem);
+  }
 }
 
 body {

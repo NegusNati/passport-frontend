@@ -13,7 +13,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
         type="button"
         aria-label="Toggle theme"
         className={[
-          'inline-flex h-9 w-9 items-center justify-center rounded-md border border-neutral-300 bg-white text-neutral-900',
+          'inline-flex h-9 w-9 items-center justify-center rounded-md border border-input bg-background text-foreground',
           'focus-visible:ring-ring ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
           className,
         ].join(' ')}

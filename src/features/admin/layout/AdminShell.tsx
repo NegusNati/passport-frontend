@@ -28,7 +28,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   }, [sidebarOpen, closeSidebar])
 
   return (
-    <div className="flex min-h-screen bg-muted/20">
+    <div className="flex min-h-screen bg-background">
       <Sidebar isOpen={sidebarOpen} onClose={closeSidebar} reduceMotion={reduceMotion} />
       <div className="flex w-full flex-1 flex-col">
         <AdminHeader onMenuClick={openSidebar} />

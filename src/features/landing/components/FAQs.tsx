@@ -54,26 +54,16 @@ export function FAQsSection() {
                 <motion.article
                   key={faq.q}
                   layout={!shouldReduceMotion}
-                  className="bg-card/90 text-card-foreground rounded-lg shadow-sm"
-                  animate={{
-                    backgroundColor: isActive ? 'rgb(249 250 251 / 0.9)' : 'rgb(255 255 255 / 0.9)',
-                    boxShadow: isActive
-                      ? '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)'
-                      : '0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)',
-                    scale: isActive ? 1.01 : 1,
-                  }}
+                  className={[
+                    'bg-card/90 text-card-foreground rounded-lg transition-shadow',
+                    isActive ? 'shadow-md ring-1 ring-ring' : 'shadow-sm',
+                  ].join(' ')}
+                  animate={{ scale: isActive ? 1.01 : 1 }}
                   transition={{
                     duration: shouldReduceMotion ? 0 : M.duration,
                     ease: M.ease,
                   }}
-                  whileHover={
-                    !shouldReduceMotion
-                      ? {
-                          boxShadow:
-                            '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
-                        }
-                      : {}
-                  }
+                  whileHover={!shouldReduceMotion ? { scale: 1.01 } : {}}
                 >
                   <button
                     type="button"

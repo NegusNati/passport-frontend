@@ -266,25 +266,22 @@ export function CalendarPage() {
           <aside className="flex flex-col gap-6">
             <AdSlot orientation="vertical" className="min-h-[18rem]" preset="sponsored" />
 
-            <div className="border border-neutral-200 bg-white p-6 shadow-sm">
-              <p className="text-xs font-semibold tracking-[0.35em] text-neutral-400 uppercase">
+            <div className="border border-border bg-card p-6 shadow-sm">
+              <p className="text-muted-foreground text-xs font-semibold tracking-[0.35em] uppercase">
                 Selected date
               </p>
-              <h3 className="mt-2 text-lg font-semibold tracking-tight text-neutral-900">
+              <h3 className="mt-2 text-lg font-semibold tracking-tight text-foreground">
                 {formatEthiopianDate(selectedDate, useGeezDigits)}
               </h3>
-              <p className="mt-1 text-sm text-neutral-500">
+              <p className="text-muted-foreground mt-1 text-sm">
                 {formatGregorianDate(selectedGregorian)}
               </p>
-              <div className="mt-4 space-y-2 text-sm text-neutral-600">
+              <div className="text-muted-foreground mt-4 space-y-2 text-sm">
                 {observances.length ? (
                   observances.map((item) => (
-                    <div
-                      key={item.title}
-                      className="border border-neutral-200 bg-neutral-50 px-4 py-3"
-                    >
-                      <p className="text-sm font-semibold text-neutral-900">{item.title}</p>
-                      <p className="mt-1 text-sm text-neutral-600">{item.description}</p>
+                    <div key={item.title} className="border-border bg-muted border px-4 py-3">
+                      <p className="text-foreground text-sm font-semibold">{item.title}</p>
+                      <p className="text-muted-foreground mt-1 text-sm">{item.description}</p>
                     </div>
                   ))
                 ) : (
@@ -298,36 +295,36 @@ export function CalendarPage() {
         <AdSlot orientation="horizontal" className="min-h-[12rem]" preset="sponsored" />
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
-          <section className="border border-neutral-200 bg-white shadow-sm">
+          <section className="border border-border bg-card shadow-sm">
             <div className="flex flex-col gap-6 p-6 sm:p-8">
               <header className="space-y-2">
                 <h2 className="text-2xl font-semibold tracking-tight">Geeʼz Numbering System</h2>
-                <p className="text-sm text-neutral-600">
+                <p className="text-muted-foreground text-sm">
                   Geeʼz numerals were introduced in the 4th century CE and remain in daily use
                   across Ethiopian Orthodox texts and calendars. Each glyph represents a whole
                   number, with digits combined from 1 to 10, 100, and 10,000 to build larger values.
                 </p>
               </header>
 
-              <div className="overflow-hidden border border-neutral-200">
-                <table className="min-w-full divide-y divide-neutral-200 text-sm">
-                  <thead className="bg-neutral-50 text-left text-xs tracking-[0.25em] text-neutral-500 uppercase">
+              <div className="overflow-hidden border border-border">
+                <table className="min-w-full divide-y divide-border text-sm">
+                  <thead className="bg-muted text-muted-foreground text-left text-xs tracking-[0.25em] uppercase">
                     <tr>
                       <th className="px-4 py-3">Number</th>
                       <th className="px-4 py-3">Symbol</th>
                       <th className="px-4 py-3">Amharic name</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-neutral-200 bg-white">
+                  <tbody className="divide-y divide-border bg-card">
                     {GEEZ_NUMERAL_TABLE.map((row) => (
                       <tr key={row.value}>
-                        <td className="px-4 py-3 text-neutral-700">
+                        <td className="px-4 py-3 text-foreground/80">
                           {row.value.toLocaleString('en-US')}
                         </td>
-                        <td className="px-4 py-3 text-lg font-semibold text-neutral-900">
+                        <td className="px-4 py-3 text-lg font-semibold text-foreground">
                           {row.symbol}
                         </td>
-                        <td className="px-4 py-3 text-neutral-600">{row.name}</td>
+                        <td className="px-4 py-3 text-muted-foreground">{row.name}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -336,13 +333,10 @@ export function CalendarPage() {
 
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold tracking-tight">Example Numbers</h3>
-                <ul className="grid gap-2 text-sm text-neutral-600 sm:grid-cols-2">
+                <ul className="grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
                   {[29, 123, 2017, 10000].map((value) => (
-                    <li
-                      key={value}
-                      className="flex items-center justify-between border border-neutral-200 bg-neutral-50 px-4 py-3"
-                    >
-                      <span className="font-semibold text-neutral-900">{toGeezNumeral(value)}</span>
+                    <li key={value} className="border-border bg-muted flex items-center justify-between border px-4 py-3">
+                      <span className="text-foreground font-semibold">{toGeezNumeral(value)}</span>
                       <span>= {value.toLocaleString('en-US')}</span>
                     </li>
                   ))}
@@ -353,8 +347,8 @@ export function CalendarPage() {
 
           <aside className="flex flex-col gap-6">
             <AdSlot orientation="vertical" className="min-h-[18rem]" preset="sponsored" />
-            <div className="border border-neutral-200 bg-white p-6 text-sm text-neutral-600 shadow-sm">
-              <h3 className="text-base font-semibold tracking-tight text-neutral-900">
+            <div className="border border-border bg-card p-6 text-sm text-muted-foreground shadow-sm">
+              <h3 className="text-foreground text-base font-semibold tracking-tight">
                 Reading tips
               </h3>
               <p className="mt-2">

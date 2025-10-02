@@ -79,7 +79,7 @@ export function UsersTable({
             <span
               className={cn(
                 'inline-flex items-center rounded-full px-2 py-1 text-xs font-medium',
-                verified ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600',
+                verified ? 'bg-primary/10 text-primary' : 'bg-muted text-muted-foreground',
               )}
             >
               {verified ? 'verified' : 'unverified'}

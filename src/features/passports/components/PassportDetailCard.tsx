@@ -91,14 +91,14 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
               {/* Right Side - Barcode and Actions */}
               <div className="flex flex-col items-center justify-center space-y-6">
                 {/* Barcode */}
-                <div className="border-border bg-card rounded border-2 p-4">
+                <div className="border-border bg-card rounded border-2 p-4 text-foreground">
                   <Barcode
                     value={passport.requestNumber}
                     width={2}
                     height={80}
                     fontSize={14}
                     background="transparent"
-                    lineColor="#000"
+                    lineColor={`hsl(var(--foreground))`}
                   />
                 </div>
 
@@ -118,7 +118,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
             </div>
 
             {/* Bottom decorative border */}
-            <div className="mt-8 border-t-2 border-red-200"></div>
+            <div className="mt-8 border-t-2 border-destructive/20"></div>
           </div>
         </div>
       </Container>

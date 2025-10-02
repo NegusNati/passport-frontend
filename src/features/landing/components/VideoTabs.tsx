@@ -65,7 +65,7 @@ export function VideoTabs() {
           <p className="text-muted-foreground mx-auto mt-2 max-w-3xl">
             Here is how you can check if your passport is ready or how you can get services provided
             by
-            <span className="block font-semibold tracking-wide text-neutral-800 sm:inline">
+            <span className="block font-semibold tracking-wide text-foreground sm:inline">
               {' '}
               Immigration &amp; Nationality Affairs
             </span>
@@ -108,7 +108,7 @@ export function VideoTabs() {
                 className="border-border overflow-hidden rounded-xl border shadow-lg"
               >
                 {embedUrl ? (
-                  <div className="relative aspect-video w-full bg-black">
+                  <div className="relative aspect-video w-full bg-card">
                     <iframe
                       title={activeTab.label}
                       src={embedUrl}
@@ -118,8 +118,8 @@ export function VideoTabs() {
                     />
                   </div>
                 ) : (
-                  <div className="flex aspect-video w-full items-center justify-center bg-neutral-100">
-                    <div className="text-center text-sm text-neutral-500">
+                  <div className="bg-muted flex aspect-video w-full items-center justify-center">
+                    <div className="text-muted-foreground text-center text-sm">
                       <p>No video available for this topic yet.</p>
                     </div>
                   </div>

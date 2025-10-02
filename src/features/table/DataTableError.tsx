@@ -14,9 +14,9 @@ export function DataTableError({ error, columns }: DataTableErrorProps) {
       <TableRow>
         <TableCell colSpan={columns} className="h-24 py-14">
           <div className="flex flex-col items-center justify-center space-y-4">
-            <AlertCircle className="h-12 w-12 text-red-500" />
+            <AlertCircle className="h-12 w-12 text-destructive" />
             <div className="text-center">
-              <h3 className="text-lg font-semibold text-red-500">
+              <h3 className="text-lg font-semibold text-destructive">
                 Failed to Load Data
               </h3>
               <p className="mt-2 text-sm text-muted-foreground">

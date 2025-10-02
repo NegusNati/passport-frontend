@@ -47,56 +47,14 @@ const QUOTES: Quote[] = [
 
 function CardItem({ q }: { q: Quote }) {
   return (
-    <li className="hover:border-border bg-muted hover:bg-card px-3 py-3 shadow-xs hover:border md:px-4 md:py-4">
+    <li className="bg-card/90 hover:bg-card border-border hover:border-brand-8/30 rounded-xl border px-3 py-3 shadow-sm transition-colors md:px-4 md:py-4">
       <p className="text-muted-foreground text-[13px] leading-relaxed italic">“{q.quote}”</p>
-      <p className="text-foreground hover:text-primary mt-2 text-[13px] font-medium">{q.name}</p>
+      <p className="text-foreground mt-2 text-[13px] font-medium">{q.name}</p>
     </li>
   )
 }
 
-function VerticalMarqueeDual({
-  items,
-  durationA = 28,
-  durationB = 32,
-}: {
-  items: Quote[]
-  durationA?: number
-  durationB?: number
-}) {
-  const half = Math.ceil(items.length / 2)
-  const colA = items.slice(0, half)
-  const colB = items.slice(half)
-  const a = React.useMemo(() => [...colA, ...colA], [colA])
-  const b = React.useMemo(
-    () => [...(colB.length ? colB : colA), ...(colB.length ? colB : colA)],
-    [colA, colB],
-  )
-
-  return (
-    <div className="relative h-[36rem] overflow-hidden p-2">
-      <div className="grid h-full grid-cols-1 items-center gap-4 md:grid-cols-2">
-        <ul
-          aria-label="User testimonials column A"
-          className="marquee marquee-pause animate-marquee-y relative grid gap-4"
-          style={{ '--marquee-duration': `${durationA}s` } as React.CSSProperties}
-        >
-          {a.map((q, i) => (
-            <CardItem key={`a-${q.name}-${i}`} q={q} />
-          ))}
-        </ul>
-        <ul
-          aria-label="User testimonials column B"
-          className="marquee marquee-pause animate-marquee-y-reverse relative grid gap-4"
-          style={{ '--marquee-duration': `${durationB}s` } as React.CSSProperties}
-        >
-          {b.map((q, i) => (
-            <CardItem key={`b-${q.name}-${i}`} q={q} />
-          ))}
-        </ul>
-      </div>
-    </div>
-  )
-}
+// Vertical marquee variant kept in history; re‑enable if needed for md+ layouts.
 
 function HorizontalMarqueeDual({
   items,
@@ -151,9 +109,9 @@ function HorizontalMarqueeDual({
 
 export function Testimonials() {
   return (
-    <aside className="relative mt-6 md:mt-0">
+    <aside className="relative mt-6 md:mt-4 py-4">
       {/* Mobile: horizontal marquee */}
-      <div className="relative md:hidden">
+      <div className="relative ">
         {/* left fade */}
         <div
           className="from-background pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r to-transparent"
@@ -168,19 +126,19 @@ export function Testimonials() {
       </div>
 
       {/* Desktop: vertical marquee */}
-      <div className="relative hidden md:block">
+      {/* <div className="relative hidden md:block"> */}
         {/* top fade (fixed) */}
-        <div
+        {/* <div
           className="from-background pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b to-transparent"
           aria-hidden
-        />
-        <VerticalMarqueeDual items={QUOTES} />
+        /> */}
+        {/* <VerticalMarqueeDual items={QUOTES} /> */}
         {/* bottom fade (make direction consistent) */}
-        <div
+        {/* <div
           className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t to-transparent"
           aria-hidden
         />
-      </div>
+      </div> */}
     </aside>
   )
 }

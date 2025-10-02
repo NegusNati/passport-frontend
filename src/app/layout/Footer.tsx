@@ -83,7 +83,7 @@ const Footer = () => {
 
             <motion.a
               href="#"
-              className="inline-flex items-center space-x-2 transition-colors duration-300 hover:text-blue-800"
+              className="inline-flex items-center space-x-2 transition-colors duration-300 hover:text-foreground"
               whileHover={{ x: 5 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -101,7 +101,7 @@ const Footer = () => {
                   <motion.a
                     href="#"
                     className="text-muted-foreground hover:text-primary block transition-colors duration-300"
-                    whileHover={{ x: 5, color: '#16a34a' }}
+                    whileHover={{ x: 5, color: 'hsl(var(--primary))' }}
                     whileTap={{ scale: 0.95 }}
                   >
                     {service === 'Advertisement' ? (
@@ -127,7 +127,7 @@ const Footer = () => {
                   <motion.a
                     href={social.url}
                     className="text-muted-foreground hover:text-primary flex items-center space-x-2 transition-colors duration-300"
-                    whileHover={{ x: 5, color: '#ca8a04' }}
+                    whileHover={{ x: 5, color: 'hsl(var(--primary))' }}
                     whileTap={{ scale: 0.95 }}
                   >
                     <span>{social.icon}</span>

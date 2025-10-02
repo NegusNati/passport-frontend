@@ -7,11 +7,11 @@ import type { AdminArticle, AdminArticlesMeta } from '../schemas/article'
 import type { ArticlesSearchParams } from '../schemas/filters'
 import { ArticlesFilters } from './ArticlesFilters'
 
-const statusColors: Record<string, string> = {
-  draft: 'bg-slate-200 text-slate-700',
-  published: 'bg-emerald-100 text-emerald-700',
-  scheduled: 'bg-amber-100 text-amber-700',
-  archived: 'bg-gray-200 text-gray-600',
+const statusClasses: Record<string, string> = {
+  draft: 'bg-muted text-muted-foreground',
+  published: 'bg-primary/10 text-primary',
+  scheduled: 'bg-accent text-accent-foreground',
+  archived: 'bg-muted text-muted-foreground',
 }
 
 type ArticlesTableProps = {
@@ -53,7 +53,7 @@ export function ArticlesTable({
         header: 'Status',
        cell: ({ row }) => {
          const status = row.original.status
-         const classes = statusColors[status] ?? 'bg-muted text-muted-foreground'
+         const classes = statusClasses[status] ?? 'bg-muted text-muted-foreground'
          return (
             <span
               className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${classes}`}

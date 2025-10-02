@@ -118,7 +118,7 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
 
       {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
       {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
-      {successMessage ? <p className="text-sm text-emerald-600">{successMessage}</p> : null}
+      {successMessage ? <p className="text-sm text-primary">{successMessage}</p> : null}
 
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? 'Uploading…' : 'Upload and process'}
