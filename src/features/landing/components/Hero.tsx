@@ -10,56 +10,118 @@ export function Hero() {
   const reduce = useReducedMotion()
   return (
     <section className="relative isolate">
-  
-      <div className="relative grid max-w-2xl items-center  gap-8 pt-14 sm:pt-20  absolute left-7 top-28 hidden md:block">
-        <motion.div
-          initial={{ opacity: 0, y: reduce ? 0 : 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: M.duration, ease: M.ease }}
-          className="space-y-6"
-        >
-          {/* Stats row */}
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="bg-white/50 text-foreground inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-medium">
-              <Users2Icon className="text-primary h-4 w-4" /> Over 1.5 million users
-            </span>
-            <span className="bg-white/50 text-foreground inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-medium">
-              <IdCardIcon className="text-primary h-4 w-4" /> 800,000+ passports confirmed as issued
-            </span>
-          </div>
-
-          <h1 className="text-foreground max-w-3xl text-3xl font-bold sm:text-4xl">
-            Tired of endless uncertainty? Instantly know if your Ethiopian passport is ready.
-          </h1>
-          <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed sm:text-base">
-            Search with your reference number or name and get real-time updates—no more repeated
-            trips to the office.
-          </p>
-
-          {/* CTA row */}
-          <div className="mt-2 flex w-full flex-col items-start gap-3 sm:w-auto sm:flex-row">
-            <div className="cta-glow relative">
-              <Button size="lg" className="relative z-[1] px-5 py-5">
-                <Link to="/passports">
-                  Check My Passport Status Now
-                  <ArrowRightIcon className="ml-2 inline h-4 w-4" aria-hidden />
-                </Link>
-              </Button>
+      {/* Container to constrain width and center content */}
+      <div className="container max-w-7xl  md:mx-6 ">
+        {/* Two-column layout on md+; single column on mobile */}
+        <div className="grid items-center gap-8 pt-14 sm:pt-20 md:grid-cols-2">
+          {/* Left: copy / CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: reduce ? 0 : 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: M.duration, ease: M.ease }}
+            className="space-y-6 md:ml-6 "
+          >
+            {/* Stats row */}
+            <div className="flex flex-wrap  items-center gap-2">
+              <span className="bg-white/50 text-primary inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-medium">
+                <Users2Icon className="text-primary h-4 w-4" /> Over 1.5 million users
+              </span>
+              <span className="bg-white/50 text-primary inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-medium">
+                <IdCardIcon className="text-primary h-4 w-4" /> 800,000+ passports confirmed as issued
+              </span>
             </div>
-            <div className="flex items-center justify-center gap-2">
-              <a
-                href="#telegram"
-                className="text-primary inline-flex items-center text-sm font-medium"
+
+            <h1 className="text-primary max-w-3xl text-3xl font-bold sm:text-4xl">
+              Tired of endless uncertainty? Instantly know if your Ethiopian passport is ready.
+            </h1>
+            <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed sm:text-base">
+              Search with your reference number or name and get real-time updates—no more repeated
+              trips to the office.
+            </p>
+
+            {/* CTA row */}
+            <div className="mt-2 flex w-full flex-col items-start gap-3 sm:w-auto sm:flex-row">
+              <div
+                className="cta-glow relative mx-auto w-full max-w-[640px] h-[200px] grid place-items-center"
               >
-                Join Telegram Group
-              </a>
+                {/* Outermost ring */}
+                <div
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+               w-[430px] h-[130px] rounded-[9999px] bg-[#88CFAA]/12 blur-[2px] animate-pulse-slow"
+                />
+
+                {/* Middle ring */}
+                <div
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+               w-[380px] h-[100px] rounded-[9999px] bg-[#53BA8A]/18 blur-[1px] animate-pulse-medium"
+                />
+
+                {/* Inner ring */}
+                <div
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+               w-[300px] h-[60px] rounded-[9999px] bg-[#009966]/28 animate-pulse-fast"
+                />
+
+                {/* CTA (kept centered by the grid wrapper) */}
+                <Button size="lg" className="relative z-[1] px-6 py-5 rounded-full">
+                  <Link to="/passports" className="inline-flex items-center">
+                    Check My Passport Status Now
+                    <ArrowRightIcon className="ml-2 h-4 w-4" aria-hidden />
+                  </Link>
+                </Button>
+              </div>
+
+              <div className="flex items-center justify-center gap-2">
+                <a
+                  href="#telegram"
+                  className="text-primary inline-flex items-center text-sm font-medium"
+                >
+                  Join Telegram Group
+                </a>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right: CardSwap (visible on md+) */}
+          <div className="hidden md:block">
+            <div className="relative md:h-[580px] md:w-[538px] justify-self-end">
+              <CardSwap
+                width={538}
+                height={560}
+                cardDistance={50}
+                verticalDistance={60}
+                delay={5000}
+                pauseOnHover={false}
+              >
+                <Card customClass="pointer-events-auto border-border/60 bg-card/80 text-card-foreground shadow-sm p-8">
+                  <h3 className="text-xl font-semibold tracking-tight">Real-time updates</h3>
+                  <p className="text-muted-foreground mt-3 text-sm">
+                    Track readiness without repeated trips. Status changes appear as soon as they’re available.
+                  </p>
+                </Card>
+                <Card customClass="pointer-events-auto border-border/60 bg-card/80 text-card-foreground shadow-sm p-8">
+                  <h3 className="text-xl font-semibold tracking-tight">Simple search</h3>
+                  <p className="text-muted-foreground mt-3 text-sm">Use your reference number or full name with intelligent matching.</p>
+                </Card>
+                <Card customClass="pointer-events-auto border-border/60 bg-card/80 text-card-foreground shadow-sm p-8">
+                  <h3 className="text-xl font-semibold tracking-tight">Community tips</h3>
+                  <p className="text-muted-foreground mt-3 text-sm">Join the Telegram group to learn from others’ experiences.</p>
+                </Card>
+              </CardSwap>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Mobile / small screens: CardSwap below content */}
-        <div className="relative mt-8 block md:hidden" style={{ height: 420 }}>
-          <CardSwap width={360} height={360} cardDistance={60} verticalDistance={70} delay={5000} pauseOnHover={false}>
+        <div className="relative mt-8 md:hidden" style={{ height: 420 }}>
+          <CardSwap
+            width={360}
+            height={360}
+            cardDistance={60}
+            verticalDistance={70}
+            delay={5000}
+            pauseOnHover={false}
+          >
             <Card customClass="border-border/60 bg-card/80 text-card-foreground shadow-sm p-6">
               <h3 className="text-lg font-semibold tracking-tight">Real-time updates</h3>
               <p className="text-muted-foreground mt-2 text-sm">
@@ -73,28 +135,6 @@ export function Hero() {
             <Card customClass="border-border/60 bg-card/80 text-card-foreground shadow-sm p-6">
               <h3 className="text-lg font-semibold tracking-tight">Community tips</h3>
               <p className="text-muted-foreground mt-2 text-sm">Join the Telegram group to learn from others’ experiences.</p>
-            </Card>
-          </CardSwap>
-        </div>
-      </div>
-
-      {/* Desktop / md+: CardSwap on the right side */}
-      <div className="pointer-events-none absolute right-7 top-28 hidden md:block" style={{ width: 538, height: 580 }}>
-        <div className="relative h-full w-full">
-          <CardSwap width={538} height={560} cardDistance={50} verticalDistance={60} delay={5000} pauseOnHover={false}>
-            <Card customClass="pointer-events-auto border-border/60 bg-card/80 text-card-foreground shadow-sm p-8">
-              <h3 className="text-xl font-semibold tracking-tight">Real-time updates</h3>
-              <p className="text-muted-foreground mt-3 text-sm">
-                Track readiness without repeated trips. Status changes appear as soon as they’re available.
-              </p>
-            </Card>
-            <Card customClass="pointer-events-auto border-border/60 bg-card/80 text-card-foreground shadow-sm p-8">
-              <h3 className="text-xl font-semibold tracking-tight">Simple search</h3>
-              <p className="text-muted-foreground mt-3 text-sm">Use your reference number or full name with intelligent matching.</p>
-            </Card>
-            <Card customClass="pointer-events-auto border-border/60 bg-card/80 text-card-foreground shadow-sm p-8">
-              <h3 className="text-xl font-semibold tracking-tight">Community tips</h3>
-              <p className="text-muted-foreground mt-3 text-sm">Join the Telegram group to learn from others’ experiences.</p>
             </Card>
           </CardSwap>
         </div>

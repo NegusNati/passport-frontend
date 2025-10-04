@@ -1,7 +1,8 @@
 
 
 
-import HeroWaveShader from '@/shared/components/common/HeroWaveShader'
+
+import shaderUrl from '@/assets/landingImages/shader_bg.svg?url'
 
 import { AdBanner } from './AdBanner'
 import { AdvertiseSection } from './Advertise'
@@ -16,14 +17,17 @@ export function LandingPage() {
   return (
   
     <div className="mx-auto max-w-7xl overflow-x-hidden space-y-4">
-            <HeroWaveShader
-        className="absolute inset-0 -z-10"
-        height={640}
-        color="#009966"      // your accent
-        strokeWidth={230}    // adjust thickness
-        />
+           
       {/* Hero band with gradient surface */}
-      <div className="teal-hero pb-8 md:pb-[620px] lg:pb-[680px]">
+      <div className="teal-hero pb-8 md:pb-[620px] lg:pb-[680px] relative"
+            style={{
+        backgroundImage: `url("${shaderUrl}")`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        height: '100vh',
+        width: '100vw',
+      }}>
           <Hero />
       </div>
 

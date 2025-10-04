@@ -26,7 +26,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         Skip to content
       </a>
       <Header />
-      <main id="main" className="w-full">
+      <main id="main" className="w-full "
+   
+      >
         {children}
       </main>
       <Footer />
