@@ -13,13 +13,13 @@ export function Hero() {
       {/* Container to constrain width and center content */}
       <div className="container max-w-7xl  md:mx-6 ">
         {/* Two-column layout on md+; single column on mobile */}
-        <div className="grid items-center gap-8 pt-14 sm:pt-20 md:grid-cols-2">
+        <div className="grid items-center gap-8 pt-14 md:mt-10 md:pt-24 md:grid-cols-2">
           {/* Left: copy / CTA */}
           <motion.div
             initial={{ opacity: 0, y: reduce ? 0 : 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: M.duration, ease: M.ease }}
-            className="space-y-6 md:ml-6 "
+            className="space-y-6 md:ml-6  md:mt-18"
           >
             {/* Stats row */}
             <div className="flex flex-wrap  items-center gap-2">
@@ -40,7 +40,7 @@ export function Hero() {
             </p>
 
             {/* CTA row */}
-            <div className="mt-2 flex w-full flex-col items-start gap-3 sm:w-auto sm:flex-row">
+            <div className="mt-2 grid w-full gap-3 sm:w-auto sm:grid-cols-2 place-items-center">
               <div
                 className="cta-glow relative mx-auto w-full max-w-[640px] h-[200px] grid place-items-center"
               >
@@ -59,19 +59,19 @@ export function Hero() {
                 {/* Inner ring */}
                 <div
                   className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-               w-[300px] h-[60px] rounded-[9999px] bg-[#009966]/28 animate-pulse-fast"
+               w-[300px] h-[60px] rounded-[9999px]  bg-[#009966]/48  animate-pulse-fast"
                 />
 
                 {/* CTA (kept centered by the grid wrapper) */}
-                <Button size="lg" className="relative z-[1] px-6 py-5 rounded-full">
-                  <Link to="/passports" className="inline-flex items-center">
-                    Check My Passport Status Now
+                <Button size="lg" className="relative z-[1]  py-5 rounded-full">
+                  <Link to="/passports" className="inline-flex items-center semi-bold">
+                    Check My Passport Status
                     <ArrowRightIcon className="ml-2 h-4 w-4" aria-hidden />
                   </Link>
                 </Button>
               </div>
 
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center justify-center">
                 <a
                   href="#telegram"
                   className="text-primary inline-flex items-center text-sm font-medium"
