@@ -4,10 +4,11 @@
   "rsc": false,
   "tsx": true,
   "tailwind": {
-    "config": "tailwind.config.ts",
+    "config": "",
     "css": "src/styles.css",
     "baseColor": "neutral",
-    "cssVariables": true
+    "cssVariables": true,
+    "prefix": ""
   },
   "aliases": {
     "components": "@/shared",
@@ -15,5 +16,6 @@
     "utils": "@/shared/lib/utils",
     "lib": "@/shared/lib",
     "hooks": "@/shared/hooks"
-  }
+  },
+  "iconLibrary": "lucide"
 }
