@@ -63,8 +63,8 @@ export function Hero() {
                 />
 
                 {/* CTA (kept centered by the grid wrapper) */}
-                <Button size="lg" className="relative z-[1]  py-5 rounded-full">
-                  <Link to="/passports" className="inline-flex items-center semi-bold">
+                <Button size="lg" variant="primary"  className="relative z-[1] py-5 rounded-full  ">
+                  <Link to="/passports" className="inline-flex items-center semi-bold bg-transparent">
                     Check My Passport Status
                     <ArrowRightIcon className="ml-2 h-4 w-4" aria-hidden />
                   </Link>
