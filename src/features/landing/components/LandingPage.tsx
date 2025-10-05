@@ -16,7 +16,7 @@ export function LandingPage() {
     <div className="mx-auto max-w-7xl overflow-x-hidden space-y-4">
            
       {/* Hero band with gradient surface */}
-      <div className="teal-hero pb-8 md:pb-[220px] lg:pb-[480px] relative overflow-x-hidden"
+      <div className="teal-hero pb-8 md:pb-[220px] lg:pb-[480px] relative overflow-x-hidden scrollable-none"
             style={{
         backgroundImage: `url("${shaderUrl}")`,
         backgroundRepeat: 'no-repeat',

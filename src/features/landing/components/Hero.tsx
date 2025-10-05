@@ -110,15 +110,18 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Mobile / small screens: CardSwap below content */}
-        <div className="relative md:hidden" style={{ height: 420 }}>
+        {/* Mobile / small screens: CardSwap below below */}
+        <div
+          className="relative md:hidden translate-x-[-185px] translate-y-[-165px]"
+          style={{ height: 420 }}
+        >
           <CardSwap
-            width={360}
-            height={360}
+            width={460}
+            height={580}
             cardDistance={60}
             verticalDistance={70}
             delay={5000}
-            pauseOnHover={false}
+            pauseOnHover={true}
           >
             <Card customClass="border-border/60 bg-card/80 text-card-foreground shadow-sm p-6">
               <h3 className="text-lg font-semibold tracking-tight">Real-time updates</h3>
