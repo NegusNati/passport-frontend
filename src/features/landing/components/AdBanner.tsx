@@ -1,3 +1,5 @@
+import { Link } from '@tanstack/react-router'
+
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
 
@@ -19,8 +21,8 @@ export function AdBanner() {
                 Reserve this premium banner for your brand.
               </p>
             </div>
-            <Button size="sm" variant="secondary">
-              Promote Your Business
+            <Button size="sm"   className="">
+              <Link to="/">Promote Your Business</Link>
             </Button>
           </div>
         </div>

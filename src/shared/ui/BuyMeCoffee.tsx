@@ -50,14 +50,14 @@ export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' 
         {/* Rotating text ring */}
         <div
           aria-hidden
-          className="absolute inset-0 grid place-items-center"
+          className="absolute inset-0 grid place-items-center rounded-full bg-primary"
           style={{ transform: 'rotate(var(--rotate, 0deg))' }}
         >
           <svg viewBox="0 0 100 100" className="h-full w-full">
             <defs>
               <path id="bmc-circle" d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" />
             </defs>
-            <text className="fill-[hsl(var(--muted-foreground))] text-[10px] tracking-[0.2em] uppercase sm:text-[12px]">
+            <text className="fill-white text-[10px] tracking-[0.2em] uppercase sm:text-[12px] font-semibold py-4">
               <textPath href="#bmc-circle" startOffset="0">
                 Buy me a coffee • Buy me a coffee •
               </textPath>
@@ -69,7 +69,7 @@ export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' 
           href={href}
           target="_blank"
           rel="noreferrer noopener"
-          className="border-input bg-background hover:border-border absolute top-1/2 left-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border shadow-sm transition hover:shadow-md sm:h-16 sm:w-16"
+          className="border-input bg-primary hover:border-border absolute top-1/2 left-1/2 grid h-14 w-14 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border-2 border-white shadow-sm transition hover:shadow-md sm:h-16 sm:w-16"
         >
           <span role="img" aria-label="coffee" className="text-xl sm:text-2xl">
             ☕️

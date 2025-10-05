@@ -49,11 +49,11 @@ const Footer = () => {
       {/* Background watermark positioned at bottom */}
       <div className="pointer-events-none absolute right-0 bottom-0 left-0 flex translate-y-2 items-end justify-center">
         <div
-          className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t to-transparent"
+          className="from-primary/40 pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t to-transparent"
           aria-hidden
         />
         <motion.div
-          className="text-muted-foreground/30 text-[4.5rem] leading-none font-bold select-none sm:text-[6rem] md:text-[8rem] lg:text-[8] xl:text-[10rem] 2xl:text-[12rem]"
+          className="text-primary/40 text-[4.5rem] leading-none font-bold select-none sm:text-[6rem] md:text-[8rem] lg:text-[8] xl:text-[10rem] 2xl:text-[12rem]"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.3 }}
@@ -70,7 +70,7 @@ const Footer = () => {
           <motion.div className="space-y-6" variants={itemVariants}>
             <div>
               <motion.h2
-                className="text-foreground mb-2 text-2xl font-bold"
+                className="text-primary mb-2 text-2xl font-bold"
                 whileHover={{ scale: 1.02 }}
                 transition={{ type: 'spring', stiffness: 300 }}
               >

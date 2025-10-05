@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react'
 
+import patterFotter from '@/assets/landingImages/pattern_footer.svg'
 import { BuyMeCoffee } from '@/shared/ui/BuyMeCoffee'
 
 import Footer from './Footer'
@@ -7,9 +8,9 @@ import { Header } from './Header'
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="bg-background text-foreground min-h-dvh w-full overflow-x-hidden">
-         {/* Hero surface tint + blobs */}
-         <div className="teal-hero absolute inset-0" aria-hidden />
+    <div className="relative bg-background text-foreground min-h-dvh w-full overflow-x-hidden">
+      {/* Hero surface tint + blobs */}
+      <div className="teal-hero absolute inset-0" aria-hidden />
       <div
         className="teal-blob-left left-[-14rem] top-[-8rem] h-[24rem] w-[32rem] md:left-[-18rem] md:top-[-10rem] md:h-[28rem] md:w-[40rem] lg:left-[-20rem] lg:top-[-12rem]"
         aria-hidden
@@ -26,11 +27,29 @@ export function AppShell({ children }: { children: ReactNode }) {
         Skip to content
       </a>
       <Header />
-      <main id="main" className="w-full "
-   
-      >
+      <main id="main" className="w-full">
         {children}
       </main>
+
+      <div className="relative flex items-center justify-center w-full mt-10 overflow-hidden">
+        {/* left fade */}
+        <div
+          className="from-background pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r to-transparent"
+          aria-hidden
+        />
+        <img
+          src={patterFotter}
+          alt=" footer pattern"
+          className="block max-w-full w-full h-auto"
+        />
+
+        {/* right fade */}
+        <div
+          className="from-background pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l to-transparent"
+          aria-hidden
+        />
+
+      </div>
       <Footer />
       <BuyMeCoffee href="https://buymeacoffee.com" />
     </div>
