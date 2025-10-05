@@ -55,8 +55,7 @@ export function FAQsSection() {
                   key={faq.q}
                   layout={!shouldReduceMotion}
                   className={[
-                    'bg-card/90 text-card-foreground rounded-lg transition-shadow',
-                    isActive ? 'shadow-md ring-1 ring-ring' : 'shadow-sm',
+                    'bg-card/90 text-card-foreground rounded-none transition-shadow'
                   ].join(' ')}
                   animate={{ scale: isActive ? 1.01 : 1 }}
                   transition={{
@@ -69,7 +68,7 @@ export function FAQsSection() {
                     type="button"
                     onClick={() => toggleIndex(index)}
                     aria-expanded={isActive}
-                    className="focus-visible:ring-ring bg-muted flex w-full items-center justify-between gap-4 rounded-xl px-5 py-4 text-left focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                    className=" bg-muted flex w-full items-center justify-between gap-4  px-5 py-4 text-left "
                   >
                     <span className="text-foreground text-sm font-medium sm:text-base">
                       {faq.q}
