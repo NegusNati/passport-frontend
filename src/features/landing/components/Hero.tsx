@@ -51,7 +51,7 @@ export function Hero() {
 
                 {/* Middle ring */}
                 <div
-                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%]  md:w-[115%]  max-w-[460px] h-[120px] rounded-[9999px] bg-primary/35 blur-[1.5px] animate-pulse-medium"
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%]  md:w-[110%]  max-w-[460px] h-[120px] rounded-[9999px] bg-primary/35 blur-[1.5px] animate-pulse-medium"
                 />
 
                 {/* Inner ring */}

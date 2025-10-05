@@ -345,44 +345,72 @@ export function CalendarPage() {
               <header className="space-y-2">
                 <h2 className="text-2xl font-semibold tracking-tight">Geeʼz Numbering System</h2>
                 <p className="text-muted-foreground text-sm">
-                  Geeʼz numerals were introduced in the 4th century CE and remain in daily use
-                  across Ethiopian Orthodox texts and calendars. Each glyph represents a whole
-                  number, with digits combined from 1 to 10, 100, and 10,000 to build larger values.
+                  Amharic has its own traditional number system that is still used in some cultural
+                  and liturgical contexts. It’s different from the “Arabic numerals” (0–9) that are
+                  common worldwide.
+                </p>
+                <p className="text-muted-foreground text-sm">
+                  Here are the basic Amharic numerals (፩–፼):
                 </p>
               </header>
 
-              <div className="overflow-hidden border border-border">
-                <table className="min-w-full divide-y divide-border text-sm">
-                  <thead className="bg-muted text-muted-foreground text-left text-xs tracking-[0.25em] uppercase">
-                    <tr>
-                      <th className="px-4 py-3">Number</th>
-                      <th className="px-4 py-3">Symbol</th>
-                      <th className="px-4 py-3">Amharic name</th>
+              {/* small hint line */}
+              <div className="text-primary/80 -mt-2 text-right text-sm italic">
+                tap the Amharic name to hear pronunciation ↘︎
+              </div>
+
+              {/* data table with separated rows */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm border-separate [border-spacing:0_10px]">
+                  <thead>
+                    <tr className="text-left text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                      <th className="bg-secondary/60 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">Number</th>
+                      <th className="bg-secondary/60 px-4 py-3">Symbol</th>
+                      <th className="bg-secondary/60 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">Amharic Name</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border bg-card">
+                  <tbody>
                     {GEEZ_NUMERAL_TABLE.map((row) => (
                       <tr key={row.value}>
-                        <td className="px-4 py-3 text-foreground/80">
+                        <td className="bg-secondary/30 px-4 py-3 first:rounded-l-lg last:rounded-r-lg text-foreground/90">
                           {row.value.toLocaleString('en-US')}
                         </td>
-                        <td className="px-4 py-3 text-lg font-semibold text-foreground">
+                        <td className="bg-secondary/30 px-4 py-3 text-lg font-semibold text-foreground">
                           {row.symbol}
                         </td>
-                        <td className="px-4 py-3 text-muted-foreground">{row.name}</td>
+                        <td className="bg-secondary/30 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">
+                          <button
+                            type="button"
+                            className="hover:text-primary focus:text-primary focus:outline-none"
+                            onClick={() => {
+                              const am = row.name.split('(')[0].trim()
+                              try {
+                                const u = new SpeechSynthesisUtterance(am)
+                                u.lang = 'am-ET'
+                                window.speechSynthesis?.speak(u)
+                              } catch (_) {
+                                // no-op if speech synthesis not available
+                              }
+                            }}
+                            aria-label={`Pronounce ${row.name}`}
+                          >
+                            <span className="font-medium text-foreground">{row.name}</span>
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
 
+              {/* examples */}
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold tracking-tight">Example Numbers</h3>
-                <ul className="grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
-                  {[29, 123, 2017, 10000].map((value) => (
-                    <li key={value} className="border-border bg-muted flex items-center justify-between border px-4 py-3">
-                      <span className="text-foreground font-semibold">{toGeezNumeral(value)}</span>
-                      <span>= {value.toLocaleString('en-US')}</span>
+                <ul className="list-disc pl-6 text-sm text-foreground/80">
+                  {[2025, 187, 50000].map((value) => (
+                    <li key={value} className="">
+                      {value.toLocaleString('en-US')} →
+                      <span className="ml-1 font-semibold"> {toGeezNumeral(value)}</span>
                     </li>
                   ))}
                 </ul>
