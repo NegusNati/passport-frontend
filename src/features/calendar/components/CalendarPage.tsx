@@ -333,7 +333,7 @@ export function CalendarPage() {
                 )}
               </div>
             </div>
-            <AdSlot orientation="vertical" className="min-h-[18rem] rounded-2xl" preset="sponsored" />
+            <AdSlot orientation="vertical" className="min-h-[18rem] rounded-2xl bg-secondary supports-[backdrop-filter]:bg-secondary backdrop-blur-lg" preset="sponsored" />
 
           </aside>
         </div>
