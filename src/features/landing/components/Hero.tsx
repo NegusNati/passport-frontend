@@ -9,9 +9,9 @@ import { Button } from '@/shared/ui/button'
 export function Hero() {
   const reduce = useReducedMotion()
   return (
-    <section className="relative isolate">
+    <section className="relative isolate overflow-hidden">
       {/* Container to constrain width and center content */}
-      <div className="container max-w-7xl px-4 md:px-6 scrollable">
+      <div className="container max-w-7xl px-4 md:px-6">
         {/* Two-column layout on md+; single column on mobile */}
         <div className="grid items-center gap-8 pt-10 md:mt-10 md:pt-24 md:grid-cols-2">
           {/* Left: copy / CTA */}
