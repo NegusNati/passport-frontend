@@ -27,7 +27,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         Skip to content
       </a>
       <Header />
-      <main id="main" className="relative z-0 w-full">
+      <main id="main" className="relative z-0 w-full"
+    
+      >
         {children}
       </main>
 
