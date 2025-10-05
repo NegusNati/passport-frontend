@@ -11,18 +11,18 @@ export function Hero() {
   return (
     <section className="relative isolate">
       {/* Container to constrain width and center content */}
-      <div className="container max-w-7xl  md:mx-6 ">
+      <div className="container max-w-7xl px-4 md:px-6 scrollable">
         {/* Two-column layout on md+; single column on mobile */}
-        <div className="grid items-center gap-8 pt-14 md:mt-10 md:pt-24 md:grid-cols-2">
+        <div className="grid items-center gap-8 pt-10 md:mt-10 md:pt-24 md:grid-cols-2">
           {/* Left: copy / CTA */}
           <motion.div
             initial={{ opacity: 0, y: reduce ? 0 : 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: M.duration, ease: M.ease }}
-            className="space-y-6 md:ml-6  md:mt-18"
+            className="space-y-6 md:ml-6 md:mt-18"
           >
-            {/* Stats row */}
-            <div className="flex flex-wrap  items-center gap-2">
+             {/* Stats row */}
+             <div className="flex flex-wrap  items-center gap-2">
               <span className="bg-white/50 text-primary inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-medium">
                 <Users2Icon className="text-primary h-4 w-4" /> Over 1.5 million users
               </span>
@@ -31,37 +31,35 @@ export function Hero() {
               </span>
             </div>
 
-            <h1 className="text-foreground max-w-3xl text-3xl font-bold sm:text-4xl">
+            <h1 className="text-foreground max-w-[30ch] text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
               Tired of endless uncertainty? Instantly know if your Ethiopian passport is ready.
             </h1>
-            <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed sm:text-base">
+            <p className="text-muted-foreground max-w-[52ch] text-base leading-relaxed">
               Search with your reference number or name and get real-time updates—no more repeated
               trips to the office.
             </p>
 
             {/* CTA row */}
-            <div className="mt-2 grid w-full gap-3 sm:w-auto sm:grid-cols-2 place-items-center">
+            <div className="mt-2 grid w-full gap-4 sm:w-auto sm:grid-cols-2 place-items-center">
               <div
-                className="cta-glow relative mx-auto w-full max-w-[640px] h-[200px] grid place-items-center"
+                className="cta-glow relative mx-auto w-full h-[220px] grid place-items-center sm:max-w-[640px]"
               >
                 {/* Outermost ring */}
                 <div
-                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-               w-[430px] h-[130px] rounded-[9999px] bg-primary/22 blur-[2px] animate-pulse-slow"
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] max-w-[520px] h-[150px] rounded-[9999px] bg-primary/25 blur-[3px] animate-pulse-slow"
                 />
 
                 {/* Middle ring */}
                 <div
-                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-               w-[380px] h-[100px] rounded-[9999px] bg-primary/38 blur-[1px] animate-pulse-medium"
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[460px] h-[120px] rounded-[9999px] bg-primary/35 blur-[1.5px] animate-pulse-medium"
                 />
 
                 {/* Inner ring */}
                 <div
-                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-               w-[300px] h-[60px] rounded-[9999px] bg-primary animate-pulse-fast"
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] max-w-[380px] h-[70px] rounded-[9999px] bg-primary animate-pulse-fast"
                 />
 
+           
                 {/* CTA (kept centered by the grid wrapper) */}
                 <Button size="lg"   className="relative z-[1] py-5 rounded-full bg-transparent  ">
                   <Link to="/passports" className="inline-flex items-center semi-bold bg-transparent">
@@ -74,7 +72,7 @@ export function Hero() {
               <div className="flex items-center justify-center">
                 <a
                   href="#telegram"
-                  className="text-primary inline-flex items-center text-sm font-medium"
+                  className="text-primary inline-flex items-center text-base font-semibold"
                 >
                   Join Telegram Group
                 </a>
@@ -113,7 +111,7 @@ export function Hero() {
         </div>
 
         {/* Mobile / small screens: CardSwap below content */}
-        <div className="relative mt-8 md:hidden" style={{ height: 420 }}>
+        <div className="relative md:hidden" style={{ height: 420 }}>
           <CardSwap
             width={360}
             height={360}

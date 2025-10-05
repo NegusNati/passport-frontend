@@ -46,18 +46,18 @@ export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' 
       ].join(' ')}
       aria-label="Support: Buy me a coffee"
     >
-      <div className="relative h-20 w-20 sm:h-24 sm:w-24">
+      <div className="relative h-22 w-22 sm:h-28 sm:w-28">
         {/* Rotating text ring */}
         <div
           aria-hidden
-          className="absolute inset-0 grid place-items-center rounded-full bg-primary"
+          className="absolute inset-0 grid place-items-center rounded-full bg-primary "
           style={{ transform: 'rotate(var(--rotate, 0deg))' }}
         >
           <svg viewBox="0 0 100 100" className="h-full w-full">
             <defs>
               <path id="bmc-circle" d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" />
             </defs>
-            <text className="fill-white text-[10px] tracking-[0.2em] uppercase sm:text-[12px] font-semibold py-4">
+            <text className="fill-white text-[10px] tracking-[0.2em] uppercase sm:text-[12px] font-semibold">
               <textPath href="#bmc-circle" startOffset="0">
                 Buy me a coffee • Buy me a coffee •
               </textPath>
