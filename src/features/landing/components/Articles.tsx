@@ -9,24 +9,27 @@ const POSTS = [
   {
     id: 1,
     title: 'How to Collect Your Ethiopian Passport Once It’s Ready',
+    excerpt: "You Collect is by, How to Collect Your Ethiopian Passport Once It’s Ready ",
     date: 'Aug 24, 2025',
     image: CalendarImage,
   },
   {
     id: 2,
     title: 'Urgent Service: What You Need to Know',
+    excerpt: "You Collect is by, How to Collect Your Ethiopian Passport Once It’s Ready ",
     date: 'Aug 24, 2025',
     image: CalendarImage,
   },
   {
     id: 3,
     title: 'Avoiding Common Application Mistakes',
+    excerpt: "You Collect is by, How to Collect Your Ethiopian Passport Once It’s Ready ", 
     date: 'Aug 24, 2025',
     image: CalendarImage,
   },
 ]
 
-export function BlogSection() {
+export function ArticleSection() {
   return (
     <section id="blogs" className="py-14 sm:py-16">
       <Container>
@@ -50,15 +53,16 @@ export function BlogSection() {
               <CardContent className="flex h-full flex-col justify-between p-1">
                 <div className="space-y-2">
                   <img src={p.image} alt={p.title} className="h-40 w-full object-cover" />
+                  <p className="text-muted-foreground text-xs">{p.date}</p>
                   <h3 className="text-lg font-semibold tracking-tight">{p.title}</h3>
-                  <p className="text-muted-foreground text-sm">{p.date}</p>
+                  <p className="text-sm text-muted-foreground">{ p.excerpt}</p>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
         <div className="my-4 flex sm:justify-center md:my-8">
-          <Button size="sm" className="font-semibold sm:w-auto">
+          <Button size="sm" className="font-semibold sm:w-auto px-4">
             <Link to="/articles"> View All</Link>
           </Button>
         </div>
@@ -67,4 +71,4 @@ export function BlogSection() {
   )
 }
 
-export default BlogSection
+export default ArticleSection

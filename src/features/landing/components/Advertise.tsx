@@ -1,6 +1,7 @@
 import { ArrowRight } from 'lucide-react'
 
-import CalendarImage from '@/assets/landingImages/calander_image.png'
+import AmharicLetters from '@/assets/landingImages/amharic_letters.svg'
+import AmharicCallander from '@/assets/landingImages/AmharicCallander.svg'
 import LookingGuyImage from '@/assets/landingImages/looking_guy.png'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
@@ -16,7 +17,7 @@ const CARDS = [
   },
   {
     key: 'calendar-highlights',
-    image: CalendarImage,
+    image: AmharicCallander,
     imageAlt: 'Ethiopian calendar illustration showcasing highlighted campaign slots.',
     title: 'Schedule Around Key Dates',
     copy: 'Anchor your ads to national events and travel seasons for maximized reach.',
@@ -24,8 +25,8 @@ const CARDS = [
   },
   {
     key: 'reporting',
-    image: null,
-    imageAlt: null,
+    image: AmharicLetters,
+    imageAlt: 'Amharic letters',
     title: 'Insightful Reporting',
     copy: 'Get shareable performance snapshots for every placement—impressions, clicks, and conversion-ready leads.',
     callout: 'Performance dashboards delivered with every buy.',
@@ -36,12 +37,12 @@ export function AdvertiseSection() {
   return (
     <section id="advertise" className="py-10 sm:py-14">
       <Container>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 overflow-hidden">
           {CARDS.map((card) => {
             switch (card.key) {
               case 'creative-support':
                 return (
-                  <div className="bg-muted flex items-center justify-end rounded-lg px-0 py-4">
+                  <div className="bg-primary/10 flex items-center justify-end rounded-lg border border-primary px-0 py-4">
                     <img
                       src={card.image as string}
                       alt={card.imageAlt as string}
@@ -53,28 +54,37 @@ export function AdvertiseSection() {
 
               case 'calendar-highlights':
                 return (
-                  <div className="bg-muted flex items-center justify-center rounded-lg px-0 py-4">
+                  <div className="bg-primary/10 flex items-center justify-center rounded-md border border-primary px-0 py-4 ">
                     <img
                       src={card.image as string}
                       alt={card.imageAlt as string}
-                      className="h-auto w-full max-w-[220px] scale-105 object-contain"
+                      className="h-full w-full max-w-[260px] scale-115 object-fill translate-y-2"
                       loading="lazy"
                     />
                   </div>
                 )
 
               case 'reporting':
-                return <div className="bg-muted flex items-center justify-center rounded-lg"></div>
+                return (
+                  <div className="bg-primary/10 flex items-center justify-center rounded-md border border-primary px-0 py-4">
+                    <img
+                      src={card.image as string}
+                      alt={card.imageAlt as string}
+                      className="h-auto w-full max-w-[260px] scale-115 object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                )
 
               default:
                 return (
                   <article
                     key={card.key}
-                    className="bg-muted flex h-full flex-col justify-between rounded-lg p-6 shadow-sm backdrop-blur-sm transition-shadow hover:shadow-lg"
+                    className="bg-muted flex h-full flex-col justify-between rounded-lg p-6 shadow-sm backdrop-blur-sm transition-shadow hover:shadow-lg border border-primary"
                   >
                     <div className="space-y-4">
                       {card.image ? (
-                        <div className="flex items-center justify-center">
+                        <div className="flex items-center justify-center ">
                           <img
                             src={card.image}
                             alt={card.imageAlt}

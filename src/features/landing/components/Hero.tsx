@@ -31,7 +31,7 @@ export function Hero() {
               </span>
             </div>
 
-            <h1 className="text-primary max-w-3xl text-3xl font-bold sm:text-4xl">
+            <h1 className="text-foreground max-w-3xl text-3xl font-bold sm:text-4xl">
               Tired of endless uncertainty? Instantly know if your Ethiopian passport is ready.
             </h1>
             <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed sm:text-base">
@@ -47,23 +47,23 @@ export function Hero() {
                 {/* Outermost ring */}
                 <div
                   className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-               w-[430px] h-[130px] rounded-[9999px] bg-[#88CFAA]/12 blur-[2px] animate-pulse-slow"
+               w-[430px] h-[130px] rounded-[9999px] bg-primary/22 blur-[2px] animate-pulse-slow"
                 />
 
                 {/* Middle ring */}
                 <div
                   className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-               w-[380px] h-[100px] rounded-[9999px] bg-[#53BA8A]/18 blur-[1px] animate-pulse-medium"
+               w-[380px] h-[100px] rounded-[9999px] bg-primary/38 blur-[1px] animate-pulse-medium"
                 />
 
                 {/* Inner ring */}
                 <div
                   className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-               w-[300px] h-[60px] rounded-[9999px]  bg-[#009966]/48  animate-pulse-fast"
+               w-[300px] h-[60px] rounded-[9999px] bg-primary animate-pulse-fast"
                 />
 
                 {/* CTA (kept centered by the grid wrapper) */}
-                <Button size="lg" variant="primary"  className="relative z-[1] py-5 rounded-full  ">
+                <Button size="lg"   className="relative z-[1] py-5 rounded-full bg-transparent  ">
                   <Link to="/passports" className="inline-flex items-center semi-bold bg-transparent">
                     Check My Passport Status
                     <ArrowRightIcon className="ml-2 h-4 w-4" aria-hidden />

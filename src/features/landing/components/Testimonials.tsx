@@ -47,9 +47,9 @@ const QUOTES: Quote[] = [
 
 function CardItem({ q }: { q: Quote }) {
   return (
-    <li className="bg-primary/40 hover:bg-card border-border hover:border-brand-8/30 rounded-xl border px-3 py-3 shadow-sm transition-colors md:px-4 md:py-4">
-      <p className="text-muted-foreground text-[13px] leading-relaxed italic">“{q.quote}”</p>
-      <p className="text-foreground mt-2 text-[13px] font-medium">{q.name}</p>
+    <li className="bg-primary/10 hover:bg-primary  border border-primary  hover:border-brand-8/30 rounded-xl  px-3 py-4 shadow-sm transition-colors md:px-4 md:py-4 text-forground hover:text-background">
+      <p className=" text-[13px] leading-relaxed italic">“{q.quote}”</p>
+      <p className=" mt-2 text-[13px] font-medium">{q.name}</p>
     </li>
   )
 }
@@ -76,9 +76,11 @@ function HorizontalMarqueeDual({
 
   return (
     <div className="relative w-full overflow-hidden rounded-xl p-2">
-      {/* left/right fade */}
-      <div className="pointer-events-none absolute top-0 left-0 h-full w-10 bg-gradient-to-r from-white to-transparent" />
-      <div className="pointer-events-none absolute top-0 right-0 h-full w-10 bg-gradient-to-l from-white to-transparent" />
+      {/* left/right fade (theme-aware, over content) */}
+      <div className="pointer-events-none absolute top-0 left-0 z-10 h-full w-10 bg-gradient-to-r from-background to-transparent" />
+      <div className="pointer-events-none absolute top-0 right-0 z-10 h-full w-10 bg-gradient-to-l from-background to-transparent" />
+
+      
       <div className="grid w-full items-center gap-3 overflow-hidden">
         <ul
           aria-label="User testimonials row A"
@@ -109,18 +111,18 @@ function HorizontalMarqueeDual({
 
 export function Testimonials() {
   return (
-    <aside className="relative mt-6 md:mt-4 py-4">
+    <aside className="relative mt-4 md:mt-0 py-4">
       {/* Mobile: horizontal marquee */}
       <div className="relative ">
         {/* left fade */}
         <div
-          className="from-background pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r to-transparent"
+          className="from-background pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r to-transparent"
           aria-hidden
         />
         <HorizontalMarqueeDual items={QUOTES} />
         {/* right fade */}
         <div
-          className="from-background pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l to-transparent"
+          className="from-background pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l to-transparent"
           aria-hidden
         />
       </div>

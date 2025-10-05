@@ -62,15 +62,15 @@ export function VideoTabs() {
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
             Video Demonstrations
           </h2>
-          <p className="text-muted-foreground mx-auto mt-2 max-w-3xl">
+          <h3 className="text-muted-foreground mx-auto mt-2 max-w-3xl">
             Here is how you can check if your passport is ready or how you can get services provided
             by
             <span className="block font-semibold tracking-wide text-foreground sm:inline">
               {' '}
-              Immigration &amp; Nationality Affairs
+              IMMIGRATION &amp; NATIONALITY AFFAIRS
             </span>
             .
-          </p>
+          </h3>
           <div className="mt-6 flex items-center justify-center">
             <div className="scrollbar-thumb-muted scrollbar-track-transparent scrollbar-hide flex w-full max-w-full gap-1 overflow-x-auto px-1 sm:justify-center sm:overflow-visible">
               {TABS.map((t) => {
@@ -80,11 +80,11 @@ export function VideoTabs() {
                     key={t.key}
                     onClick={() => setTab(t.key)}
                     className={[
-                      'focus-visible:ring-ring rounded-full border px-4 py-1 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                      'focus-visible:ring-ring rounded-lg border px-4 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                       'shadow-sm',
                       isActive
-                        ? 'border-primary bg-primary text-primary-foreground'
-                        : 'border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground',
+                        ? 'border-none bg-accent text-primary font-bold'
+                        : 'border-input bg-background text-primary hover:bg-accent ',
                       'whitespace-nowrap',
                     ].join(' ')}
                     type="button"
