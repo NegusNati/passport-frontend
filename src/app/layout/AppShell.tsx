@@ -8,15 +8,15 @@ import { Header } from './Header'
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="relative bg-background text-foreground min-h-dvh w-full overflow-x-hidden">
+    <div className="relative isolate bg-background text-foreground min-h-dvh w-full overflow-x-hidden">
       {/* Hero surface tint + blobs */}
-      <div className="teal-hero absolute inset-0" aria-hidden />
+      <div className="teal-hero pointer-events-none absolute inset-0 -z-10" aria-hidden />
       <div
-        className="teal-blob-left left-[-14rem] top-[-8rem] h-[24rem] w-[32rem] md:left-[-18rem] md:top-[-10rem] md:h-[28rem] md:w-[40rem] lg:left-[-20rem] lg:top-[-12rem]"
+        className="teal-blob-left pointer-events-none left-[-14rem] top-[-8rem] h-[24rem] w-[32rem] md:left-[-18rem] md:top-[-10rem] md:h-[28rem] md:w-[40rem] lg:left-[-20rem] lg:top-[-12rem] -z-10"
         aria-hidden
       />
       <div
-        className="teal-blob-right right-[-10rem] top-[2rem] h-[22rem] w-[30rem] md:right-[-12rem] md:top-[3rem] md:h-[26rem] md:w-[36rem] lg:right-[-14rem] lg:top-[4rem]"
+        className="teal-blob-right pointer-events-none right-[-10rem] top-[2rem] h-[22rem] w-[30rem] md:right-[-12rem] md:top-[3rem] md:h-[26rem] md:w-[36rem] lg:right-[-14rem] lg:top-[4rem] -z-10"
         aria-hidden
       />
 
@@ -27,7 +27,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         Skip to content
       </a>
       <Header />
-      <main id="main" className="w-full">
+      <main id="main" className="relative z-0 w-full">
         {children}
       </main>
 

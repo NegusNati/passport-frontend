@@ -46,17 +46,17 @@ export function Hero() {
               >
                 {/* Outermost ring */}
                 <div
-                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] max-w-[520px] h-[150px] rounded-[9999px] bg-primary/25 blur-[3px] animate-pulse-slow"
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%]  md:w-[130%]  max-w-[520px] h-[150px] rounded-[9999px] bg-primary/25 blur-[3px] animate-pulse-slow"
                 />
 
                 {/* Middle ring */}
                 <div
-                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%] max-w-[460px] h-[120px] rounded-[9999px] bg-primary/35 blur-[1.5px] animate-pulse-medium"
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[85%]  md:w-[115%]  max-w-[460px] h-[120px] rounded-[9999px] bg-primary/35 blur-[1.5px] animate-pulse-medium"
                 />
 
                 {/* Inner ring */}
                 <div
-                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] max-w-[380px] h-[70px] rounded-[9999px] bg-primary animate-pulse-fast"
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] md:w-[90%]  max-w-[380px] h-[70px] rounded-[9999px] bg-primary animate-pulse-fast"
                 />
 
            
@@ -113,7 +113,7 @@ export function Hero() {
         {/* Mobile / small screens: CardSwap below below */}
         <div
           className="relative md:hidden translate-x-[-185px] translate-y-[-165px]"
-          style={{ height: 420 }}
+          style={{ height: 410 }}
         >
           <CardSwap
             width={460}

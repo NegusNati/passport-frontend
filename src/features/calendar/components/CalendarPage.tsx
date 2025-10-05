@@ -117,7 +117,7 @@ export function CalendarPage() {
   }
 
   return (
-    <section className="bg-muted/30 py-14 sm:py-20">
+    <section className="bg-muted/30 py-14 sm:py-20 ">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 sm:px-6 lg:px-8">
         <header className="space-y-3">
           <p className="text-muted-foreground text-xs font-semibold tracking-[0.35em] uppercase">

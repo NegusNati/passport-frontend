@@ -8,14 +8,14 @@ export { ArticlesPage } from './components/ArticlesPage'
 // Export schemas and types
 export type {
   Article,
-  ArticleSummary,
   ArticleFilters as ArticleFiltersType,
   ArticleSearch,
+  ArticleSummary,
 } from './schemas/article'
 export {
   Article as ArticleSchema,
-  ArticleSummary as ArticleSummarySchema,
   ArticleSearch as ArticleSearchSchema,
+  ArticleSummary as ArticleSummarySchema,
 } from './schemas/article'
 
 // Export dummy data and utilities
