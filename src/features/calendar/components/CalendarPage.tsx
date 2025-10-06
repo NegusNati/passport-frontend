@@ -1,4 +1,7 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { ethiopicToJdn, today as getToday, weekdayFromJdn } from 'negus-ethiopic-gregorian'
+import type { Highlight } from 'negus-ethiopic-gregorian/highlights'
+import { getHighlightsForDay, getHighlightsForMonth } from 'negus-ethiopic-gregorian/highlights'
 import * as React from 'react'
 
 import shaderUrl from '@/assets/landingImages/shader_bg.svg?url'
@@ -15,7 +18,6 @@ import {
   GEEZ_NUMERAL_TABLE,
   getCalendarMatrix,
   getDaysInEthiopianMonth,
-  toEthiopian,
   toGeezNumeral,
   toGregorian,
   WEEKDAYS,
@@ -23,8 +25,8 @@ import {
 
 const yearOptionsRange = 6
 
-function useTodayEthiopianDate() {
-  return React.useMemo(() => toEthiopian(new Date()), [])
+function useTodayEthiopianDate(): EthiopicDate {
+  return React.useMemo(() => getToday('ethiopic') as EthiopicDate, [])
 }
 
 function createYearOptions(currentYear: number) {
@@ -35,35 +37,6 @@ function createYearOptions(currentYear: number) {
   return years
 }
 
-function getObservances(date: EthiopicDate) {
-  const items: Array<{ title: string; description: string }> = []
-  if (date.month === 1 && date.day === 1) {
-    items.push({
-      title: 'Ethiopian New Year (Enkutatash)',
-      description:
-        'Marks the start of the Ethiopian year on Meskerem 1, often celebrated with fresh flowers and family gatherings.',
-    })
-  }
-  if (date.month === 13 && date.day === 6) {
-    items.push({
-      title: 'Leap Day',
-      description:
-        'Pagume receives a 6th day during Ethiopian leap years, aligning the calendar with the solar cycle.',
-    })
-  }
-  return items
-}
-
-// Minimal month holiday samples – extend with more entries as needed
-function getMonthHolidays(year: number, month: number) {
-  const items: Array<{ day: number; title: string }> = []
-  if (month === 1) {
-    items.push({ day: 1, title: 'Ethiopian New Year' })
-    items.push({ day: 17, title: 'Meskel' })
-  }
-  return items
-}
-
 function isSameDate(a: EthiopicDate, b: EthiopicDate) {
   return a.year === b.year && a.month === b.month && a.day === b.day
 }
@@ -72,6 +45,18 @@ function clampDayWithinMonth(date: EthiopicDate): EthiopicDate {
   const maxDay = getDaysInEthiopianMonth(date.year, date.month)
   if (date.day <= maxDay) return date
   return { ...date, day: maxDay }
+}
+
+function formatHighlightCategory(category?: Highlight['category']) {
+  if (!category) return ''
+  return `${category.charAt(0).toUpperCase()}${category.slice(1)}`
+}
+
+function formatHighlightTag(tag: string) {
+  return tag
+    .split('-')
+    .map((segment) => `${segment.charAt(0).toUpperCase()}${segment.slice(1)}`)
+    .join(' ')
 }
 
 export function CalendarPage() {
@@ -101,8 +86,31 @@ export function CalendarPage() {
   const years = React.useMemo(() => createYearOptions(today.year), [today.year])
 
   const selectedGregorian = React.useMemo(() => toGregorian(selectedDate), [selectedDate])
-  const observances = React.useMemo(() => getObservances(selectedDate), [selectedDate])
-  const monthHolidays = React.useMemo(() => getMonthHolidays(viewYear, viewMonth), [viewYear, viewMonth])
+  const selectedHighlights = React.useMemo(
+    () => getHighlightsForDay(selectedDate, 'ethiopic'),
+    [selectedDate],
+  )
+  const monthHighlights = React.useMemo(() => {
+    const highlights = getHighlightsForMonth(viewYear, viewMonth, 'ethiopic').filter(
+      (highlight) => highlight.calendar === 'ethiopic',
+    )
+    return highlights.sort((a, b) => a.day - b.day)
+  }, [viewYear, viewMonth])
+  const monthHighlightLookup = React.useMemo(() => {
+    const lookup = new Map<number, Highlight[]>()
+    monthHighlights.forEach((highlight) => {
+      const list = lookup.get(highlight.day) ?? []
+      list.push(highlight)
+      lookup.set(highlight.day, list)
+    })
+    return lookup
+  }, [monthHighlights])
+  const selectedWeekday = React.useMemo(() => {
+    const index =
+      (weekdayFromJdn(ethiopicToJdn(selectedDate.year, selectedDate.month, selectedDate.day)) + 6) %
+      7
+    return WEEKDAYS[index]
+  }, [selectedDate])
 
   function goToToday() {
     setViewYear(today.year)
@@ -258,29 +266,70 @@ export function CalendarPage() {
                       Date.UTC(gregorian.year, gregorian.month - 1, gregorian.day),
                     )
                     const gregDay = gregDate.getUTCDate()
+                    const highlightList = isCurrentMonth
+                      ? monthHighlightLookup.get(date.day) ?? []
+                      : []
+                    const hasHighlights = highlightList.length > 0
+                    const previewName = hasHighlights
+                      ? `${highlightList[0]?.name}${
+                          highlightList.length > 1
+                            ? ` (+${highlightList.length - 1} more)`
+                            : ''
+                        }`
+                      : undefined
+                    const highlightNames = hasHighlights
+                      ? highlightList.map((item) => item.name).join(', ')
+                      : undefined
+                    const ariaLabel = `${formatEthiopianDate(date, false)}${
+                      highlightNames ? `. Holidays: ${highlightNames}` : ''
+                    }`
+                    const buttonClasses = [
+                      'focus-visible:ring-ring relative flex min-h-[72px] flex-col justify-between rounded-xl border px-2 py-2 text-left text-sm transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
+                      isSelected
+                        ? 'border-primary bg-primary text-primary-foreground shadow'
+                        : isToday
+                          ? 'border-border bg-muted/70'
+                          : 'border-border bg-card/70 hover:bg-muted/80',
+                      !isCurrentMonth && !isSelected ? 'text-muted-foreground' : '',
+                      hasHighlights && !isSelected ? 'ring-1 ring-primary/40' : '',
+                    ]
 
                     return (
                       <button
                         key={`${date.year}-${date.month}-${date.day}`}
                         type="button"
                         onClick={() => setSelectedDate({ ...date })}
-                        className={[
-                          'focus-visible:ring-ring relative flex min-h-[72px] flex-col justify-between rounded-xl px-2 py-2 text-left text-sm transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-                          isSelected
-                            ? 'border-primary bg-primary text-primary-foreground shadow'
-                            : isToday
-                              ? 'border-border bg-muted/70'
-                              : 'border-border bg-card/70 hover:bg-muted/80',
-                          !isCurrentMonth && !isSelected ? 'text-muted-foreground' : '',
-                        ].join(' ')}
+                        className={buttonClasses.filter(Boolean).join(' ')}
                         aria-pressed={isSelected}
+                        aria-label={ariaLabel}
                       >
+                        {hasHighlights ? (
+                          <span
+                            aria-hidden
+                            className={`absolute right-2 top-2 size-2 rounded-full ${
+                              isSelected ? 'bg-primary-foreground' : 'bg-primary'
+                            }`}
+                          />
+                        ) : null}
+
                         <span className="text-base leading-tight font-medium">{dayDisplay}</span>
-                        <span
-                          className={`text-[11px] font-medium ${isSelected ? 'text-primary-foreground/80' : 'text-muted-foreground'}`}
-                        >
-                          {gregDay}
-                        </span>
+                        <div className="mt-auto flex items-center justify-between gap-2 text-[11px] font-medium">
+                          <span
+                            className={
+                              isSelected ? 'text-primary-foreground/80' : 'text-muted-foreground'
+                            }
+                          >
+                            {gregDay}
+                          </span>
+                          {previewName ? (
+                            <span
+                              className={isSelected ? 'text-primary-foreground/80' : 'text-primary/80'}
+                              title={highlightNames}
+                            >
+                              {previewName}
+                            </span>
+                          ) : null}
+                        </div>
                       </button>
                     )
                   })}
@@ -294,13 +343,24 @@ export function CalendarPage() {
             <div className="border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm">
               <h3 className="text-foreground text-base font-semibold tracking-tight">Holidays this month</h3>
               <div className="mt-4 space-y-3">
-                {monthHolidays.length ? (
-                  monthHolidays.map((h) => (
-                    <div key={h.title} className="bg-muted text-foreground flex items-center gap-3 rounded-xl px-3 py-3">
+                {monthHighlights.length ? (
+                  monthHighlights.map((highlight) => (
+                    <div
+                      key={`${highlight.id}-${highlight.day}`}
+                      className="bg-muted text-foreground flex items-start gap-3 rounded-xl px-3 py-3"
+                    >
                       <div className="bg-primary text-primary-foreground grid size-10 place-items-center rounded-lg font-bold">
-                        {useGeezDigits ? toGeezNumeral(h.day) : h.day}
+                        {useGeezDigits ? toGeezNumeral(highlight.day) : highlight.day}
                       </div>
-                      <span className="text-sm font-medium">{h.title}</span>
+                      <div className="space-y-1">
+                        <p className="text-sm font-semibold leading-tight">{highlight.name}</p>
+                        <p className="text-xs text-muted-foreground leading-tight">{highlight.amharicName}</p>
+                        {highlight.category ? (
+                          <span className="text-[11px] font-medium tracking-wide text-primary/80">
+                            {formatHighlightCategory(highlight.category)}
+                          </span>
+                        ) : null}
+                      </div>
                     </div>
                   ))
                 ) : (
@@ -318,18 +378,44 @@ export function CalendarPage() {
                 {formatEthiopianDate(selectedDate, useGeezDigits)}
               </h3>
               <p className="text-muted-foreground mt-1 text-sm">
-                {formatGregorianDate(selectedGregorian)}
+                {selectedWeekday} · {formatGregorianDate(selectedGregorian)}
               </p>
               <div className="text-muted-foreground mt-4 space-y-2 text-sm">
-                {observances.length ? (
-                  observances.map((item) => (
-                    <div key={item.title} className="border-border bg-muted/60 rounded-lg border px-4 py-3">
-                      <p className="text-foreground text-sm font-semibold">{item.title}</p>
-                      <p className="text-muted-foreground mt-1 text-sm">{item.description}</p>
+                {selectedHighlights.length ? (
+                  selectedHighlights.map((highlight) => (
+                    <div
+                      key={`${highlight.id}-${highlight.day}`}
+                      className="border-border bg-muted/60 rounded-lg border px-4 py-3"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <p className="text-foreground text-sm font-semibold leading-tight">
+                          {highlight.name}
+                        </p>
+                        {highlight.category ? (
+                          <span className="text-[11px] font-medium tracking-wide text-primary/80">
+                            {formatHighlightCategory(highlight.category)}
+                          </span>
+                        ) : null}
+                      </div>
+                      <p className="text-muted-foreground mt-1 text-sm leading-tight">
+                        {highlight.amharicName}
+                      </p>
+                      {highlight.tags?.length ? (
+                        <div className="text-muted-foreground mt-3 flex flex-wrap gap-1">
+                          {highlight.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="bg-primary/10 text-primary/80 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide"
+                            >
+                              {formatHighlightTag(tag)}
+                            </span>
+                          ))}
+                        </div>
+                      ) : null}
                     </div>
                   ))
                 ) : (
-                  <p>No major calendar highlights on this date.</p>
+                  <p>We don't have any recorded highlights for this date yet.</p>
                 )}
               </div>
             </div>

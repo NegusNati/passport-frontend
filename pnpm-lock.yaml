@@ -62,6 +62,9 @@ importers:
       lucide-react:
         specifier: ^0.544.0
         version: 0.544.0(react@19.1.1)
+      negus-ethiopic-gregorian:
+        specifier: ^0.2.3
+        version: 0.2.3
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -2569,6 +2572,10 @@ packages:
 
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
+
+  negus-ethiopic-gregorian@0.2.3:
+    resolution: {integrity: sha512-+RcAJVOszeizXvfibN5z9GQdL5YK0q/PSQqObQe78eD60PPuF/MIVGaQhGI4OamKyenr2Srq3gHbGfCJrh/1mw==}
+    engines: {node: '>=16'}
 
   next-themes@0.4.6:
     resolution: {integrity: sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA==}
@@ -5886,6 +5893,8 @@ snapshots:
   napi-postinstall@0.3.3: {}
 
   natural-compare@1.4.0: {}
+
+  negus-ethiopic-gregorian@0.2.3: {}
 
   next-themes@0.4.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:

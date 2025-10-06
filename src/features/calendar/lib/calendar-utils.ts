@@ -1,16 +1,14 @@
-export type EthiopicDate = {
-  year: number
-  month: number
-  day: number
-}
+import type { EthiopicDate, GregorianDate } from 'negus-ethiopic-gregorian'
+import {
+  ethiopicDaysInMonth as pkgEthiopicDaysInMonth,
+  ethiopicToJdn,
+  isEthiopicLeapYear as pkgIsEthiopicLeapYear,
+  toEthiopic as convertToEthiopic,
+  toGregorian as convertToGregorian,
+  weekdayFromJdn,
+} from 'negus-ethiopic-gregorian'
 
-export type GregorianDate = {
-  year: number
-  month: number
-  day: number
-}
-
-const ETHIOPIAN_EPOCH = 1723856
+export type { EthiopicDate, GregorianDate }
 
 export const ETHIOPIAN_MONTHS = [
   { number: 1, english: 'Meskerem', amharic: 'መስከረም' },
@@ -30,82 +28,22 @@ export const ETHIOPIAN_MONTHS = [
 
 export const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const
 
-export function gregorianToJulianDay(year: number, month: number, day: number) {
-  const a = Math.floor((14 - month) / 12)
-  const y = year + 4800 - a
-  const m = month + 12 * a - 3
-
-  return (
-    day +
-    Math.floor((153 * m + 2) / 5) +
-    365 * y +
-    Math.floor(y / 4) -
-    Math.floor(y / 100) +
-    Math.floor(y / 400) -
-    32045
-  )
-}
-
-export function julianDayToGregorian(jd: number): GregorianDate {
-  const w = jd + 0.5
-  const z = Math.floor(w)
-  const f = w - z
-  let a = z
-
-  if (z >= 2299161) {
-    const alpha = Math.floor((z - 1867216.25) / 36524.25)
-    a = z + 1 + alpha - Math.floor(alpha / 4)
-  }
-
-  const b = a + 1524
-  const c = Math.floor((b - 122.1) / 365.25)
-  const d = Math.floor(365.25 * c)
-  const e = Math.floor((b - d) / 30.6001)
-
-  const day = b - d - Math.floor(30.6001 * e) + f
-  const month = e < 14 ? e - 1 : e - 13
-  const year = month > 2 ? c - 4716 : c - 4715
-
-  return {
-    year,
-    month,
-    day: Math.floor(day),
-  }
-}
-
-export function ethiopianToJulianDay(year: number, month: number, day: number) {
-  return ETHIOPIAN_EPOCH + 365 * (year - 1) + Math.floor(year / 4) + 30 * (month - 1) + (day - 1)
-}
-
-export function julianDayToEthiopian(jd: number): EthiopicDate {
-  const r = jd - ETHIOPIAN_EPOCH
-  const n = Math.floor((4 * r + 3) / 1461)
-  const year = n + 1
-  const yearStart = ethiopianToJulianDay(year, 1, 1)
-  const month = Math.floor((jd - yearStart) / 30) + 1
-  const day = jd - ethiopianToJulianDay(year, month, 1) + 1
-
-  return { year, month, day }
-}
-
-export function toGregorian(date: EthiopicDate): GregorianDate {
-  return julianDayToGregorian(ethiopianToJulianDay(date.year, date.month, date.day))
-}
+export const toGregorian = convertToGregorian
 
 export function toEthiopian(date: Date): EthiopicDate {
-  const jd = gregorianToJulianDay(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate())
-  return julianDayToEthiopian(jd)
+  return convertToEthiopic({
+    year: date.getUTCFullYear(),
+    month: date.getUTCMonth() + 1,
+    day: date.getUTCDate(),
+  })
 }
 
 export function isEthiopianLeapYear(year: number) {
-  return (year + 1) % 4 === 0
+  return pkgIsEthiopicLeapYear(year)
 }
 
 export function getDaysInEthiopianMonth(year: number, month: number) {
-  if (month === 13) {
-    return isEthiopianLeapYear(year) ? 6 : 5
-  }
-  return 30
+  return pkgEthiopicDaysInMonth(year, month)
 }
 
 const ETHIOPIC_UNITS = ['', '፩', '፪', '፫', '፬', '፭', '፮', '፯', '፰', '፱']
@@ -155,14 +93,8 @@ export function formatGregorianDate({ year, month, day }: GregorianDate) {
 
 export function getCalendarMatrix(year: number, month: number) {
   const daysInMonth = getDaysInEthiopianMonth(year, month)
-  const firstJd = ethiopianToJulianDay(year, month, 1)
-  const firstGregorian = julianDayToGregorian(firstJd)
-  const firstWeekday =
-    (new Date(
-      Date.UTC(firstGregorian.year, firstGregorian.month - 1, firstGregorian.day),
-    ).getUTCDay() +
-      6) %
-    7
+  const firstJd = ethiopicToJdn(year, month, 1)
+  const firstWeekday = (weekdayFromJdn(firstJd) + 6) % 7
 
   const cells: Array<{
     date: EthiopicDate
