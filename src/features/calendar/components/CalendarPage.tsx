@@ -694,10 +694,10 @@ export function CalendarPage() {
           <section className="border-border/60 bg-white/60 supports-[backdrop-filter]:bg-white/40 backdrop-blur-lg rounded-2xl border shadow-sm">
             <div className="flex flex-col gap-6 p-6 sm:p-8">
               <header className="space-y-2">
-                <h2 className="text-2xl font-semibold tracking-tight">Geeʼz Numbering System</h2>
+                <h2 className="text-2xl font-semibold tracking-tight">Gee&apos;z Numbering System</h2>
                 <p className="text-muted-foreground text-sm">
                   Amharic has its own traditional number system that is still used in some cultural
-                  and liturgical contexts. It’s different from the “Arabic numerals” (0–9) that are
+                    and liturgical contexts. It’s different from the “Arabic numerals” (0–9) that are
                   common worldwide.
                 </p>
                 <p className="text-muted-foreground text-sm">
