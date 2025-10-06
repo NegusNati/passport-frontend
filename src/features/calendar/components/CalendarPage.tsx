@@ -23,16 +23,18 @@ import {
   WEEKDAYS,
 } from '../lib/calendar-utils'
 
-const yearOptionsRange = 6
+const YEAR_WINDOW = 60
 
 function useTodayEthiopianDate(): EthiopicDate {
   return React.useMemo(() => getToday('ethiopic') as EthiopicDate, [])
 }
 
-function createYearOptions(currentYear: number) {
+function createYearOptions(centerYear: number) {
+  const start = Math.max(1, centerYear - YEAR_WINDOW)
+  const end = centerYear + YEAR_WINDOW
   const years: number[] = []
-  for (let offset = -2; offset <= yearOptionsRange; offset += 1) {
-    years.push(currentYear + offset)
+  for (let year = start; year <= end; year += 1) {
+    years.push(year)
   }
   return years
 }
@@ -203,7 +205,7 @@ export function CalendarPage() {
     () => getCalendarMatrix(viewYear, viewMonth),
     [viewYear, viewMonth],
   )
-  const years = React.useMemo(() => createYearOptions(today.year), [today.year])
+  const years = React.useMemo(() => createYearOptions(viewYear), [viewYear])
 
   const selectedGregorian = React.useMemo(() => toGregorian(selectedDate), [selectedDate])
   const selectedHighlights = React.useMemo(
@@ -469,11 +471,16 @@ export function CalendarPage() {
                     onChange={(event) => setViewYear(Number(event.target.value))}
                     className="border-input bg-background focus:ring-ring rounded-md border px-4 py-2 text-sm shadow-sm focus:ring-2 focus:outline-none"
                   >
-                    {years.map((year) => (
-                      <option key={year} value={year}>
-                        {useGeezDigits ? toGeezNumeral(year) : year}
-                      </option>
-                    ))}
+                    {years.map((year) => {
+                      const label = useGeezDigits
+                        ? `${toGeezNumeral(year)} · ${year}`
+                        : `${year} · ${toGeezNumeral(year)}`
+                      return (
+                        <option key={year} value={year}>
+                          {label}
+                        </option>
+                      )
+                    })}
                   </select>
                 </div>
               ) : null}
@@ -673,7 +680,7 @@ export function CalendarPage() {
                     </div>
                   ))
                 ) : (
-                  <p>We don't have any recorded highlights for this date yet.</p>
+                  <p>We don&apos;t have any recorded highlights for this date yet.</p>
                 )}
               </div>
             </div>

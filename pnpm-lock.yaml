@@ -63,8 +63,8 @@ importers:
         specifier: ^0.544.0
         version: 0.544.0(react@19.1.1)
       negus-ethiopic-gregorian:
-        specifier: ^0.2.3
-        version: 0.2.3
+        specifier: ^0.2.4
+        version: 0.2.4
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -2573,8 +2573,8 @@ packages:
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
-  negus-ethiopic-gregorian@0.2.3:
-    resolution: {integrity: sha512-+RcAJVOszeizXvfibN5z9GQdL5YK0q/PSQqObQe78eD60PPuF/MIVGaQhGI4OamKyenr2Srq3gHbGfCJrh/1mw==}
+  negus-ethiopic-gregorian@0.2.4:
+    resolution: {integrity: sha512-1C+t5hFdSX0gj9YhOeku+IWr/b2h9lDiBhNg3hiJgzJHl0IMlgX558QywL9FGPvzzBGlM+I2oxw4VEWCqMUY3g==}
     engines: {node: '>=16'}
 
   next-themes@0.4.6:
@@ -5894,7 +5894,7 @@ snapshots:
 
   natural-compare@1.4.0: {}
 
-  negus-ethiopic-gregorian@0.2.3: {}
+  negus-ethiopic-gregorian@0.2.4: {}
 
   next-themes@0.4.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
