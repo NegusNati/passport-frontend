@@ -1,5 +1,5 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { ethiopicToJdn, today as getToday, weekdayFromJdn } from 'negus-ethiopic-gregorian'
+import { addDays, ethiopicToJdn, today as getToday, weekdayFromJdn } from 'negus-ethiopic-gregorian'
 import type { Highlight } from 'negus-ethiopic-gregorian/highlights'
 import { getHighlightsForDay, getHighlightsForMonth } from 'negus-ethiopic-gregorian/highlights'
 import * as React from 'react'
@@ -59,14 +59,118 @@ function formatHighlightTag(tag: string) {
     .join(' ')
 }
 
+type CalendarCell = {
+  date: EthiopicDate
+  gregorian: ReturnType<typeof toGregorian>
+  isCurrentMonth: boolean
+}
+
+function createDateKey(date: EthiopicDate) {
+  return `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`
+}
+
+function stripEra(date: EthiopicDate): EthiopicDate {
+  return { year: date.year, month: date.month, day: date.day }
+}
+
+function buildWeekCells(
+  anchorDate: EthiopicDate,
+  contextYear: number,
+  contextMonth: number,
+): { startDate: EthiopicDate; endDate: EthiopicDate; cells: CalendarCell[] } {
+  const anchorJdn = ethiopicToJdn(anchorDate.year, anchorDate.month, anchorDate.day)
+  const anchorWeekday = (weekdayFromJdn(anchorJdn) + 6) % 7
+  const weekStartRaw = addDays(anchorDate, -anchorWeekday, 'ethiopic')
+  const weekStart = stripEra(weekStartRaw)
+
+  const cells: CalendarCell[] = []
+  for (let offset = 0; offset < 7; offset += 1) {
+    const next = addDays(weekStart, offset, 'ethiopic')
+    const normalized = stripEra(next)
+    cells.push({
+      date: normalized,
+      gregorian: toGregorian(normalized),
+      isCurrentMonth: normalized.year === contextYear && normalized.month === contextMonth,
+    })
+  }
+
+  const weekEnd = cells[cells.length - 1]?.date ?? weekStart
+
+  return {
+    startDate: weekStart,
+    endDate: weekEnd,
+    cells,
+  }
+}
+
+function formatWeekRange(cells: CalendarCell[], useGeezDigits: boolean) {
+  if (!cells.length) return ''
+  const first = cells[0].date
+  const last = cells[cells.length - 1].date
+  const firstMonthName = ETHIOPIAN_MONTHS[first.month - 1]?.amharic ?? ''
+  const lastMonthName = ETHIOPIAN_MONTHS[last.month - 1]?.amharic ?? ''
+  const firstDay = useGeezDigits ? toGeezNumeral(first.day) : first.day
+  const lastDay = useGeezDigits ? toGeezNumeral(last.day) : last.day
+  const firstYear = useGeezDigits ? toGeezNumeral(first.year) : first.year
+  const lastYear = useGeezDigits ? toGeezNumeral(last.year) : last.year
+
+  const sameMonth = first.month === last.month && first.year === last.year
+  const sameYear = first.year === last.year
+
+  if (sameMonth) {
+    return `${firstMonthName} ${firstDay} – ${lastDay}, ${firstYear}`
+  }
+
+  if (sameYear) {
+    return `${firstMonthName} ${firstDay} – ${lastMonthName} ${lastDay}, ${firstYear}`
+  }
+
+  return `${firstMonthName} ${firstDay}, ${firstYear} – ${lastMonthName} ${lastDay}, ${lastYear}`
+}
+
 export function CalendarPage() {
   const today = useTodayEthiopianDate()
   const [viewYear, setViewYear] = React.useState(today.year)
   const [viewMonth, setViewMonth] = React.useState(today.month)
   const [selectedDate, setSelectedDate] = React.useState<EthiopicDate>(today)
   const [useGeezDigits, setUseGeezDigits] = React.useState(true)
+  const [viewMode, setViewMode] = React.useState<'month' | 'week'>('month')
+  const [shouldFlashCard, setShouldFlashCard] = React.useState(false)
+  const selectedCardRef = React.useRef<HTMLDivElement | null>(null)
+  const flashTimeoutRef = React.useRef<number | null>(null)
+
+  const focusSelectedCard = React.useCallback(() => {
+    if (typeof window === 'undefined') return
+    if (flashTimeoutRef.current) {
+      window.clearTimeout(flashTimeoutRef.current)
+    }
+    setShouldFlashCard(true)
+    selectedCardRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    selectedCardRef.current?.focus({ preventScroll: true })
+    flashTimeoutRef.current = window.setTimeout(() => {
+      setShouldFlashCard(false)
+      flashTimeoutRef.current = null
+    }, 1200)
+  }, [])
+
+  React.useEffect(() => () => {
+    if (typeof window === 'undefined') return
+    if (flashTimeoutRef.current) {
+      window.clearTimeout(flashTimeoutRef.current)
+    }
+  }, [])
+
+  const handleSelectDate = React.useCallback(
+    (nextDate: EthiopicDate) => {
+      const sanitized = stripEra(nextDate)
+      setSelectedDate(sanitized)
+      focusSelectedCard()
+    },
+    [focusSelectedCard],
+  )
 
   React.useEffect(() => {
+    if (viewMode !== 'month') return
     setSelectedDate((prev) => {
       if (prev.year === viewYear && prev.month === viewMonth) {
         return clampDayWithinMonth(prev)
@@ -77,9 +181,25 @@ export function CalendarPage() {
         day: Math.min(prev.day, getDaysInEthiopianMonth(viewYear, viewMonth)),
       }
     })
-  }, [viewMonth, viewYear])
+  }, [viewMonth, viewYear, viewMode])
 
-  const calendarCells = React.useMemo(
+  React.useEffect(() => {
+    if (viewMode !== 'week') return
+    setViewYear(selectedDate.year)
+    setViewMonth(selectedDate.month)
+  }, [viewMode, selectedDate.year, selectedDate.month])
+
+  function handleViewModeChange(mode: 'month' | 'week') {
+    if (mode === viewMode) return
+    setViewMode(mode)
+    if (mode === 'week') {
+      setViewYear(selectedDate.year)
+      setViewMonth(selectedDate.month)
+    }
+    focusSelectedCard()
+  }
+
+  const monthCells = React.useMemo(
     () => getCalendarMatrix(viewYear, viewMonth),
     [viewYear, viewMonth],
   )
@@ -97,29 +217,81 @@ export function CalendarPage() {
     return highlights.sort((a, b) => a.day - b.day)
   }, [viewYear, viewMonth])
   const monthHighlightLookup = React.useMemo(() => {
-    const lookup = new Map<number, Highlight[]>()
+    const lookup = new Map<string, Highlight[]>()
     monthHighlights.forEach((highlight) => {
-      const list = lookup.get(highlight.day) ?? []
+      const key = createDateKey({ year: viewYear, month: highlight.month, day: highlight.day })
+      const list = lookup.get(key) ?? []
       list.push(highlight)
-      lookup.set(highlight.day, list)
+      lookup.set(key, list)
     })
     return lookup
-  }, [monthHighlights])
+  }, [monthHighlights, viewYear])
+  const weekView = React.useMemo(() => {
+    if (viewMode !== 'week') return null
+    return buildWeekCells(selectedDate, viewYear, viewMonth)
+  }, [viewMode, selectedDate, viewYear, viewMonth])
+  const visibleCells = viewMode === 'month' ? monthCells : weekView?.cells ?? monthCells
+  const visibleHighlightLookup = React.useMemo(() => {
+    if (viewMode === 'week' && weekView) {
+      const lookup = new Map<string, Highlight[]>()
+      weekView.cells.forEach(({ date }) => {
+        const key = createDateKey(date)
+        const items = getHighlightsForDay(date, 'ethiopic')
+        if (items.length) {
+          lookup.set(key, items)
+        }
+      })
+      return lookup
+    }
+    return monthHighlightLookup
+  }, [viewMode, weekView, monthHighlightLookup])
+  const weekHighlights = React.useMemo(() => {
+    if (viewMode !== 'week' || !weekView) return [] as Array<{ highlight: Highlight; date: EthiopicDate }>
+    const entries: Array<{ highlight: Highlight; date: EthiopicDate }> = []
+    const seen = new Set<string>()
+    weekView.cells.forEach(({ date }) => {
+      const items = getHighlightsForDay(date, 'ethiopic')
+      items.forEach((item) => {
+        const key = `${item.id}-${createDateKey(date)}`
+        if (seen.has(key)) return
+        seen.add(key)
+        entries.push({ highlight: item, date })
+      })
+    })
+    entries.sort(
+      (a, b) =>
+        ethiopicToJdn(a.date.year, a.date.month, a.date.day) -
+        ethiopicToJdn(b.date.year, b.date.month, b.date.day),
+    )
+    return entries
+  }, [viewMode, weekView])
   const selectedWeekday = React.useMemo(() => {
     const index =
       (weekdayFromJdn(ethiopicToJdn(selectedDate.year, selectedDate.month, selectedDate.day)) + 6) %
       7
     return WEEKDAYS[index]
   }, [selectedDate])
+  const weekRangeLabel = React.useMemo(() => {
+    if (viewMode !== 'week' || !weekView) return ''
+    return formatWeekRange(weekView.cells, useGeezDigits)
+  }, [viewMode, weekView, useGeezDigits])
 
   function goToToday() {
     setViewYear(today.year)
     setViewMonth(today.month)
-    setSelectedDate(today)
+    handleSelectDate(today)
     setUseGeezDigits(true)
   }
 
   function goToPreviousMonth() {
+    if (viewMode === 'week') {
+      const previous = stripEra(addDays(selectedDate, -7, 'ethiopic'))
+      setViewYear(previous.year)
+      setViewMonth(previous.month)
+      handleSelectDate(previous)
+      return
+    }
+
     setViewMonth((current) => {
       if (current === 1) {
         setViewYear((year) => year - 1)
@@ -130,6 +302,14 @@ export function CalendarPage() {
   }
 
   function goToNextMonth() {
+    if (viewMode === 'week') {
+      const next = stripEra(addDays(selectedDate, 7, 'ethiopic'))
+      setViewYear(next.year)
+      setViewMonth(next.month)
+      handleSelectDate(next)
+      return
+    }
+
     setViewMonth((current) => {
       if (current === 13) {
         setViewYear((year) => year + 1)
@@ -189,11 +369,23 @@ export function CalendarPage() {
                 >
                   <span className="sr-only">Previous</span>
                 </Button>
-                <div className="text-primary text-lg font-semibold">
-                  {ETHIOPIAN_MONTHS[viewMonth - 1]?.amharic}
-                  <span className="text-foreground/70 ml-2 align-middle text-base">
-                    {useGeezDigits ? toGeezNumeral(viewYear) : viewYear}
-                  </span>
+                <div
+                  className={
+                    viewMode === 'month'
+                      ? 'text-primary text-lg font-semibold'
+                      : 'text-foreground text-base font-semibold'
+                  }
+                >
+                  {viewMode === 'month' ? (
+                    <>
+                      {ETHIOPIAN_MONTHS[viewMonth - 1]?.amharic}
+                      <span className="text-foreground/70 ml-2 align-middle text-base">
+                        {useGeezDigits ? toGeezNumeral(viewYear) : viewYear}
+                      </span>
+                    </>
+                  ) : (
+                    <span>{weekRangeLabel}</span>
+                  )}
                 </div>
                 <Button
                   variant="ghost"
@@ -207,12 +399,51 @@ export function CalendarPage() {
               </div>
               <div className="bg-border/50 h-px w-full" />
 
-              <div className="hidden items-center gap-3 sm:flex">
-                <label
-                  htmlFor="month-select"
-                  className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase"
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div
+                  role="group"
+                  aria-label="Toggle calendar view"
+                  className="inline-flex rounded-full bg-muted/40 p-1 text-xs font-semibold"
                 >
-                  Month
+                  <button
+                    type="button"
+                    onClick={() => handleViewModeChange('month')}
+                    aria-pressed={viewMode === 'month'}
+                    className={[
+                      'rounded-full px-3 py-1 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                      viewMode === 'month'
+                        ? 'bg-primary text-primary-foreground shadow'
+                        : 'text-muted-foreground hover:text-foreground',
+                    ].join(' ')}
+                  >
+                    Month
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleViewModeChange('week')}
+                    aria-pressed={viewMode === 'week'}
+                    className={[
+                      'rounded-full px-3 py-1 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                      viewMode === 'week'
+                        ? 'bg-primary text-primary-foreground shadow'
+                        : 'text-muted-foreground hover:text-foreground',
+                    ].join(' ')}
+                  >
+                    Week
+                  </button>
+                </div>
+                <Button variant="outline" size="sm" onClick={goToToday}>
+                  Today
+                </Button>
+              </div>
+
+              {viewMode === 'month' ? (
+                <div className="hidden items-center gap-3 sm:flex">
+                  <label
+                    htmlFor="month-select"
+                    className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase"
+                  >
+                    Month
                 </label>
                 <select
                   id="month-select"
@@ -226,7 +457,6 @@ export function CalendarPage() {
                     </option>
                   ))}
                 </select>
-
                   <label
                     htmlFor="year-select"
                     className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase"
@@ -234,21 +464,19 @@ export function CalendarPage() {
                     Year
                   </label>
                   <select
-                  id="year-select"
-                  value={viewYear}
-                  onChange={(event) => setViewYear(Number(event.target.value))}
-                  className="border-input bg-background focus:ring-ring rounded-md border px-4 py-2 text-sm shadow-sm focus:ring-2 focus:outline-none"
-                >
-                  {years.map((year) => (
-                    <option key={year} value={year}>
-                      {useGeezDigits ? toGeezNumeral(year) : year}
-                    </option>
-                  ))}
-                </select>
-                <Button variant="outline" size="sm" onClick={goToToday}>
-                  Today
-                </Button>
-              </div>
+                    id="year-select"
+                    value={viewYear}
+                    onChange={(event) => setViewYear(Number(event.target.value))}
+                    className="border-input bg-background focus:ring-ring rounded-md border px-4 py-2 text-sm shadow-sm focus:ring-2 focus:outline-none"
+                  >
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {useGeezDigits ? toGeezNumeral(year) : year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : null}
 
               <div className="space-y-3">
                 <div className="text-muted-foreground grid grid-cols-7 gap-1 text-center text-xs font-medium tracking-[0.2em] uppercase">
@@ -257,7 +485,7 @@ export function CalendarPage() {
                   ))}
                 </div>
                 <div className="grid grid-cols-7 gap-1 sm:gap-2">
-                  {calendarCells.map(({ date, gregorian, isCurrentMonth }) => {
+                  {visibleCells.map(({ date, gregorian, isCurrentMonth }) => {
                     const isToday = isSameDate(date, today)
                     const isSelected = isSameDate(date, selectedDate)
                     const showGeez = useGeezDigits && date.day > 0
@@ -266,17 +494,8 @@ export function CalendarPage() {
                       Date.UTC(gregorian.year, gregorian.month - 1, gregorian.day),
                     )
                     const gregDay = gregDate.getUTCDate()
-                    const highlightList = isCurrentMonth
-                      ? monthHighlightLookup.get(date.day) ?? []
-                      : []
+                    const highlightList = visibleHighlightLookup.get(createDateKey(date)) ?? []
                     const hasHighlights = highlightList.length > 0
-                    const previewName = hasHighlights
-                      ? `${highlightList[0]?.name}${
-                          highlightList.length > 1
-                            ? ` (+${highlightList.length - 1} more)`
-                            : ''
-                        }`
-                      : undefined
                     const highlightNames = hasHighlights
                       ? highlightList.map((item) => item.name).join(', ')
                       : undefined
@@ -298,7 +517,7 @@ export function CalendarPage() {
                       <button
                         key={`${date.year}-${date.month}-${date.day}`}
                         type="button"
-                        onClick={() => setSelectedDate({ ...date })}
+                        onClick={() => handleSelectDate({ ...date })}
                         className={buttonClasses.filter(Boolean).join(' ')}
                         aria-pressed={isSelected}
                         aria-label={ariaLabel}
@@ -321,12 +540,15 @@ export function CalendarPage() {
                           >
                             {gregDay}
                           </span>
-                          {previewName ? (
+                          {hasHighlights ? (
                             <span
-                              className={isSelected ? 'text-primary-foreground/80' : 'text-primary/80'}
+                              className={
+                                isSelected ? 'text-primary-foreground/80' : 'text-primary/70'
+                              }
+                              aria-hidden
                               title={highlightNames}
                             >
-                              {previewName}
+                              •
                             </span>
                           ) : null}
                         </div>
@@ -341,20 +563,49 @@ export function CalendarPage() {
           <aside className="flex flex-col gap-6">
             {/* Holidays glass card */}
             <div className="border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm">
-              <h3 className="text-foreground text-base font-semibold tracking-tight">Holidays this month</h3>
+              <h3 className="text-foreground text-base font-semibold tracking-tight">
+                {viewMode === 'month' ? 'Holidays this month' : 'Holidays this week'}
+              </h3>
               <div className="mt-4 space-y-3">
-                {monthHighlights.length ? (
-                  monthHighlights.map((highlight) => (
+                {viewMode === 'month' ? (
+                  monthHighlights.length ? (
+                    monthHighlights.map((highlight) => (
+                      <div
+                        key={`${highlight.id}-${highlight.day}`}
+                        className="bg-muted text-foreground flex items-start gap-3 rounded-xl px-3 py-3"
+                      >
+                        <div className="bg-primary text-primary-foreground grid size-10 place-items-center rounded-lg font-bold">
+                          {useGeezDigits ? toGeezNumeral(highlight.day) : highlight.day}
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-semibold leading-tight">{highlight.name}</p>
+                          <p className="text-xs text-muted-foreground leading-tight">{highlight.amharicName}</p>
+                          {highlight.category ? (
+                            <span className="text-[11px] font-medium tracking-wide text-primary/80">
+                              {formatHighlightCategory(highlight.category)}
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-muted-foreground text-sm">No holidays this month</p>
+                  )
+                ) : weekHighlights.length ? (
+                  weekHighlights.map(({ highlight, date }) => (
                     <div
-                      key={`${highlight.id}-${highlight.day}`}
+                      key={`${highlight.id}-${createDateKey(date)}`}
                       className="bg-muted text-foreground flex items-start gap-3 rounded-xl px-3 py-3"
                     >
                       <div className="bg-primary text-primary-foreground grid size-10 place-items-center rounded-lg font-bold">
-                        {useGeezDigits ? toGeezNumeral(highlight.day) : highlight.day}
+                        {useGeezDigits ? toGeezNumeral(date.day) : date.day}
                       </div>
                       <div className="space-y-1">
                         <p className="text-sm font-semibold leading-tight">{highlight.name}</p>
                         <p className="text-xs text-muted-foreground leading-tight">{highlight.amharicName}</p>
+                        <p className="text-xs text-muted-foreground leading-tight">
+                          {formatEthiopianDate(date, useGeezDigits)}
+                        </p>
                         {highlight.category ? (
                           <span className="text-[11px] font-medium tracking-wide text-primary/80">
                             {formatHighlightCategory(highlight.category)}
@@ -364,13 +615,20 @@ export function CalendarPage() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-muted-foreground text-sm">No holidays this month</p>
+                  <p className="text-muted-foreground text-sm">No holidays this week</p>
                 )}
               </div>
             </div>
 
             {/* Selected date glass card */}
-            <div className="border-border/60 bg-white/60 supports-[backdrop-filter]:bg-white/40 backdrop-blur-lg rounded-2xl border p-6 shadow-sm">
+            <div
+              ref={selectedCardRef}
+              tabIndex={-1}
+              className={[
+                'border-border/60 bg-white/60 supports-[backdrop-filter]:bg-white/40 backdrop-blur-lg rounded-2xl border p-6 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary',
+                shouldFlashCard ? 'ring-2 ring-primary ring-offset-2' : '',
+              ].join(' ')}
+            >
               <p className="text-muted-foreground text-xs font-semibold tracking-[0.35em] uppercase">
                 Selected date
               </p>
