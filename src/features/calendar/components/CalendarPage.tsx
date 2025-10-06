@@ -345,7 +345,7 @@ export function CalendarPage() {
             </div>
             <div className="min-w-[220px]">
               <Select value={useGeezDigits ? 'geez' : 'arabic'} onValueChange={(v) => setUseGeezDigits(v === 'geez')}>
-                <SelectTrigger className="bg-white/80 backdrop-blur-sm">
+                <SelectTrigger className="bg-muted/80 backdrop-blur-sm">
                   <SelectValue placeholder="Use Geeʼz Numbers" />
                 </SelectTrigger>
                 <SelectContent>
