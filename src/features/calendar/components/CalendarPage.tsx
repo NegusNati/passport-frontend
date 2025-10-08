@@ -322,15 +322,8 @@ export function CalendarPage() {
   }
 
   return (
-    <section className="relative py-14 sm:py-20"
-    style={{
-      backgroundImage: `url("${shaderUrl}")`,
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: 'cover',
-      backgroundPosition: 'bottom',
-      width: '100%'
-    
-    }}
+    <section className="relative py-14 sm:py-20 "
+   
     >
       <div className=" absolute inset-0" aria-hidden />
       <div className="teal-blob-left left-[-16rem] top-[-10rem] h-[24rem] w-[28rem] md:left-[-20rem] md:top-[-12rem]" aria-hidden />

@@ -40,7 +40,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             backgroundSize: 'cover',
             backgroundPosition: 'top',
             width: '100%',
-            height: '720px',
+            height: '1120px',
 
           }}
         />
