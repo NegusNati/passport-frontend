@@ -21,7 +21,6 @@ import type {
 import { ArticleCard } from './ArticleCard'
 import { ArticleFilters } from './ArticleFilters'
 import { ArticlePagination } from './ArticlePagination'
-import { ArticleSearchForm } from './ArticleSearchForm'
 
 export function ArticlesPage() {
   // const navigate = useNavigate({ from: '/articles' })
@@ -95,12 +94,12 @@ export function ArticlesPage() {
         path="/articles"
         extraLinks={getFeedLinks()}
       />
-
+{/* 
       <ArticleSearchForm
         onSearch={handleSearch}
         initialQuery={searchQuery}
         onQueryChange={(v) => setSearchQuery(v)}
-      />
+      /> */}
 
       <section className="border-border border-b py-6">
         <Container>

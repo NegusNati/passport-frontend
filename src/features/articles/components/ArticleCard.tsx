@@ -52,14 +52,15 @@ export function ArticleCard({ article, onClick }: ArticleCardProps) {
         </div>
       </div>
 
-      <CardHeader className="pb-2">
-        <h3 className="text-foreground group-hover:text-muted-foreground line-clamp-2 text-lg leading-tight font-semibold">
+      <CardHeader className="p-0 m-0">
+        <span className="text-muted-foreground text-xs">{article.publishedDate}</span>
+        <h3 className="text-foreground group-hover:text-muted-foreground line-clamp-2 text-md leading-tight font-semibold">
           {article.title}
         </h3>
       </CardHeader>
 
       <CardContent className="pt-0">
-        <p className="text-muted-foreground mb-4 line-clamp-2 text-sm leading-relaxed">
+        <p className="text-muted-foreground mb-2 line-clamp-2 text-sm leading-relaxed">
           {article.excerpt}
         </p>
 
@@ -69,7 +70,6 @@ export function ArticleCard({ article, onClick }: ArticleCardProps) {
             <span>•</span>
             <span>{article.readTime} min read</span>
           </div>
-          <span>{article.publishedDate}</span>
         </div>
 
         {/* Tags */}
