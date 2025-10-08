@@ -25,7 +25,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
       <Container className="relative z-10">
         <div className="mx-auto max-w-4xl">
           {/* Passport Document */}
-          <div className="relative overflow-hidden rounded-lg border-2 border-blue-400 p-8 shadow-2xl   backdrop-blur-md md:p-12">
+          <div className="relative overflow-hidden rounded-lg border-2 border-primary p-8 shadow-2xl   backdrop-blur-md md:p-12">
             {/* Ethiopian Seal Background - Prominent Yellow Star */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-20">
               <img
@@ -61,7 +61,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
 
                 <div>
                   <div className="text-xs font-medium text-gray-600">Location</div>
-                  <div className="mt-0.5 flex items-center border-b border-dotted border-gray-400 pb-1">
+                  <div className="mt-0.5 flex items-center pb-1">
                     <div className="text-lg font-semibold text-gray-900">{passport.city}</div>
                   </div>
                 </div>
