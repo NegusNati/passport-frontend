@@ -15,6 +15,21 @@ export const adminKeys = {
     list: (paramsHash = '{}') => [...adminKeys.articles.all(), 'list', paramsHash] as const,
     detail: (slug: string) => [...adminKeys.articles.all(), 'detail', slug] as const,
   },
+  advertisementRequests: {
+    all: () => [...adminKeys.all, 'advertisement-requests'] as const,
+    list: (paramsHash = '{}') =>
+      [...adminKeys.advertisementRequests.all(), 'list', paramsHash] as const,
+    detail: (id: string | number) =>
+      [...adminKeys.advertisementRequests.all(), 'detail', String(id)] as const,
+  },
+  advertisements: {
+    all: () => [...adminKeys.all, 'advertisements'] as const,
+    list: (paramsHash = '{}') =>
+      [...adminKeys.advertisements.all(), 'list', paramsHash] as const,
+    detail: (id: string | number) =>
+      [...adminKeys.advertisements.all(), 'detail', String(id)] as const,
+    stats: () => [...adminKeys.advertisements.all(), 'stats'] as const,
+  },
 }
 
 export function hashParams(value: Record<string, unknown> | undefined | null) {

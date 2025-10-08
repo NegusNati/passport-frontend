@@ -1,11 +1,19 @@
 import { type HTMLAttributes } from 'react'
 
 import { Button } from '@/shared/ui/button'
+import { useAdQuery } from '@/features/advertisements/api/get-ad'
+import { useAdTracking } from '@/features/advertisements/hooks/useAdTracking'
 
 interface AdSlotProps extends HTMLAttributes<HTMLDivElement> {
   label?: string
   orientation?: 'horizontal' | 'vertical'
   preset?: 'sponsored'
+}
+
+interface DynamicAdSlotProps extends HTMLAttributes<HTMLDivElement> {
+  placement: string
+  orientation?: 'horizontal' | 'vertical'
+  fallback?: React.ReactNode
 }
 
 const orientationClasses = {
@@ -69,6 +77,81 @@ export function AdSlot({
   return (
     <div className={baseClasses.join(' ')} {...props}>
       {content}
+    </div>
+  )
+}
+
+// Dynamic ad slot that fetches and displays real ads
+export function DynamicAdSlot({
+  placement,
+  orientation = 'horizontal',
+  className = '',
+  fallback,
+  ...props
+}: DynamicAdSlotProps) {
+  const { data: ad, isLoading } = useAdQuery(placement)
+  const { handleClick } = useAdTracking(ad?.id, placement)
+
+  // Show loading skeleton
+  if (isLoading) {
+    return (
+      <div
+        className={[
+          'relative flex animate-pulse items-center justify-center border border-dashed border-border bg-muted',
+          orientationClasses[orientation],
+          className,
+        ].join(' ')}
+        {...props}
+      >
+        <span className="text-muted-foreground text-sm">Loading...</span>
+      </div>
+    )
+  }
+
+  // No ad available - show fallback or sponsored content
+  if (!ad) {
+    if (fallback) {
+      return <>{fallback}</>
+    }
+    return <AdSlot preset="sponsored" orientation={orientation} className={className} {...props} />
+  }
+
+  // Determine which asset to show based on screen size
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+
+  const handleAdClick = () => {
+    handleClick()
+    window.open(ad.client_link, '_blank', 'noopener,noreferrer')
+  }
+
+  return (
+    <div
+      className={[
+        'relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-border bg-background shadow-sm transition-shadow hover:shadow-md',
+        orientationClasses[orientation],
+        className,
+      ].join(' ')}
+      onClick={handleAdClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          handleAdClick()
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-label="Advertisement"
+      {...props}
+    >
+      <img
+        src={isMobile ? ad.mobile_asset_url : ad.desktop_asset_url}
+        alt="Advertisement"
+        className="h-full w-full object-cover"
+        loading="lazy"
+      />
+      <span className="bg-muted/80 text-muted-foreground absolute right-2 top-2 rounded px-2 py-1 text-xs font-medium">
+        Ad
+      </span>
     </div>
   )
 }

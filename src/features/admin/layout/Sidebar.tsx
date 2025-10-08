@@ -2,6 +2,8 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import {
   FileText,
   Home,
+  ImageIcon,
+  Megaphone,
   Newspaper,
   UploadCloud,
   Users,
@@ -14,6 +16,8 @@ const navItems = [
   { label: 'Users', to: '/admin/users', icon: Users },
   { label: 'Passports', to: '/admin/passports', icon: FileText },
   { label: 'Articles', to: '/admin/articles', icon: Newspaper },
+  { label: 'Ad Requests', to: '/admin/advertisement-requests', icon: Megaphone },
+  { label: 'Advertisements', to: '/admin/advertisements', icon: ImageIcon },
   { label: 'PDF import', to: '/admin/pdf-import', icon: UploadCloud },
 ] as const
 

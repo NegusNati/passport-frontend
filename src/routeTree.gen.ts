@@ -14,6 +14,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as AdvertisementRequestsRouteImport } from './routes/advertisement-requests'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PassportsIndexRouteImport } from './routes/passports/index'
@@ -25,12 +26,19 @@ import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminPdfImportRouteImport } from './routes/admin/pdf-import'
 import { Route as AdminPassportsRouteImport } from './routes/admin/passports'
 import { Route as AdminArticlesRouteImport } from './routes/admin/articles'
+import { Route as AdminAdvertisementsRouteImport } from './routes/admin/advertisements'
+import { Route as AdminAdvertisementRequestsRouteImport } from './routes/admin/advertisement-requests'
 import { Route as AdminArticlesIndexRouteImport } from './routes/admin/articles.index'
+import { Route as AdminAdvertisementsIndexRouteImport } from './routes/admin/advertisements.index'
+import { Route as AdminAdvertisementRequestsIndexRouteImport } from './routes/admin/advertisement-requests.index'
 import { Route as AdminUsersUserIdRouteImport } from './routes/admin/users.$userId'
 import { Route as AdminPassportsNewRouteImport } from './routes/admin/passports.new'
 import { Route as AdminHorizonDashboardRouteImport } from './routes/admin/horizon.dashboard'
 import { Route as AdminArticlesNewRouteImport } from './routes/admin/articles.new'
 import { Route as AdminArticlesSlugRouteImport } from './routes/admin/articles.$slug'
+import { Route as AdminAdvertisementsStatsRouteImport } from './routes/admin/advertisements.stats'
+import { Route as AdminAdvertisementsNewRouteImport } from './routes/admin/advertisements.new'
+import { Route as AdminAdvertisementsIdRouteImport } from './routes/admin/advertisements.$id'
 
 const TestRoute = TestRouteImport.update({
   id: '/test',
@@ -55,6 +63,11 @@ const LoginRoute = LoginRouteImport.update({
 const CalendarRoute = CalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdvertisementRequestsRoute = AdvertisementRequestsRouteImport.update({
+  id: '/advertisement-requests',
+  path: '/advertisement-requests',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -112,11 +125,34 @@ const AdminArticlesRoute = AdminArticlesRouteImport.update({
   path: '/articles',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAdvertisementsRoute = AdminAdvertisementsRouteImport.update({
+  id: '/advertisements',
+  path: '/advertisements',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdvertisementRequestsRoute =
+  AdminAdvertisementRequestsRouteImport.update({
+    id: '/advertisement-requests',
+    path: '/advertisement-requests',
+    getParentRoute: () => AdminRoute,
+  } as any)
 const AdminArticlesIndexRoute = AdminArticlesIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminArticlesRoute,
 } as any)
+const AdminAdvertisementsIndexRoute =
+  AdminAdvertisementsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AdminAdvertisementsRoute,
+  } as any)
+const AdminAdvertisementRequestsIndexRoute =
+  AdminAdvertisementRequestsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AdminAdvertisementRequestsRoute,
+  } as any)
 const AdminUsersUserIdRoute = AdminUsersUserIdRouteImport.update({
   id: '/$userId',
   path: '/$userId',
@@ -142,15 +178,34 @@ const AdminArticlesSlugRoute = AdminArticlesSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => AdminArticlesRoute,
 } as any)
+const AdminAdvertisementsStatsRoute =
+  AdminAdvertisementsStatsRouteImport.update({
+    id: '/stats',
+    path: '/stats',
+    getParentRoute: () => AdminAdvertisementsRoute,
+  } as any)
+const AdminAdvertisementsNewRoute = AdminAdvertisementsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AdminAdvertisementsRoute,
+} as any)
+const AdminAdvertisementsIdRoute = AdminAdvertisementsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminAdvertisementsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/advertisement-requests': typeof AdvertisementRequestsRoute
   '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/test': typeof TestRoute
+  '/admin/advertisement-requests': typeof AdminAdvertisementRequestsRouteWithChildren
+  '/admin/advertisements': typeof AdminAdvertisementsRouteWithChildren
   '/admin/articles': typeof AdminArticlesRouteWithChildren
   '/admin/passports': typeof AdminPassportsRouteWithChildren
   '/admin/pdf-import': typeof AdminPdfImportRoute
@@ -160,15 +215,21 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/articles': typeof ArticlesIndexRoute
   '/passports': typeof PassportsIndexRoute
+  '/admin/advertisements/$id': typeof AdminAdvertisementsIdRoute
+  '/admin/advertisements/new': typeof AdminAdvertisementsNewRoute
+  '/admin/advertisements/stats': typeof AdminAdvertisementsStatsRoute
   '/admin/articles/$slug': typeof AdminArticlesSlugRoute
   '/admin/articles/new': typeof AdminArticlesNewRoute
   '/admin/horizon/dashboard': typeof AdminHorizonDashboardRoute
   '/admin/passports/new': typeof AdminPassportsNewRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/admin/advertisement-requests/': typeof AdminAdvertisementRequestsIndexRoute
+  '/admin/advertisements/': typeof AdminAdvertisementsIndexRoute
   '/admin/articles/': typeof AdminArticlesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/advertisement-requests': typeof AdvertisementRequestsRoute
   '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
@@ -182,22 +243,30 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/articles': typeof ArticlesIndexRoute
   '/passports': typeof PassportsIndexRoute
+  '/admin/advertisements/$id': typeof AdminAdvertisementsIdRoute
+  '/admin/advertisements/new': typeof AdminAdvertisementsNewRoute
+  '/admin/advertisements/stats': typeof AdminAdvertisementsStatsRoute
   '/admin/articles/$slug': typeof AdminArticlesSlugRoute
   '/admin/articles/new': typeof AdminArticlesNewRoute
   '/admin/horizon/dashboard': typeof AdminHorizonDashboardRoute
   '/admin/passports/new': typeof AdminPassportsNewRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/admin/advertisement-requests': typeof AdminAdvertisementRequestsIndexRoute
+  '/admin/advertisements': typeof AdminAdvertisementsIndexRoute
   '/admin/articles': typeof AdminArticlesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/advertisement-requests': typeof AdvertisementRequestsRoute
   '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/test': typeof TestRoute
+  '/admin/advertisement-requests': typeof AdminAdvertisementRequestsRouteWithChildren
+  '/admin/advertisements': typeof AdminAdvertisementsRouteWithChildren
   '/admin/articles': typeof AdminArticlesRouteWithChildren
   '/admin/passports': typeof AdminPassportsRouteWithChildren
   '/admin/pdf-import': typeof AdminPdfImportRoute
@@ -207,11 +276,16 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/articles/': typeof ArticlesIndexRoute
   '/passports/': typeof PassportsIndexRoute
+  '/admin/advertisements/$id': typeof AdminAdvertisementsIdRoute
+  '/admin/advertisements/new': typeof AdminAdvertisementsNewRoute
+  '/admin/advertisements/stats': typeof AdminAdvertisementsStatsRoute
   '/admin/articles/$slug': typeof AdminArticlesSlugRoute
   '/admin/articles/new': typeof AdminArticlesNewRoute
   '/admin/horizon/dashboard': typeof AdminHorizonDashboardRoute
   '/admin/passports/new': typeof AdminPassportsNewRoute
   '/admin/users/$userId': typeof AdminUsersUserIdRoute
+  '/admin/advertisement-requests/': typeof AdminAdvertisementRequestsIndexRoute
+  '/admin/advertisements/': typeof AdminAdvertisementsIndexRoute
   '/admin/articles/': typeof AdminArticlesIndexRoute
 }
 export interface FileRouteTypes {
@@ -219,11 +293,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/advertisement-requests'
     | '/calendar'
     | '/login'
     | '/profile'
     | '/register'
     | '/test'
+    | '/admin/advertisement-requests'
+    | '/admin/advertisements'
     | '/admin/articles'
     | '/admin/passports'
     | '/admin/pdf-import'
@@ -233,15 +310,21 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/articles'
     | '/passports'
+    | '/admin/advertisements/$id'
+    | '/admin/advertisements/new'
+    | '/admin/advertisements/stats'
     | '/admin/articles/$slug'
     | '/admin/articles/new'
     | '/admin/horizon/dashboard'
     | '/admin/passports/new'
     | '/admin/users/$userId'
+    | '/admin/advertisement-requests/'
+    | '/admin/advertisements/'
     | '/admin/articles/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/advertisement-requests'
     | '/calendar'
     | '/login'
     | '/profile'
@@ -255,21 +338,29 @@ export interface FileRouteTypes {
     | '/admin'
     | '/articles'
     | '/passports'
+    | '/admin/advertisements/$id'
+    | '/admin/advertisements/new'
+    | '/admin/advertisements/stats'
     | '/admin/articles/$slug'
     | '/admin/articles/new'
     | '/admin/horizon/dashboard'
     | '/admin/passports/new'
     | '/admin/users/$userId'
+    | '/admin/advertisement-requests'
+    | '/admin/advertisements'
     | '/admin/articles'
   id:
     | '__root__'
     | '/'
     | '/admin'
+    | '/advertisement-requests'
     | '/calendar'
     | '/login'
     | '/profile'
     | '/register'
     | '/test'
+    | '/admin/advertisement-requests'
+    | '/admin/advertisements'
     | '/admin/articles'
     | '/admin/passports'
     | '/admin/pdf-import'
@@ -279,17 +370,23 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/articles/'
     | '/passports/'
+    | '/admin/advertisements/$id'
+    | '/admin/advertisements/new'
+    | '/admin/advertisements/stats'
     | '/admin/articles/$slug'
     | '/admin/articles/new'
     | '/admin/horizon/dashboard'
     | '/admin/passports/new'
     | '/admin/users/$userId'
+    | '/admin/advertisement-requests/'
+    | '/admin/advertisements/'
     | '/admin/articles/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  AdvertisementRequestsRoute: typeof AdvertisementRequestsRoute
   CalendarRoute: typeof CalendarRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
@@ -336,6 +433,13 @@ declare module '@tanstack/react-router' {
       path: '/calendar'
       fullPath: '/calendar'
       preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/advertisement-requests': {
+      id: '/advertisement-requests'
+      path: '/advertisement-requests'
+      fullPath: '/advertisement-requests'
+      preLoaderRoute: typeof AdvertisementRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -415,12 +519,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminArticlesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/advertisements': {
+      id: '/admin/advertisements'
+      path: '/advertisements'
+      fullPath: '/admin/advertisements'
+      preLoaderRoute: typeof AdminAdvertisementsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/advertisement-requests': {
+      id: '/admin/advertisement-requests'
+      path: '/advertisement-requests'
+      fullPath: '/admin/advertisement-requests'
+      preLoaderRoute: typeof AdminAdvertisementRequestsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/articles/': {
       id: '/admin/articles/'
       path: '/'
       fullPath: '/admin/articles/'
       preLoaderRoute: typeof AdminArticlesIndexRouteImport
       parentRoute: typeof AdminArticlesRoute
+    }
+    '/admin/advertisements/': {
+      id: '/admin/advertisements/'
+      path: '/'
+      fullPath: '/admin/advertisements/'
+      preLoaderRoute: typeof AdminAdvertisementsIndexRouteImport
+      parentRoute: typeof AdminAdvertisementsRoute
+    }
+    '/admin/advertisement-requests/': {
+      id: '/admin/advertisement-requests/'
+      path: '/'
+      fullPath: '/admin/advertisement-requests/'
+      preLoaderRoute: typeof AdminAdvertisementRequestsIndexRouteImport
+      parentRoute: typeof AdminAdvertisementRequestsRoute
     }
     '/admin/users/$userId': {
       id: '/admin/users/$userId'
@@ -457,8 +589,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminArticlesSlugRouteImport
       parentRoute: typeof AdminArticlesRoute
     }
+    '/admin/advertisements/stats': {
+      id: '/admin/advertisements/stats'
+      path: '/stats'
+      fullPath: '/admin/advertisements/stats'
+      preLoaderRoute: typeof AdminAdvertisementsStatsRouteImport
+      parentRoute: typeof AdminAdvertisementsRoute
+    }
+    '/admin/advertisements/new': {
+      id: '/admin/advertisements/new'
+      path: '/new'
+      fullPath: '/admin/advertisements/new'
+      preLoaderRoute: typeof AdminAdvertisementsNewRouteImport
+      parentRoute: typeof AdminAdvertisementsRoute
+    }
+    '/admin/advertisements/$id': {
+      id: '/admin/advertisements/$id'
+      path: '/$id'
+      fullPath: '/admin/advertisements/$id'
+      preLoaderRoute: typeof AdminAdvertisementsIdRouteImport
+      parentRoute: typeof AdminAdvertisementsRoute
+    }
   }
 }
+
+interface AdminAdvertisementRequestsRouteChildren {
+  AdminAdvertisementRequestsIndexRoute: typeof AdminAdvertisementRequestsIndexRoute
+}
+
+const AdminAdvertisementRequestsRouteChildren: AdminAdvertisementRequestsRouteChildren =
+  {
+    AdminAdvertisementRequestsIndexRoute: AdminAdvertisementRequestsIndexRoute,
+  }
+
+const AdminAdvertisementRequestsRouteWithChildren =
+  AdminAdvertisementRequestsRoute._addFileChildren(
+    AdminAdvertisementRequestsRouteChildren,
+  )
+
+interface AdminAdvertisementsRouteChildren {
+  AdminAdvertisementsIdRoute: typeof AdminAdvertisementsIdRoute
+  AdminAdvertisementsNewRoute: typeof AdminAdvertisementsNewRoute
+  AdminAdvertisementsStatsRoute: typeof AdminAdvertisementsStatsRoute
+  AdminAdvertisementsIndexRoute: typeof AdminAdvertisementsIndexRoute
+}
+
+const AdminAdvertisementsRouteChildren: AdminAdvertisementsRouteChildren = {
+  AdminAdvertisementsIdRoute: AdminAdvertisementsIdRoute,
+  AdminAdvertisementsNewRoute: AdminAdvertisementsNewRoute,
+  AdminAdvertisementsStatsRoute: AdminAdvertisementsStatsRoute,
+  AdminAdvertisementsIndexRoute: AdminAdvertisementsIndexRoute,
+}
+
+const AdminAdvertisementsRouteWithChildren =
+  AdminAdvertisementsRoute._addFileChildren(AdminAdvertisementsRouteChildren)
 
 interface AdminArticlesRouteChildren {
   AdminArticlesSlugRoute: typeof AdminArticlesSlugRoute
@@ -501,6 +685,8 @@ const AdminUsersRouteWithChildren = AdminUsersRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminAdvertisementRequestsRoute: typeof AdminAdvertisementRequestsRouteWithChildren
+  AdminAdvertisementsRoute: typeof AdminAdvertisementsRouteWithChildren
   AdminArticlesRoute: typeof AdminArticlesRouteWithChildren
   AdminPassportsRoute: typeof AdminPassportsRouteWithChildren
   AdminPdfImportRoute: typeof AdminPdfImportRoute
@@ -510,6 +696,8 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdvertisementRequestsRoute: AdminAdvertisementRequestsRouteWithChildren,
+  AdminAdvertisementsRoute: AdminAdvertisementsRouteWithChildren,
   AdminArticlesRoute: AdminArticlesRouteWithChildren,
   AdminPassportsRoute: AdminPassportsRouteWithChildren,
   AdminPdfImportRoute: AdminPdfImportRoute,
@@ -523,6 +711,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  AdvertisementRequestsRoute: AdvertisementRequestsRoute,
   CalendarRoute: CalendarRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
