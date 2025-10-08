@@ -15,8 +15,9 @@ const BaseAdvertisementSchema = z.object({
   payment_status: PaymentStatus,
   payment_amount: z.string(), // Send as string to match API expectation
   // Optional fields
+  advertisement_request_id: z.number().int().positive().optional(),
   ad_desc: z.string().optional(),
-  ad_excerpt: z.string().optional(),
+  ad_excerpt: z.string().min(1, 'Ad excerpt is required'),
 })
 
 // Create payload (includes files)

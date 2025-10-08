@@ -4,8 +4,14 @@ import { useState } from 'react'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
+import { Textarea } from '@/shared/ui/textarea'
 
-import type { Advertisement } from '../schemas/advertisement'
+import type {
+  AdStatus,
+  Advertisement,
+  PackageType,
+  PaymentStatus,
+} from '../schemas/advertisement'
 import type {
   AdvertisementCreatePayload,
   AdvertisementUpdatePayload,
@@ -17,11 +23,14 @@ type FormValues = {
   ad_title: string
   client_name: string
   ad_client_link: string
-  status: string
-  package_type: string
+  advertisement_request_id: string
+  ad_desc: string
+  ad_excerpt: string
+  status: AdStatus
+  package_type: PackageType
   ad_published_date: string
   ad_ending_date: string
-  payment_status: string
+  payment_status: PaymentStatus
   payment_amount: string
   ad_desktop_asset_url: string
   ad_mobile_asset_url: string
@@ -52,6 +61,11 @@ export function AdminAdvertisementForm({
       ad_title: advertisement?.ad_title ?? '',
       client_name: advertisement?.client_name ?? '',
       ad_client_link: advertisement?.ad_client_link ?? '',
+      advertisement_request_id: advertisement?.advertisement_request_id
+        ? String(advertisement.advertisement_request_id)
+        : '',
+      ad_desc: advertisement?.ad_desc ?? '',
+      ad_excerpt: advertisement?.ad_excerpt ?? '',
       status: advertisement?.status ?? 'active',
       package_type: advertisement?.package_type ?? 'weekly',
       ad_published_date: advertisement?.ad_published_date ?? '',
@@ -60,8 +74,8 @@ export function AdminAdvertisementForm({
       payment_amount: advertisement?.payment_amount ?? '0',
       ad_desktop_asset_url: advertisement?.ad_desktop_asset ?? '',
       ad_mobile_asset_url: advertisement?.ad_mobile_asset ?? '',
-      remove_ad_desktop_asset: false,
-      remove_ad_mobile_asset: false,
+      remove_ad_desktop_asset: false as boolean,
+      remove_ad_mobile_asset: false as boolean,
     } satisfies FormValues,
     onSubmit: async ({ value }) => {
       setFormError(null)
@@ -83,17 +97,38 @@ export function AdminAdvertisementForm({
         setFormError('Published date is required')
         return
       }
+      if (!value.ad_excerpt.trim()) {
+        setFormError('Ad excerpt is required')
+        return
+      }
+
+      const advertisementRequestIdInput = value.advertisement_request_id.trim()
+      let advertisement_request_id: number | undefined
+      if (advertisementRequestIdInput) {
+        const parsedId = Number(advertisementRequestIdInput)
+        if (!Number.isInteger(parsedId) || parsedId <= 0) {
+          setFormError('Advertisement request ID must be a positive number')
+          return
+        }
+        advertisement_request_id = parsedId
+      }
+
+      const adDesc = value.ad_desc.trim()
+      const adExcerpt = value.ad_excerpt.trim()
 
       const payload: AdvertisementCreatePayload | AdvertisementUpdatePayload = {
         ad_slot_number: value.ad_slot_number.trim(),
         ad_title: value.ad_title.trim(),
         client_name: value.client_name.trim(),
         ad_client_link: value.ad_client_link.trim() || undefined,
-        status: value.status as any,
-        package_type: value.package_type as any,
+        advertisement_request_id,
+        ad_desc: adDesc || undefined,
+        ad_excerpt: adExcerpt,
+        status: value.status,
+        package_type: value.package_type,
         ad_published_date: value.ad_published_date,
         ad_ending_date: value.ad_ending_date || null,
-        payment_status: value.payment_status as any,
+        payment_status: value.payment_status,
         payment_amount: value.payment_amount, // Send as string
         ad_desktop_asset: desktopFile ?? undefined,
         ad_mobile_asset: mobileFile ?? undefined,
@@ -159,6 +194,26 @@ export function AdminAdvertisementForm({
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
+          {/* Advertisement Request ID */}
+          <form.Field name="advertisement_request_id">
+            {(field) => (
+              <div className="space-y-2">
+                <Label htmlFor="advertisement_request_id">Advertisement Request ID (Optional)</Label>
+                <Input
+                  id="advertisement_request_id"
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Enter request ID"
+                />
+              </div>
+            )}
+          </form.Field>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
           {/* Ad Slot Number */}
           <form.Field name="ad_slot_number">
             {(field) => (
@@ -196,6 +251,41 @@ export function AdminAdvertisementForm({
           </form.Field>
         </div>
 
+        <div className="space-y-4">
+          {/* Ad Excerpt */}
+          <form.Field name="ad_excerpt">
+            {(field) => (
+              <div className="space-y-2">
+                <Label htmlFor="ad_excerpt">
+                  Ad Excerpt <span className="text-destructive">*</span>
+                </Label>
+                <Textarea
+                  id="ad_excerpt"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Short summary shown with the ad"
+                  required
+                />
+              </div>
+            )}
+          </form.Field>
+
+          {/* Ad Description */}
+          <form.Field name="ad_desc">
+            {(field) => (
+              <div className="space-y-2">
+                <Label htmlFor="ad_desc">Ad Description (Optional)</Label>
+                <Textarea
+                  id="ad_desc"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Detailed description for internal reference"
+                />
+              </div>
+            )}
+          </form.Field>
+        </div>
+
         <div className="grid gap-4 sm:grid-cols-2">
           {/* Package Type */}
           <form.Field name="package_type">
@@ -208,7 +298,7 @@ export function AdminAdvertisementForm({
                   id="package_type"
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value as any)}
+                  onChange={(e) => field.handleChange(e.target.value as PackageType)}
                   required
                 >
                   <option value="weekly">Weekly</option>
@@ -230,7 +320,7 @@ export function AdminAdvertisementForm({
                   id="payment_status"
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value as any)}
+                  onChange={(e) => field.handleChange(e.target.value as PaymentStatus)}
                   required
                 >
                   <option value="pending">Pending</option>
@@ -314,7 +404,7 @@ export function AdminAdvertisementForm({
                   id="status"
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value as any)}
+                  onChange={(e) => field.handleChange(e.target.value as AdStatus)}
                   required
                 >
                   <option value="active">Active</option>
@@ -341,7 +431,7 @@ export function AdminAdvertisementForm({
                 onFileChange={setDesktopFile}
                 onRemoveExisting={() => {
                   field.handleChange('')
-                  form.setFieldValue('remove_ad_desktop_asset', true as any)
+                  form.setFieldValue('remove_ad_desktop_asset', true)
                 }}
                 accept="image/*"
               />
@@ -358,7 +448,7 @@ export function AdminAdvertisementForm({
                 onFileChange={setMobileFile}
                 onRemoveExisting={() => {
                   field.handleChange('')
-                  form.setFieldValue('remove_ad_mobile_asset', true as any)
+                  form.setFieldValue('remove_ad_mobile_asset', true)
                 }}
                 accept="image/*"
               />
