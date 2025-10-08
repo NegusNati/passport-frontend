@@ -153,8 +153,8 @@ export function ProfilePage({ initialUser, onSignedOut }: ProfilePageProps) {
             onClick={() => logoutMutation.mutate()}
             disabled={logoutMutation.isPending}
           >
-            <LogOut className="h-4 w-4" aria-hidden="true" />
-            {logoutMutation.isPending ? 'Signing out…' : 'Sign out' }
+          
+            {logoutMutation.isPending ? 'Signing out…' : <div className='flex flex-row items-center gap-2 '>  <LogOut className="h-4 w-4" aria-hidden="true" /> Sign out </div>}
           </Button>
           {logoutMutation.isError ? (
             <p className="text-sm text-destructive">
@@ -176,4 +176,4 @@ export function ProfilePage({ initialUser, onSignedOut }: ProfilePageProps) {
   )
 }
 
-export default ProfilePage
+
