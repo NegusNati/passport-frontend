@@ -4,7 +4,6 @@ import type { Highlight } from 'negus-ethiopic-gregorian/highlights'
 import { getHighlightsForDay, getHighlightsForMonth } from 'negus-ethiopic-gregorian/highlights'
 import * as React from 'react'
 
-import shaderUrl from '@/assets/landingImages/shader_bg.svg?url'
 import { AdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
@@ -685,7 +684,10 @@ export function CalendarPage() {
 
         <AdSlot orientation="horizontal" className="min-h-[12rem] rounded-2xl bg-secondary supports-[backdrop-filter]:bg-secondary backdrop-blur-lg " preset="sponsored" />
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
-          <section className="border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm">
+          <section
+            id="geez-numbers"
+            className="border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm"
+          >
             <div className="flex flex-col gap-6 p-6 sm:p-8">
               <header className="space-y-2">
                 <h2 className="text-2xl font-semibold tracking-tight">Gee&apos;z Numbering System</h2>

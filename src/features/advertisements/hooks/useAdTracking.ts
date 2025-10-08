@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react'
 
-import { trackImpression } from '../api/track-impression'
 import { trackClick } from '../api/track-click'
+import { trackImpression } from '../api/track-impression'
 
 export function useAdTracking(adId: number | undefined, placement: string) {
   const impressionTracked = useRef(false)

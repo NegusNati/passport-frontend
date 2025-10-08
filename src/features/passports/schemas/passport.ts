@@ -42,6 +42,7 @@ export type PassportSearchFilters = z.infer<typeof PassportSearchFilters>
 export const Passport = z.object({
   id: z.string(),
   name: z.string(),
+  firstName: z.string().optional(),
   date: z.string(),
   requestNumber: z.string(),
   status: z.enum(['pending', 'processing', 'ready', 'completed']).default('pending'),

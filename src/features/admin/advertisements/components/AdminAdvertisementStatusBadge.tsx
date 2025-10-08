@@ -1,4 +1,5 @@
 import { Badge } from '@/shared/ui/badge'
+
 import type { AdStatus } from '../schemas/advertisement'
 
 type StatusBadgeProps = {

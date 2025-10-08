@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import { useCreateAdminArticleMutation } from '@/features/admin/articles/api/create-article'
-import type { AdminArticleCreatePayload, AdminArticleUpdatePayload } from '@/features/admin/articles/schemas/create'
 import { ArticleForm } from '@/features/admin/articles/components/ArticleForm'
+import type { AdminArticleCreatePayload, AdminArticleUpdatePayload } from '@/features/admin/articles/schemas/create'
 
 export const Route = createFileRoute('/admin/articles/new')({
   component: AdminArticleCreatePage,

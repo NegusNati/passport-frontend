@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react'
 import type { Table as TanStackTable } from '@tanstack/react-table'
-
-import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
-import { Input } from '@/shared/ui/input'
-import { Button } from '@/shared/ui/button'
 import { X } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 import { DataTableFacetedFilter } from '@/features/table/DataTableFacetedFilter'
 import { DataTableViewOptions } from '@/features/table/DataTableViewOptions'
+import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
+import { Button } from '@/shared/ui/button'
+import { Input } from '@/shared/ui/input'
 
 type ToolbarProps<TData> = {
   table: TanStackTable<TData>

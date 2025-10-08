@@ -47,7 +47,7 @@ function AdvertisementRequestPage() {
                   Advertisement Request
                 </h1>
                 <p className="text-muted-foreground text-lg">
-                  Submit your advertisement inquiry and we'll contact you shortly
+                  Submit your advertisement inquiry and we&apos;ll contact you shortly
                 </p>
               </div>
 

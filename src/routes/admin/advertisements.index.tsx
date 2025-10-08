@@ -3,9 +3,9 @@ import { Plus } from 'lucide-react'
 import { useState } from 'react'
 
 import {
+  type AdvertisementsSearch,
   useAdvertisementsQuery,
   useDeleteAdvertisementMutation,
-  type AdvertisementsSearch,
 } from '@/features/admin/advertisements'
 import { AdminAdvertisementsTable } from '@/features/admin/advertisements/components/AdminAdvertisementsTable'
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'

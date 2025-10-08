@@ -2,8 +2,8 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import {
   useAdminAdvertisementRequestsQuery,
-  useUpdateAdminAdvertisementRequestMutation,
   useDeleteAdminAdvertisementRequestMutation,
+  useUpdateAdminAdvertisementRequestMutation,
 } from '@/features/admin/advertisement-requests'
 import { AdminRequestsTable } from '@/features/admin/advertisement-requests/components/AdminRequestsTable'
 import {

@@ -1,8 +1,8 @@
 import { type HTMLAttributes } from 'react'
 
-import { Button } from '@/shared/ui/button'
 import { useAdQuery } from '@/features/advertisements/api/get-ad'
 import { useAdTracking } from '@/features/advertisements/hooks/useAdTracking'
+import { Button } from '@/shared/ui/button'
 
 interface AdSlotProps extends HTMLAttributes<HTMLDivElement> {
   label?: string

@@ -6,8 +6,8 @@ import { DataTable } from '@/features/table/DataTable'
 import { Button } from '@/shared/ui/button'
 
 import type { Advertisement } from '../schemas/advertisement'
-import { AdminAdvertisementStatusBadge } from './AdminAdvertisementStatusBadge'
 import { AdvertisementsToolbar } from './AdminAdvertisementsTableWrapper'
+import { AdminAdvertisementStatusBadge } from './AdminAdvertisementStatusBadge'
 
 type AdminAdvertisementsTableProps = {
   data: Advertisement[]

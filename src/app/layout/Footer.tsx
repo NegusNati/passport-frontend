@@ -3,11 +3,11 @@ import { GithubIcon, InstagramIcon, LinkedinIcon, MegaphoneIcon, TwitterIcon } f
 
 const Footer = () => {
   const services = [
-    'Advertisement',
-    'Passport Check',
-    'Ethiopian Calendar',
-    "Gee'z Numbers",
-    'Amharic Alphabets',
+    { name: 'Advertisement', href: '/advertisement-requests' },
+    { name: 'Passport Check', href: '/passports' },
+    { name: 'Ethiopian Calendar', href: '/calendar' },
+    { name: "Gee'z Numbers", href: '/calendar#geez-numbers' },
+    { name: 'Amharic Alphabets', href: '/articles' },
   ]
 
   const socials = [
@@ -96,21 +96,21 @@ const Footer = () => {
           <motion.div className="space-y-4" variants={itemVariants}>
             <h3 className="text-foreground text-lg font-semibold">Services</h3>
             <ul className="space-y-3">
-              {services.map((service, index) => (
-                <motion.li key={index}>
+              {services.map((service) => (
+                <motion.li key={service.name}>
                   <motion.a
-                    href="#"
+                    href={service.href}
                     className="text-muted-foreground hover:text-primary block transition-colors duration-300"
-                    whileHover={{ x: 5, color: 'hsl(var(--primary))' }}
+                    whileHover={{ x: 5 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    {service === 'Advertisement' ? (
+                    {service.name === 'Advertisement' ? (
                       <span className="bg-muted border-border flex w-fit items-center gap-2 rounded-md border px-4 py-1">
                         <MegaphoneIcon className="size-4" style={{ transform: 'scaleX(-1)' }} />
                         Advertisement
                       </span>
                     ) : (
-                      service
+                      service.name
                     )}
                   </motion.a>
                 </motion.li>
@@ -122,12 +122,12 @@ const Footer = () => {
           <motion.div className="space-y-6" variants={itemVariants}>
             <h3 className="text-foreground text-lg font-semibold">Developer Socials</h3>
             <ul className="space-y-3">
-              {socials.map((social, index) => (
-                <motion.li key={index}>
+              {socials.map((social) => (
+                <motion.li key={social.name}>
                   <motion.a
                     href={social.url}
                     className="text-muted-foreground hover:text-primary flex items-center space-x-2 transition-colors duration-300"
-                    whileHover={{ x: 5, color: 'hsl(var(--primary))' }}
+                    whileHover={{ x: 5 }}
                     whileTap={{ scale: 0.95 }}
                   >
                     <span>{social.icon}</span>

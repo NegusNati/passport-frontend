@@ -2,9 +2,9 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import { useArticleQuery } from '@/features/articles/lib/ArticlesQuery'
 import type { ArticleApiItem } from '@/features/articles/lib/ArticlesSchema'
+import { Badge } from '@/shared/ui/badge'
 import { Container } from '@/shared/ui/container'
 import { Seo } from '@/shared/ui/Seo'
-import { Badge } from '@/shared/ui/badge'
 
 export const Route = createFileRoute('/articles/$slug')({
   component: ArticleDetail,

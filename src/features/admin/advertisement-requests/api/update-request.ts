@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { api } from '@/api/client'
-import { API_ENDPOINTS } from '@/shared/lib/API_ENDPOINTS'
 import { adminKeys } from '@/features/admin/lib/keys'
+import { API_ENDPOINTS } from '@/shared/lib/API_ENDPOINTS'
 
 import {
   AdminAdvertisementRequestDetailResponse,

@@ -1,12 +1,36 @@
-import { useCallback, useRef, useState } from 'react'
-
+import { useRef } from 'react'
 import Barcode from 'react-barcode'
 
-import star from "@/assets/landingImages/star.svg"
+import star from '@/assets/landingImages/star.svg'
+import { usePdfDownload } from '@/shared/hooks/usePdfDownload'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
 
 import { type Passport } from '../schemas/passport'
+
+const CARD_DOWNLOAD_ID = 'passport-detail-card'
+
+function getDayOfWeek(firstName?: string) {
+  const normalized = firstName?.trim()
+  if (!normalized) {
+    return 'Please check the schedule or come Sunday'
+  }
+
+  const letter = normalized.charAt(0).toLowerCase()
+  const days: string[] = []
+
+  if (['a', 'b', 'c', 'd', 'e', 'f', 'g'].includes(letter)) days.push('Monday')
+  if (['m', 'n', 'o', 'p', 'q', 'r', 'h', 'i', 'j', 'k', 'l'].includes(letter)) days.push('Tuesday')
+  if (['a', 'b', 'c', 'd', 'e', 't'].includes(letter)) days.push('Wednesday')
+  if (['m', 'i', 'j', 'k', 'l', 's', 'u', 'v', 'w', 'x', 'y', 'z'].includes(letter)) days.push('Thursday')
+  if (['a', 'f', 'g', 'h', 'n', 'o', 'p', 'q', 'r'].includes(letter)) days.push('Friday')
+  if (['m', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'].includes(letter)) days.push('Saturday')
+
+  if (days.length === 0) {
+    return 'Please check the schedule or come Sunday'
+  }
+  return days.join(', ')
+}
 
 interface PassportDetailCardProps {
   passport: Passport
@@ -18,46 +42,15 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
   const nameParts = passport.name.split(' ')
   const givenName = nameParts.slice(0, -1).join(' ')
   const surname = nameParts[nameParts.length - 1]
+  const firstName = passport.firstName ?? nameParts[0] ?? ''
+  const dayOfWeek = getDayOfWeek(firstName)
   const cardRef = useRef<HTMLDivElement>(null)
-  const [isDownloading, setIsDownloading] = useState(false)
-
-  const handleDownload = useCallback(async () => {
-    if (!cardRef.current || isDownloading) return
-
-    setIsDownloading(true)
-    try {
-      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
-        import('html2canvas'),
-        import('jspdf'),
-      ])
-
-      const canvas = await html2canvas(cardRef.current, {
-        scale: window.devicePixelRatio || 2,
-        scrollY: -window.scrollY,
-        useCORS: true,
-        logging: false,
-      })
-      const imgData = canvas.toDataURL('image/png')
-      const pdf = new jsPDF({
-        orientation: canvas.width >= canvas.height ? 'landscape' : 'portrait',
-        unit: 'px',
-        format: [canvas.width, canvas.height],
-      })
-      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height)
-
-      const sanitizedName = passport.name
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '_')
-        .replace(/^_+|_+$/g, '') || 'passport'
-
-      pdf.save(`passport_et_${sanitizedName}.pdf`)
-    } catch (error) {
-      console.error('Failed to download passport PDF', error)
-    } finally {
-      setIsDownloading(false)
-    }
-  }, [isDownloading, passport.name])
+  
+  const { download, isDownloading } = usePdfDownload({
+    elementRef: cardRef,
+    filename: `passport_et_${passport.name}`,
+    scale: 3,
+  })
 
   return (
     <section className="relative overflow-hidden py-12 md:py-16">
@@ -69,6 +62,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
           {/* Passport Document */}
           <div
             ref={cardRef}
+            id={CARD_DOWNLOAD_ID}
             className="relative overflow-hidden rounded-lg border-2 border-primary p-8 shadow-2xl   backdrop-blur-md md:p-12"
           >
             {/* Ethiopian Seal Background - Prominent Yellow Star */}
@@ -124,7 +118,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
                 <div>
                   <div className="text-xs font-medium text-gray-600">Day of The Week</div>
                   <div className="mt-0.5 text-base font-semibold text-gray-900">
-                    
+                    {dayOfWeek}
                   </div>
                 </div>
 
@@ -156,7 +150,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
           {/* Actions below card */}
           <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Button
-              onClick={handleDownload}
+              onClick={download}
               variant="outline"
               className="w-full sm:w-auto"
               size="lg"

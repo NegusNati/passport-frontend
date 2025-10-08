@@ -26,6 +26,7 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
     return {
       id: String(p.id),
       name: p.full_name,
+      firstName: p.first_name,
       date: formatDisplayDate(p.date_of_publish),
       requestNumber: p.request_number,
       status: 'pending',
