@@ -327,11 +327,12 @@ export function CalendarPage() {
       backgroundImage: `url("${shaderUrl}")`,
       backgroundRepeat: 'no-repeat',
       backgroundSize: 'cover',
-      backgroundPosition: 'center',
+      backgroundPosition: 'bottom',
       width: '100%'
+    
     }}
     >
-      <div className="teal-hero absolute inset-0" aria-hidden />
+      <div className=" absolute inset-0" aria-hidden />
       <div className="teal-blob-left left-[-16rem] top-[-10rem] h-[24rem] w-[28rem] md:left-[-20rem] md:top-[-12rem]" aria-hidden />
       <div className="teal-blob-right right-[-12rem] top-[-2rem] h-[22rem] w-[30rem] md:right-[-16rem]" aria-hidden />
       <Container className="relative z-[1] flex flex-col gap-8">
@@ -358,7 +359,7 @@ export function CalendarPage() {
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.85fr)_minmax(0,1fr)]">
-          <div className="border-border/60 bg-white/60 supports-[backdrop-filter]:bg-white/40 backdrop-blur-lg text-card-foreground rounded-3xl border shadow-sm">
+          <div className="border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm">
             <div className="flex flex-col gap-6 p-5 sm:p-8">
               {/* Month navigation */}
               <div className="flex items-center justify-between">
@@ -632,7 +633,7 @@ export function CalendarPage() {
               ref={selectedCardRef}
               tabIndex={-1}
               className={[
-                'border-border/60 bg-white/60 supports-[backdrop-filter]:bg-white/40 backdrop-blur-lg rounded-2xl border p-6 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary',
+                'border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary',
                 shouldFlashCard ? 'ring-2 ring-primary ring-offset-2' : '',
               ].join(' ')}
             >
@@ -691,7 +692,7 @@ export function CalendarPage() {
 
         <AdSlot orientation="horizontal" className="min-h-[12rem] rounded-2xl bg-secondary supports-[backdrop-filter]:bg-secondary backdrop-blur-lg " preset="sponsored" />
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
-          <section className="border-border/60 bg-white/60 supports-[backdrop-filter]:bg-white/40 backdrop-blur-lg rounded-2xl border shadow-sm">
+          <section className="border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm">
             <div className="flex flex-col gap-6 p-6 sm:p-8">
               <header className="space-y-2">
                 <h2 className="text-2xl font-semibold tracking-tight">Gee&apos;z Numbering System</h2>
@@ -771,7 +772,7 @@ export function CalendarPage() {
 
           <aside className="flex flex-col gap-6">
           
-            <div className="border-border/60 bg-white/60 supports-[backdrop-filter]:bg-white/40 backdrop-blur-lg rounded-2xl border p-6 text-sm text-muted-foreground shadow-sm">
+            <div className="border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm">
               <h3 className="text-foreground text-base font-semibold tracking-tight">
                 Reading tips
               </h3>
