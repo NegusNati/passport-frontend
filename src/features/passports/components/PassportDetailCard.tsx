@@ -1,3 +1,5 @@
+import { useCallback, useRef, useState } from 'react'
+
 import Barcode from 'react-barcode'
 
 import star from "@/assets/landingImages/star.svg"
@@ -16,6 +18,46 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
   const nameParts = passport.name.split(' ')
   const givenName = nameParts.slice(0, -1).join(' ')
   const surname = nameParts[nameParts.length - 1]
+  const cardRef = useRef<HTMLDivElement>(null)
+  const [isDownloading, setIsDownloading] = useState(false)
+
+  const handleDownload = useCallback(async () => {
+    if (!cardRef.current || isDownloading) return
+
+    setIsDownloading(true)
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import('html2canvas'),
+        import('jspdf'),
+      ])
+
+      const canvas = await html2canvas(cardRef.current, {
+        scale: window.devicePixelRatio || 2,
+        scrollY: -window.scrollY,
+        useCORS: true,
+        logging: false,
+      })
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF({
+        orientation: canvas.width >= canvas.height ? 'landscape' : 'portrait',
+        unit: 'px',
+        format: [canvas.width, canvas.height],
+      })
+      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height)
+
+      const sanitizedName = passport.name
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '') || 'passport'
+
+      pdf.save(`passport_et_${sanitizedName}.pdf`)
+    } catch (error) {
+      console.error('Failed to download passport PDF', error)
+    } finally {
+      setIsDownloading(false)
+    }
+  }, [isDownloading, passport.name])
 
   return (
     <section className="relative overflow-hidden py-12 md:py-16">
@@ -25,7 +67,10 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
       <Container className="relative z-10">
         <div className="mx-auto max-w-4xl">
           {/* Passport Document */}
-          <div className="relative overflow-hidden rounded-lg border-2 border-primary p-8 shadow-2xl   backdrop-blur-md md:p-12">
+          <div
+            ref={cardRef}
+            className="relative overflow-hidden rounded-lg border-2 border-primary p-8 shadow-2xl   backdrop-blur-md md:p-12"
+          >
             {/* Ethiopian Seal Background - Prominent Yellow Star */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-20">
               <img
@@ -108,11 +153,17 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
             </div>
           </div>
 
-          
-
           {/* Actions below card */}
-          <div className="mt-6 flex flex-col items-center gap-3">
-            
+          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Button
+              onClick={handleDownload}
+              variant="outline"
+              className="w-full sm:w-auto"
+              size="lg"
+              disabled={isDownloading}
+            >
+              {isDownloading ? 'Preparing…' : 'Download'}
+            </Button>
             <Button
               onClick={onCheckAnother}
               className="bg-emerald-600 hover:bg-emerald-700"
