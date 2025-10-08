@@ -16,19 +16,11 @@ const EnvSchema = z.object({
 type Env = z.infer<typeof EnvSchema>
 
 function inferApiBaseUrl(env: Partial<Env>): string {
-  const fromVar = env.VITE_API_BASE_URL
-  if (fromVar) return fromVar
+  // Allow explicit override via environment variable
+  if (env.VITE_API_BASE_URL) return env.VITE_API_BASE_URL
 
-  // Infer from host when running in the browser
-  if (typeof window !== 'undefined') {
-    const isLocal = /localhost|127\.0\.0\.1/.test(window.location.hostname)
-    const protocol = isLocal ? 'http:' : 'https:'
-    const host = isLocal ? 'app.localhost' : 'passport.et'
-    return `${protocol}//${host}`
-  }
-
-  // Fallback in SSR/build contexts
-  return 'https://passport.et'
+  // Mode-based defaults: dev uses app.localhost, production uses passport.et
+  return import.meta.env.DEV ? 'http://app.localhost' : 'https://passport.et'
 }
 
 export const env = (() => {
