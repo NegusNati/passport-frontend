@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 
 import patterFotter from '@/assets/landingImages/pattern_footer.svg'
+import shaderUrl from '@/assets/landingImages/shader_bg.svg?url'
 import { BuyMeCoffee } from '@/shared/ui/BuyMeCoffee'
 
 import Footer from './Footer'
@@ -27,9 +28,21 @@ export function AppShell({ children }: { children: ReactNode }) {
         Skip to content
       </a>
       <Header />
-      <main id="main" className="relative z-0 w-full"
-    
-      >
+      <main id="main" className="relative z-0 w-full">
+        {/* Absolutely positioned background image at the top */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-0 top-[-2rem] -z-10 h-[720px] w-full border-none"
+          style={{
+            backgroundImage: `url("${shaderUrl}")`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'top',
+            width: '100%',
+            height: '720px',
+
+          }}
+        />
         {children}
       </main>
 

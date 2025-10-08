@@ -9,7 +9,7 @@ import { Button } from '@/shared/ui/button'
 export function Hero() {
   const reduce = useReducedMotion()
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate overflow-hidden  ">
       {/* Container to constrain width and center content */}
       <div className="container max-w-7xl px-4 md:px-6">
         {/* Two-column layout on md+; single column on mobile */}

@@ -1,5 +1,3 @@
-import shaderUrl from '@/assets/landingImages/shader_bg.svg?url'
-
 import { AdBanner } from './AdBanner'
 import { AdvertiseSection } from './Advertise'
 import { ArticleSection } from './Articles'
@@ -15,14 +13,8 @@ export function LandingPage() {
     <div className="mx-auto max-w-7xl overflow-x-hidden space-y-4">
       {/* Hero band with gradient surface */}
       <div
-        className="teal-hero pb-8 md:pb-[220px] lg:pb-[480px] relative overflow-hidden overscroll-none h-[100svh]"
-        style={{
-          backgroundImage: `url("${shaderUrl}")`,
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          width: '100%'
-        }}
+        className=" pb-8 md:pb-[220px] lg:pb-[480px] relative overflow-hidden overscroll-none h-[100svh]"
+    
       >
         <Hero />
       </div>
