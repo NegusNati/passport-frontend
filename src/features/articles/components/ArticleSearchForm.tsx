@@ -29,8 +29,8 @@ export function ArticleSearchForm({ onSearch, initialQuery = '', onQueryChange }
   })
 
   return (
-    <section className="bg-background py-12 md:py-16">
-      <Container>
+    <section className="py-12 md:py-16">
+      <Container className='border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm' >
         <div className="mx-auto max-w-2xl text-center">
           {/* Header */}
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">

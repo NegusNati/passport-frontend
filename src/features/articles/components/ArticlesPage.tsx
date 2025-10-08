@@ -88,7 +88,7 @@ export function ArticlesPage() {
   })
 
   return (
-    <div className="bg-background min-h-screen">
+    <div className="min-h-screen">
       <Seo
         title="Articles"
         description="Discover our latest products and stories."
@@ -104,7 +104,7 @@ export function ArticlesPage() {
 
       <section className="border-border border-b py-6">
         <Container>
-          <AdSlot preset="sponsored" orientation="horizontal" className="rounded-xl" />
+          <AdSlot preset="sponsored" orientation="horizontal"  />
         </Container>
       </section>
 
