@@ -210,10 +210,10 @@ export function PassportsTable({ searchFilters = {}, searchMode }: PassportsTabl
   )
 
   return (
-    <section className="bg-muted/30 py-12">
+    <section className=" py-12">
       <Container>
         <div className="space-y-6">
-          <div className="rounded-lg border bg-background p-6 shadow-sm">
+          <div className="rounded-lg border bg-transparent p-6 shadow-sm">
             <DataTable
               key={tableKey}
               tableTitle="Latest Passports"
