@@ -86,7 +86,7 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
     <div className="min-h-screen">
       <PassportDetailCard passport={uiPassport} onCheckAnother={handleCheckAnother} />
 
-      <section className="bg-background py-8">
+      <section className="py-8">
         <div className="container mx-auto max-w-6xl px-4">
           <AdSlot preset="sponsored" orientation="horizontal" className="rounded-lg" />
         </div>
