@@ -1,6 +1,7 @@
 import { type ReactNode } from 'react'
 
-import patterFotter from '@/assets/landingImages/pattern_footer.svg'
+import mdFooterPattern from '@/assets/landingImages/md_footer_pattern.png'
+import mobileFooterPattern from '@/assets/landingImages/mobile_footer_pattern.png'
 import shaderUrl from '@/assets/landingImages/shader_bg.svg?url'
 import { BuyMeCoffee } from '@/shared/ui/BuyMeCoffee'
 
@@ -53,9 +54,15 @@ export function AppShell({ children }: { children: ReactNode }) {
           aria-hidden
         />
         <img
-          src={patterFotter}
+          src={mobileFooterPattern}
           alt=" footer pattern"
-          className="block max-w-full w-full h-auto"
+          className="block md:hidden max-w-full w-full h-auto"
+        />
+
+        <img
+          src={mdFooterPattern}
+          alt=" footer pattern"
+          className="hidden md:block max-w-full w-full h-auto"
         />
 
         {/* right fade */}
