@@ -20,7 +20,7 @@ function inferApiBaseUrl(env: Partial<Env>): string {
   if (env.VITE_API_BASE_URL) return env.VITE_API_BASE_URL
 
   // Mode-based defaults: dev uses app.localhost, production uses passport.et
-  return import.meta.env.DEV ? 'http://app.localhost' : 'https://passport.et'
+  return import.meta.env.DEV ? 'http://app.localhost' : 'https://api.passport.et'
 }
 
 export const env = (() => {
