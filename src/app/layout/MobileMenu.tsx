@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight, X } from 'lucide-react'
 import { useEffect } from 'react'
 
+import ThemeToggle from '@/shared/components/theme-toggle'
 import { Button } from '@/shared/ui/button'
 
 type NavItem = { label: string; href: string; external?: boolean }
@@ -105,7 +106,6 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
             </header>
-
             <nav className="flex flex-col gap-1 px-5 py-4">
               {nav.map((item) => {
                 const className =
@@ -139,6 +139,9 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
                   </Link>
                 )
               })}
+              <div className="flex items-center gap-3 ">
+                <ThemeToggle className="h-10 w-20" />
+              </div>
             </nav>
 
             <div className="border-border mt-auto border-t px-5 py-6">
