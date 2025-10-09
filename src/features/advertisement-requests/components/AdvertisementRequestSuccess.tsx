@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { CheckCircle } from 'lucide-react'
 
 import { Button } from '@/shared/ui/button'
@@ -41,9 +42,16 @@ export function AdvertisementRequestSuccess({
         </ul>
       </div>
 
+      <div className="mt-6 flex gap-2">
       <Button onClick={onSubmitAnother} variant="outline" className="rounded-full px-6">
         Submit Another Request
       </Button>
+      <Button  className="rounded-full px-6 bg-primary">
+        <Link to="/" >
+          Go Home
+        </Link>
+      </Button>
+      </div>
     </div>
   )
 }

@@ -48,7 +48,7 @@ function AdvertisementRequestPage() {
           <div className="relative z-10 space-y-6">
             <div className="max-w-lg space-y-4">
               <span className="text-sm font-semibold uppercase tracking-wide text-primary">
-                Advertise with Passport
+                Advertise with Passport Alerts
               </span>
               <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
                 Advertisement Request
