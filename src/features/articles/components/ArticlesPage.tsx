@@ -15,7 +15,6 @@ import { ArticleGridSkeleton } from '@/shared/ui/skeleton'
 
 import type {
   ArticleFilters as ArticleFiltersType,
-  ArticleSearch,
   ArticleSummary,
 } from '../schemas/article'
 import { ArticleCard } from './ArticleCard'
@@ -53,10 +52,6 @@ export function ArticlesPage() {
   const rows: ArticleApiItem[] = data?.data ?? []
   const meta = data?.meta
 
-  const handleSearch = (d: ArticleSearch) => {
-    setSearchQuery(d.query)
-    setCurrentPage(1)
-  }
 
   const handleFiltersChange = (newFilters: ArticleFiltersType) => {
     setFilters(newFilters)
