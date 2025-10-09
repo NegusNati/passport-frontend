@@ -4,6 +4,8 @@ import type { Highlight } from 'negus-ethiopic-gregorian/highlights'
 import { getHighlightsForDay, getHighlightsForMonth } from 'negus-ethiopic-gregorian/highlights'
 import * as React from 'react'
 
+import ethiopic_numbers_pattern from '@/assets/landingImages/ethiopiac_num_pattern.svg'
+import ethiopic_numbers from '@/assets/landingImages/number.png'
 import { AdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
@@ -321,9 +323,17 @@ export function CalendarPage() {
   }
 
   return (
-    <section className="relative py-14 sm:py-20 "
-   
+    <section className="relative py-14 sm:py-20  "
     >
+       <div className="md:hidden absolute left-0 bottom-[240rem] transform translate-y-1/4 z-0 opacity-60 md:opacity-90 ml-2 ">
+        <img src={ethiopic_numbers_pattern} alt="logo" className="h-150 w-150 " />
+      </div>
+            <div className="absolute left-0 bottom-[160rem] transform translate-y-1/4 z-0 opacity-60 md:opacity-90 ml-2 ">
+        <img src={ethiopic_numbers_pattern} alt="logo" className="h-150 w-150 " />
+      </div>
+      <div className="absolute left-0 bottom-[60rem] transform translate-y-1/4 z-0 opacity-60 md:opacity-90 ml-2 ">
+        <img src={ethiopic_numbers} alt="logo" className="h-150 w-150 " />
+      </div>
       <div className=" absolute inset-0" aria-hidden />
       <div className="teal-blob-left left-[-16rem] top-[-10rem] h-[24rem] w-[28rem] md:left-[-20rem] md:top-[-12rem]" aria-hidden />
       <div className="teal-blob-right right-[-12rem] top-[-2rem] h-[22rem] w-[30rem] md:right-[-16rem]" aria-hidden />

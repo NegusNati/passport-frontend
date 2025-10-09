@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { useMemo, useState } from 'react'
 
+import ethiopic_numbers from '@/assets/landingImages/number.png'
 import {
   useArticlesQuery,
   useCategoriesQuery,
@@ -95,6 +96,9 @@ export function ArticlesPage() {
         initialQuery={searchQuery}
         onQueryChange={(v) => setSearchQuery(v)}
       /> */}
+        <div className="absolute left-0 bottom-[60rem] transform translate-y-1/4 z-0 opacity-60 md:opacity-90 ml-2 ">
+        <img src={ethiopic_numbers} alt="logo" className="h-150 w-150 " />
+      </div>
 
       <section className="border-border border-b py-6">
         <Container>

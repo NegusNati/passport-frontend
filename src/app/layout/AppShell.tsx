@@ -73,7 +73,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       </div>
       <Footer />
-      <BuyMeCoffee href="https://buymeacoffee.com" />
+      <BuyMeCoffee href="https://ye-buna.com/PassportET" />
     </div>
   )
 }

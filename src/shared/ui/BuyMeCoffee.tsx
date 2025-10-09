@@ -9,7 +9,7 @@ type Props = {
   Floating overlay for supporting the project. The text spins as the user scrolls
   (rotation derived from scroll delta) and naturally stops when scrolling stops.
 */
-export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' }: Props) {
+export function BuyMeCoffee({ href = 'https://ye-buna.com/PassportET', className = '' }: Props) {
   const ref = React.useRef<HTMLDivElement | null>(null)
   const lastY = React.useRef<number>(typeof window !== 'undefined' ? window.scrollY : 0)
   const angle = React.useRef(0)
