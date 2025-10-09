@@ -4,6 +4,7 @@ import mdFooterPattern from '@/assets/landingImages/md_footer_pattern.png'
 import mobileFooterPattern from '@/assets/landingImages/mobile_footer_pattern.png'
 import shaderUrl from '@/assets/landingImages/shader_bg.svg?url'
 import { BuyMeCoffee } from '@/shared/ui/BuyMeCoffee'
+import { Toaster } from '@/shared/ui/sonner'
 
 import Footer from './Footer'
 import { Header } from './Header'
@@ -74,6 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
       </div>
       <Footer />
       <BuyMeCoffee href="https://ye-buna.com/PassportET" />
+      <Toaster />
     </div>
   )
 }

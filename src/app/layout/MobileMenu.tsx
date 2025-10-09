@@ -3,10 +3,11 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight, X } from 'lucide-react'
 import { useEffect } from 'react'
 
-import ThemeToggle from '@/shared/components/theme-toggle'
+import { ThemeToggle } from '@/shared/components/theme-toggle'
 import { Button } from '@/shared/ui/button'
+import { toast } from '@/shared/ui/sonner'
 
-type NavItem = { label: string; href: string; external?: boolean }
+type NavItem = { label: string; href: string; external?: boolean; comingSoonMessage?: string }
 
 type AppPath = '/passports' | '/articles' | '/calendar'
 
@@ -110,13 +111,23 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
               {nav.map((item) => {
                 const className =
                   'text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
+                const handleComingSoonClick = () => {
+                  if (item.comingSoonMessage) {
+                    toast('Under construction 🚧', {
+                      description: item.comingSoonMessage,
+                    })
+                  }
+                }
 
                 if (item.external || item.href.startsWith('#')) {
                   return (
                     <a
                       key={item.label}
                       href={item.href}
-                      onClick={onClose}
+                      onClick={() => {
+                        handleComingSoonClick()
+                        onClose()
+                      }}
                       className={className}
                     >
                       <span>{item.label}</span>
@@ -132,7 +143,10 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
                     key={item.label}
                     to={item.href as AppPath}
                     preload="intent"
-                    onClick={onClose}
+                    onClick={() => {
+                      handleComingSoonClick()
+                      onClose()
+                    }}
                     className={className}
                   >
                     <span>{item.label}</span>

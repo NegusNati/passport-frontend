@@ -10,6 +10,7 @@ import type { User } from '@/features/auth/schemas/user'
 import { ThemeToggle } from '@/shared/components/theme-toggle'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
+import { toast } from '@/shared/ui/sonner'
 
 import { MobileMenu } from './MobileMenu'
 
@@ -17,6 +18,7 @@ type NavItem = {
   label: string
   href: string
   external?: boolean
+  comingSoonMessage?: string
 }
 
 // Supported internal paths used in header navigation
@@ -27,15 +29,29 @@ const nav: ReadonlyArray<NavItem> = [
   { label: 'Passports', href: '/passports' },
   { label: 'Articles', href: '/articles' },
   { label: 'Ethiopian Calendar', href: '/calendar' },
-  { label: 'Download App', href: '#download', external: true },
+  {
+    label: 'Download App',
+    href: '#download',
+    external: true,
+    comingSoonMessage: 'Native mobile apps are under construction. Stay tuned for the launch!',
+  },
 ]
 
 function renderNavItem(item: NavItem) {
   const className =
     'text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm font-semibold transition-colors'
+
+  const handleComingSoonClick = () => {
+    if (item.comingSoonMessage) {
+      toast('Under construction 🚧', {
+        description: item.comingSoonMessage,
+      })
+    }
+  }
+
   if (item.external || item.href.startsWith('#')) {
     return (
-      <a key={item.label} href={item.href} className={className}>
+      <a key={item.label} href={item.href} className={className} onClick={handleComingSoonClick}>
         <span>{item.label}</span>
         {item.external ? <ArrowUpRight className="h-4 w-4" aria-hidden /> : null}
       </a>
@@ -43,7 +59,13 @@ function renderNavItem(item: NavItem) {
   }
 
   return (
-    <Link key={item.label} to={item.href as AppPath} preload="intent" className={className}>
+    <Link
+      key={item.label}
+      to={item.href as AppPath}
+      preload="intent"
+      className={className}
+      onClick={handleComingSoonClick}
+    >
       <span>{item.label}</span>
     </Link>
   )
