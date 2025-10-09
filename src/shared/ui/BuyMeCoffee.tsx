@@ -55,7 +55,8 @@ export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' 
         >
           <svg viewBox="0 0 100 100" className="h-full w-full">
             <defs>
-              <path id="bmc-circle" d="M 50,50 m -40,0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" />
+              {/* Reduce radius from -40 to -35 or -36 to add padding */}
+              <path id="bmc-circle" d="M 50,50 m -36,0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0" />
             </defs>
             <text className="fill-white text-[10px] tracking-[0.2em] uppercase sm:text-[12px] font-semibold">
               <textPath href="#bmc-circle" startOffset="0">
@@ -63,6 +64,7 @@ export function BuyMeCoffee({ href = 'https://buymeacoffee.com', className = '' 
               </textPath>
             </text>
           </svg>
+
         </div>
         {/* Button in the center */}
         <a
