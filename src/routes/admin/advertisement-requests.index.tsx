@@ -6,6 +6,7 @@ import {
   useUpdateAdminAdvertisementRequestMutation,
 } from '@/features/admin/advertisement-requests'
 import { AdminRequestsTable } from '@/features/admin/advertisement-requests/components/AdminRequestsTable'
+import type { AdminAdvertisementRequestUpdatePayload } from '@/features/admin/advertisement-requests/schemas/admin-advertisement-request'
 import {
   AdminAdvertisementRequestsSearch,
   type AdminAdvertisementRequestsSearch as AdminAdvertisementRequestsSearchType,
@@ -62,7 +63,10 @@ function AdminAdvertisementRequestsIndexPage() {
     navigate({ search: { ...search, per_page, page: 1 } })
   }
 
-  const handleUpdate = async (id: number, payload: any) => {
+  const handleUpdate = async (
+    id: number,
+    payload: AdminAdvertisementRequestUpdatePayload,
+  ) => {
     await updateMutation.mutateAsync({ id, payload })
   }
 

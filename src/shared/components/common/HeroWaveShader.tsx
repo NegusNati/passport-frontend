@@ -32,7 +32,8 @@ function hexToRgb(hex: string) {
 function rgbToHsl(r: number, g: number, b: number) {
   r /= 255; g /= 255; b /= 255;
   const max = Math.max(r, g, b), min = Math.min(r, g, b);
-  let h = 0, s = 0, l = (max + min) / 2;
+  let h = 0, s = 0;
+  const l = (max + min) / 2;
   const d = max - min;
   if (d !== 0) {
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min);

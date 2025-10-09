@@ -84,127 +84,149 @@ export function AdvertisementRequestForm({
       }}
       noValidate
     >
-      {/* Full Name */}
-      <form.Field name="full_name">
-        {(field) => (
+      <div className="grid gap-4">
+        {/* Full Name */}
+        <form.Field name="full_name">
+          {(field) => (
+            <div className="grid gap-2">
+              <Label htmlFor="full_name" className="sr-only">
+                Full Name
+              </Label>
+              <Input
+                id="full_name"
+                type="text"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  field.handleChange(e.target.value)
+                }
+                placeholder="Full name"
+                required
+              />
+            </div>
+          )}
+        </form.Field>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* Phone Number */}
+          <form.Field name="phone_number">
+            {(field) => (
+              <div className="grid gap-2">
+                <Label htmlFor="phone_number" className="sr-only">
+                  Phone Number
+                </Label>
+                <Input
+                  id="phone_number"
+                  type="tel"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    field.handleChange(e.target.value)
+                  }
+                  placeholder="Phone number"
+                  required
+                />
+              </div>
+            )}
+          </form.Field>
+
+          {/* Email */}
+          <form.Field name="email">
+            {(field) => (
+              <div className="grid gap-2">
+                <Label htmlFor="email" className="sr-only">
+                  Email
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={field.state.value}
+                  onBlur={field.handleBlur}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    field.handleChange(e.target.value)
+                  }
+                  placeholder="Email"
+                />
+              </div>
+            )}
+          </form.Field>
+        </div>
+
+        {/* Company Name */}
+        <form.Field name="company_name">
+          {(field) => (
+            <div className="grid gap-2">
+              <Label htmlFor="company_name" className="sr-only">
+                Company Name
+              </Label>
+              <Input
+                id="company_name"
+                type="text"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  field.handleChange(e.target.value)
+                }
+                placeholder="Company name"
+              />
+            </div>
+          )}
+        </form.Field>
+
+        {/* Description */}
+        <form.Field name="description">
+          {(field) => (
+            <div className="grid gap-2">
+              <Label htmlFor="description" className="sr-only">
+                Advertisement Details
+              </Label>
+              <Textarea
+                id="description"
+                value={field.state.value}
+                onBlur={field.handleBlur}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                  field.handleChange(e.target.value)
+                }
+                placeholder="Advertisement details"
+                rows={5}
+                required
+              />
+              <p className="text-muted-foreground text-xs">
+                {field.state.value.length} / 5000 characters
+              </p>
+            </div>
+          )}
+        </form.Field>
+
+        {/* File Upload */}
+        <div className="grid gap-2">
+          <Label htmlFor="file" className="sr-only">
+            Attachment
+          </Label>
           <div className="grid gap-2">
-            <Label htmlFor="full_name">
-              Full Name <span className="text-destructive">*</span>
-            </Label>
             <Input
-              id="full_name"
-              type="text"
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
-              placeholder="Your full name"
-              required
+              id="file"
+              type="file"
+              onChange={handleFileChange}
+              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+              aria-invalid={!!fileError}
+              aria-describedby="file-error file-help"
             />
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+              <p id="file-help">PDF, DOC, DOCX, JPG, or PNG (max 10MB)</p>
+              {file ? (
+                <p>
+                  {file.name} · {(file.size / 1024 / 1024).toFixed(2)}MB
+                </p>
+              ) : null}
+            </div>
+            {fileError ? (
+              <p id="file-error" className="text-destructive text-sm">
+                {fileError}
+              </p>
+            ) : null}
           </div>
-        )}
-      </form.Field>
-
-      {/* Phone Number */}
-      <form.Field name="phone_number">
-        {(field) => (
-          <div className="grid gap-2">
-            <Label htmlFor="phone_number">
-              Phone Number <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="phone_number"
-              type="tel"
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
-              placeholder="+251912345678"
-              required
-            />
-          </div>
-        )}
-      </form.Field>
-
-      {/* Email */}
-      <form.Field name="email">
-        {(field) => (
-          <div className="grid gap-2">
-            <Label htmlFor="email">Email (optional)</Label>
-            <Input
-              id="email"
-              type="email"
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
-              placeholder="your.email@example.com"
-            />
-          </div>
-        )}
-      </form.Field>
-
-      {/* Company Name */}
-      <form.Field name="company_name">
-        {(field) => (
-          <div className="grid gap-2">
-            <Label htmlFor="company_name">Company Name (optional)</Label>
-            <Input
-              id="company_name"
-              type="text"
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
-              placeholder="Your company or business name"
-            />
-          </div>
-        )}
-      </form.Field>
-
-      {/* Description */}
-      <form.Field name="description">
-        {(field) => (
-          <div className="grid gap-2">
-            <Label htmlFor="description">
-              Advertisement Details <span className="text-destructive">*</span>
-            </Label>
-            <Textarea
-              id="description"
-              value={field.state.value}
-              onBlur={field.handleBlur}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
-              placeholder="Describe your advertisement needs (minimum 10 characters)"
-              rows={5}
-              required
-            />
-            <p className="text-muted-foreground text-xs">
-              {field.state.value.length} / 5000 characters
-            </p>
-          </div>
-        )}
-      </form.Field>
-
-      {/* File Upload */}
-      <div className="grid gap-2">
-        <Label htmlFor="file">Attachment (optional)</Label>
-        <Input
-          id="file"
-          type="file"
-          onChange={handleFileChange}
-          accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-          aria-invalid={!!fileError}
-          aria-describedby="file-error file-help"
-        />
-        <p id="file-help" className="text-muted-foreground text-xs">
-          PDF, DOC, DOCX, JPG, or PNG (max 10MB)
-        </p>
-        {fileError ? (
-          <p id="file-error" className="text-destructive text-sm">
-            {fileError}
-          </p>
-        ) : null}
-        {file ? (
-          <p className="text-muted-foreground text-xs">
-            Selected: {file.name} ({(file.size / 1024 / 1024).toFixed(2)}MB)
-          </p>
-        ) : null}
+        </div>
       </div>
 
       {/* Submit Button */}
@@ -218,7 +240,7 @@ export function AdvertisementRequestForm({
             <Button
               type="submit"
               disabled={!canSubmit || isSubmitting || formIsSubmitting || !!fileError}
-              className="w-full"
+              className="w-full rounded-full py-2 text-base font-semibold"
             >
               {isSubmitting || formIsSubmitting ? 'Submitting...' : 'Submit Request'}
             </Button>

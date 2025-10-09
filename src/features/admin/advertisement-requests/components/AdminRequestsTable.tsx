@@ -1,6 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { Eye, Trash2 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { DataTable } from '@/features/table/DataTable'
 import { Button } from '@/shared/ui/button'
@@ -64,30 +64,33 @@ export function AdminRequestsTable({
   const [dialogOpen, setDialogOpen] = useState(false)
   const [deletingId, setDeletingId] = useState<number | null>(null)
 
-  const handleView = (request: AdminAdvertisementRequestItem) => {
+  const handleView = useCallback((request: AdminAdvertisementRequestItem) => {
     setSelectedRequest(request)
     setDialogOpen(true)
-  }
+  }, [])
 
-  const handleDelete = async (id: number, fullName: string) => {
-    if (!confirm(`Delete advertisement request from "${fullName}"?`)) return
+  const handleDelete = useCallback(
+    async (id: number, fullName: string) => {
+      if (!confirm(`Delete advertisement request from "${fullName}"?`)) return
 
-    setDeletingId(id)
-    try {
-      await onDelete(id)
-    } catch (error) {
-      console.error('Failed to delete request:', error)
-      alert('Failed to delete request. Please try again.')
-    } finally {
-      setDeletingId(null)
-    }
-  }
+      setDeletingId(id)
+      try {
+        await onDelete(id)
+      } catch (error) {
+        console.error('Failed to delete request:', error)
+        alert('Failed to delete request. Please try again.')
+      } finally {
+        setDeletingId(null)
+      }
+    },
+    [onDelete],
+  )
 
-  const formatDate = (dateString: string) => {
+  const formatDate = useCallback((dateString: string) => {
     return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(
       new Date(dateString),
     )
-  }
+  }, [])
 
   const columns = useMemo<ColumnDef<AdminAdvertisementRequestItem>[]>(
     () => [
@@ -160,7 +163,7 @@ export function AdminRequestsTable({
         ),
       },
     ],
-    [deletingId],
+    [deletingId, formatDate, handleDelete, handleView],
   )
 
   const fallbackPageSize = data.length > 0 ? data.length : 20

@@ -1,6 +1,6 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { Edit, Trash2 } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
 import { DataTable } from '@/features/table/DataTable'
 import { Button } from '@/shared/ui/button'
@@ -40,25 +40,28 @@ export function AdminAdvertisementsTable({
 }: AdminAdvertisementsTableProps) {
   const [deletingId, setDeletingId] = useState<number | null>(null)
 
-  const handleDelete = async (id: number, title: string) => {
-    if (!confirm(`Delete advertisement "${title}"? This action cannot be undone.`)) return
+  const handleDelete = useCallback(
+    async (id: number, title: string) => {
+      if (!confirm(`Delete advertisement "${title}"? This action cannot be undone.`)) return
 
-    setDeletingId(id)
-    try {
-      await onDelete(id)
-    } catch (error) {
-      console.error('Failed to delete advertisement:', error)
-      alert('Failed to delete advertisement. Please try again.')
-    } finally {
-      setDeletingId(null)
-    }
-  }
+      setDeletingId(id)
+      try {
+        await onDelete(id)
+      } catch (error) {
+        console.error('Failed to delete advertisement:', error)
+        alert('Failed to delete advertisement. Please try again.')
+      } finally {
+        setDeletingId(null)
+      }
+    },
+    [onDelete],
+  )
 
-  const formatDate = (dateString: string) => {
+  const formatDate = useCallback((dateString: string) => {
     return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(
       new Date(dateString),
     )
-  }
+  }, [])
 
   const columns = useMemo<ColumnDef<Advertisement>[]>(
     () => [
@@ -158,7 +161,7 @@ export function AdminAdvertisementsTable({
         enableSorting: false,
       },
     ],
-    [deletingId],
+    [deletingId, formatDate, handleDelete],
   )
 
   // Status filter options for the DataTable toolbar

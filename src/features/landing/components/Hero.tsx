@@ -27,7 +27,7 @@ export function Hero() {
                 <Users2Icon className="text-primary h-4 w-4" /> Over 1.5 million users
               </span>
               <span className="bg-white/70 text-primary inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium">
-                <IdCardIcon className="text-primary h-4 w-4" /> 800,000+ passports confirmed as issued
+                <IdCardIcon className="text-primary h-4 w-4" /> 1,278,980+ passports confirmed as issued
               </span>
             </div>
 
@@ -62,7 +62,7 @@ export function Hero() {
            
                 {/* CTA (kept centered by the grid wrapper) */}
                 <Button size="lg"   className="relative z-[1] py-5 rounded-full bg-transparent  ">
-                  <Link to="/passports" className="inline-flex items-center font-semibold bg-transparent text-foreground">
+                  <Link to="/passports" className="inline-flex items-center font-semibold bg-transparent text-primary-foreground">
                     Check My Passport Status
                     <ArrowRightIcon className="ml-2 h-4 w-4" aria-hidden />
                   </Link>
