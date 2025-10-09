@@ -11,8 +11,14 @@ export default defineConfig({
     host: true,
     proxy: {
       // Forward all /api/* calls to app.localhost in dev to avoid CORS
+      // '/api': {
+      //   target: 'http://app.localhost',
+      //   changeOrigin: true,
+      //   secure: false,
+      // },
+
       '/api': {
-        target: 'http://app.localhost',
+        target: 'http://app.passport.et',
         changeOrigin: true,
         secure: false,
       },
