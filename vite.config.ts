@@ -18,7 +18,7 @@ export default defineConfig({
       // },
 
       '/api': {
-        target: 'http://app.passport.et',
+        target: 'http://api.passport.et',
         changeOrigin: true,
         secure: false,
       },
