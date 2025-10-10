@@ -18,6 +18,24 @@ const normalizeNullableString = (
   return val
 }
 
+const normalizeNullableNumber = (
+  val: number | (number | null)[] | null | undefined,
+): number | null => {
+  if (val === null || val === undefined) return null
+  if (Array.isArray(val)) {
+    const firstNumber = val.find((v): v is number => typeof v === 'number')
+    return firstNumber ?? null
+  }
+  return val
+}
+
+const normalizeOptionalNumber = (
+  val: number | (number | null)[] | null | undefined,
+): number | undefined => {
+  const normalized = normalizeNullableNumber(val)
+  return normalized ?? undefined
+}
+
 // Pagination helpers (handle both single values and arrays due to backend issue)
 export const PaginationLinks = z
   .object({
@@ -40,8 +58,20 @@ export const PaginationMeta = z
     total: z.union([z.number().int().nonnegative(), z.array(z.number().int().nonnegative())]),
     last_page: z.union([z.number().int().min(1), z.array(z.number().int().min(1))]),
     has_more: z.boolean(),
-    from: z.union([z.number().int(), z.array(z.number().int())]).optional(),
-    to: z.union([z.number().int(), z.array(z.number().int())]).optional(),
+    from: z
+      .union([
+        z.number().int(),
+        z.array(z.number().int().nullable()),
+        z.null(),
+      ])
+      .optional(),
+    to: z
+      .union([
+        z.number().int(),
+        z.array(z.number().int().nullable()),
+        z.null(),
+      ])
+      .optional(),
   })
   .transform((meta) => ({
     current_page: normalizeValue(meta.current_page),
@@ -49,8 +79,8 @@ export const PaginationMeta = z
     total: normalizeValue(meta.total),
     last_page: normalizeValue(meta.last_page),
     has_more: meta.has_more,
-    from: meta.from ? normalizeValue(meta.from) : undefined,
-    to: meta.to ? normalizeValue(meta.to) : undefined,
+    from: normalizeOptionalNumber(meta.from),
+    to: normalizeOptionalNumber(meta.to),
   }))
 
 // Admin response includes admin_notes
