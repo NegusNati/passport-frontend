@@ -15,8 +15,8 @@ services:
     environment:
       DISABLE_IPV6: 'true'
     volumes:
-      - ./data/npm/data:/data
-      - ./data/npm/letsencrypt:/etc/letsencrypt
+      - ../data/npm/data:/data
+      - ../data/npm/letsencrypt:/etc/letsencrypt
     networks:
       - web
     healthcheck:
@@ -30,7 +30,7 @@ services:
   # ============================================
   passport-frontend:
     build:
-      context: ./passport-frontend
+      context: .
       dockerfile: Dockerfile
       args:
         VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://api.passport.et}
@@ -61,7 +61,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-umami}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
     volumes:
-      - ./data/umami-db:/var/lib/postgresql/data
+      - ../data/umami-db:/var/lib/postgresql/data
     networks:
       - internal
     healthcheck:

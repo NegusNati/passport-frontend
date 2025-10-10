@@ -36,9 +36,6 @@ jobs:
             git fetch --all
             git reset --hard origin/${{ github.ref_name }}
             
-            # Navigate to parent directory for docker-compose
-            cd /opt/passport
-            
             # Pull latest images
             echo "📦 Pulling Docker images..."
             docker compose pull umami nginx-proxy-manager
