@@ -1,0 +1,117 @@
+version: '3.9'
+
+services:
+  # ============================================
+  # Nginx Proxy Manager (Reverse Proxy + SSL)
+  # ============================================
+  nginx-proxy-manager:
+    image: jc21/nginx-proxy-manager:latest
+    container_name: nginx-proxy-manager
+    restart: unless-stopped
+    ports:
+      - '80:80'      # HTTP
+      - '443:443'    # HTTPS
+      - '81:81'      # Admin UI
+    environment:
+      DISABLE_IPV6: 'true'
+    volumes:
+      - ./data/npm/data:/data
+      - ./data/npm/letsencrypt:/etc/letsencrypt
+    networks:
+      - web
+    healthcheck:
+      test: ["CMD", "/bin/check-health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  # ============================================
+  # Passport Frontend (React SPA)
+  # ============================================
+  passport-frontend:
+    build:
+      context: ./passport-frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-https://api.passport.et}
+        VITE_SITE_URL: ${VITE_SITE_URL:-https://passport.et}
+        VITE_SITE_NAME: ${VITE_SITE_NAME:-Passport}
+        VITE_HORIZON_URL: ${VITE_HORIZON_URL:-}
+    container_name: passport-frontend
+    restart: unless-stopped
+    networks:
+      - web
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    depends_on:
+      - nginx-proxy-manager
+
+  # ============================================
+  # Umami Analytics - PostgreSQL Database
+  # ============================================
+  umami-db:
+    image: postgres:15-alpine
+    container_name: umami-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-umami}
+      POSTGRES_USER: ${POSTGRES_USER:-umami}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    volumes:
+      - ./data/umami-db:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-umami}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================
+  # Umami Analytics Application
+  # ============================================
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    container_name: umami
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?DATABASE_URL is required}
+      APP_SECRET: ${UMAMI_APP_SECRET:?UMAMI_APP_SECRET is required}
+      HASH_SALT: ${UMAMI_HASH_SALT:?UMAMI_HASH_SALT is required}
+      DATABASE_TYPE: postgresql
+      DISABLE_TELEMETRY: 'true'
+    networks:
+      - web
+      - internal
+    depends_on:
+      umami-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/heartbeat || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+# ============================================
+# Networks
+# ============================================
+networks:
+  web:
+    driver: bridge
+  internal:
+    driver: bridge
+    internal: true
+
+# ============================================
+# Volumes (explicit declaration for clarity)
+# ============================================
+volumes:
+  npm-data:
+    driver: local
+  npm-letsencrypt:
+    driver: local
+  umami-db-data:
+    driver: local

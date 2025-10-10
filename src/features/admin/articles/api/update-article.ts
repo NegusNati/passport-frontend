@@ -11,7 +11,7 @@ import {
 import { extractAdminArticleErrorMessage } from './errors'
 
 export type UpdateAdminArticleInput = {
-  articleId: string
+  articleSlug: string
   payload: AdminArticleUpdatePayload
   etag?: string
 }
@@ -25,6 +25,7 @@ function buildFormDataFromUpdate(input: AdminArticleUpdatePayload) {
   const { featured_image, og_image, remove_featured_image, remove_og_image, ...rest } = input
   const parsed = AdminArticleUpdateSchema.parse(rest)
   const form = new FormData()
+  form.append('_method', 'PUT')
   // text fields
   Object.entries(parsed).forEach(([key, value]) => {
     if (value === undefined || value === null) return
@@ -43,10 +44,10 @@ function buildFormDataFromUpdate(input: AdminArticleUpdatePayload) {
   return form
 }
 
-export async function updateAdminArticle({ articleId, payload, etag }: UpdateAdminArticleInput) {
+export async function updateAdminArticle({ articleSlug, payload, etag }: UpdateAdminArticleInput) {
   const form = buildFormDataFromUpdate(payload)
   try {
-    const response = await api.patch(`/api/v1/admin/articles/${articleId}`, form, {
+    const response = await api.post(`/api/v1/admin/articles/${articleSlug}`, form, {
       headers: etag ? { 'If-Match': etag } : undefined,
     })
     return AdminArticleDetailResponseSchema.parse(response.data).data
@@ -57,16 +58,16 @@ export async function updateAdminArticle({ articleId, payload, etag }: UpdateAdm
   }
 }
 
-export function useUpdateAdminArticleMutation(articleId: string) {
+export function useUpdateAdminArticleMutation(articleSlug: string) {
   const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: ({ payload, etag }: UpdateAdminArticleVariables) =>
-      updateAdminArticle({ articleId, payload, etag }),
+      updateAdminArticle({ articleSlug, payload, etag }),
     onSuccess: async (article) => {
       await queryClient.invalidateQueries({ queryKey: adminKeys.articles.all() })
-      await queryClient.invalidateQueries({ queryKey: adminKeys.articles.detail(articleId) })
-      if (article.slug && article.slug !== articleId) {
+      await queryClient.invalidateQueries({ queryKey: adminKeys.articles.detail(articleSlug) })
+      if (article.slug && article.slug !== articleSlug) {
         await queryClient.invalidateQueries({ queryKey: adminKeys.articles.detail(article.slug) })
       }
       return article

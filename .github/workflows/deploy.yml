@@ -1,0 +1,70 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy Frontend to Server
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          script: |
+            set -e
+            
+            echo "🚀 Starting deployment..."
+            
+            # Navigate to project directory
+            cd /opt/passport/passport-frontend
+            
+            # Pull latest changes
+            echo "📥 Pulling latest code..."
+            git fetch --all
+            git reset --hard origin/${{ github.ref_name }}
+            
+            # Navigate to parent directory for docker-compose
+            cd /opt/passport
+            
+            # Pull latest images
+            echo "📦 Pulling Docker images..."
+            docker compose pull umami nginx-proxy-manager
+            
+            # Rebuild frontend with latest code
+            echo "🔨 Building frontend..."
+            docker compose build --no-cache passport-frontend
+            
+            # Restart services (zero-downtime for proxy/analytics, brief downtime for frontend)
+            echo "♻️  Restarting services..."
+            docker compose up -d
+            
+            # Cleanup old images
+            echo "🧹 Cleaning up..."
+            docker image prune -f
+            
+            # Show status
+            echo "✅ Deployment complete!"
+            docker compose ps
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment successful!"
+          else
+            echo "❌ Deployment failed!"
+            exit 1
+          fi

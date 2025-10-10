@@ -5,6 +5,7 @@ import { useCallback, useMemo, useState } from 'react'
 import type { ListParams } from '@/features/articles/lib/ArticlesApi'
 import { useArticleQuery, useArticlesQuery } from '@/features/articles/lib/ArticlesQuery'
 import type { ArticleApiItem } from '@/features/articles/lib/ArticlesSchema'
+import { LexicalViewer } from '@/shared/components/rich-text/LexicalViewer'
 import { AdSlot } from '@/shared/ui/ad-slot'
 import { Badge } from '@/shared/ui/badge'
 import { Container } from '@/shared/ui/container'
@@ -226,12 +227,8 @@ function ArticleBody({
               />
             )}
 
-            <div className="prose prose-neutral dark:prose-invert max-w-none leading-relaxed">
-              {article.content ? (
-                <div dangerouslySetInnerHTML={{ __html: article.content }} />
-              ) : (
-                <p className="text-muted-foreground">No content.</p>
-              )}
+            <div className="max-w-none leading-relaxed">
+              <LexicalViewer content={article.content ?? ''} />
             </div>
 
             {relatedIsLoading ? (

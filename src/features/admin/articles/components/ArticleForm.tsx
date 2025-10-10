@@ -1,8 +1,10 @@
 import { useForm } from '@tanstack/react-form'
+import DOMPurify from 'isomorphic-dompurify'
 import { useMemo, useState } from 'react'
 
 import { useAdminUsersQuery } from '@/features/admin/users/api/get-users'
 import { useCategoriesQuery, useTagsQuery } from '@/features/articles/lib/ArticlesQuery'
+import { LexicalEditor } from '@/shared/components/rich-text/LexicalEditor'
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
@@ -18,11 +20,9 @@ type ArticleFormValues = {
   slug?: string | null
   excerpt?: string | null
   content?: string | null
-  featured_image_url?: string | null
   canonical_url?: string | null
   meta_title?: string | null
   meta_description?: string | null
-  og_image_url?: string | null
   status: 'draft' | 'published' | 'scheduled' | 'archived'
   published_at?: string | null
   tags?: string[]
@@ -74,11 +74,9 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
       slug: article?.slug ?? '',
       excerpt: article?.excerpt ?? '',
       content: article?.content ?? '',
-      featured_image_url: article?.featured_image_url ?? '',
       canonical_url: article?.canonical_url ?? '',
       meta_title: article?.meta_title ?? '',
       meta_description: article?.meta_description ?? '',
-      og_image_url: article?.og_image_url ?? '',
       status: article?.status ?? 'draft',
       published_at: article?.published_at ?? '',
       tagsInput: article?.tags?.map((tag) => tag.slug ?? tag.name).join(', ') ?? '',
@@ -93,12 +91,10 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
         title: value.title.trim(),
         slug: value.slug?.trim() || undefined,
         excerpt: value.excerpt?.trim() || undefined,
-        content: value.content?.trim() || undefined,
-        featured_image_url: value.featured_image_url?.trim() || undefined,
+        content: sanitizeAndNormalizeContent(value.content),
         canonical_url: value.canonical_url?.trim() || undefined,
         meta_title: value.meta_title?.trim() || undefined,
         meta_description: value.meta_description?.trim() || undefined,
-        og_image_url: value.og_image_url?.trim() || undefined,
         status: value.status,
         published_at: normalizeDateTime(value.published_at),
         tags: splitCommaSeparated(value.tagsInput),
@@ -117,12 +113,12 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
           featured_image: featuredFile ?? undefined,
           og_image: ogFile ?? undefined,
           remove_featured_image: value.remove_featured_image || undefined,
-        remove_og_image: value.remove_og_image || undefined,
-        author_id:
-          typeof value.author_id === 'number' && Number.isFinite(value.author_id)
-            ? value.author_id
-            : undefined,
-      })
+          remove_og_image: value.remove_og_image || undefined,
+          author_id:
+            typeof value.author_id === 'number' && Number.isFinite(value.author_id)
+              ? value.author_id
+              : undefined,
+        })
       } catch (error) {
         setFormError(
           error instanceof Error ? error.message : 'Failed to save article. Please try again.',
@@ -221,32 +217,17 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
       <form.Field name="content">
         {(field) => (
           <div className="grid gap-2">
-            <Label htmlFor="content">Content (HTML)</Label>
-            <textarea
-              id="content"
-              className="min-h-[240px] rounded-md border border-input bg-background px-3 py-2 text-sm"
-              value={field.state.value}
-              onChange={(event) => field.handleChange(event.target.value)}
+            <Label htmlFor="content">Content</Label>
+            <LexicalEditor
+              value={field.state.value ?? ''}
+              onChange={(html) => field.handleChange(html)}
+              placeholder="Write your article content here..."
             />
           </div>
         )}
       </form.Field>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <form.Field name="featured_image_url">
-          {(field) => (
-            <div className="grid gap-2">
-              <Label htmlFor="featured_image_url">Featured image URL</Label>
-              <Input
-                id="featured_image_url"
-                value={field.state.value}
-                onChange={(event) => field.handleChange(event.target.value)}
-                placeholder="https://… or stored path"
-              />
-            </div>
-          )}
-        </form.Field>
-
         {/* Featured image upload */}
         <div className="grid gap-2">
           <Label htmlFor="featured_image">Featured image</Label>
@@ -307,20 +288,6 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
                 className="min-h-[120px] rounded-md border border-input bg-background px-3 py-2 text-sm"
                 value={field.state.value}
                 onChange={(event) => field.handleChange(event.target.value)}
-              />
-            </div>
-          )}
-        </form.Field>
-
-        <form.Field name="og_image_url">
-          {(field) => (
-            <div className="grid gap-2">
-              <Label htmlFor="og_image_url">OG image URL</Label>
-              <Input
-                id="og_image_url"
-                value={field.state.value}
-                onChange={(event) => field.handleChange(event.target.value)}
-                placeholder="https://… or stored path"
               />
             </div>
           )}
@@ -481,4 +448,26 @@ function normalizeDateTime(value?: string | null) {
     return trimmed
   }
   return date.toISOString()
+}
+
+function sanitizeAndNormalizeContent(value?: string | null) {
+  if (!value) return undefined
+  const trimmed = value.trim()
+  if (!trimmed) return undefined
+  const sanitized = DOMPurify.sanitize(trimmed, {
+    ALLOWED_TAGS: [
+      'p', 'br', 'strong', 'em', 'u', 's', 'code', 'pre',
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'ul', 'ol', 'li',
+      'a', 'blockquote',
+      'img', 'video', 'source',
+    ],
+    ALLOWED_ATTR: ['href', 'rel', 'target', 'src', 'alt', 'width', 'height', 'controls', 'preload'],
+    ALLOW_DATA_ATTR: false,
+    ADD_URI_SAFE_ATTR: ['src'],
+  })
+  if (!sanitized || sanitized === '<p><br></p>' || sanitized === '<p></p>') {
+    return undefined
+  }
+  return sanitized
 }
