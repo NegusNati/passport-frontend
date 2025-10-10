@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { type HTMLAttributes } from 'react'
 
 import { useAdQuery } from '@/features/advertisements/api/get-ad'
@@ -42,8 +43,8 @@ function SponsoredContent({ orientation }: { orientation: 'horizontal' | 'vertic
         Reach thousands of travelers looking for passport updates and related services. Reserve this
         premium banner for your brand.
       </p>
-      <Button size="sm" className="mt-1 w-full sm:w-auto">
-        Promote Your Business
+      <Button size="sm" className="mt-1 w-full sm:w-auto" asChild>
+        <Link to="/advertisement-requests">Promote Your Business</Link>
       </Button>
     </div>
   )

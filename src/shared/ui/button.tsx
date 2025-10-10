@@ -1,4 +1,5 @@
-import { type ButtonHTMLAttributes, forwardRef, type ReactNode } from 'react'
+import { Slot } from '@radix-ui/react-slot'
+import { type ButtonHTMLAttributes, forwardRef, type ReactNode, type Ref } from 'react'
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost'
 type ButtonSize = 'sm' | 'md' | 'lg'
@@ -8,6 +9,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   size?: ButtonSize
   leftIcon?: ReactNode
   rightIcon?: ReactNode
+  asChild?: boolean
 }
 
 function baseClasses(variant: ButtonVariant, disabled?: boolean) {
@@ -35,19 +37,31 @@ function sizeClasses(size: ButtonSize) {
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className = '', variant = 'primary', size = 'md', leftIcon, rightIcon, children, ...props },
+    {
+      className = '',
+      variant = 'primary',
+      size = 'md',
+      leftIcon,
+      rightIcon,
+      children,
+      asChild = false,
+      type,
+      ...props
+    },
     ref,
   ) => {
+    const Component = asChild ? Slot : 'button'
+
     return (
-      <button
-        ref={ref}
+      <Component
+        ref={ref as unknown as Ref<HTMLButtonElement>}
         className={[baseClasses(variant!, props.disabled), sizeClasses(size!), className].join(' ')}
-        {...props}
+        {...(asChild ? props : { ...props, type: type ?? 'button' })}
       >
         {leftIcon ? <span className="-ml-1">{leftIcon}</span> : null}
         <span>{children}</span>
         {rightIcon ? <span className="-mr-1">{rightIcon}</span> : null}
-      </button>
+      </Component>
     )
   },
 )

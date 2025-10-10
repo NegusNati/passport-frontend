@@ -21,8 +21,8 @@ export function AdBanner() {
                 Reserve this premium banner for your brand.
               </p>
             </div>
-            <Button size="sm"   className="">
-              <Link to="/">Promote Your Business</Link>
+            <Button size="sm" className="" asChild>
+              <Link to="/advertisement-requests">Promote Your Business</Link>
             </Button>
           </div>
         </div>
