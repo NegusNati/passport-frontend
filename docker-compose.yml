@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   # ============================================
   # Nginx Proxy Manager (Reverse Proxy + SSL)
