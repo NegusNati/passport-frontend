@@ -1,5 +1,13 @@
-import { Slot } from '@radix-ui/react-slot'
-import { type ButtonHTMLAttributes, forwardRef, type ReactNode, type Ref } from 'react'
+import {
+  type ButtonHTMLAttributes,
+  Children,
+  cloneElement,
+  forwardRef,
+  isValidElement,
+  type ReactElement,
+  type ReactNode,
+  type Ref,
+} from 'react'
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost'
 type ButtonSize = 'sm' | 'md' | 'lg'
@@ -50,18 +58,50 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref,
   ) => {
-    const Component = asChild ? Slot : 'button'
+    if (asChild) {
+      const child = Children.only(children) as ReactElement<Record<string, unknown>>
+      if (!isValidElement(child)) {
+        throw new Error('Button with asChild expects a single React element child.')
+      }
 
-    return (
-      <Component
-        ref={ref as unknown as Ref<HTMLButtonElement>}
-        className={[baseClasses(variant!, props.disabled), sizeClasses(size!), className].join(' ')}
-        {...(asChild ? props : { ...props, type: type ?? 'button' })}
-      >
+      const childClassName = [
+        baseClasses(variant!, props.disabled),
+        sizeClasses(size!),
+        className,
+        (child.props.className as string | undefined) ?? '',
+      ]
+        .filter(Boolean)
+        .join(' ')
+
+      const originalChildren = child.props.children as ReactNode
+
+      const childContent = (
+        <>
+          {leftIcon ? <span className="-ml-1">{leftIcon}</span> : null}
+          <span>{originalChildren}</span>
+          {rightIcon ? <span className="-mr-1">{rightIcon}</span> : null}
+        </>
+      )
+
+      return cloneElement(child, { className: childClassName, ...props }, childContent)
+    }
+
+    const content = (
+      <>
         {leftIcon ? <span className="-ml-1">{leftIcon}</span> : null}
         <span>{children}</span>
         {rightIcon ? <span className="-mr-1">{rightIcon}</span> : null}
-      </Component>
+      </>
+    )
+
+    return (
+      <button
+        ref={ref as unknown as Ref<HTMLButtonElement>}
+        className={[baseClasses(variant!, props.disabled), sizeClasses(size!), className].join(' ')}
+        {...{ ...props, type: type ?? 'button' }}
+      >
+        {content}
+      </button>
     )
   },
 )

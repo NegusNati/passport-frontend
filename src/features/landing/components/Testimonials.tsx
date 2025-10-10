@@ -47,10 +47,10 @@ const QUOTES: Quote[] = [
 
 function CardItem({ q }: { q: Quote }) {
   return (
-    <li className="bg-primary/10 hover:bg-primary  border border-primary  hover:border-brand-8/30 rounded-xl  px-3 py-4 shadow-sm transition-colors md:px-4 md:py-4 text-forground hover:text-background">
-      <p className=" text-[13px] leading-relaxed italic">“{q.quote}”</p>
-      <p className=" mt-2 text-[13px] font-medium">{q.name}</p>
-    </li>
+    <div className="bg-primary/10 hover:bg-primary border border-primary hover:border-brand-8/30 rounded-xl px-3 py-4 shadow-sm transition-colors md:px-4 md:py-4 text-forground hover:text-background">
+      <p className="text-[13px] leading-relaxed italic">“{q.quote}”</p>
+      <p className="mt-2 text-[13px] font-medium">{q.name}</p>
+    </div>
   )
 }
 

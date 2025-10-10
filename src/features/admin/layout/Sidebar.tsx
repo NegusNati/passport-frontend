@@ -8,27 +8,36 @@ import {
   UploadCloud,
   Users,
 } from 'lucide-react'
+import type { ComponentType, ReactNode, SVGProps } from 'react'
 
+import type { AdminPrimaryRole } from '@/features/admin/lib/roles'
 import { cn } from '@/shared/lib/utils'
 
-const navItems = [
-  { label: 'Overview', to: '/admin', icon: Home },
-  { label: 'Users', to: '/admin/users', icon: Users },
-  { label: 'Passports', to: '/admin/passports', icon: FileText },
-  { label: 'Articles', to: '/admin/articles', icon: Newspaper },
-  { label: 'Ad Requests', to: '/admin/advertisement-requests', icon: Megaphone },
-  { label: 'Advertisements', to: '/admin/advertisements', icon: ImageIcon },
-  { label: 'PDF import', to: '/admin/pdf-import', icon: UploadCloud },
+const navItems: Array<{
+  label: string
+  to: string
+  icon: ComponentType<SVGProps<SVGSVGElement>>
+  roles: AdminPrimaryRole[]
+}> = [
+  { label: 'Overview', to: '/admin', icon: Home, roles: ['admin', 'editor'] },
+  { label: 'Users', to: '/admin/users', icon: Users, roles: ['admin'] },
+  { label: 'Passports', to: '/admin/passports', icon: FileText, roles: ['admin'] },
+  { label: 'Articles', to: '/admin/articles', icon: Newspaper, roles: ['admin', 'editor'] },
+  { label: 'Ad Requests', to: '/admin/advertisement-requests', icon: Megaphone, roles: ['admin'] },
+  { label: 'Advertisements', to: '/admin/advertisements', icon: ImageIcon, roles: ['admin'] },
+  { label: 'PDF import', to: '/admin/pdf-import', icon: UploadCloud, roles: ['admin'] },
 ] as const
 
 type SidebarProps = {
   isOpen: boolean
   onClose: () => void
   reduceMotion: boolean
+  role: AdminPrimaryRole
 }
 
-export function Sidebar({ isOpen, onClose, reduceMotion }: SidebarProps) {
+export function Sidebar({ isOpen, onClose, reduceMotion, role }: SidebarProps) {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
+  const filteredItems = navItems.filter((item) => item.roles.includes(role))
 
   return (
     <>
@@ -37,7 +46,7 @@ export function Sidebar({ isOpen, onClose, reduceMotion }: SidebarProps) {
           <span className="text-lg font-semibold tracking-tight">Admin</span>
         </div>
         <nav className="flex flex-1 flex-col gap-1 px-3 py-4 text-sm">
-          {navItems.map((item) => (
+          {filteredItems.map((item) => (
             <SidebarLink key={item.to} href={item.to} icon={item.icon} active={pathname === item.to}>
               {item.label}
             </SidebarLink>
@@ -74,7 +83,7 @@ export function Sidebar({ isOpen, onClose, reduceMotion }: SidebarProps) {
           </button>
         </div>
         <nav className="flex flex-1 flex-col gap-1 px-3 py-4 text-sm">
-          {navItems.map((item) => (
+          {filteredItems.map((item) => (
             <SidebarLink
               key={item.to}
               href={item.to}
@@ -93,9 +102,9 @@ export function Sidebar({ isOpen, onClose, reduceMotion }: SidebarProps) {
 
 type SidebarLinkProps = {
   href: string
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
+  icon: ComponentType<React.SVGProps<SVGSVGElement>>
   active: boolean
-  children: React.ReactNode
+  children: ReactNode
   onClick?: () => void
 }
 

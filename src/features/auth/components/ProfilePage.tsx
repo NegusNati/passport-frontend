@@ -33,10 +33,11 @@ export function ProfilePage({ initialUser, onSignedOut }: ProfilePageProps) {
     },
   })
 
+  const roles = currentUser.roles?.map((role) => role.toLowerCase()) ?? []
   const isAdmin = Boolean(
-    currentUser.is_admin ||
-      currentUser.roles?.some((role) => role.toLowerCase() === 'admin' || role.toLowerCase() === 'superadmin'),
+    currentUser.is_admin || roles.includes('admin') || roles.includes('superadmin'),
   )
+  const isEditor = roles.includes('editor')
   const hasUploadPermission = currentUser.permissions?.includes('upload-files') ?? false
 
   const verifiedLabel = currentUser.email_verified_at ? 'Verified' : 'Not verified'
@@ -55,13 +56,13 @@ export function ProfilePage({ initialUser, onSignedOut }: ProfilePageProps) {
               Keep your contact details up to date so we can reach you about passport updates.
             </p>
           </div>
-          {isAdmin ? (
+          {isAdmin || isEditor ? (
             <Link
               to="/admin"
               preload="intent"
               className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-input bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
             >
-              Admin dashboard
+              Go to dashboard
             </Link>
           ) : null}
         </div>
@@ -162,7 +163,7 @@ export function ProfilePage({ initialUser, onSignedOut }: ProfilePageProps) {
             </p>
           ) : null}
         </div>
-        {hasUploadPermission && !isAdmin ? (
+        {hasUploadPermission && !(isAdmin || isEditor) ? (
           <p className="text-xs text-muted-foreground">
             You can upload passport PDFs from the{' '}
             <Link to="/admin/pdf-import" preload="intent" className="underline">
