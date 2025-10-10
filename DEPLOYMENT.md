@@ -314,7 +314,7 @@ git pull
 docker compose pull
 
 # Rebuild frontend
-docker compose build passport-frontend
+cd docker compose build passport-frontend
 
 # Restart
 docker compose up -d
