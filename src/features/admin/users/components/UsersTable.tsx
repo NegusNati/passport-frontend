@@ -1,13 +1,16 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import { useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
+import { useUpdateUserRoleMutation } from '@/features/admin/users/api/update-user-role'
 import { DataTable } from '@/features/table/DataTable'
 import { cn } from '@/shared/lib/utils'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
+import { toast } from '@/shared/ui/sonner'
 
 import type { AdminUser, AdminUsersMeta } from '../schemas/user'
+import { UserRoleDialog } from './UserRoleDialog'
 
 const roleOptions = [
   { value: 'admin', label: 'Admin' },
@@ -44,6 +47,42 @@ export function UsersTable({
   onPageChange,
   onPageSizeChange,
 }: UsersTableProps) {
+  const [editingUser, setEditingUser] = useState<AdminUser | null>(null)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const mutation = useUpdateUserRoleMutation()
+
+  const handleEditClick = useCallback((user: AdminUser) => {
+    setEditingUser(user)
+    setDialogOpen(true)
+  }, [])
+
+  const handleDialogOpenChange = useCallback(
+    (open: boolean) => {
+      setDialogOpen(open)
+      if (!open) {
+        setEditingUser(null)
+        mutation.reset()
+      }
+    },
+    [mutation],
+  )
+
+  const handleRoleSubmit = useCallback(
+    async (role: 'admin' | 'user') => {
+      if (!editingUser) return
+      try {
+        await mutation.mutateAsync({ userId: editingUser.id, role })
+        toast.success('User role updated')
+        setDialogOpen(false)
+        setEditingUser(null)
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to update user role'
+        toast.error(message)
+      }
+    },
+    [editingUser, mutation],
+  )
+
   const columns = useMemo<ColumnDef<AdminUser>[]>(
     () => [
       {
@@ -91,16 +130,17 @@ export function UsersTable({
         id: 'actions',
         header: '',
         cell: ({ row }) => (
-          <a
-            href={`/admin/users/${row.original.id}`}
+          <button
+            type="button"
+            onClick={() => handleEditClick(row.original)}
             className="inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
           >
             Edit
-          </a>
+          </button>
         ),
       },
     ],
-    [],
+    [handleEditClick],
   )
 
   const fallbackPageSize = data.length > 0 ? data.length : 10
@@ -125,6 +165,14 @@ export function UsersTable({
           onPageSizeChange,
         }}
         tableTitle="Users"
+      />
+      <UserRoleDialog
+        open={dialogOpen}
+        onOpenChange={handleDialogOpenChange}
+        user={editingUser}
+        onSubmit={handleRoleSubmit}
+        isSubmitting={mutation.isPending}
+        errorMessage={mutation.error instanceof Error ? mutation.error.message : null}
       />
     </div>
   )
