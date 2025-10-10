@@ -31,8 +31,11 @@ mkdir -p data/npm/data data/npm/letsencrypt data/umami-db
 ### 3. Configure Environment
 
 ```bash
+# Navigate into repository
+cd passport-frontend
+
 # Copy template
-cp passport-frontend/.env.example .env
+cp .env.example .env
 
 # Generate secrets
 openssl rand -hex 32  # UMAMI_APP_SECRET
@@ -97,11 +100,11 @@ docker compose logs -f
 
 ```
 /opt/passport/
-├── .env                          # Environment variables (keep secure!)
 ├── data/                         # Persistent data
 │   ├── npm/                      # Nginx Proxy Manager data
 │   └── umami-db/                 # Umami PostgreSQL data
 └── passport-frontend/            # Git repository
+    ├── .env                      # Environment variables (keep secure!)
     ├── docker-compose.yml        # Orchestration config
     ├── Dockerfile               # Frontend build
     ├── .env.example             # Template
@@ -153,8 +156,8 @@ After setup, every push to `main` automatically deploys!
 # Check logs
 docker compose logs
 
-# Verify .env file exists in /opt/passport
-ls -la /opt/passport/.env
+# Verify .env file exists in passport-frontend directory
+ls -la /opt/passport/passport-frontend/.env
 
 # Check data directory permissions
 ls -la /opt/passport/data/

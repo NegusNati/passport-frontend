@@ -71,16 +71,15 @@ mkdir -p data/npm/data data/npm/letsencrypt data/umami-db
 ### 2. Configure Environment Variables
 
 ```bash
-# Copy environment template from inside the repo
-cp passport-frontend/.env.example .env
+# Navigate into the repository
+cd passport-frontend
+
+# Copy environment template
+cp .env.example .env
 
 # Generate secure secrets
 openssl rand -hex 32  # For UMAMI_APP_SECRET
 openssl rand -hex 16  # For UMAMI_HASH_SALT
-negus@PassportET:/opt/passport/passport-frontend$ openssl rand -hex 32  # For UMAMI_APP_SECRET
-openssl rand -hex 16  # For UMAMI_HASH_SALT
-ee9fb29a0b65a8c7921f08277f0c59b4853ee4f1198ffacc899f2342fc6628c9
-e2e7bd2a5e23faa673e93a75587582e4
 
 # Edit .env file
 nano .env
@@ -97,21 +96,24 @@ VITE_SITE_NAME=Passport
 # Umami database
 POSTGRES_DB=umami
 POSTGRES_USER=umami
-POSTGRES_PASSWORD=<your-strong-password>
+POSTGRES_PASSWORD=your-strong-password-here
 
-# Umami app secrets (generated above)
-UMAMI_APP_SECRET=ee9fb29a0b65a8c7921f08277f0c59b4853ee4f1198ffacc899f2342fc6628c9
-UMAMI_HASH_SALT=e2e7bd2a5e23faa673e93a75587582e4
+# Umami app secrets (use your generated values)
+UMAMI_APP_SECRET=your-64-char-hex-here
+UMAMI_HASH_SALT=your-32-char-hex-here
 
-# Umami database URL
-DATABASE_URL=postgresql://umami:<your-strong-password>@umami-db:5432/umami
+# Umami database URL (must match password above)
+DATABASE_URL=postgresql://umami:your-strong-password-here@umami-db:5432/umami
 ```
 
 ### 3. Initial Deployment
 
 ```bash
-# Run from the passport-frontend directory
+# Make sure you're in the passport-frontend directory
 cd /opt/passport/passport-frontend
+
+# Verify .env exists in this directory
+ls -la .env
 
 # Start all services
 docker compose up -d
