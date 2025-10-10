@@ -1,4 +1,4 @@
-name: Deploy to Production
+name: Zero Downtime Deployment to VPS
 
 on:
   push:
@@ -16,8 +16,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to server via SSH
-        uses: appleboy/ssh-action@v1.2.0
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
@@ -26,41 +26,65 @@ jobs:
           script: |
             set -e
             
-            echo "🚀 Starting deployment..."
-            
-            # Navigate to project directory
             cd /opt/passport/passport-frontend
             
-            # Pull latest changes
+            # Step 1: Pull the latest code
             echo "📥 Pulling latest code..."
             git fetch --all
             git reset --hard origin/${{ github.ref_name }}
             
-            # Pull latest images
-            echo "📦 Pulling Docker images..."
-            docker compose pull umami nginx-proxy-manager
-            
-            # Rebuild frontend with latest code
-            echo "🔨 Building frontend..."
+            # Step 2: Build new frontend image without removing old container yet
+            echo "🔨 Building new frontend image..."
             docker compose build --no-cache passport-frontend
             
-            # Restart services (zero-downtime for proxy/analytics, brief downtime for frontend)
-            echo "♻️  Restarting services..."
+            # Step 3: Pull latest images for other services (no rebuild needed)
+            echo "📦 Pulling latest images for supporting services..."
+            docker compose pull umami nginx-proxy-manager
+            
+            # Step 4: Scale frontend to 2 instances for zero downtime
+            echo "⚡ Starting new frontend instance alongside old one..."
+            docker compose up -d --scale passport-frontend=2 --no-recreate
+            
+            # Wait for new container to be healthy
+            echo "⏳ Waiting for new container to become healthy..."
+            sleep 15
+            
+            # Step 5: Check if new container is healthy
+            if docker ps --filter "name=passport-frontend" --filter "health=healthy" | grep -q passport-frontend; then
+              echo "✅ New container is healthy, proceeding..."
+            else
+              echo "⚠️  New container health check not available, waiting additional time..."
+              sleep 10
+            fi
+            
+            # Step 6: Scale back to 1 (removes old container, keeps new one)
+            echo "♻️  Removing old container, keeping new one..."
+            docker compose up -d --scale passport-frontend=1 --remove-orphans
+            
+            # Step 7: Ensure all services are up (NPM, Umami)
+            echo "🔄 Ensuring all services are running..."
             docker compose up -d
             
-            # Cleanup old images
-            echo "🧹 Cleaning up..."
+            # Step 8: Clean up unused images and containers
+            echo "🧹 Cleaning up old images..."
             docker image prune -f
             
-            # Show status
+            # Step 9: Show final status
             echo "✅ Deployment complete!"
+            echo ""
+            echo "📊 Service Status:"
             docker compose ps
+            echo ""
+            echo "💾 Disk Usage:"
+            docker system df
 
       - name: Notify deployment status
         if: always()
         run: |
           if [ "${{ job.status }}" == "success" ]; then
             echo "✅ Deployment successful!"
+            echo "🌐 Frontend: https://passport.et"
+            echo "📊 Analytics: https://analytics.passport.et"
           else
             echo "❌ Deployment failed!"
             exit 1
