@@ -3,12 +3,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/api/client'
 import { adminKeys } from '@/features/admin/lib/keys'
 
-import type { AdminUser, AdminUsersListResponse } from '../schemas/user'
+import type { AdminRole, AdminUser, AdminUsersListResponse } from '../schemas/user'
 import { AdminUserDetailResponseSchema } from '../schemas/user'
 
 export type UpdateUserRoleInput = {
   userId: number | string
-  role: 'admin' | 'user'
+  role: AdminRole
 }
 
 export async function updateUserRole({ userId, role }: UpdateUserRoleInput) {

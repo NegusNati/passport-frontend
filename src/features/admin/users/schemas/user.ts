@@ -18,6 +18,9 @@ export const AdminUserSchema = z.object({
 
 export type AdminUser = z.infer<typeof AdminUserSchema>
 
+export const AdminRoleOptions = ['admin', 'editor', 'user'] as const
+export type AdminRole = (typeof AdminRoleOptions)[number]
+
 const PaginationLinks = z.object({
   first: z.string().nullable().optional(),
   last: z.string().nullable().optional(),

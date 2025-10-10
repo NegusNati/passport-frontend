@@ -6,12 +6,15 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 
-import type { AdminUser } from '../schemas/user'
+import type { AdminRole, AdminUser } from '../schemas/user'
+import { AdminRoleOptions } from '../schemas/user'
 
-const roleOptions = [
-  { value: 'admin', label: 'Admin' },
-  { value: 'user', label: 'User' },
-]
+const roleLabels: Record<AdminRole, string> = {
+  admin: 'Admin',
+  editor: 'Editor',
+  user: 'User',
+}
+const roleOptions = AdminRoleOptions.map((value) => ({ value, label: roleLabels[value] }))
 
 const statusOptions = [
   { value: 'active', label: 'Active' },
@@ -26,7 +29,7 @@ type UserFormProps = {
 }
 
 export type UpdateAdminUserFormValues = {
-  role: string
+  role: AdminRole
   status: string
   is_admin: boolean
 }
@@ -36,7 +39,7 @@ export function UserForm({ user, onSubmit, isSubmitting, errorMessage }: UserFor
 
   const form = useForm({
     defaultValues: {
-      role: (user.roles?.[0] ?? (user.is_admin ? 'admin' : 'user')) as string,
+      role: (user.roles?.[0] ?? (user.is_admin ? 'admin' : 'user')) as AdminRole,
       status: (user.email_verified_at ? 'active' : 'inactive') as string,
       is_admin: Boolean(user.is_admin ?? (user.roles ?? []).includes('admin')),
     } satisfies UpdateAdminUserFormValues,
@@ -67,7 +70,7 @@ export function UserForm({ user, onSubmit, isSubmitting, errorMessage }: UserFor
             {(field) => (
               <Select
                 value={field.state.value}
-                onValueChange={(value) => field.handleChange(value)}
+                onValueChange={(value) => field.handleChange(value as AdminRole)}
               >
                 <SelectTrigger id="role">
                   <SelectValue />

@@ -12,18 +12,21 @@ import {
 import { Label } from '@/shared/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 
-import type { AdminUser } from '../schemas/user'
+import type { AdminRole, AdminUser } from '../schemas/user'
+import { AdminRoleOptions } from '../schemas/user'
 
-const roleOptions = [
-  { value: 'user', label: 'User' },
-  { value: 'admin', label: 'Admin' },
-]
+const roleLabels: Record<AdminRole, string> = {
+  admin: 'Admin',
+  editor: 'Editor',
+  user: 'User',
+}
+const roleOptions = AdminRoleOptions.map((value) => ({ value, label: roleLabels[value] }))
 
 type UserRoleDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   user: AdminUser | null
-  onSubmit: (role: 'admin' | 'user') => Promise<void> | void
+  onSubmit: (role: AdminRole) => Promise<void> | void
   isSubmitting: boolean
   errorMessage?: string | null
 }
@@ -36,7 +39,7 @@ export function UserRoleDialog({
   isSubmitting,
   errorMessage,
 }: UserRoleDialogProps) {
-  const [role, setRole] = useState<'admin' | 'user'>('user')
+  const [role, setRole] = useState<AdminRole>('user')
   const fullName = useMemo(() => {
     if (!user) return ''
     return [user.first_name, user.middle_name, user.last_name].filter(Boolean).join(' ')
@@ -44,7 +47,7 @@ export function UserRoleDialog({
 
   useEffect(() => {
     if (!user) return
-    const nextRole = (user.roles?.[0] ?? (user.is_admin ? 'admin' : 'user')) as 'admin' | 'user'
+    const nextRole = (user.roles?.[0] ?? (user.is_admin ? 'admin' : 'user')) as AdminRole
     setRole(nextRole)
   }, [user])
 
@@ -79,7 +82,7 @@ export function UserRoleDialog({
               <Label htmlFor="user-role-select">Role</Label>
               <Select
                 value={role}
-                onValueChange={(value) => setRole(value as 'admin' | 'user')}
+                onValueChange={(value) => setRole(value as AdminRole)}
               >
                 <SelectTrigger id="user-role-select">
                   <SelectValue placeholder="Select role" />
@@ -95,8 +98,8 @@ export function UserRoleDialog({
             </div>
 
             <p className="text-xs text-muted-foreground">
-              Granting the admin role provides access to all administration modules. Revert to user to
-              remove elevated privileges.
+              Admin grants full control, editor limits access to article management, and user keeps
+              standard access only.
             </p>
 
             {errorMessage ? (

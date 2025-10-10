@@ -9,13 +9,15 @@ import { Label } from '@/shared/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 import { toast } from '@/shared/ui/sonner'
 
-import type { AdminUser, AdminUsersMeta } from '../schemas/user'
+import type { AdminRole, AdminUser, AdminUsersMeta } from '../schemas/user'
+import { AdminRoleOptions } from '../schemas/user'
 import { UserRoleDialog } from './UserRoleDialog'
-
-const roleOptions = [
-  { value: 'admin', label: 'Admin' },
-  { value: 'user', label: 'User' },
-]
+const roleLabels: Record<AdminRole, string> = {
+  admin: 'Admin',
+  editor: 'Editor',
+  user: 'User',
+}
+const roleOptions = AdminRoleOptions.map((value) => ({ value, label: roleLabels[value] }))
 
 // status options removed; backend provides email_verified instead
 
@@ -68,7 +70,7 @@ export function UsersTable({
   )
 
   const handleRoleSubmit = useCallback(
-    async (role: 'admin' | 'user') => {
+    async (role: AdminRole) => {
       if (!editingUser) return
       try {
         await mutation.mutateAsync({ userId: editingUser.id, role })
