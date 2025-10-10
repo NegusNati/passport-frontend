@@ -42,7 +42,10 @@ export function AdvertiseSection() {
             switch (card.key) {
               case 'creative-support':
                 return (
-                  <div className="bg-primary/10 flex items-center justify-end rounded-lg border border-primary px-0 py-4">
+                  <div
+                    key={card.key}
+                    className="bg-primary/10 flex items-center justify-end rounded-lg border border-primary px-0 py-4"
+                  >
                     <img
                       src={card.image as string}
                       alt={card.imageAlt as string}
@@ -54,7 +57,10 @@ export function AdvertiseSection() {
 
               case 'calendar-highlights':
                 return (
-                  <div className="bg-primary/10 flex items-center justify-center rounded-md border border-primary px-0 py-4 ">
+                  <div
+                    key={card.key}
+                    className="bg-primary/10 flex items-center justify-center rounded-md border border-primary px-0 py-4 "
+                  >
                     <img
                       src={card.image as string}
                       alt={card.imageAlt as string}
@@ -66,7 +72,10 @@ export function AdvertiseSection() {
 
               case 'reporting':
                 return (
-                  <div className="bg-primary/10 flex items-center justify-center rounded-md border border-primary px-0 py-4">
+                  <div
+                    key={card.key}
+                    className="bg-primary/10 flex items-center justify-center rounded-md border border-primary px-0 py-4"
+                  >
                     <img
                       src={card.image as string}
                       alt={card.imageAlt as string}
