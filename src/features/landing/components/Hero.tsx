@@ -4,6 +4,7 @@ import { ArrowRightIcon, IdCardIcon, Users2Icon } from 'lucide-react'
 
 import LandingImageOne from '@/assets/landingImages/cardImages/Landing_img_1.png'
 import LandingImageTwo from '@/assets/landingImages/cardImages/Landing_img_2.png'
+import LandingImageThree from '@/assets/landingImages/cardImages/Landing_img_3.png'
 import { AnimatedBorderCard, Card, CardSwap } from '@/shared/components/common'
 import { M } from '@/shared/lib/motion'
 import { Button } from '@/shared/ui/button'
@@ -23,9 +24,9 @@ const HERO_CARDS = [
     alt: 'Collage of community members sharing travel tips',
   },
   {
-    title: 'Get Detailed',
+    title: 'Join Our Community',
     description: 'Join the Telegram group to learn from others’ experiences.',
-    image: LandingImageOne,
+    image: LandingImageThree,
     alt: 'Collage of community members sharing travel tips',
   },
 ] as const
@@ -48,10 +49,10 @@ function renderHeroCard(variant: 'desktop' | 'mobile', card: (typeof HERO_CARDS)
           loading="lazy"
           decoding="async"
         />
-        <div className="from-primary/40 via-primary/5 absolute inset-0 bg-gradient-to-t to-transparent" />
-        <div className={`absolute inset-x-0 bottom-0 space-y-2 ${padding}`}>
+        <div className=" absolute inset-0 bg-gradient-to-t from-primary/50 via-primary/15 to-primary/5" />
+        <div className={`absolute inset-x-0 bottom-0 space-y-2 ${padding} ` }>
           <h3 className={`${headingSize} font-semibold tracking-tight text-white`}>{card.title}</h3>
-          <p className={`text-sm leading-relaxed text-white/80 ${descriptionSpacing}`}>
+          <p className={`text-sm leading-relaxed text-white/90 ${descriptionSpacing}`}>
             {card.description}
           </p>
         </div>
@@ -81,7 +82,7 @@ export function Hero() {
                 <Users2Icon className="text-primary h-4 w-4" />
                 Over 1.5 million users
               </AnimatedBorderCard>
-              <AnimatedBorderCard variant="secondary" size="sm">
+              <AnimatedBorderCard variant="secondary" size="sm" className=' border-amber-100/50' >
                 <IdCardIcon className="text-primary h-4 w-4" />
                 1,278,980+ passports confirmed as issued
               </AnimatedBorderCard>
@@ -109,8 +110,8 @@ export function Hero() {
 
                 {/* CTA (kept centered by the grid wrapper) */}
 
-                <Button size="lg" className="relative z-[1] rounded-full bg-transparent py-5">
-                  <Link
+                <Button size="lg" className="relative z-[1] rounded-full bg-transparent py-5  text-sm md:text-base ">
+                  <Link 
                     to="/passports"
                     className="inline-flex items-center bg-transparent font-semibold text-white"
                   >

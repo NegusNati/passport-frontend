@@ -25,7 +25,7 @@ export function AnimatedBorderCard({
 
   const variantClasses = {
     primary: 'border-primary/50',
-    secondary: 'border-accent/90',
+    secondary: 'border-amber-500/50',
     accent: 'border-amber-500/50',
   }
 
