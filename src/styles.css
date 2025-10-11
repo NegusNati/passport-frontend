@@ -300,3 +300,36 @@ code {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
 }
+
+
+/* Animations for star movement */
+@keyframes star-movement-bottom {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-100%, 0%);
+    opacity: 0;
+  }
+}
+
+@keyframes star-movement-top {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100%, 0%);
+    opacity: 0;
+  }
+}
+
+/* Animation utility classes (mimicking Tailwind behavior) */
+.animate-star-movement-bottom {
+  animation: star-movement-bottom  linear infinite alternate;
+}
+
+.animate-star-movement-top {
+  animation: star-movement-top  linear infinite alternate;
+}

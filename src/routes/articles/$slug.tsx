@@ -6,8 +6,8 @@ import type { ListParams } from '@/features/articles/lib/ArticlesApi'
 import { useArticleQuery, useArticlesQuery } from '@/features/articles/lib/ArticlesQuery'
 import type { ArticleApiItem } from '@/features/articles/lib/ArticlesSchema'
 import { LexicalViewer } from '@/shared/components/rich-text/LexicalViewer'
-import { AdSlot } from '@/shared/ui/ad-slot'
-import { Badge } from '@/shared/ui/badge'
+import AdSlot from '@/shared/ui/ad-slot'
+import { Card, CardContent, CardHeader } from '@/shared/ui/card'
 import { Container } from '@/shared/ui/container'
 import { Seo } from '@/shared/ui/Seo'
 
@@ -131,143 +131,117 @@ function ArticleBody({
   const authorName = article.author?.name ?? 'Passport.ET Editorial'
   const publishedDate = article.published_at ? formatDisplayDate(article.published_at) : undefined
   const readingTime = estimateReadingTime(article)
-  const headlineSummary = article.excerpt ?? 'Search for blog posts by blog title.'
-  const categories = article.categories ?? []
+  const headlineSummary = article.excerpt ?? 'Search for blog post by blog title'
 
   return (
     <section className="py-10 sm:py-16">
       <Container>
-        <div className="mx-auto grid max-w-6xl items-start gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-16">
-          <div className="space-y-10 lg:space-y-12">
-            <div className="border-border/60 bg-card/80 supports-[backdrop-filter]:bg-card/60 rounded-3xl border px-5 py-6 shadow-sm sm:px-8 sm:py-8">
-              <div className="flex flex-wrap items-center justify-between gap-4 text-sm">
-                <button
-                  type="button"
-                  className="text-muted-foreground inline-flex items-center gap-2 font-medium transition hover:text-foreground"
-                  onClick={onBack}
-                >
-                  <ArrowLeft className="size-4" aria-hidden="true" />
-                  Blogs
-                </button>
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleShare}
-                    className="text-muted-foreground/80 hover:text-foreground flex h-9 w-9 items-center justify-center rounded-full border border-border transition hover:bg-muted"
-                    aria-label="Share article"
-                  >
-                    <Share2 className="size-4" aria-hidden="true" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleCopyLink}
-                    className="text-muted-foreground/80 hover:text-foreground flex h-9 w-9 items-center justify-center rounded-full border border-border transition hover:bg-muted"
-                    aria-label="Copy article link"
-                  >
-                    {copied ? <Check className="size-4 text-emerald-600" /> : <LinkIcon className="size-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="mt-6 space-y-4">
-                <div className="space-y-3">
-                  <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
-                    {article.title}
-                  </h1>
-                  <p className="text-muted-foreground text-base leading-relaxed">{headlineSummary}</p>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-4">
-                  <div className="flex items-center gap-3">
-                    <span className="bg-primary/10 text-primary flex h-12 w-12 items-center justify-center rounded-full text-lg font-semibold">
-                      {getInitials(authorName)}
-                    </span>
-                    <div className="space-y-0.5">
-                      <p className="text-foreground text-sm font-semibold leading-tight">{authorName}</p>
-                      <p className="text-muted-foreground text-xs">
-                        {publishedDate ?? '—'}
-                        {publishedDate && readingTime ? ' · ' : null}
-                        {readingTime ? `${readingTime} min read` : null}
-                      </p>
-                    </div>
-                  </div>
-                  {categories.length ? (
-                    <div className="flex flex-wrap items-center gap-2">
-                      {categories.map((category) => (
-                        <Badge
-                          key={category.slug}
-                          variant="secondary"
-                          className="bg-emerald-50 text-emerald-700 border-emerald-100 text-xs font-medium"
-                        >
-                          {category.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  ) : null}
-                  {copied ? (
-                    <span className="text-emerald-600 text-xs font-medium">Link copied!</span>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-
-            {article.featured_image_url ? (
-              <img
-                src={article.featured_image_url}
-                alt={article.title}
-                className="w-full rounded-[1.75rem] object-cover"
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-              />
-            ) : (
-              <div
-                className="bg-emerald-50 border border-emerald-100 h-64 w-full rounded-[1.75rem] sm:h-80"
-                aria-hidden="true"
-              />
-            )}
-
-            <div className="max-w-none leading-relaxed">
-              <LexicalViewer content={article.content ?? ''} />
-            </div>
-
-            {relatedIsLoading ? (
-              <p className="text-muted-foreground text-sm">Loading similar articles…</p>
-            ) : relatedArticles.length ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-foreground text-xl font-semibold">Others like this</h2>
-                  <Link
-                    to="/articles"
-                    className="text-primary text-sm font-medium underline-offset-4 hover:underline"
-                  >
-                    View all
-                  </Link>
-                </div>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {relatedArticles.map((related) => (
-                    <RelatedArticleCard key={related.id} article={related} />
-                  ))}
-                </div>
-              </div>
-            ) : null}
-
-            <div className="lg:hidden">
+        <div className="mx-auto max-w-6xl md:grid md:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)] md:items-start md:gap-10 lg:gap-12">
+          <div className="mx-auto max-w-3xl space-y-8 md:mx-0 md:max-w-none md:pr-6 lg:pr-10">
+            <div className="md:hidden">
               <AdSlot
                 orientation="horizontal"
                 preset="sponsored"
                 className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
               />
             </div>
-          </div>
 
-          <div className="hidden lg:block">
+            {/* Navigation Bar */}
+            <div className="flex items-center justify-between">
+              <button
+                type="button"
+                className="text-muted-foreground inline-flex items-center gap-2 font-medium transition hover:text-foreground"
+                onClick={onBack}
+              >
+                <ArrowLeft className="size-4" aria-hidden="true" />
+                Blogs
+              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="text-muted-foreground/80 hover:text-foreground flex h-9 w-9 items-center justify-center rounded-full border border-border transition hover:bg-muted"
+                  aria-label="Share article"
+                >
+                  <Share2 className="size-4" aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCopyLink}
+                  className="text-muted-foreground/80 hover:text-foreground flex h-9 w-9 items-center justify-center rounded-full border border-border transition hover:bg-muted"
+                  aria-label="Copy article link"
+                >
+                  {copied ? <Check className="size-4 text-emerald-600" /> : <LinkIcon className="size-4" />}
+                </button>
+              </div>
+            </div>
+
+            {/* Title and Subtitle */}
+            <div className="space-y-4 text-center">
+              <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
+                {article.title}
+              </h1>
+              <p className="text-muted-foreground text-base leading-relaxed">{headlineSummary}</p>
+            </div>
+
+            {/* Author Section */}
+            <div className="flex items-center justify-center gap-3">
+              <span className="bg-primary flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full text-lg font-semibold text-white">
+                {getInitials(authorName)}
+              </span>
+              <div className="space-y-0.5">
+                <p className="text-foreground text-base font-semibold">{authorName}</p>
+                <p className="text-muted-foreground text-sm">
+                  {publishedDate ?? '—'}
+                  {publishedDate && readingTime ? ' · ' : null}
+                  {readingTime ? `${readingTime} Min` : null}
+                </p>
+              </div>
+            </div>
+
+            {/* Featured Image */}
+            {article.featured_image_url ? (
+              <img
+                src={article.featured_image_url}
+                alt={article.title}
+                className="w-full rounded-2xl object-cover"
+                loading="eager"
+                fetchPriority="high"
+                decoding="async"
+              />
+            ) : (
+              <div
+                className="bg-muted h-64 w-full rounded-2xl sm:h-80"
+                aria-hidden="true"
+              />
+            )}
+
+            {/* Article Content */}
+            <div className="max-w-none leading-relaxed">
+              <LexicalViewer content={article.content ?? ''} />
+            </div>
+
+            {/* Related Articles */}
+            {relatedIsLoading ? (
+              <p className="text-muted-foreground text-sm">Loading similar articles…</p>
+            ) : relatedArticles.length ? (
+              <div className="space-y-6">
+                <h2 className="text-foreground text-xl font-semibold">Others like this</h2>
+                <div className="grid gap-6 sm:grid-cols-2">
+                  {relatedArticles.map((related) => (
+                    <RelatedArticleCard key={related.id} article={related} />
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+          <aside className="hidden md:sticky md:top-24 md:block">
             <AdSlot
               orientation="vertical"
               preset="sponsored"
               className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
             />
-          </div>
+          </aside>
         </div>
       </Container>
     </section>
@@ -276,29 +250,55 @@ function ArticleBody({
 
 function RelatedArticleCard({ article }: { article: ArticleApiItem }) {
   const publishedDate = article.published_at ? formatDisplayDate(article.published_at) : '—'
-  const readingTime = estimateReadingTime(article)
   const summarySource = article.excerpt ?? (article.content ? stripHtml(article.content) : '')
-  const summary = summarySource ? truncate(summarySource, 120) : 'Read the full story.'
+  const summary = summarySource ? truncate(summarySource, 80) : 'Read the full story.'
 
   return (
     <Link
       to="/articles/$slug"
       params={{ slug: article.slug }}
       preload="intent"
-      className="bg-muted/40 hover:bg-muted/60 border-border/60 text-left flex h-full flex-col justify-between rounded-2xl border px-5 py-6 transition-shadow hover:shadow-sm"
+      className="block"
     >
-      <span className="text-emerald-700 text-xs font-semibold uppercase tracking-[0.3em]">
-        {publishedDate}
-      </span>
-      <div className="mt-4 space-y-2">
-        <h3 className="text-foreground text-base font-semibold leading-snug line-clamp-2">
-          {article.title}
-        </h3>
-        <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">{summary}</p>
-      </div>
-      {readingTime ? (
-        <span className="text-muted-foreground mt-4 text-xs font-medium">{readingTime} min read</span>
-      ) : null}
+      <Card className="overflow-hidden transition-shadow hover:shadow-lg">
+        <div className="aspect-16/9 w-full overflow-hidden bg-muted">
+          {article.featured_image_url ? (
+            <img
+              src={article.featured_image_url}
+              alt={article.title}
+              className="h-full w-full object-cover object-center"
+              loading="lazy"
+            />
+          ) : (
+            <div className="bg-muted flex h-full w-full items-center justify-center">
+              <div className="text-muted-foreground">
+                <svg
+                  className="h-12 w-12"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+            </div>
+          )}
+        </div>
+        <CardHeader className="pb-2">
+          <p className="text-primary text-sm">{publishedDate}</p>
+        </CardHeader>
+        <CardHeader className="pt-0 pb-3">
+          <h3 className="text-base font-bold leading-tight line-clamp-2">{article.title}</h3>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <p className="text-muted-foreground line-clamp-2 text-sm">{summary}</p>
+        </CardContent>
+      </Card>
     </Link>
   )
 }

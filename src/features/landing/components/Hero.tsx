@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRightIcon, IdCardIcon, Users2Icon } from 'lucide-react'
 
-import { AnimatedBorderCard, Card,CardSwap } from '@/shared/components/common'
+import { AnimatedBorderCard, Card, CardSwap } from '@/shared/components/common'
 import { M } from '@/shared/lib/motion'
 import { Button } from '@/shared/ui/button'
 
@@ -21,14 +21,14 @@ export function Hero() {
             transition={{ duration: M.duration, ease: M.ease }}
             className="space-y-6 md:ml-6 md:mt-18"
           >
-             {/* Stats row */}
-             <div className="flex flex-wrap items-center gap-3">
+            {/* Stats row */}
+            <div className="flex flex-wrap items-center gap-3">
               <AnimatedBorderCard variant="primary" size="sm">
-                <Users2Icon className="text-primary h-4 w-4" /> 
+                <Users2Icon className="text-primary h-4 w-4" />
                 Over 1.5 million users
               </AnimatedBorderCard>
               <AnimatedBorderCard variant="secondary" size="sm">
-                <IdCardIcon className="text-primary h-4 w-4" /> 
+                <IdCardIcon className="text-primary h-4 w-4" />
                 1,278,980+ passports confirmed as issued
               </AnimatedBorderCard>
             </div>
@@ -61,15 +61,17 @@ export function Hero() {
                   className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] md:w-[90%]  max-w-[380px] h-[70px] rounded-[9999px] bg-primary animate-pulse-fast"
                 />
 
-           
+
                 {/* CTA (kept centered by the grid wrapper) */}
-                <Button size="lg"   className="relative z-[1] py-5 rounded-full bg-transparent  ">
+
+
+                <Button size="lg" className="relative z-[1] py-5 rounded-full bg-transparent  ">
                   <Link to="/passports" className="inline-flex items-center font-semibold bg-transparent text-white">
                     Check My Passport Status
                     <ArrowRightIcon className="ml-2 h-4 w-4" aria-hidden />
                   </Link>
                 </Button>
-                
+
               </div>
 
               <div className="flex items-center justify-center">
