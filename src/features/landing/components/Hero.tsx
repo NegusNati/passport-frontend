@@ -76,8 +76,9 @@ export function Hero() {
 
               <div className="flex items-center justify-center">
                 <a
-                  href="#telegram"
-                  className="text-primary inline-flex items-center text-base font-semibold"
+                  href="https://t.me/passportdotet_group"
+                  target="_blank"
+                  className="text-primary inline-flex items-center text-base font-semibold" rel="noreferrer"
                 >
                   Join Telegram Group
                 </a>

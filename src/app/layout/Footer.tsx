@@ -82,7 +82,9 @@ const Footer = () => {
             </div>
 
             <motion.a
-              href="#"
+              href="https://t.me/passportdotet_group"
+              target="_blank"
+              rel="noreferrer"
               className="inline-flex items-center space-x-2 transition-colors duration-300 hover:text-foreground"
               whileHover={{ x: 5 }}
               whileTap={{ scale: 0.95 }}
@@ -126,6 +128,8 @@ const Footer = () => {
                 <motion.li key={social.name}>
                   <motion.a
                     href={social.url}
+                    target="_blank"
+                    rel="noreferrer"
                     className="text-muted-foreground hover:text-primary flex items-center space-x-2 transition-colors duration-300"
                     whileHover={{ x: 5 }}
                     whileTap={{ scale: 0.95 }}
