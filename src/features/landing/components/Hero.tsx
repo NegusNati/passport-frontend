@@ -32,8 +32,8 @@ const HERO_CARDS = [
 ] as const
 
 function renderHeroCard(variant: 'desktop' | 'mobile', card: (typeof HERO_CARDS)[number]) {
-  const padding = variant === 'desktop' ? 'p-8' : 'p-6'
-  const headingSize = variant === 'desktop' ? 'text-xl' : 'text-lg'
+  const padding = variant === 'desktop' ? 'p-8' : 'p-4 sm:p-6'
+  const headingSize = variant === 'desktop' ? 'text-xl' : 'text-base sm:text-lg'
   const descriptionSpacing = variant === 'desktop' ? 'mt-3' : 'mt-2'
 
   return (
@@ -113,7 +113,7 @@ export function Hero() {
                 <Button size="lg" className="relative z-[1] rounded-full bg-transparent py-5  text-sm md:text-base ">
                   <Link 
                     to="/passports"
-                    className="inline-flex items-center bg-transparent font-semibold text-white"
+                    className="inline-flex items-center bg-transparent font-semibold text-white " 
                   >
                     Check My Passport Status
                     <ArrowRightIcon className="ml-2 h-4 w-4" aria-hidden />
@@ -125,17 +125,17 @@ export function Hero() {
                 <a
                   href="https://t.me/passportdotet_group"
                   target="_blank"
-                  className="text-primary inline-flex items-center text-base font-semibold"
+                  className="text-primary inline-flex items-center text-base font-semibold "
                   rel="noreferrer"
                 >
-                  Join Telegram Group
+                  Join The Telegram Group
                 </a>
               </div>
             </div>
           </motion.div>
 
           {/* Right: CardSwap (visible on md+) */}
-          <div className="hidden md:block">
+          <div className="hidden md:block translate-y-[-65px] translate-x-[-45px]">
             <div className="relative justify-self-end md:h-[580px] md:w-[538px]">
               <CardSwap
                 width={538}
@@ -149,23 +149,6 @@ export function Hero() {
               </CardSwap>
             </div>
           </div>
-        </div>
-
-        {/* Mobile / small screens: CardSwap below below */}
-        <div
-          className="relative translate-x-[-185px] translate-y-[-165px] md:hidden"
-          style={{ height: 410 }}
-        >
-          <CardSwap
-            width={460}
-            height={580}
-            cardDistance={60}
-            verticalDistance={70}
-            delay={5000}
-            pauseOnHover={true}
-          >
-            {HERO_CARDS.map((card) => renderHeroCard('mobile', card))}
-          </CardSwap>
         </div>
       </div>
     </section>
