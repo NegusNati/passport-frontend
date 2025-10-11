@@ -3,7 +3,10 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { queryClient } from '@/api/queryClient'
 import { useDeleteAdminArticleMutation } from '@/features/admin/articles/api/delete-article'
 import { fetchAdminArticle, useAdminArticleQuery } from '@/features/admin/articles/api/get-article'
-import { type UpdateAdminArticleVariables, useUpdateAdminArticleMutation } from '@/features/admin/articles/api/update-article'
+import {
+  type UpdateAdminArticleVariables,
+  useUpdateAdminArticleMutation,
+} from '@/features/admin/articles/api/update-article'
 import { ArticleForm } from '@/features/admin/articles/components/ArticleForm'
 import { adminKeys } from '@/features/admin/lib/keys'
 
@@ -64,7 +67,7 @@ function AdminArticleEditPage() {
         </div>
         <button
           type="button"
-          className="inline-flex h-9 items-center justify-center rounded-md border border-destructive bg-destructive/10 px-3 text-sm font-medium text-destructive transition-colors hover:bg-destructive hover:text-destructive-foreground"
+          className="border-destructive bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground inline-flex h-9 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors"
           onClick={handleDelete}
           disabled={deleteMutation.isPending}
         >

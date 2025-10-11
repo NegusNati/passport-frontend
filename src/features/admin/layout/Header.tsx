@@ -11,7 +11,12 @@ type AdminHeaderProps = {
 
 export function AdminHeader({ onMenuClick, className }: AdminHeaderProps) {
   return (
-    <header className={cn('flex h-16 items-center justify-between border-b bg-background/80 px-4 backdrop-blur', className)}>
+    <header
+      className={cn(
+        'bg-background/80 flex h-16 items-center justify-between border-b px-4 backdrop-blur',
+        className,
+      )}
+    >
       <div className="flex items-center gap-2">
         <Button
           variant="outline"
@@ -22,7 +27,7 @@ export function AdminHeader({ onMenuClick, className }: AdminHeaderProps) {
         >
           <Menu className="h-4 w-4" aria-hidden="true" />
         </Button>
-        <span className="text-sm font-medium text-muted-foreground">Admin console</span>
+        <span className="text-muted-foreground text-sm font-medium">Admin console</span>
       </div>
       <div className="flex items-center gap-2">
         <ThemeToggle />

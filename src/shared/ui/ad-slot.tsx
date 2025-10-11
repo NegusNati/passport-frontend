@@ -98,7 +98,7 @@ export function DynamicAdSlot({
     return (
       <div
         className={[
-          'relative flex animate-pulse items-center justify-center border border-dashed border-border bg-muted',
+          'border-border bg-muted relative flex animate-pulse items-center justify-center border border-dashed',
           orientationClasses[orientation],
           className,
         ].join(' ')}
@@ -128,7 +128,7 @@ export function DynamicAdSlot({
   return (
     <div
       className={[
-        'relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-border bg-background shadow-sm transition-shadow hover:shadow-md',
+        'border-border bg-background relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border shadow-sm transition-shadow hover:shadow-md',
         orientationClasses[orientation],
         className,
       ].join(' ')}
@@ -150,7 +150,7 @@ export function DynamicAdSlot({
         className="h-full w-full object-cover"
         loading="lazy"
       />
-      <span className="bg-muted/80 text-muted-foreground absolute right-2 top-2 rounded px-2 py-1 text-xs font-medium">
+      <span className="bg-muted/80 text-muted-foreground absolute top-2 right-2 rounded px-2 py-1 text-xs font-medium">
         Ad
       </span>
     </div>

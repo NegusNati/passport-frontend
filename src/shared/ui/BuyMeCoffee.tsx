@@ -50,7 +50,7 @@ export function BuyMeCoffee({ href = 'https://ye-buna.com/PassportET', className
         {/* Rotating text ring */}
         <div
           aria-hidden
-          className="absolute inset-0 grid place-items-center rounded-full bg-primary "
+          className="bg-primary absolute inset-0 grid place-items-center rounded-full"
           style={{ transform: 'rotate(var(--rotate, 0deg))' }}
         >
           <svg viewBox="0 0 100 100" className="h-full w-full">
@@ -58,13 +58,12 @@ export function BuyMeCoffee({ href = 'https://ye-buna.com/PassportET', className
               {/* Reduce radius from -40 to -35 or -36 to add padding */}
               <path id="bmc-circle" d="M 50,50 m -36,0 a 36,36 0 1,1 72,0 a 36,36 0 1,1 -72,0" />
             </defs>
-            <text className="fill-white text-[10px] tracking-[0.2em] uppercase sm:text-[12px] font-semibold">
+            <text className="fill-white text-[10px] font-semibold tracking-[0.2em] uppercase sm:text-[12px]">
               <textPath href="#bmc-circle" startOffset="0">
                 Buy me a coffee • Buy me a coffee •
               </textPath>
             </text>
           </svg>
-
         </div>
         {/* Button in the center */}
         <a

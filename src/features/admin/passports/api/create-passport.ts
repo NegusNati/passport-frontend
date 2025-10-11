@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/api/client'
 import { adminKeys } from '@/features/admin/lib/keys'
 
-import { type AdminPassportCreateInput,AdminPassportCreateSchema } from '../schemas/create'
+import { type AdminPassportCreateInput, AdminPassportCreateSchema } from '../schemas/create'
 import { AdminPassportsListResponseSchema } from '../schemas/passport'
 
 export async function createAdminPassport(input: AdminPassportCreateInput) {

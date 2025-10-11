@@ -44,7 +44,7 @@ export function AdvertisementsToolbar<TData>({
   const isFiltered = table.getState().columnFilters.length > 0 || searchValue !== ''
 
   return (
-    <div className="flex flex-col gap-4 items-start justify-start md:flex-row md:items-center md:justify-between">
+    <div className="flex flex-col items-start justify-start gap-4 md:flex-row md:items-center md:justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Search by title or client name..."

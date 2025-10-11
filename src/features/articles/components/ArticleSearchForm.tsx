@@ -13,7 +13,11 @@ interface ArticleSearchFormProps {
   onQueryChange?: (value: string) => void
 }
 
-export function ArticleSearchForm({ onSearch, initialQuery = '', onQueryChange }: ArticleSearchFormProps) {
+export function ArticleSearchForm({
+  onSearch,
+  initialQuery = '',
+  onQueryChange,
+}: ArticleSearchFormProps) {
   const form = useForm({
     defaultValues: {
       query: initialQuery,
@@ -30,7 +34,7 @@ export function ArticleSearchForm({ onSearch, initialQuery = '', onQueryChange }
 
   return (
     <section className="py-12 md:py-16">
-      <Container className='border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm' >
+      <Container className="border-border/60 rounded-2xl border bg-transparent p-6 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
         <div className="mx-auto max-w-2xl text-center">
           {/* Header */}
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">

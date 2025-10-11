@@ -4,7 +4,7 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 
-import { type PdfUploadInput,PdfUploadSchema } from '../schemas/upload'
+import { type PdfUploadInput, PdfUploadSchema } from '../schemas/upload'
 
 const defaultState = {
   date: '',
@@ -79,17 +79,13 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
             key={fileKey}
             className="text-sm"
           />
-          <p className="text-xs text-muted-foreground">Maximum size 10MB. Only PDF files are allowed.</p>
+          <p className="text-muted-foreground text-xs">
+            Maximum size 10MB. Only PDF files are allowed.
+          </p>
         </div>
         <div className="grid gap-2">
           <Label htmlFor="date">Date (YYYY-MM-DD)</Label>
-          <Input
-            id="date"
-            type="date"
-            value={formValues.date}
-            onChange={handleChange}
-            required
-          />
+          <Input id="date" type="date" value={formValues.date} onChange={handleChange} required />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="location">Location</Label>
@@ -110,15 +106,15 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
             placeholder="HEADER"
             required
           />
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-xs">
             Ingestion starts after the first line that matches this value.
           </p>
         </div>
       </div>
 
-      {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
-      {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
-      {successMessage ? <p className="text-sm text-primary">{successMessage}</p> : null}
+      {formError ? <p className="text-destructive text-sm">{formError}</p> : null}
+      {errorMessage ? <p className="text-destructive text-sm">{errorMessage}</p> : null}
+      {successMessage ? <p className="text-primary text-sm">{successMessage}</p> : null}
 
       <Button type="submit" disabled={isSubmitting}>
         {isSubmitting ? 'Uploading…' : 'Upload and process'}

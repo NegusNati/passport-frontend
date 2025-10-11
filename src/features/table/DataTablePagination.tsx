@@ -1,25 +1,14 @@
-import type { Table } from '@tanstack/react-table';
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from 'lucide-react';
-import * as React from 'react';
+import type { Table } from '@tanstack/react-table'
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import * as React from 'react'
 
-import { Button } from '@/shared/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/ui/select';
+import { Button } from '@/shared/ui/button'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 
 interface DataTablePaginationProps<TData> {
-  table: Table<TData>;
-  onPageChange?: (pageIndex: number) => void;
-  onPageSizeChange?: (pageSize: number) => void;
+  table: Table<TData>
+  onPageChange?: (pageIndex: number) => void
+  onPageSizeChange?: (pageSize: number) => void
 }
 
 export function DataTablePagination<TData>({
@@ -30,34 +19,32 @@ export function DataTablePagination<TData>({
   // Handle page index change
   const handlePageIndexChange = (pageIndex: number) => {
     if (onPageChange) {
-      onPageChange(pageIndex);
+      onPageChange(pageIndex)
     } else {
-      table.setPageIndex(pageIndex);
+      table.setPageIndex(pageIndex)
     }
-  };
+  }
 
   // Handle page size change
   const handlePageSizeChange = (value: string) => {
-    const pageSize = Number(value);
+    const pageSize = Number(value)
     if (onPageSizeChange) {
-      onPageSizeChange(pageSize);
+      onPageSizeChange(pageSize)
     } else {
-      table.setPageSize(pageSize);
+      table.setPageSize(pageSize)
     }
-  };
-  const pageSize = table.getState().pagination.pageSize;
+  }
+  const pageSize = table.getState().pagination.pageSize
   const pageSizeOptions = React.useMemo(() => {
-    const defaults = [10, 20, 30, 40, 50];
-    if (defaults.includes(pageSize)) return defaults;
-    return [...defaults, pageSize].sort((a, b) => a - b);
-  }, [pageSize]);
+    const defaults = [10, 20, 30, 40, 50]
+    if (defaults.includes(pageSize)) return defaults
+    return [...defaults, pageSize].sort((a, b) => a - b)
+  }, [pageSize])
   return (
-    <div className="flex flex-col-reverse items-center justify-end gap-4 px-2 sm:flex-row rounded-none">
+    <div className="flex flex-col-reverse items-center justify-end gap-4 rounded-none px-2 sm:flex-row">
       <div className="flex items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
         <div className="flex items-center space-x-2">
-          <p className="whitespace-nowrap text-sm font-medium">
-            Rows per page
-          </p>
+          <p className="text-sm font-medium whitespace-nowrap">Rows per page</p>
           <Select
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={handlePageSizeChange}
@@ -67,11 +54,7 @@ export function DataTablePagination<TData>({
             </SelectTrigger>
             <SelectContent side="top" className="rounded-none">
               {pageSizeOptions.map((sizeOption) => (
-                <SelectItem
-                  key={sizeOption}
-                  value={`${sizeOption}`}
-                  className="rounded-none"
-                >
+                <SelectItem key={sizeOption} value={`${sizeOption}`} className="rounded-none">
                   {sizeOption}
                 </SelectItem>
               ))}
@@ -84,7 +67,7 @@ export function DataTablePagination<TData>({
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex rounded-none"
+            className="hidden h-8 w-8 rounded-none p-0 lg:flex"
             onClick={() => handlePageIndexChange(0)}
             disabled={!table.getCanPreviousPage()}
           >
@@ -93,14 +76,12 @@ export function DataTablePagination<TData>({
           </Button>
           <Button
             variant="outline"
-            className="h-8 w-8 p-0 rounded-none"
+            className="h-8 w-8 rounded-none p-0"
             onClick={() => {
               if (onPageChange) {
-                handlePageIndexChange(
-                  table.getState().pagination.pageIndex - 1
-                );
+                handlePageIndexChange(table.getState().pagination.pageIndex - 1)
               } else {
-                table.previousPage();
+                table.previousPage()
               }
             }}
             disabled={!table.getCanPreviousPage()}
@@ -110,14 +91,12 @@ export function DataTablePagination<TData>({
           </Button>
           <Button
             variant="outline"
-            className="h-8 w-8 p-0 rounded-none"
+            className="h-8 w-8 rounded-none p-0"
             onClick={() => {
               if (onPageChange) {
-                handlePageIndexChange(
-                  table.getState().pagination.pageIndex + 1
-                );
+                handlePageIndexChange(table.getState().pagination.pageIndex + 1)
               } else {
-                table.nextPage();
+                table.nextPage()
               }
             }}
             disabled={!table.getCanNextPage()}
@@ -127,7 +106,7 @@ export function DataTablePagination<TData>({
           </Button>
           <Button
             variant="outline"
-            className="hidden h-8 w-8 p-0 lg:flex rounded-none"
+            className="hidden h-8 w-8 rounded-none p-0 lg:flex"
             onClick={() => handlePageIndexChange(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >
@@ -137,5 +116,5 @@ export function DataTablePagination<TData>({
         </div>
       </div>
     </div>
-  );
+  )
 }

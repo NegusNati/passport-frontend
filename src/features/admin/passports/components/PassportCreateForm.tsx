@@ -5,10 +5,7 @@ import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 
-import {
-  type AdminPassportCreateInput,
-  AdminPassportCreateSchema,
-} from '../schemas/create'
+import { type AdminPassportCreateInput, AdminPassportCreateSchema } from '../schemas/create'
 
 const locations = ['ICS branch office, Jimma', 'Addis Ababa', 'Dire Dawa']
 
@@ -18,7 +15,11 @@ type PassportCreateFormProps = {
   errorMessage?: string | null
 }
 
-export function PassportCreateForm({ onSubmit, isSubmitting, errorMessage }: PassportCreateFormProps) {
+export function PassportCreateForm({
+  onSubmit,
+  isSubmitting,
+  errorMessage,
+}: PassportCreateFormProps) {
   const [formError, setFormError] = useState<string | null>(null)
 
   const form = useForm({
@@ -82,7 +83,7 @@ export function PassportCreateForm({ onSubmit, isSubmitting, errorMessage }: Pas
               <Label htmlFor="location">Location</Label>
               <select
                 id="location"
-                className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+                className="border-input bg-background h-10 rounded-md border px-3 text-sm"
                 value={field.state.value}
                 onChange={(event) => field.handleChange(event.target.value)}
                 required
@@ -155,8 +156,8 @@ export function PassportCreateForm({ onSubmit, isSubmitting, errorMessage }: Pas
         </form.Field>
       </div>
 
-      {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
-      {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
+      {formError ? <p className="text-destructive text-sm">{formError}</p> : null}
+      {errorMessage ? <p className="text-destructive text-sm">{errorMessage}</p> : null}
 
       <form.Subscribe selector={(state) => state.canSubmit}>
         {(canSubmit) => (

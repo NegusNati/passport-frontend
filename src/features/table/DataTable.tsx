@@ -11,53 +11,46 @@ import {
   type SortingState,
   useReactTable,
   type VisibilityState,
-} from '@tanstack/react-table';
-import * as React from 'react';
+} from '@tanstack/react-table'
+import * as React from 'react'
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/shared/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table'
 
-import { DataTableError } from './DataTableError';
-import { DataTableLoadingSkeleton } from './DataTableLoadingSkeleton';
-import { DataTablePagination } from './DataTablePagination';
-import { DataTableToolbar } from './DataTableToolbar';
+import { DataTableError } from './DataTableError'
+import { DataTableLoadingSkeleton } from './DataTableLoadingSkeleton'
+import { DataTablePagination } from './DataTablePagination'
+import { DataTableToolbar } from './DataTableToolbar'
 
 interface PaginationProps {
-  pageCount: number;
-  pageIndex: number;
-  pageSize: number;
-  onPageChange: (page: number) => void;
-  onPageSizeChange: (pageSize: number) => void;
+  pageCount: number
+  pageIndex: number
+  pageSize: number
+  onPageChange: (page: number) => void
+  onPageSizeChange: (pageSize: number) => void
 }
 
 interface DataTableProps<TData, TValue> {
-  tableTitle?: string;
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  isLoading?: boolean;
-  isError?: boolean;
-  error?: Error | null;
-  pagination?: PaginationProps;
-  searchKey?: string;
+  tableTitle?: string
+  columns: ColumnDef<TData, TValue>[]
+  data: TData[]
+  isLoading?: boolean
+  isError?: boolean
+  error?: Error | null
+  pagination?: PaginationProps
+  searchKey?: string
   filterableColumns?: {
-    id: string;
-    title: string;
+    id: string
+    title: string
     options: {
-      label: string;
-      value: string;
-    }[];
-  }[];
+      label: string
+      value: string
+    }[]
+  }[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  toolbar?: React.ComponentType<any>;
-  onExport?: () => void;
-  onAction?: () => void;
-  actionTitle?: string;
+  toolbar?: React.ComponentType<any>
+  onExport?: () => void
+  onAction?: () => void
+  actionTitle?: string
 }
 
 export function DataTable<TData, TValue>({
@@ -75,13 +68,10 @@ export function DataTable<TData, TValue>({
   onAction,
   actionTitle,
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({});
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = React.useState({})
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([])
 
   const table = useReactTable({
     data,
@@ -128,34 +118,34 @@ export function DataTable<TData, TValue>({
             },
           },
         }),
-  });
-  const ToolbarComponent = CustomToolbar || DataTableToolbar;
+  })
+  const ToolbarComponent = CustomToolbar || DataTableToolbar
 
   // Force table section to re-render when server data size or controlled pagination changes.
   // This guards against cases where upstream keeps previous data during fetches
   // and React Table's internal memoization could retain the old row model briefly.
   const renderKey = React.useMemo(() => {
-    const pageIndex = pagination ? pagination.pageIndex : table.getState().pagination.pageIndex;
-    const pageSize = pagination ? pagination.pageSize : table.getState().pagination.pageSize;
-    return `${data.length}-${pageIndex}-${pageSize}`;
-  }, [data.length, pagination, table]);
+    const pageIndex = pagination ? pagination.pageIndex : table.getState().pagination.pageIndex
+    const pageSize = pagination ? pagination.pageSize : table.getState().pagination.pageSize
+    return `${data.length}-${pageIndex}-${pageSize}`
+  }, [data.length, pagination, table])
 
   const handlePaginationChange = (pageIndex: number) => {
     // Always update the table state immediately so the UI reflects the change
-    table.setPageIndex(pageIndex);
+    table.setPageIndex(pageIndex)
     if (pagination) {
       // Convert 0-based to 1-based for the API
-      pagination.onPageChange(pageIndex + 1);
+      pagination.onPageChange(pageIndex + 1)
     }
-  };
+  }
 
   const handlePageSizeChange = (pageSize: number) => {
     // Always update the table state immediately so the UI reflects the change
-    table.setPageSize(pageSize);
+    table.setPageSize(pageSize)
     if (pagination) {
-      pagination.onPageSizeChange(pageSize);
+      pagination.onPageSizeChange(pageSize)
     }
-  };
+  }
 
   return (
     <div className="space-y-4">
@@ -180,23 +170,17 @@ export function DataTable<TData, TValue>({
       )}
       <div className="rounded-none border" key={renderKey} role="region" aria-live="polite">
         <Table>
-          <TableHeader className="rounded-none border-none  bg-accent">
+          <TableHeader className="bg-accent rounded-none border-none">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead
-                      key={header.id}
-                      className="whitespace-nowrap py-2 px-4 rounded-none"
-                    >
+                    <TableHead key={header.id} className="rounded-none px-4 py-2 whitespace-nowrap">
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -206,36 +190,30 @@ export function DataTable<TData, TValue>({
           ) : isError && error ? (
             <DataTableError error={error} columns={columns.length} />
           ) : (
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                  className="odd:bg-muted/30"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && 'selected'}
+                    className="odd:bg-muted/30"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
                     ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length} className="h-24 text-center">
+                    No results found.
+                  </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results found.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        )}
+              )}
+            </TableBody>
+          )}
         </Table>
       </div>
       {!isError && table.getRowModel().rows.length > 0 && (
@@ -246,5 +224,5 @@ export function DataTable<TData, TValue>({
         />
       )}
     </div>
-  );
+  )
 }

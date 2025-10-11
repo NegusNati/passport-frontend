@@ -22,13 +22,16 @@ Nginx Proxy Manager (ports 80/443)
 ## Prerequisites
 
 ### Server Requirements
+
 - Ubuntu 22.04 LTS (or similar)
 - 2GB+ RAM, 20GB+ storage
 - Public IP with DNS A records pointing to your server
 - Ports 80, 443, 22 open in firewall
 
 ### Required Domains
+
 Configure DNS A records for:
+
 - `passport.et` → Your server IP (frontend)
 - `api.passport.et` → Your backend server IP
 - `analytics.passport.et` → Your server IP (Umami dashboard)
@@ -132,6 +135,7 @@ docker compose logs -f
 Open `http://your-server-ip:81` in your browser.
 
 **Default credentials:**
+
 - Email: `admin@example.com`
 - Password: `changeme`
 
@@ -274,6 +278,7 @@ git push origin main
 ```
 
 GitHub Actions will automatically:
+
 1. Pull latest code on server
 2. Rebuild frontend container
 3. Restart services with zero downtime
@@ -474,6 +479,7 @@ sudo chown -R $USER:$USER /opt/passport/data
 ## Maintenance
 
 ### Monthly Tasks
+
 - [ ] Review logs for errors
 - [ ] Check SSL certificate expiry (NPM auto-renews)
 - [ ] Update Docker images
@@ -481,6 +487,7 @@ sudo chown -R $USER:$USER /opt/passport/data
 - [ ] Review analytics for anomalies
 
 ### Quarterly Tasks
+
 - [ ] Security audit
 - [ ] Rotate SSH keys
 - [ ] Review and update dependencies
@@ -496,6 +503,7 @@ sudo chown -R $USER:$USER /opt/passport/data
 ## Support
 
 For issues with:
+
 - **Frontend:** Check repository issues
 - **Nginx Proxy Manager:** https://github.com/NginxProxyManager/nginx-proxy-manager
 - **Umami:** https://github.com/umami-software/umami

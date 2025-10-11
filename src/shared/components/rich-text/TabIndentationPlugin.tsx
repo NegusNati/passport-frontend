@@ -1,5 +1,12 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { $getSelection, $isRangeSelection, COMMAND_PRIORITY_EDITOR, INDENT_CONTENT_COMMAND, KEY_TAB_COMMAND, OUTDENT_CONTENT_COMMAND } from 'lexical'
+import {
+  $getSelection,
+  $isRangeSelection,
+  COMMAND_PRIORITY_EDITOR,
+  INDENT_CONTENT_COMMAND,
+  KEY_TAB_COMMAND,
+  OUTDENT_CONTENT_COMMAND,
+} from 'lexical'
 import { useEffect } from 'react'
 
 export function TabIndentationPlugin(): null {

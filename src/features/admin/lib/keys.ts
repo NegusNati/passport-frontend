@@ -24,8 +24,7 @@ export const adminKeys = {
   },
   advertisements: {
     all: () => [...adminKeys.all, 'advertisements'] as const,
-    list: (paramsHash = '{}') =>
-      [...adminKeys.advertisements.all(), 'list', paramsHash] as const,
+    list: (paramsHash = '{}') => [...adminKeys.advertisements.all(), 'list', paramsHash] as const,
     detail: (id: string | number) =>
       [...adminKeys.advertisements.all(), 'detail', String(id)] as const,
     stats: () => [...adminKeys.advertisements.all(), 'stats'] as const,

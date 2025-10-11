@@ -29,4 +29,3 @@ export const Route = createRootRoute({
     </AppErrorBoundary>
   ),
 })
-

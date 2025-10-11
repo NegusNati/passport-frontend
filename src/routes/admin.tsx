@@ -3,7 +3,7 @@ import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
 import { queryClient } from '@/api/queryClient'
 import { AdminShell } from '@/features/admin/layout/AdminShell'
-import { type AdminPrimaryRole,resolveAdminPrimaryRole } from '@/features/admin/lib/roles'
+import { type AdminPrimaryRole, resolveAdminPrimaryRole } from '@/features/admin/lib/roles'
 import { authKeys, fetchMe } from '@/features/auth/api'
 import type { User } from '@/features/auth/schemas/user'
 
@@ -51,4 +51,3 @@ function AdminLayout() {
     </AdminShell>
   )
 }
-

@@ -58,9 +58,7 @@ export function AdminAdvertisementsTable({
   )
 
   const formatDate = useCallback((dateString: string) => {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(
-      new Date(dateString),
-    )
+    return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(dateString))
   }, [])
 
   const columns = useMemo<ColumnDef<Advertisement>[]>(
@@ -76,7 +74,7 @@ export function AdminAdvertisementsTable({
         header: 'Title',
         cell: ({ row }) => (
           <div>
-            <div className="font-medium text-foreground">{row.original.ad_title}</div>
+            <div className="text-foreground font-medium">{row.original.ad_title}</div>
             <div className="text-muted-foreground text-xs">{row.original.client_name}</div>
           </div>
         ),
@@ -96,7 +94,7 @@ export function AdminAdvertisementsTable({
           <div className="text-sm">
             <div className="font-medium capitalize">{row.original.package_type}</div>
             <div className="text-muted-foreground text-xs">
-              ${parseFloat(row.original.payment_amount).toFixed(2)} · {' '}
+              ${parseFloat(row.original.payment_amount).toFixed(2)} ·{' '}
               <span className="capitalize">{row.original.payment_status}</span>
             </div>
           </div>
@@ -113,8 +111,8 @@ export function AdminAdvertisementsTable({
               <span className="font-medium">{row.original.ctr.toFixed(2)}%</span>
             </div>
             <div className="text-muted-foreground text-xs">
-              {row.original.impressions.toLocaleString()} imp · {row.original.clicks.toLocaleString()}{' '}
-              clicks
+              {row.original.impressions.toLocaleString()} imp ·{' '}
+              {row.original.clicks.toLocaleString()} clicks
             </div>
           </div>
         ),
@@ -127,7 +125,9 @@ export function AdminAdvertisementsTable({
           <div className="text-sm">
             <div>{formatDate(row.original.ad_published_date)}</div>
             {row.original.ad_ending_date ? (
-              <div className="text-muted-foreground text-xs">to {formatDate(row.original.ad_ending_date)}</div>
+              <div className="text-muted-foreground text-xs">
+                to {formatDate(row.original.ad_ending_date)}
+              </div>
             ) : (
               <div className="text-muted-foreground text-xs">No end date</div>
             )}
@@ -142,7 +142,7 @@ export function AdminAdvertisementsTable({
           <div className="flex items-center justify-end gap-2">
             <a
               href={`/admin/advertisements/${row.original.id}`}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              className="text-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-9 w-9 items-center justify-center rounded-md transition-colors"
               title="Edit"
             >
               <Edit className="h-4 w-4" />

@@ -41,7 +41,8 @@ export function normalizeOklchColors(root: HTMLElement): () => void {
 
   // Create temporary element for color conversion
   const tempEl = doc.createElement('div')
-  tempEl.style.cssText = 'position:fixed;top:-9999px;left:-9999px;visibility:hidden;pointer-events:none'
+  tempEl.style.cssText =
+    'position:fixed;top:-9999px;left:-9999px;visibility:hidden;pointer-events:none'
   doc.body.appendChild(tempEl)
 
   const convertOklchToRgb = (oklchValue: string): string => {

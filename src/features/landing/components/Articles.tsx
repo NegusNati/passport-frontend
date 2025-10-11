@@ -55,11 +55,11 @@ export function ArticleSection() {
             {[1, 2, 3].map((i) => (
               <Card
                 key={i}
-                className="m-0 max-w-xs min-w-[85vw] flex-shrink-0 overflow-hidden rounded-sm p-0 sm:max-w-none sm:min-w-0 sm:flex-shrink"
+                className="m-0 flex h-full min-h-[360px] max-w-xs min-w-[85vw] flex-shrink-0 overflow-hidden rounded-sm p-0 sm:max-w-none sm:min-w-0 sm:flex-shrink"
               >
-                <CardContent className="flex h-full flex-col justify-between p-1">
-                  <div className="space-y-2">
-                    <Skeleton className="h-40 w-full" />
+                <CardContent className="flex flex-1 flex-col gap-3 p-1 sm:p-3">
+                  <Skeleton className="h-40 w-full" />
+                  <div className="flex flex-1 flex-col gap-2">
                     <Skeleton className="h-3 w-24" />
                     <Skeleton className="h-5 w-full" />
                     <Skeleton className="h-4 w-full" />
@@ -87,11 +87,11 @@ export function ArticleSection() {
                   to="/articles/$slug"
                   params={{ slug: article.slug }}
                   preload="intent"
-                  className="block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="block h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 >
-                  <Card className="m-0 max-w-xs min-w-[85vw] flex-shrink-0 overflow-hidden rounded-sm p-0 transition-shadow hover:shadow-lg sm:max-w-none sm:min-w-0 sm:flex-shrink">
-                    <CardContent className="flex h-full flex-col justify-between p-1">
-                      <div className="space-y-2">
+                  <Card className="m-0 flex h-full min-h-[360px] max-w-xs min-w-[85vw] flex-shrink-0 overflow-hidden rounded-sm p-0 transition-shadow hover:shadow-lg sm:max-w-none sm:min-w-0 sm:flex-shrink">
+                    <CardContent className="flex flex-1 flex-col gap-3 p-1 sm:p-3">
+                      <div className="overflow-hidden rounded-sm">
                         <img
                           src={imageSrc}
                           alt={article.title}
@@ -99,15 +99,17 @@ export function ArticleSection() {
                           loading="lazy"
                           decoding="async"
                         />
-                        {date ? (
-                          <p className="text-muted-foreground text-xs">{date}</p>
-                        ) : null}
-                        <h3 className="text-lg font-semibold tracking-tight line-clamp-2">
+                      </div>
+                      <div className="flex flex-1 flex-col gap-2">
+                        {date ? <p className="text-muted-foreground text-xs">{date}</p> : null}
+                        <h3 className="line-clamp-2 text-lg font-semibold tracking-tight">
                           {article.title}
                         </h3>
                         {excerpt ? (
-                          <p className="text-sm text-muted-foreground line-clamp-2">{excerpt}</p>
-                        ) : null}
+                          <p className="flex-1 text-sm text-muted-foreground line-clamp-3">{excerpt}</p>
+                        ) : (
+                          <span className="flex-1" />
+                        )}
                       </div>
                     </CardContent>
                   </Card>
@@ -129,7 +131,7 @@ export function ArticleSection() {
           </div>
         )}
 
-        <div className="my-4 flex sm:justify-center md:my-8">
+        <div className="my-4 flex justify-center md:my-8">
           <Button size="sm" className="px-4 font-semibold sm:w-auto" asChild>
             <Link to="/articles">View All</Link>
           </Button>

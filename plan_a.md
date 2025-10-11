@@ -3,12 +3,15 @@
 ## Overview
 
 ### Current State
+
 The `ArticleSection` component in the landing page uses hardcoded data:
+
 - Static `POSTS` array with 3 dummy articles
 - Same calendar image for all cards
 - No real API integration
 
 ### Target State
+
 - Fetch 3 latest articles from the articles API
 - Reuse existing API infrastructure from articles feature
 - Add proper prefetching for instant display
@@ -67,13 +70,14 @@ export async function fetchLandingArticles() {
     sort: 'published_at',
     sort_dir: 'desc',
   }
-  
+
   const data = await getJSON<unknown>(API_ENDPOINTS.V1.ARTICLES.ROOT, params)
   return ArticleListResponse.parse(data)
 }
 ```
 
 **Key Points:**
+
 - Fetches only 3 articles (`per_page: 3`)
 - Sorted by most recent (`sort: 'published_at', sort_dir: 'desc'`)
 - Reuses existing `ArticleListResponse` schema for validation
@@ -88,14 +92,15 @@ export async function fetchLandingArticles() {
  * Re-export article schemas for landing page use
  * Keeps landing feature decoupled while reusing validated types
  */
-export { 
-  ArticleApiItem, 
+export {
+  ArticleApiItem,
   ArticleListResponse,
-  type ArticleApiItem as LandingArticleItem 
+  type ArticleApiItem as LandingArticleItem,
 } from '@/features/articles/lib/ArticlesSchema'
 ```
 
 **Key Points:**
+
 - Re-exports types from articles feature
 - Maintains separation of concerns
 - Provides alias (`LandingArticleItem`) for landing-specific usage
@@ -125,13 +130,14 @@ export function useLandingArticlesQuery() {
   return useQuery({
     queryKey: landingKeys.articles() as QueryKey,
     queryFn: fetchLandingArticles,
-    staleTime: 5 * 60_000,    // Consider data fresh for 5 minutes
-    gcTime: 10 * 60_000,       // Keep in cache for 10 minutes
+    staleTime: 5 * 60_000, // Consider data fresh for 5 minutes
+    gcTime: 10 * 60_000, // Keep in cache for 10 minutes
   })
 }
 ```
 
 **Key Points:**
+
 - Query key factory pattern for consistency
 - 5-minute staleTime (landing page doesn't need frequent updates)
 - 10-minute cache time
@@ -158,12 +164,12 @@ import type { ArticleApiItem } from '../lib/LandingSchema'
  */
 function formatDate(dateStr: string | null | undefined): string {
   if (!dateStr) return ''
-  
+
   try {
-    return new Intl.DateTimeFormat('en-US', { 
-      month: 'short', 
-      day: 'numeric', 
-      year: 'numeric' 
+    return new Intl.DateTimeFormat('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
     }).format(new Date(dateStr))
   } catch {
     return ''
@@ -238,10 +244,10 @@ export function ArticleSection() {
                 >
                   <CardContent className="flex h-full flex-col justify-between p-1">
                     <div className="space-y-2">
-                      <img 
-                        src={article.featured_image_url || CalendarImage} 
-                        alt={article.title} 
-                        className="h-40 w-full object-cover" 
+                      <img
+                        src={article.featured_image_url || CalendarImage}
+                        alt={article.title}
+                        className="h-40 w-full object-cover"
                       />
                       <p className="text-muted-foreground text-xs">
                         {formatDate(article.published_at)}
@@ -274,6 +280,7 @@ export default ArticleSection
 ```
 
 **Key Changes:**
+
 1. Removed hardcoded `POSTS` array
 2. Added `useLandingArticlesQuery()` hook
 3. Added loading skeleton (3 cards)
@@ -300,6 +307,7 @@ export const Route = createLazyFileRoute('/')({
 ```
 
 **Key Points:**
+
 - Enables code splitting for landing page
 - Component bundle loads on-demand
 - Reduces initial JavaScript bundle size
@@ -328,6 +336,7 @@ export const Route = createFileRoute('/')({
 ```
 
 **Key Points:**
+
 - Loader runs before component mounts
 - Prefetches articles data
 - Uses TanStack Router context to access queryClient
@@ -345,6 +354,7 @@ export const Route = createFileRoute('/')({
 **Endpoint:** Same as articles page (`/api/v1/articles`)
 
 **Request Parameters:**
+
 ```json
 {
   "per_page": 3,
@@ -355,6 +365,7 @@ export const Route = createFileRoute('/')({
 ```
 
 **Response Schema:** `ArticleListResponse`
+
 ```typescript
 {
   data: ArticleApiItem[],
@@ -371,11 +382,13 @@ export const Route = createFileRoute('/')({
 ### Caching Strategy
 
 **Query Configuration:**
+
 - `staleTime: 5 * 60_000` (5 minutes) - Data considered fresh
 - `gcTime: 10 * 60_000` (10 minutes) - Keep in cache
 - Prefetch in loader for instant display
 
 **Why 5 minutes?**
+
 - Landing page articles don't update frequently
 - Reduces API calls
 - Better performance
@@ -383,6 +396,7 @@ export const Route = createFileRoute('/')({
 ### Error Handling
 
 **Strategy:** Silent failure
+
 - If fetch fails, section renders without cards
 - User experience: Section appears empty
 - No error message shown to user
@@ -404,12 +418,14 @@ article.featured_image_url || CalendarImage
 ## Code Splitting Benefits
 
 ### Before (Without Lazy Route)
+
 ```
 Landing bundle: ~450KB
 Initial load: Includes all LandingPage components
 ```
 
 ### After (With Lazy Route)
+
 ```
 Initial bundle: ~300KB (router + critical)
 Landing chunk: ~150KB (loaded on demand)
@@ -429,6 +445,7 @@ Result: 33% reduction in initial bundle
 ## Testing Checklist
 
 ### Functional Testing
+
 - [ ] Articles load correctly on landing page
 - [ ] Shows exactly 3 articles
 - [ ] Displays most recent articles first
@@ -439,23 +456,27 @@ Result: 33% reduction in initial bundle
 - [ ] Links use correct article slugs
 
 ### Loading States
+
 - [ ] Skeleton cards show during initial load
 - [ ] Skeleton matches card layout structure
 - [ ] No loading state on repeat visits (cache working)
 - [ ] Prefetching eliminates flash of loading state
 
 ### Error Handling
+
 - [ ] Network errors handled gracefully
 - [ ] Section doesn't crash on API failure
 - [ ] Empty state displays properly if no articles
 
 ### Performance
+
 - [ ] Prefetching works (no loading spinner on first visit)
 - [ ] Caching works (subsequent visits instant)
 - [ ] Code splitting reduces initial bundle size
 - [ ] Images lazy load properly
 
 ### Responsive Design
+
 - [ ] Horizontal scroll works on mobile
 - [ ] Grid layout works on tablet (2 columns)
 - [ ] Grid layout works on desktop (3 columns)
@@ -466,34 +487,44 @@ Result: 33% reduction in initial bundle
 ## Performance Benefits
 
 ### 1. Prefetching
+
 ✅ **Loader prefetches data before component renders**
+
 - No loading spinner visible to user
 - Instant content display
 - Feels like static content
 
 ### 2. Caching
+
 ✅ **5-minute cache reduces API calls**
+
 - First visit: Fetch from API
 - Subsequent visits (within 5 min): Serve from cache
 - Reduces server load
 - Faster page loads
 
 ### 3. Code Splitting
+
 ✅ **Lazy route splits bundle**
+
 - Initial bundle: ~33% smaller
 - Landing components load on-demand
 - Faster First Contentful Paint (FCP)
 - Better Core Web Vitals
 
 ### 4. Reusability
+
 ✅ **Shares infrastructure with articles feature**
+
 - Same API endpoint
 - Same schema validation
 - Same query patterns
 - DRY principle
 
 ### 5. Type Safety
+
 ✅ **Full validation chain**
+
 - Zod validates API response
 - TypeScript infers types
 - Compile-time + runtime safety
@@ -506,26 +537,29 @@ Result: 33% reduction in initial bundle
 ### Option 1: Reuse ArticlesQuery Directly
 
 **Simpler approach:**
+
 ```typescript
 import { useArticlesQuery } from '@/features/articles/lib/ArticlesQuery'
 
 export function ArticleSection() {
-  const { data } = useArticlesQuery({ 
-    per_page: 3, 
-    page: 1, 
-    sort: 'published_at', 
-    sort_dir: 'desc' 
+  const { data } = useArticlesQuery({
+    per_page: 3,
+    page: 1,
+    sort: 'published_at',
+    sort_dir: 'desc',
   })
   // ...
 }
 ```
 
 **Pros:**
+
 - Less code duplication
 - No need for landing/lib folder
 - Simpler maintenance
 
 **Cons:**
+
 - Landing feature coupled to articles query
 - Can't customize cache settings for landing
 - Less flexibility for landing-specific logic
@@ -537,20 +571,23 @@ export function ArticleSection() {
 ### Option 2: Server-Side Rendering (SSR)
 
 If using SSR (e.g., with Remix or Next.js):
+
 ```typescript
 export async function loader() {
   return json({
-    articles: await fetchLandingArticles()
+    articles: await fetchLandingArticles(),
   })
 }
 ```
 
 **Pros:**
+
 - SEO-friendly (content in HTML)
 - No loading state ever
 - Faster perceived performance
 
 **Cons:**
+
 - Requires SSR setup
 - More complex deployment
 - Current app is SPA
@@ -560,21 +597,25 @@ export async function loader() {
 ## Migration Path
 
 ### Phase 1: Create Infrastructure
+
 1. Create `landing/lib/` folder
 2. Add `LandingApi.ts`, `LandingSchema.ts`, `LandingQuery.ts`
 3. Verify API calls work
 
 ### Phase 2: Update Component
+
 1. Update `Articles.tsx` to use query
 2. Test loading states
 3. Verify data display
 
 ### Phase 3: Add Code Splitting
+
 1. Create `index.lazy.tsx`
 2. Update `index.tsx` with loader
 3. Test prefetching
 
 ### Phase 4: Testing & Optimization
+
 1. Run full test checklist
 2. Measure bundle size reduction
 3. Verify performance improvements
@@ -586,6 +627,7 @@ export async function loader() {
 ### Issue: Articles don't load
 
 **Check:**
+
 - API endpoint is correct (`/api/v1/articles`)
 - Network tab shows 200 response
 - Response matches `ArticleListResponse` schema
@@ -594,6 +636,7 @@ export async function loader() {
 ### Issue: Loading state persists
 
 **Check:**
+
 - Loader is running (add console.log)
 - `queryClient` available in context
 - Prefetch promise resolving
@@ -602,6 +645,7 @@ export async function loader() {
 ### Issue: Code splitting not working
 
 **Check:**
+
 - Both `index.tsx` and `index.lazy.tsx` exist
 - Using `createLazyFileRoute` correctly
 - Vite build output shows separate chunk
@@ -609,6 +653,7 @@ export async function loader() {
 ### Issue: Stale data showing
 
 **Check:**
+
 - `staleTime` setting (may need to lower)
 - Cache invalidation on new article publish
 - Browser cache vs React Query cache
@@ -618,12 +663,14 @@ export async function loader() {
 ## Success Metrics
 
 ### Performance Targets
+
 - [ ] Initial bundle reduced by >30%
 - [ ] Landing page loads < 2 seconds
 - [ ] No visible loading state on first visit
 - [ ] Article images load < 500ms
 
 ### User Experience Targets
+
 - [ ] Seamless navigation to article details
 - [ ] Mobile horizontal scroll smooth
 - [ ] No layout shift (CLS < 0.1)
@@ -634,41 +681,48 @@ export async function loader() {
 ## Future Enhancements
 
 ### 1. Featured Articles
+
 Instead of "latest 3", could support "featured" flag:
+
 ```typescript
 const params = {
   per_page: 3,
-  featured: true,  // NEW
+  featured: true, // NEW
   sort: 'published_at',
   sort_dir: 'desc',
 }
 ```
 
 ### 2. Category Filter
+
 Show articles from specific category:
+
 ```typescript
 const params = {
   per_page: 3,
-  category: 'passport-tips',  // NEW
+  category: 'passport-tips', // NEW
   sort: 'published_at',
   sort_dir: 'desc',
 }
 ```
 
 ### 3. Background Refresh
+
 Auto-refresh articles every 10 minutes:
+
 ```typescript
 export function useLandingArticlesQuery() {
   return useQuery({
     queryKey: landingKeys.articles(),
     queryFn: fetchLandingArticles,
     staleTime: 5 * 60_000,
-    refetchInterval: 10 * 60_000,  // NEW
+    refetchInterval: 10 * 60_000, // NEW
   })
 }
 ```
 
 ### 4. Skeleton Animation
+
 Add shimmer effect to skeletons for better perceived performance.
 
 ---
@@ -683,12 +737,12 @@ This plan transforms the static ArticleSection into a dynamic, performant compon
 ✅ Reduces bundle size with code splitting  
 ✅ Reuses existing infrastructure  
 ✅ Maintains type safety throughout  
-✅ Provides excellent user experience  
+✅ Provides excellent user experience
 
 **Estimated Implementation Time:** 1-2 hours
 
 **Files Created:** 4  
 **Files Modified:** 2  
-**Lines of Code:** ~250  
+**Lines of Code:** ~250
 
 **Result:** Production-ready, performant, maintainable dynamic article section.

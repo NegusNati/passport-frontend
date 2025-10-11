@@ -34,10 +34,7 @@ function ArticleDetail() {
   )
   const relatedQuery = useArticlesQuery(relatedParams, { enabled: Boolean(a) })
   const relatedArticles = useMemo(
-    () =>
-      (relatedQuery.data?.data ?? [])
-        .filter((item) => item.slug !== a?.slug)
-        .slice(0, 3),
+    () => (relatedQuery.data?.data ?? []).filter((item) => item.slug !== a?.slug).slice(0, 3),
     [relatedQuery.data?.data, a?.slug],
   )
 
@@ -150,7 +147,7 @@ function ArticleBody({
             <div className="flex items-center justify-between">
               <button
                 type="button"
-                className="text-muted-foreground inline-flex items-center gap-2 font-medium transition hover:text-foreground"
+                className="text-muted-foreground hover:text-foreground inline-flex items-center gap-2 font-medium transition"
                 onClick={onBack}
               >
                 <ArrowLeft className="size-4" aria-hidden="true" />
@@ -160,7 +157,7 @@ function ArticleBody({
                 <button
                   type="button"
                   onClick={handleShare}
-                  className="text-muted-foreground/80 hover:text-foreground flex h-9 w-9 items-center justify-center rounded-full border border-border transition hover:bg-muted"
+                  className="text-muted-foreground/80 hover:text-foreground border-border hover:bg-muted flex h-9 w-9 items-center justify-center rounded-full border transition"
                   aria-label="Share article"
                 >
                   <Share2 className="size-4" aria-hidden="true" />
@@ -168,10 +165,14 @@ function ArticleBody({
                 <button
                   type="button"
                   onClick={handleCopyLink}
-                  className="text-muted-foreground/80 hover:text-foreground flex h-9 w-9 items-center justify-center rounded-full border border-border transition hover:bg-muted"
+                  className="text-muted-foreground/80 hover:text-foreground border-border hover:bg-muted flex h-9 w-9 items-center justify-center rounded-full border transition"
                   aria-label="Copy article link"
                 >
-                  {copied ? <Check className="size-4 text-emerald-600" /> : <LinkIcon className="size-4" />}
+                  {copied ? (
+                    <Check className="size-4 text-emerald-600" />
+                  ) : (
+                    <LinkIcon className="size-4" />
+                  )}
                 </button>
               </div>
             </div>
@@ -210,10 +211,7 @@ function ArticleBody({
                 decoding="async"
               />
             ) : (
-              <div
-                className="bg-muted h-64 w-full rounded-2xl sm:h-80"
-                aria-hidden="true"
-              />
+              <div className="bg-muted h-64 w-full rounded-2xl sm:h-80" aria-hidden="true" />
             )}
 
             {/* Article Content */}
@@ -248,19 +246,6 @@ function ArticleBody({
                 className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
               />
             </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
           </div>
           <aside className="hidden md:sticky md:top-24 md:block">
             <AdSlot
@@ -288,14 +273,9 @@ function RelatedArticleCard({ article }: { article: ArticleApiItem }) {
   const summary = summarySource ? truncate(summarySource, 80) : 'Read the full story.'
 
   return (
-    <Link
-      to="/articles/$slug"
-      params={{ slug: article.slug }}
-      preload="intent"
-      className="block"
-    >
+    <Link to="/articles/$slug" params={{ slug: article.slug }} preload="intent" className="block">
       <Card className="overflow-hidden transition-shadow hover:shadow-lg">
-        <div className="aspect-16/9 w-full overflow-hidden bg-muted">
+        <div className="bg-muted aspect-16/9 w-full overflow-hidden">
           {article.featured_image_url ? (
             <img
               src={article.featured_image_url}
@@ -306,12 +286,7 @@ function RelatedArticleCard({ article }: { article: ArticleApiItem }) {
           ) : (
             <div className="bg-muted flex h-full w-full items-center justify-center">
               <div className="text-muted-foreground">
-                <svg
-                  className="h-12 w-12"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="h-12 w-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -327,7 +302,7 @@ function RelatedArticleCard({ article }: { article: ArticleApiItem }) {
           <p className="text-primary text-sm">{publishedDate}</p>
         </CardHeader>
         <CardHeader className="pt-0 pb-3">
-          <h3 className="text-base font-bold leading-tight line-clamp-2">{article.title}</h3>
+          <h3 className="line-clamp-2 text-base leading-tight font-bold">{article.title}</h3>
         </CardHeader>
         <CardContent className="pt-0">
           <p className="text-muted-foreground line-clamp-2 text-sm">{summary}</p>
@@ -354,16 +329,21 @@ function estimateReadingTime(article: ArticleApiItem) {
 }
 
 function getInitials(name: string) {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join('') || 'PE'
+  return (
+    name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join('') || 'PE'
+  )
 }
 
 function stripHtml(value: string) {
-  return value.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+  return value
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 function truncate(value: string, maxLength = 140) {

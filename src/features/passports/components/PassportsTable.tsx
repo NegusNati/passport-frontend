@@ -59,206 +59,205 @@ const DEFAULT_PAGINATION: PaginationState = {
 
 export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTableProps>(
   ({ searchFilters = {}, searchMode }, ref) => {
-  const router = useRouter()
-  const [filters, setFilters] = React.useState<PassportFilters>({ date: 'all', city: 'all' })
-  const [pagination, setPagination] = React.useState<PaginationState>(DEFAULT_PAGINATION)
+    const router = useRouter()
+    const [filters, setFilters] = React.useState<PassportFilters>({ date: 'all', city: 'all' })
+    const [pagination, setPagination] = React.useState<PaginationState>(DEFAULT_PAGINATION)
 
-  const locationsQuery = useLocationsQuery()
-  const locationOptions = React.useMemo<FilterOption[]>(() => {
-    const items = locationsQuery.data?.data ?? []
-    return items.map((value) => ({ value, label: value }))
-  }, [locationsQuery.data])
+    const locationsQuery = useLocationsQuery()
+    const locationOptions = React.useMemo<FilterOption[]>(() => {
+      const items = locationsQuery.data?.data ?? []
+      return items.map((value) => ({ value, label: value }))
+    }, [locationsQuery.data])
 
-  React.useEffect(() => {
-    setPagination((prev) => (prev.pageIndex === 0 ? prev : { ...prev, pageIndex: 0 }))
-  }, [searchFilters, searchMode])
+    React.useEffect(() => {
+      setPagination((prev) => (prev.pageIndex === 0 ? prev : { ...prev, pageIndex: 0 }))
+    }, [searchFilters, searchMode])
 
-  const listParams = React.useMemo<Partial<ListParams>>(
-    () =>
-      buildListParams({
-        searchFilters,
-        filters,
-        pagination,
-      }),
-    [searchFilters, filters, pagination],
-  )
+    const listParams = React.useMemo<Partial<ListParams>>(
+      () =>
+        buildListParams({
+          searchFilters,
+          filters,
+          pagination,
+        }),
+      [searchFilters, filters, pagination],
+    )
 
-  const passportsQuery = usePassportsQuery(listParams)
-  const { data, isLoading, isError, error } = passportsQuery
+    const passportsQuery = usePassportsQuery(listParams)
+    const { data, isLoading, isError, error } = passportsQuery
 
-  const rows = React.useMemo<PassportApiItem[]>(() => {
-    if (!data?.data) return []
-    return [...data.data]
-  }, [data?.data])
+    const rows = React.useMemo<PassportApiItem[]>(() => {
+      if (!data?.data) return []
+      return [...data.data]
+    }, [data?.data])
 
-  const meta = data?.meta
-  const total = meta?.total ?? 0
-  const currentPage = meta?.current_page ?? pagination.pageIndex + 1
-  const pageCount = meta?.last_page ?? 1
-  const pageSizeFromMeta = meta?.page_size ?? meta?.per_page
-  const effectivePageSize = pageSizeFromMeta ?? pagination.pageSize
-  const from = total ? (currentPage - 1) * effectivePageSize + 1 : 0
-  const to = Math.min(currentPage * effectivePageSize, total)
+    const meta = data?.meta
+    const total = meta?.total ?? 0
+    const currentPage = meta?.current_page ?? pagination.pageIndex + 1
+    const pageCount = meta?.last_page ?? 1
+    const pageSizeFromMeta = meta?.page_size ?? meta?.per_page
+    const effectivePageSize = pageSizeFromMeta ?? pagination.pageSize
+    const from = total ? (currentPage - 1) * effectivePageSize + 1 : 0
+    const to = Math.min(currentPage * effectivePageSize, total)
 
-
-
-  const handlePageChange = React.useCallback(
-    (pageNumber: number) => {
+    const handlePageChange = React.useCallback((pageNumber: number) => {
       setPagination((prev) => ({ ...prev, pageIndex: Math.max(0, pageNumber - 1) }))
-    },
-    [],
-  )
+    }, [])
 
-  const handlePageSizeChange = React.useCallback((size: number) => {
-    setPagination({ pageIndex: 0, pageSize: size })
-  }, [])
+    const handlePageSizeChange = React.useCallback((size: number) => {
+      setPagination({ pageIndex: 0, pageSize: size })
+    }, [])
 
-  const handleFilterChange = React.useCallback((key: keyof PassportFilters, value: string) => {
-    setFilters((prev) => ({ ...prev, [key]: value }))
-    setPagination((prev) => ({ ...prev, pageIndex: 0 }))
-  }, [])
+    const handleFilterChange = React.useCallback((key: keyof PassportFilters, value: string) => {
+      setFilters((prev) => ({ ...prev, [key]: value }))
+      setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+    }, [])
 
-  const columns = React.useMemo<ColumnDef<PassportApiItem>[]>(() => {
-    return [
-      {
-        accessorKey: 'full_name',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
-        cell: ({ row }) => (
-          <span className="text-foreground font-medium">{row.original.full_name}</span>
-        ),
-        enableSorting: false,
-        meta: { label: 'Name' },
-      },
-      {
-        accessorKey: 'location',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Location" />,
-        cell: ({ row }) => <span className="text-muted-foreground text-sm">{row.original.location}</span>,
-        enableSorting: false,
-        meta: { label: 'Location' },
-      },
-      {
-        accessorKey: 'date_of_publish',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Published" />,
-        cell: ({ row }) => (
-          <span className="text-muted-foreground text-sm">
-            {formatDisplayDate(row.original.date_of_publish)}
-          </span>
-        ),
-        enableSorting: false,
-        meta: { label: 'Published date' },
-      },
-      {
-        accessorKey: 'request_number',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Request number" />,
-        cell: ({ row }) => (
-          <span className="font-mono text-xs uppercase tracking-tight">
-            {row.original.request_number}
-          </span>
-        ),
-        enableSorting: false,
-        meta: { label: 'Request number' },
-      },
-      {
-        id: 'actions',
-        header: '',
-        enableHiding: false,
-        cell: ({ row }) => (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() =>
-              router.navigate({
-                to: '/passports/$passportId',
-                params: { passportId: String(row.original.id) },
-              })
-            }
-          >
-            Detail
-          </Button>
-        ),
-      },
-    ]
-  }, [router])
+    const columns = React.useMemo<ColumnDef<PassportApiItem>[]>(() => {
+      return [
+        {
+          accessorKey: 'full_name',
+          header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+          cell: ({ row }) => (
+            <span className="text-foreground font-medium">{row.original.full_name}</span>
+          ),
+          enableSorting: false,
+          meta: { label: 'Name' },
+        },
+        {
+          accessorKey: 'location',
+          header: ({ column }) => <DataTableColumnHeader column={column} title="Location" />,
+          cell: ({ row }) => (
+            <span className="text-muted-foreground text-sm">{row.original.location}</span>
+          ),
+          enableSorting: false,
+          meta: { label: 'Location' },
+        },
+        {
+          accessorKey: 'date_of_publish',
+          header: ({ column }) => <DataTableColumnHeader column={column} title="Published" />,
+          cell: ({ row }) => (
+            <span className="text-muted-foreground text-sm">
+              {formatDisplayDate(row.original.date_of_publish)}
+            </span>
+          ),
+          enableSorting: false,
+          meta: { label: 'Published date' },
+        },
+        {
+          accessorKey: 'request_number',
+          header: ({ column }) => <DataTableColumnHeader column={column} title="Request number" />,
+          cell: ({ row }) => (
+            <span className="font-mono text-xs tracking-tight uppercase">
+              {row.original.request_number}
+            </span>
+          ),
+          enableSorting: false,
+          meta: { label: 'Request number' },
+        },
+        {
+          id: 'actions',
+          header: '',
+          enableHiding: false,
+          cell: ({ row }) => (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() =>
+                router.navigate({
+                  to: '/passports/$passportId',
+                  params: { passportId: String(row.original.id) },
+                })
+              }
+            >
+              Detail
+            </Button>
+          ),
+        },
+      ]
+    }, [router])
 
-  const toolbarComponent = React.useMemo(() => {
-    return function Toolbar<TData>(props: PassportsTableToolbarProps<TData>) {
-      return (
-        <PassportsTableToolbar
-          {...props}
-          title="Latest Passports"
-          filters={filters}
-          onFilterChange={handleFilterChange}
-          dateOptions={DATE_PRESETS}
-          locationOptions={locationOptions}
-          isLoadingLocations={locationsQuery.isLoading}
-        />
-      )
-    }
-  }, [filters, handleFilterChange, locationOptions, locationsQuery.isLoading])
+    const toolbarComponent = React.useMemo(() => {
+      return function Toolbar<TData>(props: PassportsTableToolbarProps<TData>) {
+        return (
+          <PassportsTableToolbar
+            {...props}
+            title="Latest Passports"
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            dateOptions={DATE_PRESETS}
+            locationOptions={locationOptions}
+            isLoadingLocations={locationsQuery.isLoading}
+          />
+        )
+      }
+    }, [filters, handleFilterChange, locationOptions, locationsQuery.isLoading])
 
-  const derivedError = isError
-    ? error instanceof Error
-      ? error
-      : new Error('Failed to load passports.')
-    : null
+    const derivedError = isError
+      ? error instanceof Error
+        ? error
+        : new Error('Failed to load passports.')
+      : null
 
-  const tableKey = React.useMemo(
-    () =>
-      `${pagination.pageIndex}-${pagination.pageSize}-${rows.length}-${passportsQuery.dataUpdatedAt ?? 0}-${JSON.stringify(
+    const tableKey = React.useMemo(
+      () =>
+        `${pagination.pageIndex}-${pagination.pageSize}-${rows.length}-${passportsQuery.dataUpdatedAt ?? 0}-${JSON.stringify(
+          searchFilters,
+        )}`,
+      [
+        pagination.pageIndex,
+        pagination.pageSize,
+        rows.length,
+        passportsQuery.dataUpdatedAt,
         searchFilters,
-      )}`,
-    [pagination.pageIndex, pagination.pageSize, rows.length, passportsQuery.dataUpdatedAt, searchFilters],
-  )
+      ],
+    )
 
-  return (
-    <section ref={ref} className=" py-12">
-      <Container>
-        <div className="space-y-6">
-          <div className="rounded-lg border bg-transparent/80 p-6 shadow-sm backdrop-blur">
-            <DataTable
-              key={tableKey}
-              tableTitle="Latest Passports"
-              columns={columns}
-              data={rows}
-              isLoading={isLoading}
-              isError={isError}
-              error={derivedError}
-              pagination={{
-                pageCount,
-                pageIndex: pagination.pageIndex,
-                pageSize: pagination.pageSize,
-                onPageChange: handlePageChange,
-                onPageSizeChange: handlePageSizeChange,
-              }}
-              toolbar={toolbarComponent}
-            />
+    return (
+      <section ref={ref} className="py-12">
+        <Container>
+          <div className="space-y-6">
+            <div className="rounded-lg border bg-transparent/80 p-6 shadow-sm backdrop-blur">
+              <DataTable
+                key={tableKey}
+                tableTitle="Latest Passports"
+                columns={columns}
+                data={rows}
+                isLoading={isLoading}
+                isError={isError}
+                error={derivedError}
+                pagination={{
+                  pageCount,
+                  pageIndex: pagination.pageIndex,
+                  pageSize: pagination.pageSize,
+                  onPageChange: handlePageChange,
+                  onPageSizeChange: handlePageSizeChange,
+                }}
+                toolbar={toolbarComponent}
+              />
+            </div>
+            <div className="text-muted-foreground flex items-center justify-between text-sm">
+              {isLoading ? (
+                <span>Loading summary…</span>
+              ) : total > 0 ? (
+                <span>
+                  Showing {from} to {to} of {total} entries
+                </span>
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
-          <div className="flex items-center justify-between text-sm text-muted-foreground">
-            {isLoading ? (
-              <span>Loading summary…</span>
-            ) : total > 0 ? (
-              <span>
-                Showing {from} to {to} of {total} entries
-              </span>
-            ): <></>}
-          </div>
-        </div>
-      </Container>
-    </section>
-  )
-})
+        </Container>
+      </section>
+    )
+  },
+)
 
 PassportsTable.displayName = 'PassportsTable'
 
 function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) {
-  const {
-    title,
-    filters,
-    onFilterChange,
-    dateOptions,
-    locationOptions,
-    isLoadingLocations,
-  } = props
+  const { title, filters, onFilterChange, dateOptions, locationOptions, isLoadingLocations } = props
 
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -270,7 +269,7 @@ function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) 
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <span className="text-muted-foreground text-xs uppercase tracking-wide">Filter by</span>
+        <span className="text-muted-foreground text-xs tracking-wide uppercase">Filter by</span>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Select value={filters.date} onValueChange={(value) => onFilterChange('date', value)}>
             <SelectTrigger className="w-44">

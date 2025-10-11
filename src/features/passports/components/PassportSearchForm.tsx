@@ -26,7 +26,11 @@ interface PassportSearchFormProps {
   onScrollToResults?: () => void
 }
 
-export function PassportSearchForm({ onSearch, onQueryChange, onScrollToResults }: PassportSearchFormProps) {
+export function PassportSearchForm({
+  onSearch,
+  onQueryChange,
+  onScrollToResults,
+}: PassportSearchFormProps) {
   const router = useRouter()
   const [searchMode, setSearchMode] = useState<SearchMode>('number')
   // Local inputs for debounced interactive search
@@ -78,18 +82,21 @@ export function PassportSearchForm({ onSearch, onQueryChange, onScrollToResults 
       .join(' ')
   }, [])
 
-  const buildNameFilters = useCallback((first: string, middle: string, last: string): PassportSearchFilters => {
-    const filters: PassportSearchFilters = {}
-    const sanitizedFirst = sanitizeNameSegment(first)
-    const sanitizedMiddle = sanitizeNameSegment(middle)
-    const sanitizedLast = sanitizeNameSegment(last)
+  const buildNameFilters = useCallback(
+    (first: string, middle: string, last: string): PassportSearchFilters => {
+      const filters: PassportSearchFilters = {}
+      const sanitizedFirst = sanitizeNameSegment(first)
+      const sanitizedMiddle = sanitizeNameSegment(middle)
+      const sanitizedLast = sanitizeNameSegment(last)
 
-    if (sanitizedFirst.length >= 3) filters.first_name = sanitizedFirst
-    if (sanitizedMiddle.length >= 3) filters.middle_name = sanitizedMiddle
-    if (sanitizedLast.length >= 3) filters.last_name = sanitizedLast
+      if (sanitizedFirst.length >= 3) filters.first_name = sanitizedFirst
+      if (sanitizedMiddle.length >= 3) filters.middle_name = sanitizedMiddle
+      if (sanitizedLast.length >= 3) filters.last_name = sanitizedLast
 
-    return filters
-  }, [sanitizeNameSegment])
+      return filters
+    },
+    [sanitizeNameSegment],
+  )
 
   const numberForm = useForm({
     defaultValues: {
@@ -138,14 +145,14 @@ export function PassportSearchForm({ onSearch, onQueryChange, onScrollToResults 
           validatedData.middleName?.trim(),
           validatedData.lastName,
         ]
-      .filter(Boolean)
-      .join(' ')
-      .toLowerCase()
-    const foundPassport = DUMMY_PASSPORTS.find((p) => p.name.toLowerCase() === searchName)
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase()
+        const foundPassport = DUMMY_PASSPORTS.find((p) => p.name.toLowerCase() === searchName)
 
-      if (foundPassport) {
-        // Navigate to detail page
-        router.navigate({
+        if (foundPassport) {
+          // Navigate to detail page
+          router.navigate({
             to: '/passports/$passportId',
             params: { passportId: foundPassport.id },
           })
@@ -193,11 +200,19 @@ export function PassportSearchForm({ onSearch, onQueryChange, onScrollToResults 
     } else {
       onQueryChange({}, 'name')
     }
-  }, [debouncedName, firstInput, middleInput, lastInput, searchMode, onQueryChange, buildNameFilters])
+  }, [
+    debouncedName,
+    firstInput,
+    middleInput,
+    lastInput,
+    searchMode,
+    onQueryChange,
+    buildNameFilters,
+  ])
 
   return (
-    <section className=" py-12 md:py-16 mx-2">
-      <Container className='border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm ' >
+    <section className="mx-2 py-12 md:py-16">
+      <Container className="border-border/60 rounded-2xl border bg-transparent p-6 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
         <div className="mx-auto max-w-2xl text-center">
           {/* Header */}
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
@@ -249,7 +264,9 @@ export function PassportSearchForm({ onSearch, onQueryChange, onScrollToResults 
                           <span>Searching...</span>
                         </div>
                       ) : (
-                        <p className="text-muted-foreground text-xs">Type at least 3 characters to search</p>
+                        <p className="text-muted-foreground text-xs">
+                          Type at least 3 characters to search
+                        </p>
                       )}
                     </div>
                   )}
@@ -338,7 +355,9 @@ export function PassportSearchForm({ onSearch, onQueryChange, onScrollToResults 
                     <span>Searching...</span>
                   </div>
                 ) : (
-                  <p className="text-muted-foreground text-xs">Type at least 3 characters in any name field to search</p>
+                  <p className="text-muted-foreground text-xs">
+                    Type at least 3 characters in any name field to search
+                  </p>
                 )}
               </form>
             )}
@@ -360,10 +379,10 @@ export function PassportSearchForm({ onSearch, onQueryChange, onScrollToResults 
                     key={number}
                     type="button"
                     onClick={() => {
-                     numberForm.setFieldValue('requestNumber', number)
-                     // ensure debounced live search is triggered
-                     setNumberInput(number)
-                    onQueryChange?.({ request_number: sanitizeRequestNumber(number) }, 'number')
+                      numberForm.setFieldValue('requestNumber', number)
+                      // ensure debounced live search is triggered
+                      setNumberInput(number)
+                      onQueryChange?.({ request_number: sanitizeRequestNumber(number) }, 'number')
                     }}
                     className="border-border bg-muted/50 hover:bg-muted rounded-md border px-3 py-1 text-xs"
                   >

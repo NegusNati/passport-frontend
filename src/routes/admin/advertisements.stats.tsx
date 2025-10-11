@@ -15,10 +15,10 @@ function AdminAdvertisementStatsPage() {
     return (
       <div className="space-y-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 w-64 rounded bg-muted" />
+          <div className="bg-muted h-8 w-64 rounded" />
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-32 rounded-lg bg-muted" />
+              <div key={i} className="bg-muted h-32 rounded-lg" />
             ))}
           </div>
         </div>
@@ -29,11 +29,9 @@ function AdminAdvertisementStatsPage() {
   if (query.isError || !query.data) {
     return (
       <div className="space-y-6">
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6">
+        <div className="border-destructive/50 bg-destructive/10 rounded-lg border p-6">
           <p className="text-destructive font-medium">Failed to load statistics</p>
-          <p className="text-muted-foreground text-sm">
-            {query.error?.message || 'Unknown error'}
-          </p>
+          <p className="text-muted-foreground text-sm">{query.error?.message || 'Unknown error'}</p>
         </div>
       </div>
     )
@@ -50,7 +48,7 @@ function AdminAdvertisementStatsPage() {
         </div>
         <a
           href="/admin/advertisements"
-          className="inline-flex h-10 items-center justify-center gap-2 rounded-md border border-input bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+          className="border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-10 items-center justify-center gap-2 rounded-md border px-4 text-sm font-medium transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Advertisements

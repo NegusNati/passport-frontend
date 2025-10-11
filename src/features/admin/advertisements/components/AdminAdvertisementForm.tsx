@@ -6,16 +6,8 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Textarea } from '@/shared/ui/textarea'
 
-import type {
-  AdStatus,
-  Advertisement,
-  PackageType,
-  PaymentStatus,
-} from '../schemas/advertisement'
-import type {
-  AdvertisementCreatePayload,
-  AdvertisementUpdatePayload,
-} from '../schemas/create'
+import type { AdStatus, Advertisement, PackageType, PaymentStatus } from '../schemas/advertisement'
+import type { AdvertisementCreatePayload, AdvertisementUpdatePayload } from '../schemas/create'
 import { MediaUploadPreview } from './MediaUploadPreview'
 
 type FormValues = {
@@ -40,7 +32,9 @@ type FormValues = {
 
 type AdvertisementFormProps = {
   advertisement?: Advertisement
-  onSubmit: (values: AdvertisementCreatePayload | AdvertisementUpdatePayload) => Promise<void> | void
+  onSubmit: (
+    values: AdvertisementCreatePayload | AdvertisementUpdatePayload,
+  ) => Promise<void> | void
   isSubmitting?: boolean
   errorMessage?: string | null
 }
@@ -178,9 +172,7 @@ export function AdminAdvertisementForm({
           <form.Field name="ad_client_link">
             {(field) => (
               <div className="space-y-2">
-                <Label htmlFor="ad_client_link">
-                  Client Link (Optional)
-                </Label>
+                <Label htmlFor="ad_client_link">Client Link (Optional)</Label>
                 <Input
                   id="ad_client_link"
                   type="url"
@@ -198,7 +190,9 @@ export function AdminAdvertisementForm({
           <form.Field name="advertisement_request_id">
             {(field) => (
               <div className="space-y-2">
-                <Label htmlFor="advertisement_request_id">Advertisement Request ID (Optional)</Label>
+                <Label htmlFor="advertisement_request_id">
+                  Advertisement Request ID (Optional)
+                </Label>
                 <Input
                   id="advertisement_request_id"
                   type="number"
@@ -296,7 +290,7 @@ export function AdminAdvertisementForm({
                 </Label>
                 <select
                   id="package_type"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value as PackageType)}
                   required
@@ -318,7 +312,7 @@ export function AdminAdvertisementForm({
                 </Label>
                 <select
                   id="payment_status"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value as PaymentStatus)}
                   required
@@ -402,7 +396,7 @@ export function AdminAdvertisementForm({
                 </Label>
                 <select
                   id="status"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value as AdStatus)}
                   required
@@ -416,8 +410,6 @@ export function AdminAdvertisementForm({
             )}
           </form.Field>
         </div>
-
-
 
         {/* Media Uploads */}
         <div className="grid gap-4 sm:grid-cols-2">
@@ -458,14 +450,18 @@ export function AdminAdvertisementForm({
       </div>
 
       {displayError && (
-        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4">
+        <div className="border-destructive/50 bg-destructive/10 rounded-md border p-4">
           <p className="text-destructive text-sm font-medium">{displayError}</p>
         </div>
       )}
 
       <div className="flex gap-3">
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Saving...' : advertisement ? 'Update Advertisement' : 'Create Advertisement'}
+          {isSubmitting
+            ? 'Saving...'
+            : advertisement
+              ? 'Update Advertisement'
+              : 'Create Advertisement'}
         </Button>
         <Button type="button" variant="outline" onClick={() => window.history.back()}>
           Cancel

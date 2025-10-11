@@ -21,7 +21,9 @@ type ArticlesTableProps = {
   isError: boolean
   error: Error | null
   filters: Pick<ArticlesSearchParams, 'q' | 'status' | 'category' | 'tag'>
-  onFilterChange: (updates: Partial<Pick<ArticlesSearchParams, 'q' | 'status' | 'category' | 'tag'>>) => void
+  onFilterChange: (
+    updates: Partial<Pick<ArticlesSearchParams, 'q' | 'status' | 'category' | 'tag'>>,
+  ) => void
   onPageChange: (page: number) => void
   onPageSizeChange: (size: number) => void
   onDelete?: (slug: string) => void
@@ -45,16 +47,16 @@ export function ArticlesTable({
         accessorKey: 'title',
         header: 'Title',
         cell: ({ row }) => (
-          <span className="font-medium text-foreground">{row.original.title}</span>
+          <span className="text-foreground font-medium">{row.original.title}</span>
         ),
       },
       {
         accessorKey: 'status',
         header: 'Status',
-       cell: ({ row }) => {
-         const status = row.original.status
-         const classes = statusClasses[status] ?? 'bg-muted text-muted-foreground'
-         return (
+        cell: ({ row }) => {
+          const status = row.original.status
+          const classes = statusClasses[status] ?? 'bg-muted text-muted-foreground'
+          return (
             <span
               className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${classes}`}
               role="status"
@@ -69,14 +71,14 @@ export function ArticlesTable({
         accessorKey: 'author',
         header: 'Author',
         cell: ({ row }) => (
-          <span className="text-sm text-muted-foreground">{row.original.author?.name ?? '—'}</span>
+          <span className="text-muted-foreground text-sm">{row.original.author?.name ?? '—'}</span>
         ),
       },
       {
         accessorKey: 'published_at',
         header: 'Published',
         cell: ({ row }) => (
-          <span className="text-sm text-muted-foreground">
+          <span className="text-muted-foreground text-sm">
             {row.original.published_at ? formatDate(row.original.published_at) : '—'}
           </span>
         ),
@@ -88,14 +90,14 @@ export function ArticlesTable({
           <div className="flex items-center gap-2">
             <a
               href={`/admin/articles/${row.original.slug}`}
-              className="inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              className="border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors"
             >
               Edit
             </a>
             {onDelete ? (
               <button
                 type="button"
-                className="inline-flex h-9 items-center justify-center rounded-md border border-destructive bg-destructive/10 px-3 text-sm font-medium text-destructive transition-colors hover:bg-destructive hover:text-destructive-foreground"
+                className="border-destructive bg-destructive/10 text-destructive hover:bg-destructive hover:text-destructive-foreground inline-flex h-9 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors"
                 onClick={() => {
                   if (confirm('Delete this article? This action can be undone later.')) {
                     onDelete(row.original.slug)

@@ -58,9 +58,7 @@ export function AdminRequestsTable({
   onDelete,
   isSaving,
 }: AdminRequestsTableProps) {
-  const [selectedRequest, setSelectedRequest] = useState<AdminAdvertisementRequestItem | null>(
-    null,
-  )
+  const [selectedRequest, setSelectedRequest] = useState<AdminAdvertisementRequestItem | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [deletingId, setDeletingId] = useState<number | null>(null)
 
@@ -87,9 +85,7 @@ export function AdminRequestsTable({
   )
 
   const formatDate = useCallback((dateString: string) => {
-    return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(
-      new Date(dateString),
-    )
+    return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(new Date(dateString))
   }, [])
 
   const columns = useMemo<ColumnDef<AdminAdvertisementRequestItem>[]>(
@@ -104,7 +100,7 @@ export function AdminRequestsTable({
         header: 'Full Name',
         cell: ({ row }) => (
           <div>
-            <div className="font-medium text-foreground">{row.original.full_name}</div>
+            <div className="text-foreground font-medium">{row.original.full_name}</div>
             {row.original.email && (
               <div className="text-muted-foreground text-xs">{row.original.email}</div>
             )}
@@ -114,9 +110,7 @@ export function AdminRequestsTable({
       {
         accessorKey: 'company_name',
         header: 'Company',
-        cell: ({ row }) => (
-          <span className="text-sm">{row.original.company_name || '—'}</span>
-        ),
+        cell: ({ row }) => <span className="text-sm">{row.original.company_name || '—'}</span>,
       },
       {
         accessorKey: 'phone_number',
@@ -132,7 +126,7 @@ export function AdminRequestsTable({
         accessorKey: 'created_at',
         header: 'Created',
         cell: ({ row }) => (
-          <span className="text-sm text-muted-foreground">
+          <span className="text-muted-foreground text-sm">
             {formatDate(row.original.created_at)}
           </span>
         ),

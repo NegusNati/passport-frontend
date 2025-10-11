@@ -82,38 +82,38 @@ export function AdminRequestDetailDialog({
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <Label className="text-xs text-muted-foreground">Full Name</Label>
+                <Label className="text-muted-foreground text-xs">Full Name</Label>
                 <p className="text-sm">{request.full_name}</p>
               </div>
 
               <div>
-                <Label className="text-xs text-muted-foreground">Company Name</Label>
+                <Label className="text-muted-foreground text-xs">Company Name</Label>
                 <p className="text-sm">{request.company_name || '—'}</p>
               </div>
 
               <div>
-                <Label className="text-xs text-muted-foreground">Phone Number</Label>
+                <Label className="text-muted-foreground text-xs">Phone Number</Label>
                 <p className="text-sm">{request.phone_number}</p>
               </div>
 
               <div>
-                <Label className="text-xs text-muted-foreground">Email</Label>
+                <Label className="text-muted-foreground text-xs">Email</Label>
                 <p className="text-sm">{request.email || '—'}</p>
               </div>
 
               <div className="sm:col-span-2">
-                <Label className="text-xs text-muted-foreground">Description</Label>
+                <Label className="text-muted-foreground text-xs">Description</Label>
                 <p className="text-sm">{request.description}</p>
               </div>
 
               {request.file_url && (
                 <div className="sm:col-span-2">
-                  <Label className="text-xs text-muted-foreground">Attachment</Label>
+                  <Label className="text-muted-foreground text-xs">Attachment</Label>
                   <a
                     href={request.file_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary hover:underline mt-1 flex items-center gap-2 text-sm"
+                    className="text-primary mt-1 flex items-center gap-2 text-sm hover:underline"
                   >
                     <FileText className="h-4 w-4" />
                     View Attachment
@@ -122,12 +122,12 @@ export function AdminRequestDetailDialog({
               )}
 
               <div>
-                <Label className="text-xs text-muted-foreground">Created At</Label>
+                <Label className="text-muted-foreground text-xs">Created At</Label>
                 <p className="text-sm">{formatDate(request.created_at)}</p>
               </div>
 
               <div>
-                <Label className="text-xs text-muted-foreground">Updated At</Label>
+                <Label className="text-muted-foreground text-xs">Updated At</Label>
                 <p className="text-sm">{formatDate(request.updated_at)}</p>
               </div>
             </div>
@@ -147,7 +147,7 @@ export function AdminRequestDetailDialog({
                   <Label htmlFor="status">Status</Label>
                   <select
                     id="status"
-                    className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+                    className="border-input bg-background h-10 rounded-md border px-3 text-sm"
                     value={field.state.value}
                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
                       field.handleChange(
@@ -172,7 +172,9 @@ export function AdminRequestDetailDialog({
                     id="contacted_at"
                     type="date"
                     value={field.state.value}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      field.handleChange(e.target.value)
+                    }
                   />
                 </div>
               )}
@@ -185,7 +187,9 @@ export function AdminRequestDetailDialog({
                   <Textarea
                     id="admin_notes"
                     value={field.state.value}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => field.handleChange(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      field.handleChange(e.target.value)
+                    }
                     placeholder="Add internal notes about this request"
                     rows={4}
                   />

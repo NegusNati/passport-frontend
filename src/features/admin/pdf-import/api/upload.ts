@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/api/client'
 import { adminKeys } from '@/features/admin/lib/keys'
 
-import { type PdfUploadInput,PdfUploadSchema } from '../schemas/upload'
+import { type PdfUploadInput, PdfUploadSchema } from '../schemas/upload'
 
 export async function uploadPdfToSqlite(input: PdfUploadInput) {
   const payload = PdfUploadSchema.parse(input)

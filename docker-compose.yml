@@ -7,9 +7,9 @@ services:
     container_name: nginx-proxy-manager
     restart: unless-stopped
     ports:
-      - '80:80'      # HTTP
-      - '443:443'    # HTTPS
-      - '81:81'      # Admin UI
+      - '80:80' # HTTP
+      - '443:443' # HTTPS
+      - '81:81' # Admin UI
     environment:
       DISABLE_IPV6: 'true'
     volumes:
@@ -18,7 +18,7 @@ services:
     networks:
       - web
     healthcheck:
-      test: ["CMD", "/bin/check-health"]
+      test: ['CMD', '/bin/check-health']
       interval: 30s
       timeout: 3s
       retries: 3
@@ -39,7 +39,7 @@ services:
     networks:
       - web
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost/']
       interval: 30s
       timeout: 3s
       retries: 3
@@ -62,7 +62,7 @@ services:
     networks:
       - internal
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-umami}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-umami}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -87,7 +87,7 @@ services:
       umami-db:
         condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:3000/api/heartbeat || exit 1"]
+      test: ['CMD-SHELL', 'curl -f http://localhost:3000/api/heartbeat || exit 1']
       interval: 30s
       timeout: 5s
       retries: 3

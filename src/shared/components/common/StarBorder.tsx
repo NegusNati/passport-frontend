@@ -1,22 +1,22 @@
 type StarBorderProps<T extends React.ElementType> = React.ComponentPropsWithoutRef<T> & {
-  as?: T;
-  className?: string;
-  children?: React.ReactNode;
-  color?: string;
-  speed?: React.CSSProperties['animationDuration'];
-  thickness?: number;
-};
+  as?: T
+  className?: string
+  children?: React.ReactNode
+  color?: string
+  speed?: React.CSSProperties['animationDuration']
+  thickness?: number
+}
 
 const StarBorder = <T extends React.ElementType = 'button'>({
   as,
   className = '',
   color = 'white',
   speed = '6s',
-  thickness = .2,
+  thickness = 0.2,
   children,
   ...rest
 }: StarBorderProps<T>) => {
-  const Component = as || 'button';
+  const Component = as || 'button'
 
   return (
     <Component
@@ -24,28 +24,28 @@ const StarBorder = <T extends React.ElementType = 'button'>({
       {...rest}
       style={{
         padding: `${thickness}px 0`,
-        ...rest.style
+        ...rest.style,
       }}
     >
       <div
-        className="absolute w-[300%] h-[50%] opacity-70 bottom-[-11px] right-[-250%] rounded-full animate-star-movement-bottom z-0"
+        className="animate-star-movement-bottom absolute right-[-250%] bottom-[-11px] z-0 h-[50%] w-[300%] rounded-full opacity-70"
         style={{
           background: `radial-gradient(circle, ${color}, transparent 10%)`,
-          animationDuration: speed
+          animationDuration: speed,
         }}
       ></div>
       <div
-        className="absolute w-[300%] h-[50%] opacity-70 top-[-10px] left-[-250%] rounded-full animate-star-movement-top z-0"
+        className="animate-star-movement-top absolute top-[-10px] left-[-250%] z-0 h-[50%] w-[300%] rounded-full opacity-70"
         style={{
           background: `radial-gradient(circle, ${color}, transparent 10%)`,
-          animationDuration: speed
+          animationDuration: speed,
         }}
       ></div>
-      <div className="relative z-1  border-gray-800 bg-transparent text-white text-center text-[16px] py-[16px] px-[26px] rounded-[10px]">
+      <div className="relative z-1 rounded-[10px] border-gray-800 bg-transparent px-[26px] py-[16px] text-center text-[16px] text-white">
         {children}
       </div>
     </Component>
-  );
-};
+  )
+}
 
-export default StarBorder;
+export default StarBorder

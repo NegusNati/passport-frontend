@@ -27,34 +27,35 @@ export const PackageType = z.enum(['weekly', 'monthly', 'yearly'])
 export type PackageType = z.infer<typeof PackageType>
 
 // Core Advertisement schema (matches API response)
-export const Advertisement = z.object({
-  id: z.number().int().positive(),
-  ad_slot_number: z.string().min(1),
-  ad_title: z.string().min(1).max(255),
-  ad_desc: z.string().nullable(),
-  ad_excerpt: z.string().nullable(),
-  ad_desktop_asset: z.string().nullable(),
-  ad_mobile_asset: z.string().nullable(),
-  ad_client_link: z.string().nullable(),
-  status: AdStatus,
-  package_type: PackageType,
-  ad_published_date: z.string(),
-  ad_ending_date: z.string().nullable(),
-  payment_status: PaymentStatus,
-  payment_amount: z.string(), // API returns string like "2000.00"
-  client_name: z.string().min(1).max(255),
-  impressions_count: z.number().int().nonnegative().nullable().default(0),
-  clicks_count: z.number().int().nonnegative().nullable().default(0),
-  priority: z.number().nullable().default(0),
-  created_at: z.string(),
-  updated_at: z.string(),
-  admin_notes: z.string().nullable(),
-  expiry_notification_sent: z.boolean().nullable(),
-  days_until_expiry: z.number().nullable(),
-  is_active: z.boolean(),
-  is_expired: z.boolean(),
-  advertisement_request_id: z.number().nullable(),
-})
+export const Advertisement = z
+  .object({
+    id: z.number().int().positive(),
+    ad_slot_number: z.string().min(1),
+    ad_title: z.string().min(1).max(255),
+    ad_desc: z.string().nullable(),
+    ad_excerpt: z.string().nullable(),
+    ad_desktop_asset: z.string().nullable(),
+    ad_mobile_asset: z.string().nullable(),
+    ad_client_link: z.string().nullable(),
+    status: AdStatus,
+    package_type: PackageType,
+    ad_published_date: z.string(),
+    ad_ending_date: z.string().nullable(),
+    payment_status: PaymentStatus,
+    payment_amount: z.string(), // API returns string like "2000.00"
+    client_name: z.string().min(1).max(255),
+    impressions_count: z.number().int().nonnegative().nullable().default(0),
+    clicks_count: z.number().int().nonnegative().nullable().default(0),
+    priority: z.number().nullable().default(0),
+    created_at: z.string(),
+    updated_at: z.string(),
+    admin_notes: z.string().nullable(),
+    expiry_notification_sent: z.boolean().nullable(),
+    days_until_expiry: z.number().nullable(),
+    is_active: z.boolean(),
+    is_expired: z.boolean(),
+    advertisement_request_id: z.number().nullable(),
+  })
   .transform((data) => ({
     ...data,
     // Add computed fields for compatibility
@@ -66,9 +67,10 @@ export const Advertisement = z.object({
     title: data.ad_title,
     impressions: data.impressions_count || 0,
     clicks: data.clicks_count || 0,
-    ctr: data.clicks_count && data.impressions_count && data.impressions_count > 0
-      ? (data.clicks_count / data.impressions_count) * 100
-      : 0,
+    ctr:
+      data.clicks_count && data.impressions_count && data.impressions_count > 0
+        ? (data.clicks_count / data.impressions_count) * 100
+        : 0,
     payment_amount_number: parseFloat(data.payment_amount) || 0,
   }))
 
@@ -116,10 +118,22 @@ const normalizeOptionalNumber = (
 // Pagination schemas
 export const PaginationLinks = z
   .object({
-    first: z.union([z.string(), z.array(z.string().nullable())]).nullable().optional(),
-    last: z.union([z.string(), z.array(z.string().nullable())]).nullable().optional(),
-    prev: z.union([z.string(), z.array(z.string().nullable())]).nullable().optional(),
-    next: z.union([z.string(), z.array(z.string().nullable())]).nullable().optional(),
+    first: z
+      .union([z.string(), z.array(z.string().nullable())])
+      .nullable()
+      .optional(),
+    last: z
+      .union([z.string(), z.array(z.string().nullable())])
+      .nullable()
+      .optional(),
+    prev: z
+      .union([z.string(), z.array(z.string().nullable())])
+      .nullable()
+      .optional(),
+    next: z
+      .union([z.string(), z.array(z.string().nullable())])
+      .nullable()
+      .optional(),
   })
   .transform((links) => ({
     first: normalizeNullableString(links.first),
@@ -135,20 +149,8 @@ export const PaginationMeta = z
     total: z.union([z.number().int().nonnegative(), z.array(z.number().int().nonnegative())]),
     last_page: z.union([z.number().int().min(1), z.array(z.number().int().min(1))]),
     has_more: z.boolean(),
-    from: z
-      .union([
-        z.number().int(),
-        z.array(z.number().int().nullable()),
-        z.null(),
-      ])
-      .optional(),
-    to: z
-      .union([
-        z.number().int(),
-        z.array(z.number().int().nullable()),
-        z.null(),
-      ])
-      .optional(),
+    from: z.union([z.number().int(), z.array(z.number().int().nullable()), z.null()]).optional(),
+    to: z.union([z.number().int(), z.array(z.number().int().nullable()), z.null()]).optional(),
   })
   .transform((meta) => ({
     current_page: normalizeValue(meta.current_page),

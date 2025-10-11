@@ -3,13 +3,15 @@ import { z } from 'zod'
 import { ArticleApiItem } from '../lib/ArticlesSchema'
 
 const filterValue = z.union([z.literal('all'), z.string().min(1)])
-const dateRangeValue = z.union([z.literal('all'), z.literal('7d'), z.literal('30d'), z.literal('90d')])
+const dateRangeValue = z.union([
+  z.literal('all'),
+  z.literal('7d'),
+  z.literal('30d'),
+  z.literal('90d'),
+])
 
 export const ArticleSearch = z.object({
-  query: z
-    .string()
-    .min(1, 'Search query is required')
-    .max(120, 'Please shorten your search query'),
+  query: z.string().min(1, 'Search query is required').max(120, 'Please shorten your search query'),
 })
 
 export type ArticleSearch = z.infer<typeof ArticleSearch>

@@ -42,7 +42,7 @@ export function MediaUploadPreview({
           />
           <button
             type="button"
-            className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-destructive text-destructive-foreground hover:opacity-90"
+            className="bg-destructive text-destructive-foreground absolute -top-2 -right-2 h-6 w-6 rounded-full hover:opacity-90"
             onClick={() => {
               if (file) {
                 onFileChange(null)
@@ -65,7 +65,7 @@ export function MediaUploadPreview({
           const selectedFile = e.target.files?.[0] || null
           onFileChange(selectedFile)
         }}
-        className="block w-full text-sm text-muted-foreground file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-primary-foreground hover:file:bg-primary/90"
+        className="text-muted-foreground file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:px-4 file:py-2 file:text-sm file:font-semibold"
       />
       <p className="text-muted-foreground text-xs">PNG, JPG, GIF, WebP up to 5MB</p>
     </div>

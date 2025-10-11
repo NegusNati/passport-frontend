@@ -7,15 +7,11 @@ import { Hero } from './Hero'
 import { Testimonials } from './Testimonials'
 import { VideoTabs } from './VideoTabs'
 
-
 export function LandingPage() {
   return (
-    <div className="mx-auto max-w-7xl overflow-x-hidden space-y-4">
+    <div className="mx-auto max-w-7xl space-y-4 overflow-x-hidden">
       {/* Hero band with gradient surface */}
-      <div
-        className=" pb-8 md:pb-[220px] lg:pb-[480px] relative overflow-hidden overscroll-none h-[100svh]"
-    
-      >
+      <div className="relative h-[100svh] overflow-hidden overscroll-none pb-8 md:pb-[220px] lg:pb-[480px]">
         <Hero />
       </div>
 

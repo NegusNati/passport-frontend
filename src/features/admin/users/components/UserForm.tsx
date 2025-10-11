@@ -114,7 +114,7 @@ export function UserForm({ user, onSubmit, isSubmitting, errorMessage }: UserFor
           <Label htmlFor="is_admin">Admin access</Label>
           <form.Field name="is_admin">
             {(field) => (
-              <label className="flex items-center gap-3 rounded-lg border bg-muted/40 px-3 py-2 text-sm text-muted-foreground">
+              <label className="bg-muted/40 text-muted-foreground flex items-center gap-3 rounded-lg border px-3 py-2 text-sm">
                 <input
                   id="is_admin"
                   type="checkbox"
@@ -138,8 +138,8 @@ export function UserForm({ user, onSubmit, isSubmitting, errorMessage }: UserFor
         </div>
       </div>
 
-      {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
-      {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
+      {formError ? <p className="text-destructive text-sm">{formError}</p> : null}
+      {errorMessage ? <p className="text-destructive text-sm">{errorMessage}</p> : null}
 
       <form.Subscribe selector={(state) => state.canSubmit}>
         {(canSubmit) => (

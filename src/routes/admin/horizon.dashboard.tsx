@@ -13,9 +13,13 @@ function HorizonRedirect() {
   return (
     <div className="container mx-auto max-w-xl p-6 text-center">
       <Seo title="Redirecting to Horizon" noindex />
-      <p className="text-sm text-muted-foreground">Redirecting to Horizon…</p>
-      <p className="text-xs text-muted-foreground">
-        If nothing happens, <a className="underline" href={env.HORIZON_URL}>click here</a>.
+      <p className="text-muted-foreground text-sm">Redirecting to Horizon…</p>
+      <p className="text-muted-foreground text-xs">
+        If nothing happens,{' '}
+        <a className="underline" href={env.HORIZON_URL}>
+          click here
+        </a>
+        .
       </p>
     </div>
   )

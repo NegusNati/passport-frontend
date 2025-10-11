@@ -16,28 +16,29 @@ export function NotFound() {
       {/* Ambient gradient blobs */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 -top-24 -z-10 h-72 bg-gradient-to-tr from-primary/20 via-secondary/10 to-transparent blur-2xl dark:from-primary/15 dark:via-secondary/10"
+        className="from-primary/20 via-secondary/10 dark:from-primary/15 dark:via-secondary/10 pointer-events-none absolute inset-x-0 -top-24 -z-10 h-72 bg-gradient-to-tr to-transparent blur-2xl"
       />
 
-      <section className="container mx-auto max-w-3xl px-4 py-16 sm:py-24 text-center">
+      <section className="container mx-auto max-w-3xl px-4 py-16 text-center sm:py-24">
         {/* Icon backdrop */}
         <motion.div
           aria-hidden
           initial={{ rotate: 0, opacity: 0.12, y: reduce ? 0 : -6 }}
           animate={{ rotate: 360, opacity: 0.12, y: 0 }}
           transition={{ duration: reduce ? 0 : 24, repeat: Infinity, ease: 'linear' }}
-          className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-2xl bg-primary/10 text-primary sm:h-28 sm:w-28"
+          className="bg-primary/10 text-primary mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-2xl sm:h-28 sm:w-28"
         >
           <Compass className="h-12 w-12 sm:h-14 sm:w-14" />
         </motion.div>
 
         {/* 404 headline */}
         <p className="text-muted-foreground mb-2 text-sm tracking-widest">ERROR 404</p>
-        <h1 className="bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl">
+        <h1 className="from-foreground to-muted-foreground bg-gradient-to-r bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl">
           Lost your way?
         </h1>
-        <p className="text-muted-foreground mx-auto mt-3 max-w-prose text-balance text-base sm:text-lg">
-          The page you’re looking for doesn’t exist, moved, or the URL has a typo. Let’s get you back on track.
+        <p className="text-muted-foreground mx-auto mt-3 max-w-prose text-base text-balance sm:text-lg">
+          The page you’re looking for doesn’t exist, moved, or the URL has a typo. Let’s get you
+          back on track.
         </p>
 
         {/* Actions */}

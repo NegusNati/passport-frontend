@@ -39,9 +39,13 @@
     hsl(var(--primary) / 0.8)
   );
   border-radius: inherit;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   mask-composite: xor;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   animation: rotate-gradient var(--animation-duration, 3s) linear infinite;
   opacity: var(--glow-opacity, 0.5);
@@ -62,9 +66,13 @@
     hsl(var(--primary) / 0.6)
   );
   border-radius: inherit;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   mask-composite: xor;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   filter: blur(8px);
   opacity: 0.3;
@@ -168,7 +176,7 @@
     animation: none;
     --gradient-angle: 0deg;
   }
-  
+
   .animated-border-card:hover::before,
   .animated-border-card:hover::after {
     --glow-opacity: 0.5;

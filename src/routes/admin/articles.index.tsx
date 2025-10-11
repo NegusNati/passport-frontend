@@ -49,7 +49,7 @@ function AdminArticlesIndexPage() {
         </div>
         <a
           href="/admin/articles/new"
-          className="inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+          className="border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors"
         >
           New article
         </a>
@@ -87,4 +87,3 @@ function AdminArticlesIndexPage() {
     </div>
   )
 }
-

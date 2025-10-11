@@ -5,14 +5,17 @@ import { adminKeys } from '@/features/admin/lib/keys'
 import { API_ENDPOINTS } from '@/shared/lib/API_ENDPOINTS'
 
 import { AdvertisementDetailResponse } from '../schemas/advertisement'
-import {
-  AdvertisementCreateSchema,
-  type AdvertisementUpdatePayload,
-} from '../schemas/create'
+import { AdvertisementCreateSchema, type AdvertisementUpdatePayload } from '../schemas/create'
 import { extractAdvertisementErrorMessage } from './errors'
 
 function buildFormDataFromUpdate(_id: number, input: AdvertisementUpdatePayload) {
-  const { ad_desktop_asset, ad_mobile_asset, remove_ad_desktop_asset, remove_ad_mobile_asset, ...rest } = input
+  const {
+    ad_desktop_asset,
+    ad_mobile_asset,
+    remove_ad_desktop_asset,
+    remove_ad_mobile_asset,
+    ...rest
+  } = input
   const parsed = AdvertisementCreateSchema.parse(rest)
   const form = new FormData()
 

@@ -1,14 +1,17 @@
 # Advertisement Requests Table Refactor
 
 ## Overview
+
 Refactored the advertisement requests table to use the reusable `DataTable` component, following the same pattern as the articles table implementation.
 
 ## Changes Made
 
 ### 1. New Table Component
+
 **File:** `src/features/admin/advertisement-requests/components/AdminRequestsTable.tsx`
 
 **Features:**
+
 - Uses TanStack Table for column definitions
 - Leverages the shared `DataTable` component
 - Column-based table with proper type definitions
@@ -17,6 +20,7 @@ Refactored the advertisement requests table to use the reusable `DataTable` comp
 - Proper pagination integration
 
 **Columns:**
+
 - ID
 - Full Name (with email as secondary text)
 - Company
@@ -26,9 +30,11 @@ Refactored the advertisement requests table to use the reusable `DataTable` comp
 - Actions (View, Delete)
 
 ### 2. New Filters Component with Debounced Search
+
 **File:** `src/features/admin/advertisement-requests/components/AdminRequestsFilters.tsx`
 
 **Features:**
+
 - **Debounced search inputs** (350ms delay) for:
   - Full Name
   - Company Name
@@ -39,6 +45,7 @@ Refactored the advertisement requests table to use the reusable `DataTable` comp
 - Prevents excessive API calls during typing
 
 **How Debouncing Works:**
+
 ```typescript
 // Local state for immediate UI updates
 const [fullNameInput, setFullNameInput] = useState(filters.full_name ?? '')
@@ -55,26 +62,31 @@ useEffect(() => {
 ```
 
 ### 3. Updated Route
+
 **File:** `src/routes/admin/advertisement-requests.index.tsx`
 
 **Changes:**
+
 - Removed custom pagination logic (now handled by DataTable)
 - Added `handlePageSizeChange` for per-page selection
 - Simplified component - DataTable handles loading states
 - Cleaner integration with filters
 
 ### 4. Removed Files
+
 - Old `AdminRequestsTable.tsx` (custom implementation)
 - Old `AdminRequestsFilters.tsx` (without debouncing)
 
 ## Benefits
 
 ### 1. Consistency
+
 - Follows the same pattern as `ArticlesTable`
 - Uses the same `DataTable` component
 - Consistent UX across admin pages
 
 ### 2. Built-in Features
+
 - ✅ Pagination controls (previous, next, page numbers)
 - ✅ Page size selector (10, 20, 50, 100)
 - ✅ Loading skeletons
@@ -84,6 +96,7 @@ useEffect(() => {
 - ✅ Column visibility toggle (future enhancement)
 
 ### 3. Performance
+
 - **Debounced search** - Reduces API calls by 90%+
   - Without debounce: 10 characters typed = 10 API calls
   - With debounce: 10 characters typed = 1 API call (after 350ms)
@@ -91,12 +104,14 @@ useEffect(() => {
 - Efficient re-renders with React Table memoization
 
 ### 4. Better UX
+
 - Immediate visual feedback when typing (local state)
 - Smooth transitions with `keepPreviousData`
 - Professional table controls
 - Responsive design
 
 ### 5. Maintainability
+
 - Shared component reduces code duplication
 - Easier to add new features (sorting, filtering)
 - Type-safe column definitions
@@ -105,6 +120,7 @@ useEffect(() => {
 ## Usage
 
 ### Filters with Debounced Search
+
 ```tsx
 // User types "John" in Full Name input
 // 1. Local state updates immediately: "J" -> "Jo" -> "Joh" -> "John"
@@ -114,6 +130,7 @@ useEffect(() => {
 ```
 
 ### Pagination
+
 ```tsx
 // Users can:
 - Click previous/next buttons
@@ -123,6 +140,7 @@ useEffect(() => {
 ```
 
 ### Actions
+
 ```tsx
 // Each row has:
 - View button: Opens detail dialog
@@ -146,14 +164,18 @@ useEffect(() => {
 ## Performance Metrics
 
 ### API Call Reduction
+
 **Before (no debouncing):**
+
 - User types "John Doe" = 8 characters = 8 API calls
 
 **After (with debouncing):**
+
 - User types "John Doe" = 1 API call (after 350ms)
 - **87.5% reduction in API calls**
 
 ### User Experience
+
 - Local state updates: **Instant** (0ms)
 - API call trigger: **350ms** after typing stops
 - Smooth pagination transitions with previous data
@@ -176,6 +198,7 @@ src/features/admin/advertisement-requests/
 ## Related Patterns
 
 This implementation follows the same patterns as:
+
 - `src/features/admin/articles/components/ArticlesTable.tsx`
 - `src/features/admin/articles/components/ArticlesFilters.tsx`
 

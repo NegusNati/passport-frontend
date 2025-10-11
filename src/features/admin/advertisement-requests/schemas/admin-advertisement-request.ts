@@ -39,10 +39,22 @@ const normalizeOptionalNumber = (
 // Pagination helpers (handle both single values and arrays due to backend issue)
 export const PaginationLinks = z
   .object({
-    first: z.union([z.string(), z.array(z.string().nullable())]).nullable().optional(),
-    last: z.union([z.string(), z.array(z.string().nullable())]).nullable().optional(),
-    prev: z.union([z.string(), z.array(z.string().nullable())]).nullable().optional(),
-    next: z.union([z.string(), z.array(z.string().nullable())]).nullable().optional(),
+    first: z
+      .union([z.string(), z.array(z.string().nullable())])
+      .nullable()
+      .optional(),
+    last: z
+      .union([z.string(), z.array(z.string().nullable())])
+      .nullable()
+      .optional(),
+    prev: z
+      .union([z.string(), z.array(z.string().nullable())])
+      .nullable()
+      .optional(),
+    next: z
+      .union([z.string(), z.array(z.string().nullable())])
+      .nullable()
+      .optional(),
   })
   .transform((links) => ({
     first: normalizeNullableString(links.first),
@@ -58,20 +70,8 @@ export const PaginationMeta = z
     total: z.union([z.number().int().nonnegative(), z.array(z.number().int().nonnegative())]),
     last_page: z.union([z.number().int().min(1), z.array(z.number().int().min(1))]),
     has_more: z.boolean(),
-    from: z
-      .union([
-        z.number().int(),
-        z.array(z.number().int().nullable()),
-        z.null(),
-      ])
-      .optional(),
-    to: z
-      .union([
-        z.number().int(),
-        z.array(z.number().int().nullable()),
-        z.null(),
-      ])
-      .optional(),
+    from: z.union([z.number().int(), z.array(z.number().int().nullable()), z.null()]).optional(),
+    to: z.union([z.number().int(), z.array(z.number().int().nullable()), z.null()]).optional(),
   })
   .transform((meta) => ({
     current_page: normalizeValue(meta.current_page),
@@ -116,6 +116,4 @@ export const AdminAdvertisementRequestUpdate = z.object({
   contacted_at: z.string().optional().or(z.literal('')), // ISO date or YYYY-MM-DD
 })
 
-export type AdminAdvertisementRequestUpdatePayload = z.infer<
-  typeof AdminAdvertisementRequestUpdate
->
+export type AdminAdvertisementRequestUpdatePayload = z.infer<typeof AdminAdvertisementRequestUpdate>

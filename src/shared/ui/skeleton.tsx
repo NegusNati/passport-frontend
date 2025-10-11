@@ -22,12 +22,12 @@ export function Skeleton({ className = '', width, height, ...props }: SkeletonPr
 
 export function ArticleCardSkeleton() {
   return (
-    <div className="border-border bg-card rounded-xl border overflow-hidden shadow-sm">
+    <div className="border-border bg-card overflow-hidden rounded-xl border shadow-sm">
       {/* Image skeleton - takes 60% height */}
       <Skeleton className="h-48 w-full" />
 
       {/* Content section - takes 40% height */}
-      <div className="p-4 space-y-3">
+      <div className="space-y-3 p-4">
         {/* Date skeleton */}
         <Skeleton className="h-4 w-24" />
 
@@ -59,12 +59,12 @@ export function ArticleGridSkeleton({ count = 8 }: { count?: number }) {
 
 export function RelatedArticleCardSkeleton() {
   return (
-    <div className="border-border bg-card rounded-xl border overflow-hidden shadow-sm">
+    <div className="border-border bg-card overflow-hidden rounded-xl border shadow-sm">
       {/* Image skeleton */}
       <Skeleton className="aspect-16/9 w-full" />
 
       {/* Content section */}
-      <div className="p-4 space-y-3">
+      <div className="space-y-3 p-4">
         {/* Date skeleton */}
         <Skeleton className="h-4 w-24" />
 
@@ -153,10 +153,10 @@ export function ArticleDetailSkeleton() {
 export function PassportDetailSkeleton() {
   return (
     <section className="relative overflow-hidden py-12 md:py-16">
-      <div className="container relative z-10 mx-auto">
+      <div className="relative z-10 container mx-auto">
         <div className="mx-auto max-w-4xl">
           {/* Passport Card skeleton */}
-          <div className="relative overflow-hidden rounded-lg border-2 border-primary p-8 shadow-2xl backdrop-blur-md md:p-12">
+          <div className="border-primary relative overflow-hidden rounded-lg border-2 p-8 shadow-2xl backdrop-blur-md md:p-12">
             {/* Header skeleton */}
             <div className="relative z-10 mb-8 space-y-2 text-center">
               <Skeleton className="mx-auto h-7 w-3/4 md:h-8" />

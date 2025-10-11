@@ -6,8 +6,8 @@ import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 
 interface DataTableColumnHeaderProps<TData, TValue> extends HTMLAttributes<HTMLDivElement> {
-  column: Column<TData, TValue>;
-  title: string;
+  column: Column<TData, TValue>
+  title: string
 }
 
 export function DataTableColumnHeader<TData, TValue>({
@@ -16,7 +16,7 @@ export function DataTableColumnHeader<TData, TValue>({
   className,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
-    return <div className={cn(className)}>{title}</div>;
+    return <div className={cn(className)}>{title}</div>
   }
 
   return (
@@ -27,8 +27,8 @@ export function DataTableColumnHeader<TData, TValue>({
         className="-ml-2 h-8 px-2"
         type="button"
         onClick={() => {
-          const isAsc = column.getIsSorted() === 'asc';
-          column.toggleSorting(isAsc);
+          const isAsc = column.getIsSorted() === 'asc'
+          column.toggleSorting(isAsc)
         }}
       >
         <span>{title}</span>
@@ -45,11 +45,11 @@ export function DataTableColumnHeader<TData, TValue>({
           type="button"
           aria-label={`Hide ${title} column`}
           onClick={() => column.toggleVisibility(false)}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition hover:bg-muted"
+          className="text-muted-foreground hover:bg-muted inline-flex h-8 w-8 items-center justify-center rounded-md transition"
         >
           <EyeOff className="h-4 w-4" />
         </button>
       ) : null}
     </div>
-  );
+  )
 }

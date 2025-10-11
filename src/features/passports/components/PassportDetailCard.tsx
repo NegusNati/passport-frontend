@@ -22,7 +22,8 @@ function getDayOfWeek(firstName?: string) {
   if (['a', 'b', 'c', 'd', 'e', 'f', 'g'].includes(letter)) days.push('Monday')
   if (['m', 'n', 'o', 'p', 'q', 'r', 'h', 'i', 'j', 'k', 'l'].includes(letter)) days.push('Tuesday')
   if (['a', 'b', 'c', 'd', 'e', 't'].includes(letter)) days.push('Wednesday')
-  if (['m', 'i', 'j', 'k', 'l', 's', 'u', 'v', 'w', 'x', 'y', 'z'].includes(letter)) days.push('Thursday')
+  if (['m', 'i', 'j', 'k', 'l', 's', 'u', 'v', 'w', 'x', 'y', 'z'].includes(letter))
+    days.push('Thursday')
   if (['a', 'f', 'g', 'h', 'n', 'o', 'p', 'q', 'r'].includes(letter)) days.push('Friday')
   if (['m', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'].includes(letter)) days.push('Saturday')
 
@@ -45,7 +46,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
   const firstName = passport.firstName ?? nameParts[0] ?? ''
   const dayOfWeek = getDayOfWeek(firstName)
   const cardRef = useRef<HTMLDivElement>(null)
-  
+
   const { download, isDownloading } = usePdfDownload({
     elementRef: cardRef,
     filename: `passport_et_${passport.name}`,
@@ -63,15 +64,11 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
           <div
             ref={cardRef}
             id={CARD_DOWNLOAD_ID}
-            className="relative overflow-hidden rounded-lg border-2 border-primary p-8 shadow-2xl   backdrop-blur-md md:p-12"
+            className="border-primary relative overflow-hidden rounded-lg border-2 p-8 shadow-2xl backdrop-blur-md md:p-12"
           >
             {/* Ethiopian Seal Background - Prominent Yellow Star */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-20">
-              <img
-                src={star}
-                alt="Ethiopian Star"
-                className="w-64 h-64 md:w-80 md:h-80"
-              />
+              <img src={star} alt="Ethiopian Star" className="h-64 w-64 md:h-80 md:w-80" />
             </div>
 
             {/* Header */}
@@ -79,7 +76,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
               <h1 className="mb-1 text-xl font-bold text-red-900 md:text-2xl">
                 የኢትዮጵያ ፌዴራላዊ ዲሞክራሲያዊ ሪፐብሊክ
               </h1>
-              <h2 className="text-lg font-semibold text-red-800 md:text-xl font-gotham "> 
+              <h2 className="font-gotham text-lg font-semibold text-red-800 md:text-xl">
                 FEDERAL DEMOCRATIC REPUBLIC OF ETHIOPIA
               </h2>
             </div>
@@ -117,9 +114,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
 
                 <div>
                   <div className="text-xs font-medium text-gray-600">Day of The Week</div>
-                  <div className="mt-0.5 text-base font-semibold text-gray-900">
-                    {dayOfWeek}
-                  </div>
+                  <div className="mt-0.5 text-base font-semibold text-gray-900">{dayOfWeek}</div>
                 </div>
 
                 <div>
@@ -141,8 +136,8 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
                   />
                 </div>
               </div>
-              <div className='flex flex-col items-center gap-3 text-primary'>
-                <div className='text-md font-bold'>www.passport.et</div>
+              <div className="text-primary flex flex-col items-center gap-3">
+                <div className="text-md font-bold">www.passport.et</div>
               </div>
             </div>
           </div>

@@ -15,7 +15,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
     return (
       <span
         className={[
-          'relative inline-flex h-10 w-16 items-center rounded-full border border-input bg-muted/60 p-1',
+          'border-input bg-muted/60 relative inline-flex h-10 w-16 items-center rounded-full border p-1',
           className,
         ].join(' ')}
       >
@@ -23,7 +23,7 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
           className="absolute inset-0 rounded-full bg-gradient-to-r from-amber-200/40 to-orange-200/30"
           aria-hidden
         />
-        <span className="relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-background shadow">
+        <span className="bg-background relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-full shadow">
           <Sun className="h-4 w-4" aria-hidden />
         </span>
       </span>
@@ -37,22 +37,21 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       aria-pressed={isDark}
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       className={[
-        'relative inline-flex h-10 w-16 items-center rounded-full border border-input bg-muted/60 p-1 text-foreground',
+        'border-input bg-muted/60 text-foreground relative inline-flex h-10 w-16 items-center rounded-full border p-1',
         'focus-visible:ring-ring ring-offset-background focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
         className,
       ].join(' ')}
       whileTap={reduceMotion ? undefined : { scale: 0.95 }}
       animate={{
-        background:
-          isDark
-            ? 'linear-gradient(135deg, rgba(59,130,246,0.28) 0%, rgba(29,78,216,0.28) 100%)'
-            : 'linear-gradient(135deg, rgba(253,224,71,0.3) 0%, rgba(251,191,36,0.2) 100%)',
+        background: isDark
+          ? 'linear-gradient(135deg, rgba(59,130,246,0.28) 0%, rgba(29,78,216,0.28) 100%)'
+          : 'linear-gradient(135deg, rgba(253,224,71,0.3) 0%, rgba(251,191,36,0.2) 100%)',
       }}
       transition={{ duration: reduceMotion ? 0 : 0.4, ease: 'easeOut' }}
     >
       <motion.span
         layout
-        className="relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-full bg-background shadow-lg"
+        className="bg-background relative z-10 inline-flex h-8 w-8 items-center justify-center rounded-full shadow-lg"
         animate={{ x: isDark ? 24 : 0 }}
         transition={
           reduceMotion

@@ -5,10 +5,7 @@ import { adminKeys } from '@/features/admin/lib/keys'
 import { API_ENDPOINTS } from '@/shared/lib/API_ENDPOINTS'
 
 import { AdvertisementDetailResponse } from '../schemas/advertisement'
-import {
-  type AdvertisementCreatePayload,
-  AdvertisementCreateSchema,
-} from '../schemas/create'
+import { type AdvertisementCreatePayload, AdvertisementCreateSchema } from '../schemas/create'
 import { extractAdvertisementErrorMessage } from './errors'
 
 function buildFormDataFromCreate(input: AdvertisementCreatePayload) {

@@ -7,7 +7,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 
 import { useLogin } from '../hooks'
-import { type LoginInput,LoginSchema } from '../schemas/login'
+import { type LoginInput, LoginSchema } from '../schemas/login'
 import type { User } from '../schemas/user'
 
 type LoginFormProps = {
@@ -31,7 +31,7 @@ function mapServerErrors(data?: ApiValidation) {
   }
   const message =
     data?.code === 'invalid_credentials'
-      ? data.message ?? 'We could not find a matching phone number and password.'
+      ? (data.message ?? 'We could not find a matching phone number and password.')
       : data?.message
   return { fieldErrors, message }
 }
@@ -43,12 +43,12 @@ function sanitizePhone(value: string) {
 function validatePhone(value: string) {
   const sanitized = sanitizePhone(value)
   const result = LoginSchema.shape.phoneNumber.safeParse(sanitized)
-  return result.success ? undefined : result.error.issues[0]?.message ?? 'Invalid phone number'
+  return result.success ? undefined : (result.error.issues[0]?.message ?? 'Invalid phone number')
 }
 
 function validatePassword(value: string) {
   const result = LoginSchema.shape.password.safeParse(value)
-  return result.success ? undefined : result.error.issues[0]?.message ?? 'Invalid password'
+  return result.success ? undefined : (result.error.issues[0]?.message ?? 'Invalid password')
 }
 
 export function LoginForm({ onSuccess }: LoginFormProps) {
@@ -85,7 +85,10 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       )
       setFieldErrors(apiFieldErrors)
       const fallback =
-        message ?? (Object.keys(apiFieldErrors).length > 0 ? null : 'Unable to sign in with those credentials.')
+        message ??
+        (Object.keys(apiFieldErrors).length > 0
+          ? null
+          : 'Unable to sign in with those credentials.')
       setFormError(fallback)
     },
   })
@@ -159,7 +162,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                   aria-describedby="phone-number-error"
                 />
                 {error ? (
-                  <p id="phone-number-error" className="text-sm text-destructive">
+                  <p id="phone-number-error" className="text-destructive text-sm">
                     {error}
                   </p>
                 ) : null}
@@ -175,57 +178,62 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             onSubmit: ({ value }) => validatePassword(value ?? ''),
           }}
         >
-        {(field) => {
-          const error = field.state.meta.errors[0] ?? fieldErrors.password
-          return (
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  value={field.state.value ?? ''}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => {
-                    const nextValue = event.target.value
-                    if (fieldErrors.password) {
-                      setFieldErrors((prev) => ({ ...prev, password: undefined }))
-                    }
-                    if (formError) {
-                      setFormError(null)
-                    }
-                    loginMutation.reset()
-                    field.handleChange(nextValue)
-                  }}
-                  aria-invalid={Boolean(error)}
-                  aria-describedby="password-error"
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-2 inline-flex items-center"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <EyeOff className="h-5 w-5" aria-hidden /> : <Eye className="h-5 w-5" aria-hidden />}
-                </button>
-              </div>
-              {error ? (
-                <p id="password-error" className="text-sm text-destructive">
-                  {error}
-                </p>
-              ) : null}
+          {(field) => {
+            const error = field.state.meta.errors[0] ?? fieldErrors.password
+            return (
+              <div className="grid gap-2">
+                <Label htmlFor="password">Password</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    value={field.state.value ?? ''}
+                    onBlur={field.handleBlur}
+                    onChange={(event) => {
+                      const nextValue = event.target.value
+                      if (fieldErrors.password) {
+                        setFieldErrors((prev) => ({ ...prev, password: undefined }))
+                      }
+                      if (formError) {
+                        setFormError(null)
+                      }
+                      loginMutation.reset()
+                      field.handleChange(nextValue)
+                    }}
+                    aria-invalid={Boolean(error)}
+                    aria-describedby="password-error"
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-2 inline-flex items-center"
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" aria-hidden />
+                    ) : (
+                      <Eye className="h-5 w-5" aria-hidden />
+                    )}
+                  </button>
+                </div>
+                {error ? (
+                  <p id="password-error" className="text-destructive text-sm">
+                    {error}
+                  </p>
+                ) : null}
               </div>
             )
           }}
         </form.Field>
       </div>
 
-      {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
+      {formError ? <p className="text-destructive text-sm">{formError}</p> : null}
       {retryAfterSeconds !== null ? (
-        <p className="text-sm text-muted-foreground">
-          You can try again in approximately {retryAfterSeconds} second{retryAfterSeconds === 1 ? '' : 's'}.
+        <p className="text-muted-foreground text-sm">
+          You can try again in approximately {retryAfterSeconds} second
+          {retryAfterSeconds === 1 ? '' : 's'}.
         </p>
       ) : null}
 

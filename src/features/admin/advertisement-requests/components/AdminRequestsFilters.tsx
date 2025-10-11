@@ -3,13 +3,7 @@ import { useEffect, useState } from 'react'
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 
 import type { AdminAdvertisementRequestsSearch } from '../schemas/filters'
 
@@ -31,10 +25,7 @@ const statusOptions = [
   { value: 'rejected', label: 'Rejected' },
 ]
 
-export function AdminRequestsFilters({
-  filters,
-  onFilterChange,
-}: AdminRequestsFiltersProps) {
+export function AdminRequestsFilters({ filters, onFilterChange }: AdminRequestsFiltersProps) {
   // Local state for input values (for immediate UI updates)
   const [fullNameInput, setFullNameInput] = useState(filters.full_name ?? '')
   const [companyNameInput, setCompanyNameInput] = useState(filters.company_name ?? '')
@@ -78,7 +69,7 @@ export function AdminRequestsFilters({
   }, [debouncedPhoneNumber, filters.phone_number, onFilterChange])
 
   return (
-    <div className="grid gap-4 rounded-lg border bg-background p-4 md:grid-cols-4">
+    <div className="bg-background grid gap-4 rounded-lg border p-4 md:grid-cols-4">
       <div className="grid gap-2">
         <Label htmlFor="filter-status">Status</Label>
         <Select

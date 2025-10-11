@@ -212,7 +212,7 @@ export function AdvertisementRequestForm({
               aria-invalid={!!fileError}
               aria-describedby="file-error file-help"
             />
-            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
+            <div className="text-muted-foreground flex flex-wrap items-center justify-between gap-2 text-xs">
               <p id="file-help">PDF, DOC, DOCX, JPG, or PNG (max 10MB)</p>
               {file ? (
                 <p>
@@ -231,9 +231,7 @@ export function AdvertisementRequestForm({
 
       {/* Submit Button */}
       <form.Subscribe
-        selector={(state) =>
-          [state.canSubmit, state.isSubmitting, state.isSubmitted] as const
-        }
+        selector={(state) => [state.canSubmit, state.isSubmitting, state.isSubmitted] as const}
       >
         {([canSubmit, formIsSubmitting, isSubmitted]) => (
           <div className="space-y-2">

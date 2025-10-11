@@ -63,10 +63,7 @@ function AdminAdvertisementRequestsIndexPage() {
     navigate({ search: { ...search, per_page, page: 1 } })
   }
 
-  const handleUpdate = async (
-    id: number,
-    payload: AdminAdvertisementRequestUpdatePayload,
-  ) => {
+  const handleUpdate = async (id: number, payload: AdminAdvertisementRequestUpdatePayload) => {
     await updateMutation.mutateAsync({ id, payload })
   }
 

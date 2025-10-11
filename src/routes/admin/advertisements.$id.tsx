@@ -24,8 +24,8 @@ function AdminAdvertisementEditPage() {
     return (
       <div className="space-y-6">
         <div className="animate-pulse space-y-4">
-          <div className="h-8 w-64 rounded bg-muted" />
-          <div className="h-4 w-96 rounded bg-muted" />
+          <div className="bg-muted h-8 w-64 rounded" />
+          <div className="bg-muted h-4 w-96 rounded" />
         </div>
       </div>
     )
@@ -34,11 +34,9 @@ function AdminAdvertisementEditPage() {
   if (query.isError || !query.data) {
     return (
       <div className="space-y-6">
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-6">
+        <div className="border-destructive/50 bg-destructive/10 rounded-lg border p-6">
           <p className="text-destructive font-medium">Failed to load advertisement</p>
-          <p className="text-muted-foreground text-sm">
-            {query.error?.message || 'Unknown error'}
-          </p>
+          <p className="text-muted-foreground text-sm">{query.error?.message || 'Unknown error'}</p>
         </div>
       </div>
     )
@@ -53,7 +51,7 @@ function AdminAdvertisementEditPage() {
         </p>
       </div>
 
-      <div className="rounded-lg border bg-card p-6">
+      <div className="bg-card rounded-lg border p-6">
         <AdminAdvertisementForm
           advertisement={query.data}
           onSubmit={handleSubmit}

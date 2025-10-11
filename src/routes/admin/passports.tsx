@@ -8,7 +8,8 @@ export const Route = createFileRoute('/admin/passports')({
   validateSearch: (search: Record<string, unknown>) => {
     const page = Number(search.page ?? 1) || 1
     const page_size = Number(search.page_size ?? 20) || 20
-    const request_number = typeof search.request_number === 'string' ? search.request_number : undefined
+    const request_number =
+      typeof search.request_number === 'string' ? search.request_number : undefined
     const location = typeof search.location === 'string' ? search.location : undefined
     const first_name = typeof search.first_name === 'string' ? search.first_name : undefined
     const middle_name = typeof search.middle_name === 'string' ? search.middle_name : undefined

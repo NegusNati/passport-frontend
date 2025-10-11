@@ -52,9 +52,9 @@ export function ArticleCard({ article, onClick }: ArticleCardProps) {
         </div>
       </div>
 
-      <CardHeader className="p-0 m-0">
+      <CardHeader className="m-0 p-0">
         <span className="text-muted-foreground text-xs">{article.publishedDate}</span>
-        <h3 className="text-foreground group-hover:text-muted-foreground line-clamp-2 text-md leading-tight font-semibold">
+        <h3 className="text-foreground group-hover:text-muted-foreground text-md line-clamp-2 leading-tight font-semibold">
           {article.title}
         </h3>
       </CardHeader>

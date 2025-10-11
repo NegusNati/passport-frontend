@@ -22,7 +22,7 @@ export function AdminUnauthorized({ user: _user, variant = 'forbidden' }: AdminU
 
   const title =
     variant === 'restricted'
-      ? "Hold up — this section needs admin clearance"
+      ? 'Hold up — this section needs admin clearance'
       : "Oops! You're not cleared for this hangar"
 
   const description =
@@ -33,36 +33,42 @@ export function AdminUnauthorized({ user: _user, variant = 'forbidden' }: AdminU
   return (
     <div className="flex min-h-[70vh] flex-col items-center justify-center px-6 text-center">
       <div className="relative mb-12 h-40 w-40">
-        {!reduceMotion && FLOAT_ITEMS.map((item, index) => (
-          <motion.span
-            key={index}
-            className="absolute left-1/2 top-1/2 text-3xl"
-            style={{
-              transform: `translate(-50%, -50%) rotate(${index * 90}deg)`
-            }}
-            animate={{
-              y: [0, -12, 0],
-              rotate: [index * 90, index * 90 + 6, index * 90],
-            }}
-            transition={{
-              repeat: Infinity,
-              duration: 3.2,
-              ease: 'easeInOut',
-              delay: item.delay,
-            }}
-          >
-            {item.emoji}
-          </motion.span>
-        ))}
+        {!reduceMotion &&
+          FLOAT_ITEMS.map((item, index) => (
+            <motion.span
+              key={index}
+              className="absolute top-1/2 left-1/2 text-3xl"
+              style={{
+                transform: `translate(-50%, -50%) rotate(${index * 90}deg)`,
+              }}
+              animate={{
+                y: [0, -12, 0],
+                rotate: [index * 90, index * 90 + 6, index * 90],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 3.2,
+                ease: 'easeInOut',
+                delay: item.delay,
+              }}
+            >
+              {item.emoji}
+            </motion.span>
+          ))}
         {reduceMotion && (
-          <span className="absolute left-1/2 top-1/2 text-4xl" style={{ transform: 'translate(-50%, -50%)' }}>
+          <span
+            className="absolute top-1/2 left-1/2 text-4xl"
+            style={{ transform: 'translate(-50%, -50%)' }}
+          >
             🚫
           </span>
         )}
         <motion.div
-          className="bg-primary/5 text-primary absolute inset-6 rounded-full border border-primary/40"
+          className="bg-primary/5 text-primary border-primary/40 absolute inset-6 rounded-full border"
           animate={reduceMotion ? undefined : { scale: [1, 1.05, 1] }}
-          transition={reduceMotion ? undefined : { repeat: Infinity, duration: 4, ease: 'easeInOut' }}
+          transition={
+            reduceMotion ? undefined : { repeat: Infinity, duration: 4, ease: 'easeInOut' }
+          }
         />
       </div>
 
@@ -76,7 +82,9 @@ export function AdminUnauthorized({ user: _user, variant = 'forbidden' }: AdminU
           </Button>
         ) : (
           <Button asChild>
-            <a href="mailto:support@passport.et?subject=Editor%20Role%20Request">Contact us for editor access</a>
+            <a href="mailto:support@passport.et?subject=Editor%20Role%20Request">
+              Contact us for editor access
+            </a>
           </Button>
         )}
         <Button variant="outline" asChild>

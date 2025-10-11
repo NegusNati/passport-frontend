@@ -2,7 +2,7 @@ import { createFileRoute, isRedirect, redirect } from '@tanstack/react-router'
 import { z } from 'zod'
 
 import { queryClient } from '@/api/queryClient'
-import { type ApiError,authKeys, fetchMe } from '@/features/auth/api'
+import { type ApiError, authKeys, fetchMe } from '@/features/auth/api'
 import { RegisterPage } from '@/features/auth/components/RegisterPage'
 
 const SearchSchema = z.object({

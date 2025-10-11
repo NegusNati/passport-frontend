@@ -1,4 +1,4 @@
-import { toast as sonnerToast,Toaster as SonnerToaster } from 'sonner'
+import { toast as sonnerToast, Toaster as SonnerToaster } from 'sonner'
 
 export const toast = sonnerToast
 
@@ -11,7 +11,8 @@ export function Toaster() {
       duration={3500}
       toastOptions={{
         classNames: {
-          toast: 'bg-background/95 border border-border backdrop-blur supports-[backdrop-filter]:bg-background/70',
+          toast:
+            'bg-background/95 border border-border backdrop-blur supports-[backdrop-filter]:bg-background/70',
           description: 'text-muted-foreground',
         },
       }}

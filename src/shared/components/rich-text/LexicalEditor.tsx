@@ -12,7 +12,12 @@ import { ListPlugin } from '@lexical/react/LexicalListPlugin'
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import DOMPurify from 'isomorphic-dompurify'
-import { $getRoot, $insertNodes, type EditorState, type LexicalEditor as LexicalEditorType } from 'lexical'
+import {
+  $getRoot,
+  $insertNodes,
+  type EditorState,
+  type LexicalEditor as LexicalEditorType,
+} from 'lexical'
 import { useEffect } from 'react'
 
 import { createEditorConfig } from '@/shared/lib/lexical/initial-config'
@@ -50,13 +55,40 @@ function InitialContentPlugin({ html }: { html: string }) {
       const parser = new DOMParser()
       const sanitizedHtml = DOMPurify.sanitize(html, {
         ALLOWED_TAGS: [
-          'p', 'br', 'strong', 'em', 'u', 's', 'code', 'pre',
-          'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-          'ul', 'ol', 'li',
-          'a', 'blockquote',
-          'img', 'video', 'source',
+          'p',
+          'br',
+          'strong',
+          'em',
+          'u',
+          's',
+          'code',
+          'pre',
+          'h1',
+          'h2',
+          'h3',
+          'h4',
+          'h5',
+          'h6',
+          'ul',
+          'ol',
+          'li',
+          'a',
+          'blockquote',
+          'img',
+          'video',
+          'source',
         ],
-        ALLOWED_ATTR: ['href', 'rel', 'target', 'src', 'alt', 'width', 'height', 'controls', 'preload'],
+        ALLOWED_ATTR: [
+          'href',
+          'rel',
+          'target',
+          'src',
+          'alt',
+          'width',
+          'height',
+          'controls',
+          'preload',
+        ],
         ALLOW_DATA_ATTR: false,
         ADD_URI_SAFE_ATTR: ['src'],
       })
@@ -78,7 +110,11 @@ type LexicalEditorProps = {
   placeholder?: string
 }
 
-export function LexicalEditor({ value, onChange, placeholder = 'Start writing...' }: LexicalEditorProps) {
+export function LexicalEditor({
+  value,
+  onChange,
+  placeholder = 'Start writing...',
+}: LexicalEditorProps) {
   const initialConfig = {
     ...createEditorConfig('article-editor', true),
     editorState: null,
@@ -89,13 +125,40 @@ export function LexicalEditor({ value, onChange, placeholder = 'Start writing...
       const html = $generateHtmlFromNodes(editor)
       const sanitized = DOMPurify.sanitize(html, {
         ALLOWED_TAGS: [
-          'p', 'br', 'strong', 'em', 'u', 's', 'code', 'pre',
-          'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-          'ul', 'ol', 'li',
-          'a', 'blockquote',
-          'img', 'video', 'source',
+          'p',
+          'br',
+          'strong',
+          'em',
+          'u',
+          's',
+          'code',
+          'pre',
+          'h1',
+          'h2',
+          'h3',
+          'h4',
+          'h5',
+          'h6',
+          'ul',
+          'ol',
+          'li',
+          'a',
+          'blockquote',
+          'img',
+          'video',
+          'source',
         ],
-        ALLOWED_ATTR: ['href', 'rel', 'target', 'src', 'alt', 'width', 'height', 'controls', 'preload'],
+        ALLOWED_ATTR: [
+          'href',
+          'rel',
+          'target',
+          'src',
+          'alt',
+          'width',
+          'height',
+          'controls',
+          'preload',
+        ],
         ALLOW_DATA_ATTR: false,
         ADD_URI_SAFE_ATTR: ['src'],
       })
@@ -105,7 +168,7 @@ export function LexicalEditor({ value, onChange, placeholder = 'Start writing...
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div className="relative rounded-md border border-input bg-background">
+      <div className="border-input bg-background relative rounded-md border">
         <ToolbarPlugin />
         <div className="relative">
           <RichTextPlugin
@@ -113,7 +176,7 @@ export function LexicalEditor({ value, onChange, placeholder = 'Start writing...
               <ContentEditable className="lexical-editor min-h-[240px] resize-none overflow-auto px-4 py-3 text-sm outline-none" />
             }
             placeholder={
-              <div className="pointer-events-none absolute left-4 top-3 text-sm text-muted-foreground">
+              <div className="text-muted-foreground pointer-events-none absolute top-3 left-4 text-sm">
                 {placeholder}
               </div>
             }

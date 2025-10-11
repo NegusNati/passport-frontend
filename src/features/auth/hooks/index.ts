@@ -7,14 +7,7 @@ import {
 
 import { queryClient } from '@/api/queryClient'
 
-import {
-  type ApiError,
-  authKeys,
-  fetchMe,
-  login,
-  logout,
-  register,
-} from '../api'
+import { type ApiError, authKeys, fetchMe, login, logout, register } from '../api'
 import type { LoginInput } from '../schemas/login'
 import type { RegisterInput } from '../schemas/register'
 import type { User } from '../schemas/user'

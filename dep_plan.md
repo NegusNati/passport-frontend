@@ -7,13 +7,17 @@ This deployment plan has been fully implemented with simplified, production-read
 ## What Was Created
 
 ### 1. **Dockerfile** ✅
+
 Multi-stage build using Node 20 Alpine and Nginx 1.27 Alpine:
+
 - Builder stage: pnpm install & build with environment variables
 - Runtime stage: Nginx serving static assets with health checks
 - Location: `/Dockerfile`
 
 ### 2. **Nginx Configuration** ✅
+
 Production-ready SPA-optimized configuration:
+
 - Gzip compression for text assets
 - Cache headers (1 year for hashed assets, no-cache for HTML)
 - SPA fallback routing (`try_files` → `index.html`)
@@ -21,7 +25,9 @@ Production-ready SPA-optimized configuration:
 - Location: `/docker/nginx/nginx.conf`
 
 ### 3. **Docker Compose** ✅
+
 Complete orchestration with 4 services:
+
 - `nginx-proxy-manager`: Reverse proxy + SSL management (ports 80/443/81)
 - `passport-frontend`: React SPA built from Dockerfile
 - `umami`: Self-hosted analytics (PostgreSQL-based)
@@ -30,19 +36,25 @@ Complete orchestration with 4 services:
 - Location: `/docker-compose.yml`
 
 ### 4. **Environment Configuration** ✅
+
 Template for all required environment variables:
+
 - Frontend build variables (`VITE_API_BASE_URL`, `VITE_SITE_URL`, etc.)
 - Umami database credentials
 - Umami application secrets
 - Location: `/.env.example`
 
 ### 5. **Build Optimization** ✅
+
 Docker build exclusions for faster builds:
+
 - Excludes `node_modules`, `.git`, `dist`, documentation
 - Location: `/.dockerignore`
 
 ### 6. **CI/CD Pipeline** ✅
+
 GitHub Actions workflow for automated deployment:
+
 - Triggers on push to `main`/`master` or manual dispatch
 - SSH-based deployment to production server
 - Pulls latest code, rebuilds frontend, restarts services
@@ -50,7 +62,9 @@ GitHub Actions workflow for automated deployment:
 - Location: `/.github/workflows/deploy.yml`
 
 ### 7. **Comprehensive Documentation** ✅
+
 Complete deployment runbook covering:
+
 - Architecture overview
 - Prerequisites and server setup
 - Nginx Proxy Manager configuration
@@ -96,6 +110,7 @@ docker compose up -d
 ### GitHub Actions
 
 Add repository secrets:
+
 - `DEPLOY_HOST`: Server IP
 - `DEPLOY_USER`: SSH user
 - `DEPLOY_SSH_KEY`: Private SSH key
@@ -112,7 +127,7 @@ Push to main branch for automatic deployment.
 ✅ **Optimized caching** for static assets  
 ✅ **SPA routing** with proper fallback  
 ✅ **Security headers** and gzip compression  
-✅ **Automated CI/CD** via GitHub Actions  
+✅ **Automated CI/CD** via GitHub Actions
 
 ## Next Steps
 

@@ -10,25 +10,25 @@ type PdfImportPanelProps = {
 export function PdfImportPanel({ info, isLoading }: PdfImportPanelProps) {
   if (isLoading) {
     return (
-      <div className="rounded-lg border bg-background p-4">
-        <p className="text-sm text-muted-foreground">Loading import instructions…</p>
+      <div className="bg-background rounded-lg border p-4">
+        <p className="text-muted-foreground text-sm">Loading import instructions…</p>
       </div>
     )
   }
 
   return (
-    <div className="grid gap-3 rounded-lg border bg-background p-4">
+    <div className="bg-background grid gap-3 rounded-lg border p-4">
       <div className="flex items-start gap-3">
         <AlertTriangle className="h-5 w-5 text-amber-500" aria-hidden="true" />
         <div className="space-y-1">
           <h2 className="text-base font-semibold">Import guidelines</h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {info?.message ?? 'Upload a PDF export to start the ingestion job.'}
           </p>
         </div>
       </div>
       {info?.constraints ? (
-        <dl className="grid gap-2 text-sm text-muted-foreground">
+        <dl className="text-muted-foreground grid gap-2 text-sm">
           {Object.entries(info.constraints).map(([key, value]) => (
             <div key={key} className="grid grid-cols-[120px_1fr] gap-2">
               <dt className="font-medium capitalize">{formatKey(key)}</dt>

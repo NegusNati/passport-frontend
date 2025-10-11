@@ -26,7 +26,7 @@ function AdminAdvertisementCreatePage() {
         </p>
       </div>
 
-      <div className="rounded-lg border bg-card p-6">
+      <div className="bg-card rounded-lg border p-6">
         <AdminAdvertisementForm
           onSubmit={handleSubmit}
           isSubmitting={mutation.isPending}

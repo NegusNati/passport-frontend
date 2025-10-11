@@ -44,26 +44,32 @@ export function PassportsAdminTable({
         accessorKey: 'full_name',
         header: 'Name',
         cell: ({ row }) => (
-          <span className="text-sm font-medium text-foreground">{row.original.full_name}</span>
+          <span className="text-foreground text-sm font-medium">{row.original.full_name}</span>
         ),
       },
       {
         accessorKey: 'request_number',
         header: 'Request #',
         cell: ({ row }) => (
-          <span className="font-mono text-xs text-muted-foreground">{row.original.request_number}</span>
+          <span className="text-muted-foreground font-mono text-xs">
+            {row.original.request_number}
+          </span>
         ),
       },
       {
         accessorKey: 'location',
         header: 'Location',
-        cell: ({ row }) => <span className="text-sm text-muted-foreground">{row.original.location}</span>,
+        cell: ({ row }) => (
+          <span className="text-muted-foreground text-sm">{row.original.location}</span>
+        ),
       },
       {
         accessorKey: 'date_of_publish',
         header: 'Published',
         cell: ({ row }) => (
-          <span className="text-sm text-muted-foreground">{formatDate(row.original.date_of_publish)}</span>
+          <span className="text-muted-foreground text-sm">
+            {formatDate(row.original.date_of_publish)}
+          </span>
         ),
       },
     ],
@@ -191,80 +197,77 @@ function PassportsFilters({ filters, onFilterChange }: FilterProps) {
   const locationOptions = (locationsQuery.data?.data ?? []).filter(Boolean)
 
   return (
-    <div className="flex flex-col rounded-lg border bg-background p-4 md:grid-cols-5">
+    <div className="bg-background flex flex-col rounded-lg border p-4 md:grid-cols-5">
       <div className="flex flex-row gap-4">
-      <div className="grid gap-2">
-        <Label htmlFor="passport-request">Request number</Label>
-        <Input
-          id="passport-request"
-          value={requestInput}
-          onChange={(event) => setRequestInput(event.target.value)}
-          placeholder="Search by request number"
-          aria-describedby="passport-request-help"
-        />
+        <div className="grid gap-2">
+          <Label htmlFor="passport-request">Request number</Label>
+          <Input
+            id="passport-request"
+            value={requestInput}
+            onChange={(event) => setRequestInput(event.target.value)}
+            placeholder="Search by request number"
+            aria-describedby="passport-request-help"
+          />
+        </div>
 
-      </div>
-   
-      <div className="grid gap-2">
-        <Label htmlFor="passport-location">Location</Label>
-        <select
-          id="passport-location"
-          value={filters.location ?? ''}
-          onChange={(event) => onFilterChange({ location: event.target.value || undefined })}
-          className="h-10 rounded-md border border-input bg-background px-3 text-sm"
-        >
-          <option value="">All locations</option>
-          {locationsQuery.isLoading ? (
-            <option value="__loading" disabled>
-              Loading locations…
-            </option>
-          ) : locationOptions.length === 0 ? (
-            <option value="__empty" disabled>
-              No locations available
-            </option>
-          ) : (
-            locationOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
+        <div className="grid gap-2">
+          <Label htmlFor="passport-location">Location</Label>
+          <select
+            id="passport-location"
+            value={filters.location ?? ''}
+            onChange={(event) => onFilterChange({ location: event.target.value || undefined })}
+            className="border-input bg-background h-10 rounded-md border px-3 text-sm"
+          >
+            <option value="">All locations</option>
+            {locationsQuery.isLoading ? (
+              <option value="__loading" disabled>
+                Loading locations…
               </option>
-            ))
-          )}
-        </select>
+            ) : locationOptions.length === 0 ? (
+              <option value="__empty" disabled>
+                No locations available
+              </option>
+            ) : (
+              locationOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))
+            )}
+          </select>
+        </div>
       </div>
+
+      <div className="align-center flex flex-row gap-4 py-2">
+        <div className="grid gap-2">
+          <Label htmlFor="first-name">First name</Label>
+          <Input
+            id="first-name"
+            value={firstInput}
+            onChange={(e) => setFirstInput(e.target.value)}
+            placeholder="e.g., John"
+            aria-describedby="passport-name-help"
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="middle-name">Middle name</Label>
+          <Input
+            id="middle-name"
+            value={middleInput}
+            onChange={(e) => setMiddleInput(e.target.value)}
+            placeholder="optional"
+          />
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="last-name">Last name</Label>
+          <Input
+            id="last-name"
+            value={lastInput}
+            onChange={(e) => setLastInput(e.target.value)}
+            placeholder="e.g., Doe"
+          />
+        </div>
       </div>
-      
-      <div className="flex flex-row gap-4 align-center py-2" >
-      <div className="grid gap-2">
-        <Label htmlFor="first-name">First name</Label>
-        <Input
-          id="first-name"
-          value={firstInput}
-          onChange={(e) => setFirstInput(e.target.value)}
-          placeholder="e.g., John"
-          aria-describedby="passport-name-help"
-        />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="middle-name">Middle name</Label>
-        <Input
-          id="middle-name"
-          value={middleInput}
-          onChange={(e) => setMiddleInput(e.target.value)}
-          placeholder="optional"
-        />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="last-name">Last name</Label>
-        <Input
-          id="last-name"
-          value={lastInput}
-          onChange={(e) => setLastInput(e.target.value)}
-          placeholder="e.g., Doe"
-        />
-      
-      </div>
-      </div>
-      
     </div>
   )
 }

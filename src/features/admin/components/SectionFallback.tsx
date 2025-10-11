@@ -15,11 +15,13 @@ export function SectionLoading({ loading }: { loading: boolean }) {
 export function SectionError({ error }: { error: Error | null }) {
   if (!error) return null
   return (
-    <div className="flex items-start gap-2 rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive">
+    <div className="border-destructive/40 bg-destructive/10 text-destructive flex items-start gap-2 rounded-lg border p-3 text-sm">
       <AlertCircle className="mt-0.5 h-4 w-4" aria-hidden="true" />
       <div>
         <p className="font-medium">{error.message}</p>
-        <p className="text-xs text-destructive/80">Try reloading or contact support if the issue persists.</p>
+        <p className="text-destructive/80 text-xs">
+          Try reloading or contact support if the issue persists.
+        </p>
       </div>
     </div>
   )

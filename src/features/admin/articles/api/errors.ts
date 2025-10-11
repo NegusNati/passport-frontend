@@ -28,12 +28,14 @@ export function extractAdminArticleErrorMessage(error: unknown, fallback: string
   const apiError = error as ApiError | undefined
   const payload = apiError?.response?.data as ErrorPayload | undefined
 
-  const detailMessage = extractDetailMessage(payload?.details) ?? extractDetailMessage(payload?.errors)
+  const detailMessage =
+    extractDetailMessage(payload?.details) ?? extractDetailMessage(payload?.errors)
 
   const message =
     (typeof payload?.message === 'string' && payload.message.trim().length > 0
       ? payload.message
-      : undefined) ?? detailMessage ??
+      : undefined) ??
+    detailMessage ??
     (typeof apiError?.message === 'string' && apiError.message.trim().length > 0
       ? apiError.message
       : undefined)

@@ -61,29 +61,24 @@ export function UserRoleDialog({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Edit user role</DialogTitle>
-          <DialogDescription>
-            Update access level for {fullName || 'this user'}.
-          </DialogDescription>
+          <DialogDescription>Update access level for {fullName || 'this user'}.</DialogDescription>
         </DialogHeader>
 
         {user ? (
           <div className="space-y-4">
             <div className="grid gap-1">
               <Label>Full name</Label>
-              <p className="text-sm font-medium text-foreground">{fullName || '—'}</p>
+              <p className="text-foreground text-sm font-medium">{fullName || '—'}</p>
             </div>
 
             <div className="grid gap-1">
               <Label>Email</Label>
-              <p className="text-sm text-muted-foreground">{user.email ?? '—'}</p>
+              <p className="text-muted-foreground text-sm">{user.email ?? '—'}</p>
             </div>
 
             <div className="grid gap-2">
               <Label htmlFor="user-role-select">Role</Label>
-              <Select
-                value={role}
-                onValueChange={(value) => setRole(value as AdminRole)}
-              >
+              <Select value={role} onValueChange={(value) => setRole(value as AdminRole)}>
                 <SelectTrigger id="user-role-select">
                   <SelectValue placeholder="Select role" />
                 </SelectTrigger>
@@ -97,19 +92,22 @@ export function UserRoleDialog({
               </Select>
             </div>
 
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               Admin grants full control, editor limits access to article management, and user keeps
               standard access only.
             </p>
 
-            {errorMessage ? (
-              <p className="text-sm text-destructive">{errorMessage}</p>
-            ) : null}
+            {errorMessage ? <p className="text-destructive text-sm">{errorMessage}</p> : null}
           </div>
         ) : null}
 
         <DialogFooter className="pt-4">
-          <Button variant="outline" type="button" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+          <Button
+            variant="outline"
+            type="button"
+            onClick={() => onOpenChange(false)}
+            disabled={isSubmitting}
+          >
             Cancel
           </Button>
           <Button type="button" onClick={handleSubmit} disabled={!user || isSubmitting}>

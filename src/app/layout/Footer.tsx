@@ -85,7 +85,7 @@ const Footer = () => {
               href="https://t.me/passportdotet_group"
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center space-x-2 transition-colors duration-300 hover:text-foreground"
+              className="hover:text-foreground inline-flex items-center space-x-2 transition-colors duration-300"
               whileHover={{ x: 5 }}
               whileTap={{ scale: 0.95 }}
             >

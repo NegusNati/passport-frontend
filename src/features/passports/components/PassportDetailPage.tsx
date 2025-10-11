@@ -1,7 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
 import * as React from 'react'
 
-import HabeshaFace from "@/assets/landingImages/habesha_face.svg"
+import HabeshaFace from '@/assets/landingImages/habesha_face.svg'
 import { usePassportQuery } from '@/features/passports/lib/PassportsQuery'
 import type { PassportApiItem } from '@/features/passports/lib/PassportsSchema'
 import type { Passport } from '@/features/passports/schemas/passport'
@@ -50,7 +50,7 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
       <div className="container mx-auto py-12">
         <Card className="mx-auto max-w-md">
           <CardContent className="space-y-4 pt-6 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+            <div className="bg-primary/10 mx-auto flex h-12 w-12 items-center justify-center rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -96,9 +96,9 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
   if (isError || !uiPassport) {
     return (
       <div className="container mx-auto py-12">
-        <Card className="mx-auto max-w-md border-destructive/50">
+        <Card className="border-destructive/50 mx-auto max-w-md">
           <CardContent className="space-y-4 pt-6 text-center">
-            <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+            <div className="bg-destructive/10 mx-auto flex h-12 w-12 items-center justify-center rounded-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -130,8 +130,8 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
   return (
     <div className="min-h-screen">
       <PassportDetailCard passport={uiPassport} onCheckAnother={handleCheckAnother} />
-      <div className="absolute left-[-10rem] top-[15rem] opacity-90  z-[-110]  ml-2 ">
-        <img src={HabeshaFace} alt="Habesha Face" className="h-150 w-150 " />
+      <div className="absolute top-[15rem] left-[-10rem] z-[-110] ml-2 opacity-90">
+        <img src={HabeshaFace} alt="Habesha Face" className="h-150 w-150" />
       </div>
       <section className="py-8">
         <div className="container mx-auto max-w-6xl px-4">

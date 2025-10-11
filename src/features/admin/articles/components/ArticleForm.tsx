@@ -11,7 +11,11 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 
 import type { AdminArticle } from '../schemas/article'
-import { type AdminArticleCreatePayload, AdminArticleCreateSchema, type AdminArticleUpdatePayload } from '../schemas/create'
+import {
+  type AdminArticleCreatePayload,
+  AdminArticleCreateSchema,
+  type AdminArticleUpdatePayload,
+} from '../schemas/create'
 
 const statusOptions = ['draft', 'published', 'scheduled', 'archived'] as const
 
@@ -170,10 +174,11 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
               <Label htmlFor="status">Status</Label>
               <select
                 id="status"
-                className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+                className="border-input bg-background h-10 rounded-md border px-3 text-sm"
                 value={field.state.value}
                 onChange={(event) =>
-                  field.handleChange(event.target.value as ArticleFormValues['status'])}
+                  field.handleChange(event.target.value as ArticleFormValues['status'])
+                }
               >
                 {statusOptions.map((option) => (
                   <option key={option} value={option}>
@@ -206,7 +211,7 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
             <Label htmlFor="excerpt">Excerpt</Label>
             <textarea
               id="excerpt"
-              className="min-h-[120px] rounded-md border border-input bg-background px-3 py-2 text-sm"
+              className="border-input bg-background min-h-[120px] rounded-md border px-3 py-2 text-sm"
               value={field.state.value}
               onChange={(event) => field.handleChange(event.target.value)}
             />
@@ -235,7 +240,7 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
             <img
               src={featuredPreview}
               alt="Featured preview"
-              className="h-24 w-24 rounded-md object-cover border"
+              className="h-24 w-24 rounded-md border object-cover"
             />
           ) : null}
           <input
@@ -285,7 +290,7 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
               <Label htmlFor="meta_description">Meta description</Label>
               <textarea
                 id="meta_description"
-                className="min-h-[120px] rounded-md border border-input bg-background px-3 py-2 text-sm"
+                className="border-input bg-background min-h-[120px] rounded-md border px-3 py-2 text-sm"
                 value={field.state.value}
                 onChange={(event) => field.handleChange(event.target.value)}
               />
@@ -351,10 +356,11 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
             />
             <select
               aria-label="Select author"
-              className="h-10 rounded-md border border-input bg-background px-3 text-sm"
+              className="border-input bg-background h-10 rounded-md border px-3 text-sm"
               value={field.state.value ?? ''}
               onChange={(e) =>
-                field.handleChange(e.currentTarget.value ? Number(e.currentTarget.value) : null)}
+                field.handleChange(e.currentTarget.value ? Number(e.currentTarget.value) : null)
+              }
             >
               <option value="">
                 {article?.author ? `${article.author.name} (current)` : 'Select author (optional)'}
@@ -371,7 +377,7 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
                 </option>
               ))}
             </select>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-muted-foreground text-xs">
               {usersQuery.isFetching
                 ? 'Searching…'
                 : debouncedAuthor
@@ -382,14 +388,18 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
         )}
       </form.Field>
 
-      {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
-      {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
+      {formError ? <p className="text-destructive text-sm">{formError}</p> : null}
+      {errorMessage ? <p className="text-destructive text-sm">{errorMessage}</p> : null}
 
       {/* OG image upload row (placed after grid to avoid uneven columns on small screens) */}
       <div className="grid gap-2 md:max-w-md">
         <Label htmlFor="og_image">OG image</Label>
         {ogPreview ? (
-          <img src={ogPreview} alt="OG preview" className="h-24 w-24 rounded-md object-cover border" />
+          <img
+            src={ogPreview}
+            alt="OG preview"
+            className="h-24 w-24 rounded-md border object-cover"
+          />
         ) : null}
         <input
           id="og_image"
@@ -403,7 +413,6 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
             }
           }}
         />
-    
       </div>
 
       <form.Subscribe selector={(state) => state.canSubmit}>
@@ -456,11 +465,28 @@ function sanitizeAndNormalizeContent(value?: string | null) {
   if (!trimmed) return undefined
   const sanitized = DOMPurify.sanitize(trimmed, {
     ALLOWED_TAGS: [
-      'p', 'br', 'strong', 'em', 'u', 's', 'code', 'pre',
-      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-      'ul', 'ol', 'li',
-      'a', 'blockquote',
-      'img', 'video', 'source',
+      'p',
+      'br',
+      'strong',
+      'em',
+      'u',
+      's',
+      'code',
+      'pre',
+      'h1',
+      'h2',
+      'h3',
+      'h4',
+      'h5',
+      'h6',
+      'ul',
+      'ol',
+      'li',
+      'a',
+      'blockquote',
+      'img',
+      'video',
+      'source',
     ],
     ALLOWED_ATTR: ['href', 'rel', 'target', 'src', 'alt', 'width', 'height', 'controls', 'preload'],
     ALLOW_DATA_ATTR: false,

@@ -20,7 +20,7 @@ type ArticlesFiltersProps = {
 
 export function ArticlesFilters({ filters, onFilterChange }: ArticlesFiltersProps) {
   return (
-    <div className="grid gap-4 rounded-lg border bg-background p-4 md:grid-cols-4">
+    <div className="bg-background grid gap-4 rounded-lg border p-4 md:grid-cols-4">
       <div className="grid gap-2">
         <Label htmlFor="article-search">Search</Label>
         <Input

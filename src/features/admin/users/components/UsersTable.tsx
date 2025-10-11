@@ -92,14 +92,16 @@ export function UsersTable({
         header: 'Name',
         cell: ({ row }) => {
           const name = `${row.original.first_name} ${row.original.last_name}`
-          return <span className="font-medium text-foreground">{name.trim()}</span>
+          return <span className="text-foreground font-medium">{name.trim()}</span>
         },
       },
       {
         accessorKey: 'phone_number',
         header: 'Phone',
         cell: ({ row }) => (
-          <span className="font-mono text-xs text-muted-foreground">{row.original.phone_number ?? '—'}</span>
+          <span className="text-muted-foreground font-mono text-xs">
+            {row.original.phone_number ?? '—'}
+          </span>
         ),
       },
       {
@@ -108,7 +110,7 @@ export function UsersTable({
         cell: ({ row }) => {
           const fallback = row.original.is_admin ? 'admin' : 'user'
           const role = row.original.roles?.[0] ?? fallback
-          return <span className="capitalize text-sm text-muted-foreground">{role}</span>
+          return <span className="text-muted-foreground text-sm capitalize">{role}</span>
         },
       },
       {
@@ -135,7 +137,7 @@ export function UsersTable({
           <button
             type="button"
             onClick={() => handleEditClick(row.original)}
-            className="inline-flex h-9 items-center justify-center rounded-md border border-input bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+            className="border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center justify-center rounded-md border px-3 text-sm font-medium transition-colors"
           >
             Edit
           </button>
@@ -187,7 +189,7 @@ type UsersTableFiltersProps = {
 
 function UsersTableFilters({ filters, onFilterChange }: UsersTableFiltersProps) {
   return (
-    <div className="grid gap-4 rounded-lg border bg-background p-4 md:grid-cols-4">
+    <div className="bg-background grid gap-4 rounded-lg border p-4 md:grid-cols-4">
       <div className="grid gap-2">
         <Label htmlFor="user-search">Search</Label>
         <Input
@@ -222,7 +224,9 @@ function UsersTableFilters({ filters, onFilterChange }: UsersTableFiltersProps) 
         <Label htmlFor="user-admin">Admin</Label>
         <Select
           value={typeof filters.is_admin === 'boolean' ? String(filters.is_admin) : undefined}
-          onValueChange={(value) => onFilterChange({ is_admin: value ? value === 'true' : undefined })}
+          onValueChange={(value) =>
+            onFilterChange({ is_admin: value ? value === 'true' : undefined })
+          }
         >
           <SelectTrigger id="user-admin">
             <SelectValue placeholder="All users" />
@@ -239,9 +243,12 @@ function UsersTableFilters({ filters, onFilterChange }: UsersTableFiltersProps) 
       <div className="grid gap-2">
         <Label htmlFor="user-verified">Email verified</Label>
         <Select
-          value={typeof filters.email_verified === 'boolean' ? String(filters.email_verified) : undefined}
+          value={
+            typeof filters.email_verified === 'boolean' ? String(filters.email_verified) : undefined
+          }
           onValueChange={(value) =>
-            onFilterChange({ email_verified: value ? value === 'true' : undefined })}
+            onFilterChange({ email_verified: value ? value === 'true' : undefined })
+          }
         >
           <SelectTrigger id="user-verified">
             <SelectValue placeholder="All" />

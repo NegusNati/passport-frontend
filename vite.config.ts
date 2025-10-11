@@ -13,9 +13,7 @@ export default defineConfig({
       // Use app.localhost for API in dev, api.passport.et in prod
       '/api': {
         target:
-          process.env.NODE_ENV === 'production'
-            ? 'http://api.passport.et'
-            : 'http://app.localhost',
+          process.env.NODE_ENV === 'production' ? 'http://api.passport.et' : 'http://app.localhost',
         changeOrigin: true,
         secure: false,
       },

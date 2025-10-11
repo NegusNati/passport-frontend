@@ -19,18 +19,18 @@ Add these secrets in your GitHub repository:
 
 ### Required Secrets
 
-| Secret Name | Description | Example |
-|------------|-------------|---------|
-| `DEPLOY_HOST` | Server IP or hostname | `159.69.107.45` or `passport.et` |
-| `DEPLOY_USER` | SSH username | `negus` |
+| Secret Name      | Description             | Example                               |
+| ---------------- | ----------------------- | ------------------------------------- |
+| `DEPLOY_HOST`    | Server IP or hostname   | `159.69.107.45` or `passport.et`      |
+| `DEPLOY_USER`    | SSH username            | `negus`                               |
 | `DEPLOY_SSH_KEY` | Private SSH key content | Full content of your private key file |
-| `DEPLOY_PORT` | SSH port (optional) | `22` (default) |
+| `DEPLOY_PORT`    | SSH port (optional)     | `22` (default)                        |
 
 ### Optional Secrets
 
-| Secret Name | Description | Default |
-|------------|-------------|---------|
-| `DEPLOY_PORT` | Custom SSH port | `22` |
+| Secret Name   | Description     | Default |
+| ------------- | --------------- | ------- |
+| `DEPLOY_PORT` | Custom SSH port | `22`    |
 
 ## Setup SSH Key for GitHub Actions
 
@@ -57,7 +57,7 @@ ssh-copy-id -i ~/.ssh/passport-deploy.pub negus@159.69.107.45
 
 # Option B: Manual copy
 cat ~/.ssh/passport-deploy.pub
-# Then on server: 
+# Then on server:
 # nano ~/.ssh/authorized_keys
 # Paste the public key on a new line
 ```
@@ -84,6 +84,7 @@ cat ~/.ssh/passport-deploy
 ```
 
 Then add to GitHub:
+
 1. Go to your repository on GitHub
 2. **Settings → Secrets and variables → Actions**
 3. Click **New repository secret**
@@ -104,6 +105,7 @@ DEPLOY_PORT: 22 (optional)
 ## Deployment Workflow
 
 The workflow is triggered on:
+
 - **Push to main/master**: Automatic deployment
 - **Manual trigger**: Via GitHub Actions UI
 
@@ -112,7 +114,7 @@ The workflow is triggered on:
 1. **Checkout code**: Gets latest code from repository
 2. **Pull latest code on server**: Updates code on server
 3. **Build new image**: Builds fresh Docker image with latest code
-4. **Zero-downtime deployment**: 
+4. **Zero-downtime deployment**:
    - Scales to 2 frontend instances
    - Waits for new instance to be healthy (15 seconds)
    - Scales back to 1 (removes old, keeps new)
@@ -179,6 +181,7 @@ docker stats
 **Error**: `Permission denied (publickey)`
 
 **Solution**:
+
 ```bash
 # Verify SSH key is correct
 cat ~/.ssh/passport-deploy.pub
@@ -214,6 +217,7 @@ git reset --hard origin/master
 ### Deployment Succeeds but Site Shows Old Version
 
 **Causes**:
+
 1. Browser cache
 2. Cloudflare cache
 3. Build didn't include new changes
@@ -252,6 +256,7 @@ curl http://localhost/healthz
 **Error**: `port is already allocated`
 
 **Solution**:
+
 ```bash
 # Find process using port 80
 sudo lsof -i :80
@@ -312,6 +317,7 @@ docker compose up -d passport-frontend
 ### Before Pushing to Main
 
 1. **Test locally**:
+
    ```bash
    pnpm lint
    pnpm typecheck
@@ -319,6 +325,7 @@ docker compose up -d passport-frontend
    ```
 
 2. **Test Docker build locally**:
+
    ```bash
    docker compose build passport-frontend
    docker compose up -d passport-frontend
@@ -389,9 +396,9 @@ Edit `.github/workflows/deploy.yml`:
 ```yaml
 # In the build step
 docker compose build --no-cache \
-  --build-arg VITE_API_BASE_URL=https://api.passport.et \
-  --build-arg VITE_SITE_URL=https://passport.et \
-  passport-frontend
+--build-arg VITE_API_BASE_URL=https://api.passport.et \
+--build-arg VITE_SITE_URL=https://passport.et \
+passport-frontend
 ```
 
 ### Deploy to Multiple Environments
@@ -402,6 +409,7 @@ Create separate workflows for staging and production:
 - `.github/workflows/deploy-production.yml` (deploys on push to `main`)
 
 Use different secrets:
+
 - `STAGING_HOST`, `STAGING_USER`, `STAGING_KEY`
 - `PRODUCTION_HOST`, `PRODUCTION_USER`, `PRODUCTION_KEY`
 

@@ -37,14 +37,14 @@ export function AdvertiseSection() {
   return (
     <section id="advertise" className="py-10 sm:py-14">
       <Container>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 overflow-hidden">
+        <div className="grid gap-6 overflow-hidden sm:grid-cols-2 lg:grid-cols-3">
           {CARDS.map((card) => {
             switch (card.key) {
               case 'creative-support':
                 return (
                   <div
                     key={card.key}
-                    className="bg-primary/10 flex items-center justify-end rounded-lg border border-primary px-0 py-4"
+                    className="bg-primary/10 border-primary flex items-center justify-end rounded-lg border px-0 py-4"
                   >
                     <img
                       src={card.image as string}
@@ -59,12 +59,12 @@ export function AdvertiseSection() {
                 return (
                   <div
                     key={card.key}
-                    className="bg-primary/10 flex items-center justify-center rounded-md border border-primary px-0 py-4 overflow-hidden"
+                    className="bg-primary/10 border-primary flex items-center justify-center overflow-hidden rounded-md border px-0 py-4"
                   >
                     <img
                       src={card.image as string}
                       alt={card.imageAlt as string}
-                      className="h-auto w-full max-w-[260px] scale-115 object-fill translate-y-12"
+                      className="h-auto w-full max-w-[260px] translate-y-12 scale-115 object-fill"
                       loading="lazy"
                       style={{ maxHeight: '180px', width: '100%', objectFit: 'cover' }}
                     />
@@ -75,7 +75,7 @@ export function AdvertiseSection() {
                 return (
                   <div
                     key={card.key}
-                    className="bg-primary/10 flex items-center justify-center rounded-md border border-primary px-0 py-4"
+                    className="bg-primary/10 border-primary flex items-center justify-center rounded-md border px-0 py-4"
                   >
                     <img
                       src={card.image as string}
@@ -90,11 +90,11 @@ export function AdvertiseSection() {
                 return (
                   <article
                     key={card.key}
-                    className="bg-muted flex h-full flex-col justify-between rounded-lg p-6 shadow-sm backdrop-blur-sm transition-shadow hover:shadow-lg border border-primary"
+                    className="bg-muted border-primary flex h-full flex-col justify-between rounded-lg border p-6 shadow-sm backdrop-blur-sm transition-shadow hover:shadow-lg"
                   >
                     <div className="space-y-4">
                       {card.image ? (
-                        <div className="flex items-center justify-center ">
+                        <div className="flex items-center justify-center">
                           <img
                             src={card.image}
                             alt={card.imageAlt}

@@ -4,7 +4,11 @@ const now = new Date('2025-08-24T10:00:00Z')
 
 const toIso = (minutesAgo: number) => new Date(now.getTime() - minutesAgo * 60 * 1000).toISOString()
 
-const makeTaxonomy = (id: number, name: string) => ({ id, name, slug: name.toLowerCase().replace(/\s+/g, '-') })
+const makeTaxonomy = (id: number, name: string) => ({
+  id,
+  name,
+  slug: name.toLowerCase().replace(/\s+/g, '-'),
+})
 
 const sampleCategories = [
   makeTaxonomy(1, 'Passport'),

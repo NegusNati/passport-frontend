@@ -4,7 +4,10 @@ import { queryClient } from '@/api/queryClient'
 import { adminKeys } from '@/features/admin/lib/keys'
 import { fetchAdminUser, useAdminUserQuery } from '@/features/admin/users/api/get-user'
 import { useUpdateAdminUserMutation } from '@/features/admin/users/api/update-user'
-import { type UpdateAdminUserFormValues,UserForm } from '@/features/admin/users/components/UserForm'
+import {
+  type UpdateAdminUserFormValues,
+  UserForm,
+} from '@/features/admin/users/components/UserForm'
 
 export const Route = createFileRoute('/admin/users/$userId')({
   loader: async ({ params }) => {
@@ -47,9 +50,7 @@ function AdminUserDetailPage() {
         <h1 className="text-2xl font-semibold tracking-tight">
           {user.first_name} {user.last_name}
         </h1>
-        <p className="text-muted-foreground mt-1 text-sm">
-          Update account status and permissions.
-        </p>
+        <p className="text-muted-foreground mt-1 text-sm">Update account status and permissions.</p>
       </div>
 
       <UserForm

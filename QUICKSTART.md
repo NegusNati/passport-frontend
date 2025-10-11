@@ -46,6 +46,7 @@ nano .env
 ```
 
 Required variables in `.env`:
+
 ```env
 VITE_API_BASE_URL=https://api.passport.et
 VITE_SITE_URL=https://passport.et
@@ -152,6 +153,7 @@ After setup, every push to `main` automatically deploys!
 ## Troubleshooting
 
 ### Services won't start
+
 ```bash
 # Check logs
 docker compose logs
@@ -164,6 +166,7 @@ ls -la /opt/passport/data/
 ```
 
 ### Frontend build fails
+
 ```bash
 # Rebuild without cache
 docker compose build --no-cache passport-frontend
@@ -171,6 +174,7 @@ docker compose up -d passport-frontend
 ```
 
 ### Can't access on port 81
+
 ```bash
 # Check firewall
 sudo ufw status

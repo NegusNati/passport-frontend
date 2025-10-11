@@ -34,28 +34,28 @@ const MetaLinkItem = z.object({
   active: z.boolean(),
 })
 
-export const AdminUsersMetaSchema = z.object({
-  current_page: z.number().int().min(1).optional(),
-  from: z.number().int().optional(),
-  last_page: z.number().int().min(1).optional(),
-  links: z.array(MetaLinkItem).optional(),
-  path: z.string().optional(),
-  per_page: z.number().int().min(1).optional(),
-  to: z.number().int().optional(),
-  total: z.union([z.number().int(), z.tuple([z.number().int(), z.number().int()])]).optional(),
-  page_size_options: z.array(z.number().int()).optional(),
-  has_more: z.boolean().optional(),
-  page_size: z.number().int().optional(),
-}).passthrough()
+export const AdminUsersMetaSchema = z
+  .object({
+    current_page: z.number().int().min(1).optional(),
+    from: z.number().int().optional(),
+    last_page: z.number().int().min(1).optional(),
+    links: z.array(MetaLinkItem).optional(),
+    path: z.string().optional(),
+    per_page: z.number().int().min(1).optional(),
+    to: z.number().int().optional(),
+    total: z.union([z.number().int(), z.tuple([z.number().int(), z.number().int()])]).optional(),
+    page_size_options: z.array(z.number().int()).optional(),
+    has_more: z.boolean().optional(),
+    page_size: z.number().int().optional(),
+  })
+  .passthrough()
 
 export const AdminUsersListResponseSchema = z.object({
   data: z.array(AdminUserSchema),
   links: PaginationLinks.optional(),
   meta: AdminUsersMetaSchema,
   filters: z.unknown().optional(),
-  sort: z
-    .object({ column: z.string().optional(), direction: z.string().optional() })
-    .optional(),
+  sort: z.object({ column: z.string().optional(), direction: z.string().optional() }).optional(),
 })
 
 export const AdminUserDetailResponseSchema = z.object({

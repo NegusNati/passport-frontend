@@ -118,13 +118,18 @@ Optional teal tints (from variables)
 - Section tint (hero):
 
 ```css
-.teal-hero { background: linear-gradient(to bottom, hsl(var(--teal-2)) 0%, transparent 60%); }
+.teal-hero {
+  background: linear-gradient(to bottom, hsl(var(--teal-2)) 0%, transparent 60%);
+}
 ```
 
 - Accent panel:
 
 ```css
-.panel-accent { background-color: hsl(var(--teal-1)); border: 1px solid hsl(var(--border)); }
+.panel-accent {
+  background-color: hsl(var(--teal-1));
+  border: 1px solid hsl(var(--border));
+}
 ```
 
 ## Concrete TODOs (from scan)
@@ -146,14 +151,13 @@ Additions after review
   - `src/features/articles/components/*` (ensure all text/badge colors come from tokens)
   - `src/features/admin/**/*Table*.tsx` (badges and table headers)
 
-
 ---
 
 ## Implementation Notes
 
-1) Prefer component-level refactors over scattering utility replacements. E.g., a `StatusBadge` that maps domain status → shadcn `Badge` variant.
-2) For large tables, keep contrast high; use `text-muted-foreground` for secondary cells and `text-foreground` for primary columns.
-3) If a brand-tinted section is desired (like the Radix screenshot hero), add a utility class:
+1. Prefer component-level refactors over scattering utility replacements. E.g., a `StatusBadge` that maps domain status → shadcn `Badge` variant.
+2. For large tables, keep contrast high; use `text-muted-foreground` for secondary cells and `text-foreground` for primary columns.
+3. If a brand-tinted section is desired (like the Radix screenshot hero), add a utility class:
 
 ```css
 .teal-hero {
@@ -163,9 +167,9 @@ Additions after review
 
 Then apply on page wrappers or headers.
 
-4) For icons/SVG, drive color with `text-*` tokens; avoid inline `fill="#..."`.
+4. For icons/SVG, drive color with `text-*` tokens; avoid inline `fill="#..."`.
 
-5) After each phase, run:
+5. After each phase, run:
 
 ```bash
 pnpm -s typecheck && pnpm -s build && pnpm -s preview

@@ -65,7 +65,7 @@ export function VideoTabs() {
           <h3 className="text-muted-foreground mx-auto mt-2 max-w-3xl">
             Here is how you can check if your passport is ready or how you can get services provided
             by
-            <span className="block font-semibold tracking-wide text-foreground sm:inline">
+            <span className="text-foreground block font-semibold tracking-wide sm:inline">
               {' '}
               IMMIGRATION &amp; NATIONALITY AFFAIRS
             </span>
@@ -83,8 +83,8 @@ export function VideoTabs() {
                       'focus-visible:ring-ring rounded-lg border px-4 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                       'shadow-sm',
                       isActive
-                        ? 'border-none bg-accent text-primary font-bold'
-                        : 'border-input bg-background text-primary hover:bg-accent ',
+                        ? 'bg-accent text-primary border-none font-bold'
+                        : 'border-input bg-background text-primary hover:bg-accent',
                       'whitespace-nowrap',
                     ].join(' ')}
                     type="button"
@@ -108,7 +108,7 @@ export function VideoTabs() {
                 className="border-border overflow-hidden rounded-xl border shadow-lg"
               >
                 {embedUrl ? (
-                  <div className="relative aspect-video w-full bg-card">
+                  <div className="bg-card relative aspect-video w-full">
                     <iframe
                       title={activeTab.label}
                       src={embedUrl}

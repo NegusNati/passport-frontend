@@ -47,7 +47,7 @@ const QUOTES: Quote[] = [
 
 function CardItem({ q }: { q: Quote }) {
   return (
-    <div className="bg-primary/10 hover:bg-primary border border-primary hover:border-brand-8/30 rounded-xl px-3 py-4 shadow-sm transition-colors md:px-4 md:py-4 text-forground hover:text-background">
+    <div className="bg-primary/10 hover:bg-primary border-primary hover:border-brand-8/30 text-forground hover:text-background rounded-xl border px-3 py-4 shadow-sm transition-colors md:px-4 md:py-4">
       <p className="text-[13px] leading-relaxed italic">“{q.quote}”</p>
       <p className="mt-2 text-[13px] font-medium">{q.name}</p>
     </div>
@@ -77,10 +77,9 @@ function HorizontalMarqueeDual({
   return (
     <div className="relative w-full overflow-hidden rounded-xl p-2">
       {/* left/right fade (theme-aware, over content) */}
-      <div className="pointer-events-none absolute top-0 left-0 z-10 h-full w-10 bg-gradient-to-r from-background to-transparent" />
-      <div className="pointer-events-none absolute top-0 right-0 z-10 h-full w-10 bg-gradient-to-l from-background to-transparent" />
+      <div className="from-background pointer-events-none absolute top-0 left-0 z-10 h-full w-10 bg-gradient-to-r to-transparent" />
+      <div className="from-background pointer-events-none absolute top-0 right-0 z-10 h-full w-10 bg-gradient-to-l to-transparent" />
 
-      
       <div className="grid w-full items-center gap-3 overflow-hidden">
         <ul
           aria-label="User testimonials row A"
@@ -111,9 +110,9 @@ function HorizontalMarqueeDual({
 
 export function Testimonials() {
   return (
-    <aside className="relative mt-4 md:mt-0 py-4">
+    <aside className="relative mt-4 py-4 md:mt-0">
       {/* Mobile: horizontal marquee */}
-      <div className="relative ">
+      <div className="relative">
         {/* left fade */}
         <div
           className="from-background pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r to-transparent"
@@ -129,14 +128,14 @@ export function Testimonials() {
 
       {/* Desktop: vertical marquee */}
       {/* <div className="relative hidden md:block"> */}
-        {/* top fade (fixed) */}
-        {/* <div
+      {/* top fade (fixed) */}
+      {/* <div
           className="from-background pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b to-transparent"
           aria-hidden
         /> */}
-        {/* <VerticalMarqueeDual items={QUOTES} /> */}
-        {/* bottom fade (make direction consistent) */}
-        {/* <div
+      {/* <VerticalMarqueeDual items={QUOTES} /> */}
+      {/* bottom fade (make direction consistent) */}
+      {/* <div
           className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t to-transparent"
           aria-hidden
         />

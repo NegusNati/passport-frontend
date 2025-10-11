@@ -156,12 +156,15 @@ export function CalendarPage() {
     }, 1200)
   }, [])
 
-  React.useEffect(() => () => {
-    if (typeof window === 'undefined') return
-    if (flashTimeoutRef.current) {
-      window.clearTimeout(flashTimeoutRef.current)
-    }
-  }, [])
+  React.useEffect(
+    () => () => {
+      if (typeof window === 'undefined') return
+      if (flashTimeoutRef.current) {
+        window.clearTimeout(flashTimeoutRef.current)
+      }
+    },
+    [],
+  )
 
   const handleSelectDate = React.useCallback(
     (nextDate: EthiopicDate) => {
@@ -233,7 +236,7 @@ export function CalendarPage() {
     if (viewMode !== 'week') return null
     return buildWeekCells(selectedDate, viewYear, viewMonth)
   }, [viewMode, selectedDate, viewYear, viewMonth])
-  const visibleCells = viewMode === 'month' ? monthCells : weekView?.cells ?? monthCells
+  const visibleCells = viewMode === 'month' ? monthCells : (weekView?.cells ?? monthCells)
   const visibleHighlightLookup = React.useMemo(() => {
     if (viewMode === 'week' && weekView) {
       const lookup = new Map<string, Highlight[]>()
@@ -249,7 +252,8 @@ export function CalendarPage() {
     return monthHighlightLookup
   }, [viewMode, weekView, monthHighlightLookup])
   const weekHighlights = React.useMemo(() => {
-    if (viewMode !== 'week' || !weekView) return [] as Array<{ highlight: Highlight; date: EthiopicDate }>
+    if (viewMode !== 'week' || !weekView)
+      return [] as Array<{ highlight: Highlight; date: EthiopicDate }>
     const entries: Array<{ highlight: Highlight; date: EthiopicDate }> = []
     const seen = new Set<string>()
     weekView.cells.forEach(({ date }) => {
@@ -323,31 +327,41 @@ export function CalendarPage() {
   }
 
   return (
-    <section className="relative py-14 sm:py-20  "
-    >
-       <div className="md:hidden absolute left-0 bottom-[240rem] transform translate-y-1/4 z-0 opacity-60 md:opacity-90 ml-2 ">
-        <img src={ethiopic_numbers_pattern} alt="logo" className="h-150 w-150 " />
+    <section className="relative py-14 sm:py-20">
+      <div className="absolute bottom-[240rem] left-0 z-0 ml-2 translate-y-1/4 transform opacity-60 md:hidden md:opacity-90">
+        <img src={ethiopic_numbers_pattern} alt="logo" className="h-150 w-150" />
       </div>
-            <div className="absolute left-0 bottom-[160rem] transform translate-y-1/4 z-0 opacity-60 md:opacity-90 ml-2 ">
-        <img src={ethiopic_numbers_pattern} alt="logo" className="h-150 w-150 " />
+      <div className="absolute bottom-[160rem] left-0 z-0 ml-2 translate-y-1/4 transform opacity-60 md:opacity-90">
+        <img src={ethiopic_numbers_pattern} alt="logo" className="h-150 w-150" />
       </div>
-      <div className="absolute left-0 bottom-[60rem] transform translate-y-1/4 z-0 opacity-60 md:opacity-90 ml-2 ">
-        <img src={ethiopic_numbers} alt="logo" className="h-150 w-150 " />
+      <div className="absolute bottom-[60rem] left-0 z-0 ml-2 translate-y-1/4 transform opacity-60 md:opacity-90">
+        <img src={ethiopic_numbers} alt="logo" className="h-150 w-150" />
       </div>
-      <div className=" absolute inset-0" aria-hidden />
-      <div className="teal-blob-left left-[-16rem] top-[-10rem] h-[24rem] w-[28rem] md:left-[-20rem] md:top-[-12rem]" aria-hidden />
-      <div className="teal-blob-right right-[-12rem] top-[-2rem] h-[22rem] w-[30rem] md:right-[-16rem]" aria-hidden />
+      <div className="absolute inset-0" aria-hidden />
+      <div
+        className="teal-blob-left top-[-10rem] left-[-16rem] h-[24rem] w-[28rem] md:top-[-12rem] md:left-[-20rem]"
+        aria-hidden
+      />
+      <div
+        className="teal-blob-right top-[-2rem] right-[-12rem] h-[22rem] w-[30rem] md:right-[-16rem]"
+        aria-hidden
+      />
       <Container className="relative z-[1] flex flex-col gap-8">
-        <header className="border-border/60 bg-white/60 supports-[backdrop-filter]:bg-transparent backdrop-blur-md rounded-2xl border px-5 py-6 shadow-sm sm:px-8 sm:py-7">
+        <header className="border-border/60 rounded-2xl border bg-white/60 px-5 py-6 shadow-sm backdrop-blur-md supports-[backdrop-filter]:bg-transparent sm:px-8 sm:py-7">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">Ethiopian Calendar</h1>
+              <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                Ethiopian Calendar
+              </h1>
               <p className="text-muted-foreground mt-1 text-sm sm:text-base">
                 Check out the date, holidays and wengalat
               </p>
             </div>
             <div className="min-w-[220px]">
-              <Select value={useGeezDigits ? 'geez' : 'arabic'} onValueChange={(v) => setUseGeezDigits(v === 'geez')}>
+              <Select
+                value={useGeezDigits ? 'geez' : 'arabic'}
+                onValueChange={(v) => setUseGeezDigits(v === 'geez')}
+              >
                 <SelectTrigger className="bg-muted/80 backdrop-blur-sm">
                   <SelectValue placeholder="Use Geeʼz Numbers" />
                 </SelectTrigger>
@@ -361,7 +375,7 @@ export function CalendarPage() {
         </header>
 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.85fr)_minmax(0,1fr)]">
-          <div className="border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm">
+          <div className="border-border/60 rounded-2xl border bg-transparent p-6 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
             <div className="flex flex-col gap-6 p-5 sm:p-8">
               {/* Month navigation */}
               <div className="flex items-center justify-between">
@@ -408,14 +422,14 @@ export function CalendarPage() {
                 <div
                   role="group"
                   aria-label="Toggle calendar view"
-                  className="inline-flex rounded-full bg-muted/40 p-1 text-xs font-semibold"
+                  className="bg-muted/40 inline-flex rounded-full p-1 text-xs font-semibold"
                 >
                   <button
                     type="button"
                     onClick={() => handleViewModeChange('month')}
                     aria-pressed={viewMode === 'month'}
                     className={[
-                      'rounded-full px-3 py-1 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                      'focus-visible:ring-primary focus-visible:ring-offset-background rounded-full px-3 py-1 transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                       viewMode === 'month'
                         ? 'bg-primary text-primary-foreground shadow'
                         : 'text-muted-foreground hover:text-foreground',
@@ -428,7 +442,7 @@ export function CalendarPage() {
                     onClick={() => handleViewModeChange('week')}
                     aria-pressed={viewMode === 'week'}
                     className={[
-                      'rounded-full px-3 py-1 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                      'focus-visible:ring-primary focus-visible:ring-offset-background rounded-full px-3 py-1 transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                       viewMode === 'week'
                         ? 'bg-primary text-primary-foreground shadow'
                         : 'text-muted-foreground hover:text-foreground',
@@ -449,19 +463,19 @@ export function CalendarPage() {
                     className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase"
                   >
                     Month
-                </label>
-                <select
-                  id="month-select"
-                  value={viewMonth}
-                  onChange={(event) => setViewMonth(Number(event.target.value))}
-                  className="border-input bg-background focus:ring-ring rounded-md border px-4 py-2 text-sm shadow-sm focus:ring-2 focus:outline-none"
-                >
-                  {ETHIOPIAN_MONTHS.map((month) => (
-                    <option key={month.number} value={month.number}>
-                      {month.english} · {month.amharic}
-                    </option>
-                  ))}
-                </select>
+                  </label>
+                  <select
+                    id="month-select"
+                    value={viewMonth}
+                    onChange={(event) => setViewMonth(Number(event.target.value))}
+                    className="border-input bg-background focus:ring-ring rounded-md border px-4 py-2 text-sm shadow-sm focus:ring-2 focus:outline-none"
+                  >
+                    {ETHIOPIAN_MONTHS.map((month) => (
+                      <option key={month.number} value={month.number}>
+                        {month.english} · {month.amharic}
+                      </option>
+                    ))}
+                  </select>
                   <label
                     htmlFor="year-select"
                     className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase"
@@ -535,7 +549,7 @@ export function CalendarPage() {
                         {hasHighlights ? (
                           <span
                             aria-hidden
-                            className={`absolute right-2 top-2 size-2 rounded-full ${
+                            className={`absolute top-2 right-2 size-2 rounded-full ${
                               isSelected ? 'bg-primary-foreground' : 'bg-primary'
                             }`}
                           />
@@ -572,7 +586,7 @@ export function CalendarPage() {
 
           <aside className="flex flex-col gap-6">
             {/* Holidays glass card */}
-            <div className="border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm">
+            <div className="border-border/60 rounded-2xl border bg-transparent p-6 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
               <h3 className="text-foreground text-base font-semibold tracking-tight">
                 {viewMode === 'month' ? 'Holidays this month' : 'Holidays this week'}
               </h3>
@@ -588,10 +602,12 @@ export function CalendarPage() {
                           {useGeezDigits ? toGeezNumeral(highlight.day) : highlight.day}
                         </div>
                         <div className="space-y-1">
-                          <p className="text-sm font-semibold leading-tight">{highlight.name}</p>
-                          <p className="text-xs text-muted-foreground leading-tight">{highlight.amharicName}</p>
+                          <p className="text-sm leading-tight font-semibold">{highlight.name}</p>
+                          <p className="text-muted-foreground text-xs leading-tight">
+                            {highlight.amharicName}
+                          </p>
                           {highlight.category ? (
-                            <span className="text-[11px] font-medium tracking-wide text-primary/80">
+                            <span className="text-primary/80 text-[11px] font-medium tracking-wide">
                               {formatHighlightCategory(highlight.category)}
                             </span>
                           ) : null}
@@ -611,13 +627,15 @@ export function CalendarPage() {
                         {useGeezDigits ? toGeezNumeral(date.day) : date.day}
                       </div>
                       <div className="space-y-1">
-                        <p className="text-sm font-semibold leading-tight">{highlight.name}</p>
-                        <p className="text-xs text-muted-foreground leading-tight">{highlight.amharicName}</p>
-                        <p className="text-xs text-muted-foreground leading-tight">
+                        <p className="text-sm leading-tight font-semibold">{highlight.name}</p>
+                        <p className="text-muted-foreground text-xs leading-tight">
+                          {highlight.amharicName}
+                        </p>
+                        <p className="text-muted-foreground text-xs leading-tight">
                           {formatEthiopianDate(date, useGeezDigits)}
                         </p>
                         {highlight.category ? (
-                          <span className="text-[11px] font-medium tracking-wide text-primary/80">
+                          <span className="text-primary/80 text-[11px] font-medium tracking-wide">
                             {formatHighlightCategory(highlight.category)}
                           </span>
                         ) : null}
@@ -635,14 +653,14 @@ export function CalendarPage() {
               ref={selectedCardRef}
               tabIndex={-1}
               className={[
-                'border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm outline-none transition focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-primary',
-                shouldFlashCard ? 'ring-2 ring-primary ring-offset-2' : '',
+                'border-border/60 focus-visible:ring-primary rounded-2xl border bg-transparent p-6 shadow-sm backdrop-blur-lg transition outline-none focus-visible:ring-2 focus-visible:ring-offset-2 supports-[backdrop-filter]:bg-transparent',
+                shouldFlashCard ? 'ring-primary ring-2 ring-offset-2' : '',
               ].join(' ')}
             >
               <p className="text-muted-foreground text-xs font-semibold tracking-[0.35em] uppercase">
                 Selected date
               </p>
-              <h3 className="mt-2 text-lg font-semibold tracking-tight text-foreground">
+              <h3 className="text-foreground mt-2 text-lg font-semibold tracking-tight">
                 {formatEthiopianDate(selectedDate, useGeezDigits)}
               </h3>
               <p className="text-muted-foreground mt-1 text-sm">
@@ -656,11 +674,11 @@ export function CalendarPage() {
                       className="border-border bg-muted/60 rounded-lg border px-4 py-3"
                     >
                       <div className="flex items-center justify-between gap-2">
-                        <p className="text-foreground text-sm font-semibold leading-tight">
+                        <p className="text-foreground text-sm leading-tight font-semibold">
                           {highlight.name}
                         </p>
                         {highlight.category ? (
-                          <span className="text-[11px] font-medium tracking-wide text-primary/80">
+                          <span className="text-primary/80 text-[11px] font-medium tracking-wide">
                             {formatHighlightCategory(highlight.category)}
                           </span>
                         ) : null}
@@ -673,7 +691,7 @@ export function CalendarPage() {
                           {highlight.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="bg-primary/10 text-primary/80 rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide"
+                              className="bg-primary/10 text-primary/80 rounded-full px-2 py-0.5 text-[10px] font-medium tracking-wide uppercase"
                             >
                               {formatHighlightTag(tag)}
                             </span>
@@ -687,23 +705,32 @@ export function CalendarPage() {
                 )}
               </div>
             </div>
-            <AdSlot orientation="vertical" className="min-h-[18rem] rounded-2xl bg-secondary supports-[backdrop-filter]:bg-secondary backdrop-blur-lg" preset="sponsored" />
-
+            <AdSlot
+              orientation="vertical"
+              className="bg-secondary supports-[backdrop-filter]:bg-secondary min-h-[18rem] rounded-2xl backdrop-blur-lg"
+              preset="sponsored"
+            />
           </aside>
         </div>
 
-        <AdSlot orientation="horizontal" className="min-h-[12rem] rounded-2xl bg-secondary supports-[backdrop-filter]:bg-secondary backdrop-blur-lg " preset="sponsored" />
+        <AdSlot
+          orientation="horizontal"
+          className="bg-secondary supports-[backdrop-filter]:bg-secondary min-h-[12rem] rounded-2xl backdrop-blur-lg"
+          preset="sponsored"
+        />
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
           <section
             id="geez-numbers"
-            className="border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm"
+            className="border-border/60 rounded-2xl border bg-transparent p-6 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent"
           >
             <div className="flex flex-col gap-6 p-6 sm:p-8">
               <header className="space-y-2">
-                <h2 className="text-2xl font-semibold tracking-tight">Gee&apos;z Numbering System</h2>
+                <h2 className="text-2xl font-semibold tracking-tight">
+                  Gee&apos;z Numbering System
+                </h2>
                 <p className="text-muted-foreground text-sm">
                   Amharic has its own traditional number system that is still used in some cultural
-                    and liturgical contexts. It’s different from the “Arabic numerals” (0–9) that are
+                  and liturgical contexts. It’s different from the “Arabic numerals” (0–9) that are
                   common worldwide.
                 </p>
                 <p className="text-muted-foreground text-sm">
@@ -718,21 +745,25 @@ export function CalendarPage() {
 
               {/* data table with separated rows */}
               <div className="overflow-x-auto">
-                <table className="w-full text-sm border-separate [border-spacing:0_10px]">
+                <table className="w-full border-separate [border-spacing:0_10px] text-sm">
                   <thead>
-                    <tr className="text-left text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                      <th className="bg-secondary/60 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">Number</th>
+                    <tr className="text-muted-foreground text-left text-xs tracking-[0.25em] uppercase">
+                      <th className="bg-secondary/60 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">
+                        Number
+                      </th>
                       <th className="bg-secondary/60 px-4 py-3">Symbol</th>
-                      <th className="bg-secondary/60 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">Amharic Name</th>
+                      <th className="bg-secondary/60 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">
+                        Amharic Name
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {GEEZ_NUMERAL_TABLE.map((row) => (
                       <tr key={row.value}>
-                        <td className="bg-secondary/30 px-4 py-3 first:rounded-l-lg last:rounded-r-lg text-foreground/90">
+                        <td className="bg-secondary/30 text-foreground/90 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">
                           {row.value.toLocaleString('en-US')}
                         </td>
-                        <td className="bg-secondary/30 px-4 py-3 text-lg font-semibold text-foreground">
+                        <td className="bg-secondary/30 text-foreground px-4 py-3 text-lg font-semibold">
                           {row.symbol}
                         </td>
                         <td className="bg-secondary/30 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">
@@ -751,7 +782,7 @@ export function CalendarPage() {
                             }}
                             aria-label={`Pronounce ${row.name}`}
                           >
-                            <span className="font-medium text-foreground">{row.name}</span>
+                            <span className="text-foreground font-medium">{row.name}</span>
                           </button>
                         </td>
                       </tr>
@@ -763,7 +794,7 @@ export function CalendarPage() {
               {/* examples */}
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold tracking-tight">Example Numbers</h3>
-                <ul className="list-disc pl-6 text-sm text-foreground/80">
+                <ul className="text-foreground/80 list-disc pl-6 text-sm">
                   {[2025, 187, 50000].map((value) => (
                     <li key={value} className="">
                       {value.toLocaleString('en-US')} →
@@ -776,8 +807,7 @@ export function CalendarPage() {
           </section>
 
           <aside className="flex flex-col gap-6">
-          
-            <div className="border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm">
+            <div className="border-border/60 rounded-2xl border bg-transparent p-6 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
               <h3 className="text-foreground text-base font-semibold tracking-tight">
                 Reading tips
               </h3>
@@ -790,8 +820,11 @@ export function CalendarPage() {
                 seasonal content before the Ethiopian New Year.
               </p>
             </div>
-            <AdSlot orientation="vertical" className="w-full min-h-[18rem] rounded-2xl bg-secondary supports-[backdrop-filter]:bg-secondary backdrop-blur-lg" preset="sponsored" />
-
+            <AdSlot
+              orientation="vertical"
+              className="bg-secondary supports-[backdrop-filter]:bg-secondary min-h-[18rem] w-full rounded-2xl backdrop-blur-lg"
+              preset="sponsored"
+            />
           </aside>
         </div>
       </Container>

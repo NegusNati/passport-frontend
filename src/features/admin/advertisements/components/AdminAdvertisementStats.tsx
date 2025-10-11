@@ -1,4 +1,12 @@
-import { AlertTriangle,BarChart, Clock, DollarSign, Eye, MousePointerClick, TrendingUp } from 'lucide-react'
+import {
+  AlertTriangle,
+  BarChart,
+  Clock,
+  DollarSign,
+  Eye,
+  MousePointerClick,
+  TrendingUp,
+} from 'lucide-react'
 
 import type { AdvertisementStatsData } from '../schemas/stats'
 
@@ -60,7 +68,7 @@ export function AdminAdvertisementStats({ stats }: StatsProps) {
       </div>
 
       {/* Summary Card */}
-      <div className="rounded-lg border bg-card p-6">
+      <div className="bg-card rounded-lg border p-6">
         <h3 className="mb-4 text-lg font-semibold">Summary</h3>
         <div className="grid gap-4 md:grid-cols-2">
           <div>
@@ -100,9 +108,9 @@ type StatCardProps = {
 
 function StatCard({ icon: Icon, label, value, iconColor = 'text-primary' }: StatCardProps) {
   return (
-    <div className="rounded-lg border bg-card p-6">
+    <div className="bg-card rounded-lg border p-6">
       <div className="flex items-center gap-4">
-        <div className={`rounded-full bg-muted p-3 ${iconColor}`}>
+        <div className={`bg-muted rounded-full p-3 ${iconColor}`}>
           <Icon className="h-6 w-6" />
         </div>
         <div>

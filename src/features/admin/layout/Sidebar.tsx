@@ -1,13 +1,5 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import {
-  FileText,
-  Home,
-  ImageIcon,
-  Megaphone,
-  Newspaper,
-  UploadCloud,
-  Users,
-} from 'lucide-react'
+import { FileText, Home, ImageIcon, Megaphone, Newspaper, UploadCloud, Users } from 'lucide-react'
 import type { ComponentType, ReactNode, SVGProps } from 'react'
 
 import type { AdminPrimaryRole } from '@/features/admin/lib/roles'
@@ -41,13 +33,18 @@ export function Sidebar({ isOpen, onClose, reduceMotion, role }: SidebarProps) {
 
   return (
     <>
-      <aside className="hidden w-64 flex-col border-r bg-background/95 pb-6 lg:flex">
+      <aside className="bg-background/95 hidden w-64 flex-col border-r pb-6 lg:flex">
         <div className="flex h-16 items-center border-b px-6">
           <span className="text-lg font-semibold tracking-tight">Admin</span>
         </div>
         <nav className="flex flex-1 flex-col gap-1 px-3 py-4 text-sm">
           {filteredItems.map((item) => (
-            <SidebarLink key={item.to} href={item.to} icon={item.icon} active={pathname === item.to}>
+            <SidebarLink
+              key={item.to}
+              href={item.to}
+              icon={item.icon}
+              active={pathname === item.to}
+            >
               {item.label}
             </SidebarLink>
           ))}
@@ -66,7 +63,7 @@ export function Sidebar({ isOpen, onClose, reduceMotion, role }: SidebarProps) {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 w-64 transform border-r bg-background pb-6 shadow-lg transition-transform lg:hidden',
+          'bg-background fixed inset-y-0 left-0 z-50 w-64 transform border-r pb-6 shadow-lg transition-transform lg:hidden',
           isOpen ? 'translate-x-0' : '-translate-x-full',
           reduceMotion && 'transition-none',
         )}
@@ -77,7 +74,7 @@ export function Sidebar({ isOpen, onClose, reduceMotion, role }: SidebarProps) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-md border border-input px-2 py-1 text-sm"
+            className="border-input rounded-md border px-2 py-1 text-sm"
           >
             Close
           </button>
@@ -115,12 +112,7 @@ function SidebarLink({ href, icon: Icon, active, children, onClick }: SidebarLin
     : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
 
   return (
-    <Link
-      to={href}
-      className={cn(baseClasses, activeClasses)}
-      onClick={onClick}
-      preload="intent"
-    >
+    <Link to={href} className={cn(baseClasses, activeClasses)} onClick={onClick} preload="intent">
       <Icon className="h-4 w-4" aria-hidden="true" />
       <span>{children}</span>
     </Link>

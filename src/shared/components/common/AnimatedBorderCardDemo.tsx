@@ -1,4 +1,4 @@
-import { CheckCircleIcon,IdCardIcon, StarIcon, Users2Icon } from 'lucide-react'
+import { CheckCircleIcon, IdCardIcon, StarIcon, Users2Icon } from 'lucide-react'
 
 import { AnimatedBorderCard } from './AnimatedBorderCard'
 
@@ -6,7 +6,7 @@ export function AnimatedBorderCardDemo() {
   return (
     <div className="space-y-8 p-8">
       <div className="text-center">
-        <h2 className="text-3xl font-bold mb-4">Animated Border Cards</h2>
+        <h2 className="mb-4 text-3xl font-bold">Animated Border Cards</h2>
         <p className="text-muted-foreground">
           Beautiful cards with glowing conic-gradient borders using modern CSS @property
         </p>
@@ -72,20 +72,20 @@ export function AnimatedBorderCardDemo() {
       {/* Interactive demo */}
       <div className="space-y-4">
         <h3 className="text-xl font-semibold">Interactive Demo</h3>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Hover over the cards to see enhanced glow effects
         </p>
         <div className="flex flex-wrap items-center gap-4">
-          <AnimatedBorderCard 
-            variant="primary" 
+          <AnimatedBorderCard
+            variant="primary"
             size="md"
             className="cursor-pointer transition-transform hover:scale-105"
           >
             <StarIcon className="h-4 w-4" />
             Hover me!
           </AnimatedBorderCard>
-          <AnimatedBorderCard 
-            variant="secondary" 
+          <AnimatedBorderCard
+            variant="secondary"
             size="md"
             className="cursor-pointer transition-transform hover:scale-105"
           >

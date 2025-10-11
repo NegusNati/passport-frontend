@@ -20,7 +20,7 @@ export function AppErrorFallback({ error, reset, showDetails }: AppErrorFallback
         {FLOATING_ICONS.map((icon, index) => (
           <motion.span
             key={icon}
-            className="absolute left-1/2 top-1/2 text-3xl"
+            className="absolute top-1/2 left-1/2 text-3xl"
             style={{ transform: `translate(-50%, -50%)` }}
             animate={
               reducedMotion
@@ -51,8 +51,8 @@ export function AppErrorFallback({ error, reset, showDetails }: AppErrorFallback
         Something went off course
       </h1>
       <p className="text-muted-foreground mt-3 max-w-xl text-sm sm:text-base">
-        Our passport pigeons are on the case. Try refreshing, or head back home while we realign
-        the navigation.
+        Our passport pigeons are on the case. Try refreshing, or head back home while we realign the
+        navigation.
       </p>
 
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
@@ -67,7 +67,7 @@ export function AppErrorFallback({ error, reset, showDetails }: AppErrorFallback
       </div>
 
       {showDetails && error ? (
-        <pre className="text-muted-foreground/70 mt-6 max-w-2xl overflow-auto rounded-md bg-muted/40 p-4 text-left text-xs">
+        <pre className="text-muted-foreground/70 bg-muted/40 mt-6 max-w-2xl overflow-auto rounded-md p-4 text-left text-xs">
           {error.message}
         </pre>
       ) : null}
@@ -108,11 +108,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
 
     if (error) {
       return (
-        <AppErrorFallback
-          error={error}
-          reset={this.resetErrorBoundary}
-          showDetails={development}
-        />
+        <AppErrorFallback error={error} reset={this.resetErrorBoundary} showDetails={development} />
       )
     }
 

@@ -9,7 +9,7 @@ export const AUTH_TOKEN_STORAGE_KEY = 'auth-token'
 let authToken: string | null = null
 
 export const api = axios.create({
-  baseURL:  env.API_BASE_URL,
+  baseURL: env.API_BASE_URL,
   headers: {
     Accept: 'application/json',
   },

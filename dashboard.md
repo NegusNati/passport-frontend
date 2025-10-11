@@ -5,6 +5,7 @@ This plan introduces an admin dashboard built with shadcn/ui, TanStack Router, T
 ---
 
 ## Goals
+
 - Role-gated admin area under `/admin` with responsive shell (sidebar + header + content).
 - Sub-features: User Management, Passports Admin, Articles Admin, and PDF-to-SQLite ingestion.
 - Reuse DataTable, Input/Button primitives, and existing query patterns.
@@ -86,6 +87,7 @@ src/
 ```
 
 Notes
+
 - Each sub-feature owns schemas/api/components; routes simply orchestrate and prefetch data.
 - Keep loaders thin: prefetch + redirect; avoid embedding heavy UI logic.
 
@@ -94,12 +96,14 @@ Notes
 ## Phase 0 – Prep & Decisions
 
 Todos
+
 - Confirm backend role info on `/api/v1/auth/me` (`role`, `is_admin`) and available abilities (`can:manage-articles`, `can:upload-files`).
 - Catalog admin API endpoints and expected pagination param names (`page_size`, `per_page`, `limit`).
 - Compile design tokens for admin shell (spacing, sidebar width, header height) via Tailwind config/utilities.
 - Decide ability constants for articles/PDF import and expose helper in `guards.ts` if needed.
 
 Deliverables
+
 - `src/features/admin/lib/guards.ts` implementing `ensureAdmin`.
 - `src/features/admin/lib/keys.ts` with helpers for users, passports, articles.
 - Documented abilities (constants or enum) for downstream use.
@@ -109,6 +113,7 @@ Deliverables
 ## Phase 1 – Routing & Guards
 
 Todos
+
 - Create `/admin` root route loader:
   - `ensureQueryData(['auth','user'], fetchMe)`.
   - Guard by admin status (from Phase 0 helper).
@@ -123,10 +128,12 @@ Todos
 - Provide `RouterContext` `loaderData` type augmentation for admin user if needed.
 
 Deliverables
+
 - Route files with guards and lazy components.
 - Optional shared `Forbidden` component for non-admin fallback.
 
 QA
+
 - Unauth user → `/login?redirect=/admin`.
 - Auth non-admin → redirected/403.
 - Admin sees dashboard without flash.
@@ -136,6 +143,7 @@ QA
 ## Phase 2 – Admin Shell (Layout)
 
 Todos
+
 - Build `AdminShell.tsx` with responsive sidebar + header and `<Outlet />`.
 - `Sidebar.tsx` using shadcn Navigation primitives:
   - Sections: Overview, Users, Passports, Articles, PDF Import (placeholder for Settings later).
@@ -145,9 +153,11 @@ Todos
 - Add `AdminShell` provider (if we need context for collapsed state) under `features/admin/layout`.
 
 Deliverables
+
 - Layout components with tests for focus/ARIA (optional).
 
 QA
+
 - Keyboard navigation works; sidebar toggle is accessible.
 - Focus rings visible; screen reader labels present.
 - Layout responsive ≥320px.
@@ -157,6 +167,7 @@ QA
 ## Phase 3 – Users (List + Edit)
 
 Todos
+
 - Schemas
   - `users/schemas/user.ts`: extend public user with role/status fields.
   - `users/schemas/filters.ts`: Zod parser for search, role, status, pagination, sort.
@@ -174,6 +185,7 @@ Todos
 - Cache invalidations using `adminKeys.users` helpers.
 
 QA
+
 - Page size change updates rows; skeleton matches selection during refetch.
 - Editing role updates list/detail caches and shows toast.
 - Filters persist via URL; disallowed edits show errors gracefully.
@@ -183,6 +195,7 @@ QA
 ## Phase 4 – Passports Admin (Create + List)
 
 Todos
+
 - Schemas
   - `passports/schemas/create.ts`: form validation (request_number, names, location, publish date).
 - API wrappers
@@ -197,6 +210,7 @@ Todos
   - `/admin/passports/new`: create form route.
 
 QA
+
 - Creating passport adds row (invalidate list).
 - Validation errors surface inline with hints from backend 422 payload.
 - Page size change updates row count & summary.
@@ -206,6 +220,7 @@ QA
 ## Phase 5 – Articles Admin (CRUD + Filters)
 
 Todos
+
 - Schemas
   - `articles/schemas/article.ts`: Article resource for admin (full payload per API guide).
   - `articles/schemas/filters.ts`: list filter schema (q, title, category, tag, status, author_id, date range, per_page/page/sort).
@@ -228,6 +243,7 @@ Todos
 - Error handling for 429 with Retry-After (show cooldown message).
 
 QA
+
 - Filters update URL and trigger new fetch.
 - Create/update flows show success toasts and redirect appropriately.
 - Delete prompts confirmation and removes row; handles 403/404 gracefully.
@@ -238,6 +254,7 @@ QA
 ## Phase 6 – PDF Import Flow
 
 Todos
+
 - Schema `pdf-import/schemas/upload.ts` (file, date, location, linesToSkip) with client size guard (<=10MB where possible).
 - API wrappers (require `upload-files` ability)
   - `get-info.ts`: GET helper endpoint (show constraints).
@@ -249,6 +266,7 @@ Todos
 - Optional: stub status polling hook for future job tracking.
 
 QA
+
 - Form prevents >10MB uploads client-side, surfaces 422 errors inline.
 - Successful upload shows 202 message and invalidates passports admin list.
 - Spinner/progress indicator visible during upload; handles 429 gracefully.
@@ -258,11 +276,13 @@ QA
 ## Phase 7 – Error & Loading UX
 
 Todos
+
 - Use `DataTableLoadingSkeleton` keyed to selected page size for all server-driven tables.
 - Provide fallback `pendingComponent` or skeleton wrappers on admin routes.
 - Centralize API error normalization (429 → display retry message with header; 401/403 → redirect or special UI).
 
 QA
+
 - Skeleton row counts match selected page size during refetch.
 - 429 responses display friendly cooldown messaging using `Retry-After` header.
 - No layout jank on slow connections.
@@ -272,11 +292,13 @@ QA
 ## Phase 8 – Testing
 
 Todos
+
 - Unit tests: schemas (`safeParse`), hashParams helpers, guards (`isAdminUser`, ability checks).
 - Integration tests: route loaders (redirect logic), table page-size behaviour, mutation invalidations.
 - E2E (optional): admin login → create article → edit user role → upload PDF.
 
 QA
+
 - `pnpm test`, `pnpm typecheck`, `pnpm lint` all pass.
 - Snapshot/RTL tests cover critical components where feasible.
 
@@ -285,11 +307,13 @@ QA
 ## Phase 9 – Performance & A11y
 
 Todos
+
 - Consider virtualized rows for large tables (keep server pagination primary).
 - Prefetch admin subroutes when sidebar items are hovered/focused.
 - Ensure WCAG AA contrast, accessible names, focus order, and that animations respect `prefers-reduced-motion`.
 
 QA
+
 - Lighthouse a11y ≥ 95 for key admin pages.
 - No layout shifts when toggling sidebar/hydrating data.
 
@@ -347,9 +371,9 @@ QA
 ---
 
 ## Implementation Notes & Tips
+
 - Keep server-driven pagination for admin tables; use hashed query keys to ensure refetch on filter/page changes.
 - Prefer `validateSearch` with Zod for filter state to enable shareable URLs.
 - Centralize ability strings (e.g., `MANAGE_ARTICLES`, `UPLOAD_FILES`) to avoid typos.
 - Add confirmation dialogs for destructive actions (delete article, revoke user).
 - Consider toast notifications for success/failure across admin forms.
-

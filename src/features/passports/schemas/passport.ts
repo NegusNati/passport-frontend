@@ -9,20 +9,22 @@ export const PassportSearchByNumber = z.object({
     .max(255, 'Keep the request number under 255 characters'),
 })
 
-export const PassportSearchByName = z.object({
-  firstName: z.string().trim().optional().default(''),
-  middleName: z.string().trim().optional().default(''),
-  lastName: z.string().trim().optional().default(''),
-}).refine(
-  (values) =>
-    [values.firstName, values.middleName, values.lastName]
-      .filter(Boolean)
-      .some((value) => !!value && value.trim().length >= 3),
-  {
-    message: 'Enter at least one name with 3 or more characters',
-    path: ['firstName'],
-  },
-)
+export const PassportSearchByName = z
+  .object({
+    firstName: z.string().trim().optional().default(''),
+    middleName: z.string().trim().optional().default(''),
+    lastName: z.string().trim().optional().default(''),
+  })
+  .refine(
+    (values) =>
+      [values.firstName, values.middleName, values.lastName]
+        .filter(Boolean)
+        .some((value) => !!value && value.trim().length >= 3),
+    {
+      message: 'Enter at least one name with 3 or more characters',
+      path: ['firstName'],
+    },
+  )
 
 export type PassportSearchByNumber = z.infer<typeof PassportSearchByNumber>
 export type PassportSearchByName = z.infer<typeof PassportSearchByName>

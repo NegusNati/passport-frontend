@@ -14,20 +14,11 @@ import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardHeader } from '@/shared/ui/card'
 import { Container } from '@/shared/ui/container'
 import { Input } from '@/shared/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/shared/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 import { Seo } from '@/shared/ui/Seo'
 import { ArticleGridSkeleton } from '@/shared/ui/skeleton'
 
-import type {
-  ArticleFilters as ArticleFiltersType,
-  ArticleSummary,
-} from '../schemas/article'
+import type { ArticleFilters as ArticleFiltersType, ArticleSummary } from '../schemas/article'
 import { ArticlePagination } from './ArticlePagination'
 
 export function ArticlesPage() {
@@ -53,16 +44,19 @@ export function ArticlesPage() {
     setIsSearching(false)
   }, [searchInput])
 
-  const params = useMemo(() => ({
-    per_page: perPage,
-    page: currentPage,
-    sort: 'published_at' as const,
-    sort_dir: 'desc' as const,
-    // Prefer fast title prefix search; only send when >= 3 chars for performance
-    ...(debouncedSearchInput.trim().length >= 3 && { title: debouncedSearchInput.trim() }),
-    ...(filters.category !== 'all' && { category: filters.category }),
-    ...(filters.tag !== 'all' && { tag: filters.tag }),
-  }), [debouncedSearchInput, filters, currentPage, perPage])
+  const params = useMemo(
+    () => ({
+      per_page: perPage,
+      page: currentPage,
+      sort: 'published_at' as const,
+      sort_dir: 'desc' as const,
+      // Prefer fast title prefix search; only send when >= 3 chars for performance
+      ...(debouncedSearchInput.trim().length >= 3 && { title: debouncedSearchInput.trim() }),
+      ...(filters.category !== 'all' && { category: filters.category }),
+      ...(filters.tag !== 'all' && { tag: filters.tag }),
+    }),
+    [debouncedSearchInput, filters, currentPage, perPage],
+  )
 
   const { data, isLoading } = useArticlesQuery(params)
   const categories = useCategoriesQuery()
@@ -70,7 +64,6 @@ export function ArticlesPage() {
 
   const rows: ArticleApiItem[] = data?.data ?? []
   const meta = data?.meta
-
 
   const handleSearch = () => {
     // Reset to page 1 when explicitly searching
@@ -123,18 +116,18 @@ export function ArticlesPage() {
         extraLinks={getFeedLinks()}
       />
 
-      <div className="absolute left-0 bottom-[60rem] transform translate-y-1/4 z-[-100] opacity-60 md:opacity-90 ml-2 ">
-        <img src={ethiopic_numbers} alt="logo" className="h-150 w-150 " />
+      <div className="absolute bottom-[60rem] left-0 z-[-100] ml-2 translate-y-1/4 transform opacity-60 md:opacity-90">
+        <img src={ethiopic_numbers} alt="logo" className="h-150 w-150" />
       </div>
 
       {/* Search Section */}
       <section className="py-12">
         <Container>
           <h1 className="mb-4 text-4xl font-bold tracking-tight">Search for Articles</h1>
-          <div className="flex flex-col gap-8 md:gap-20 md:flex-row justify-between">
-            <div className="flex-1 flex flex-row gap-2">
+          <div className="flex flex-col justify-between gap-8 md:flex-row md:gap-20">
+            <div className="flex flex-1 flex-row gap-2">
               {/* Search Input */}
-              <div className="relative flex-1  ">
+              <div className="relative flex-1">
                 <Input
                   placeholder="Enter blog title"
                   value={searchInput}
@@ -143,26 +136,22 @@ export function ArticlesPage() {
                   className="h-11"
                 />
                 {isSearching && (
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <div className="absolute top-1/2 right-3 -translate-y-1/2">
                     <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
                   </div>
                 )}
               </div>
 
               {/* Search Button */}
-              <Button
-                onClick={handleSearch}
-                variant="primary"
-                size="lg"
-                className="md:w-auto"
-              >
+              <Button onClick={handleSearch} variant="primary" size="lg" className="md:w-auto">
                 Search
               </Button>
-
             </div>
-            <div className="flex-1 flex flex-row gap-2">
+            <div className="flex flex-1 flex-row gap-2">
               {/* Filter By Label */}
-              <span className="text-muted-foreground hidden text-sm md:inline-block self-center">Filter by</span>
+              <span className="text-muted-foreground hidden self-center text-sm md:inline-block">
+                Filter by
+              </span>
 
               {/* Category Filter */}
               <Select value={filters.category} onValueChange={handleCategoryChange}>
@@ -250,7 +239,7 @@ export function ArticlesPage() {
                             <p className="text-primary text-sm">{article.publishedDate}</p>
                           </CardHeader>
                           <CardHeader className="pt-0 pb-3">
-                            <h3 className="text-lg font-bold leading-tight line-clamp-2">
+                            <h3 className="line-clamp-2 text-lg leading-tight font-bold">
                               {article.title}
                             </h3>
                           </CardHeader>

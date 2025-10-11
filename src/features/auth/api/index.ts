@@ -1,4 +1,10 @@
-import { api, type ApiError,AUTH_TOKEN_STORAGE_KEY, clearAuthToken, setAuthToken } from '@/api/client'
+import {
+  api,
+  type ApiError,
+  AUTH_TOKEN_STORAGE_KEY,
+  clearAuthToken,
+  setAuthToken,
+} from '@/api/client'
 import { queryClient } from '@/api/queryClient'
 
 import type { LoginInput } from '../schemas/login'

@@ -8,7 +8,7 @@ import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 
 import { useRegister } from '../hooks'
-import { type RegisterInput,RegisterSchema } from '../schemas/register'
+import { type RegisterInput, RegisterSchema } from '../schemas/register'
 import type { User } from '../schemas/user'
 
 type RegisterFormProps = {
@@ -49,7 +49,7 @@ function mapServerErrors(data?: ApiValidation) {
 
 function validateRequired(schema: z.ZodTypeAny, value: string) {
   const result = schema.safeParse(value.trim())
-  return result.success ? undefined : result.error.issues[0]?.message ?? 'This field is required'
+  return result.success ? undefined : (result.error.issues[0]?.message ?? 'This field is required')
 }
 
 function sanitizePhone(value: string) {
@@ -62,18 +62,20 @@ function validateEmail(value: string) {
     return undefined
   }
   const result = RegisterSchema.shape.email.safeParse(trimmed)
-  return result.success ? undefined : result.error.issues[0]?.message ?? 'Enter a valid email'
+  return result.success ? undefined : (result.error.issues[0]?.message ?? 'Enter a valid email')
 }
 
 function validatePhone(value: string) {
   const sanitized = sanitizePhone(value)
   const result = RegisterSchema.shape.phoneNumber.safeParse(sanitized)
-  return result.success ? undefined : result.error.issues[0]?.message ?? 'Enter a valid phone number'
+  return result.success
+    ? undefined
+    : (result.error.issues[0]?.message ?? 'Enter a valid phone number')
 }
 
 function validatePassword(value: string) {
   const result = RegisterSchema.shape.password.safeParse(value)
-  return result.success ? undefined : result.error.issues[0]?.message ?? 'Password is too short'
+  return result.success ? undefined : (result.error.issues[0]?.message ?? 'Password is too short')
 }
 
 export function RegisterForm({ onSuccess }: RegisterFormProps) {
@@ -112,7 +114,8 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       )
       setFieldErrors(apiFieldErrors)
       const fallback =
-        message ?? (Object.keys(apiFieldErrors).length > 0 ? null : 'Unable to create your account.')
+        message ??
+        (Object.keys(apiFieldErrors).length > 0 ? null : 'Unable to create your account.')
       setFormError(fallback)
     },
   })
@@ -180,8 +183,10 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           <form.Field
             name="firstName"
             validators={{
-              onChange: ({ value }) => validateRequired(RegisterSchema.shape.firstName, value ?? ''),
-              onSubmit: ({ value }) => validateRequired(RegisterSchema.shape.firstName, value ?? ''),
+              onChange: ({ value }) =>
+                validateRequired(RegisterSchema.shape.firstName, value ?? ''),
+              onSubmit: ({ value }) =>
+                validateRequired(RegisterSchema.shape.firstName, value ?? ''),
             }}
           >
             {(field) => {
@@ -209,7 +214,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
                     aria-describedby="first-name-error"
                   />
                   {error ? (
-                    <p id="first-name-error" className="text-sm text-destructive">
+                    <p id="first-name-error" className="text-destructive text-sm">
                       {error}
                     </p>
                   ) : null}
@@ -252,7 +257,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
                     aria-describedby="last-name-error"
                   />
                   {error ? (
-                    <p id="last-name-error" className="text-sm text-destructive">
+                    <p id="last-name-error" className="text-destructive text-sm">
                       {error}
                     </p>
                   ) : null}
@@ -296,7 +301,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
                     aria-describedby="email-error"
                   />
                   {error ? (
-                    <p id="email-error" className="text-sm text-destructive">
+                    <p id="email-error" className="text-destructive text-sm">
                       {error}
                     </p>
                   ) : null}
@@ -341,7 +346,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
                     aria-describedby="register-phone-error"
                   />
                   {error ? (
-                    <p id="register-phone-error" className="text-sm text-destructive">
+                    <p id="register-phone-error" className="text-destructive text-sm">
                       {error}
                     </p>
                   ) : null}
@@ -359,47 +364,51 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
               onSubmit: ({ value }) => validatePassword(value ?? ''),
             }}
           >
-         {(field) => {
-          const error = field.state.meta.errors[0] ?? fieldErrors.password
-          return (
-            <div className="grid gap-2">
-              <Label htmlFor="register-password">Password</Label>
-              <div className="relative">
-                <Input
-                  id="register-password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  value={field.state.value ?? ''}
-                  onBlur={field.handleBlur}
-                  onChange={(event) => {
-                    const nextValue = event.target.value
-                    if (fieldErrors.password) {
-                      setFieldErrors((prev) => ({ ...prev, password: undefined }))
-                    }
-                    if (formError) {
-                      setFormError(null)
-                    }
-                    registerMutation.reset()
-                    field.handleChange(nextValue)
-                  }}
-                  aria-invalid={Boolean(error)}
-                  aria-describedby="register-password-error"
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-2 inline-flex items-center"
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? <EyeOff className="h-5 w-5" aria-hidden /> : <Eye className="h-5 w-5" aria-hidden />}
-                </button>
-              </div>
-              {error ? (
-                <p id="register-password-error" className="text-sm text-destructive">
-                  {error}
-                </p>
-              ) : null}
+            {(field) => {
+              const error = field.state.meta.errors[0] ?? fieldErrors.password
+              return (
+                <div className="grid gap-2">
+                  <Label htmlFor="register-password">Password</Label>
+                  <div className="relative">
+                    <Input
+                      id="register-password"
+                      type={showPassword ? 'text' : 'password'}
+                      autoComplete="new-password"
+                      value={field.state.value ?? ''}
+                      onBlur={field.handleBlur}
+                      onChange={(event) => {
+                        const nextValue = event.target.value
+                        if (fieldErrors.password) {
+                          setFieldErrors((prev) => ({ ...prev, password: undefined }))
+                        }
+                        if (formError) {
+                          setFormError(null)
+                        }
+                        registerMutation.reset()
+                        field.handleChange(nextValue)
+                      }}
+                      aria-invalid={Boolean(error)}
+                      aria-describedby="register-password-error"
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-2 inline-flex items-center"
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-5 w-5" aria-hidden />
+                      ) : (
+                        <Eye className="h-5 w-5" aria-hidden />
+                      )}
+                    </button>
+                  </div>
+                  {error ? (
+                    <p id="register-password-error" className="text-destructive text-sm">
+                      {error}
+                    </p>
+                  ) : null}
                 </div>
               )
             }}
@@ -432,51 +441,55 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
               },
             }}
           >
-          {(field) => {
-            const error = field.state.meta.errors[0] ?? fieldErrors.passwordConfirmation
-            return (
-              <div className="grid gap-2">
-                <Label htmlFor="password-confirmation">Confirm password</Label>
-                <div className="relative">
-                  <Input
-                    id="password-confirmation"
-                    type={showPasswordConfirmation ? 'text' : 'password'}
-                    autoComplete="new-password"
-                    value={field.state.value ?? ''}
-                    onBlur={field.handleBlur}
-                    onChange={(event) => {
-                      const nextValue = event.target.value
-                      if (fieldErrors.passwordConfirmation) {
-                        setFieldErrors((prev) => ({ ...prev, passwordConfirmation: undefined }))
+            {(field) => {
+              const error = field.state.meta.errors[0] ?? fieldErrors.passwordConfirmation
+              return (
+                <div className="grid gap-2">
+                  <Label htmlFor="password-confirmation">Confirm password</Label>
+                  <div className="relative">
+                    <Input
+                      id="password-confirmation"
+                      type={showPasswordConfirmation ? 'text' : 'password'}
+                      autoComplete="new-password"
+                      value={field.state.value ?? ''}
+                      onBlur={field.handleBlur}
+                      onChange={(event) => {
+                        const nextValue = event.target.value
+                        if (fieldErrors.passwordConfirmation) {
+                          setFieldErrors((prev) => ({ ...prev, passwordConfirmation: undefined }))
+                        }
+                        if (formError) {
+                          setFormError(null)
+                        }
+                        registerMutation.reset()
+                        field.handleChange(nextValue)
+                      }}
+                      aria-invalid={Boolean(error)}
+                      aria-describedby="password-confirmation-error"
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPasswordConfirmation((prev) => !prev)}
+                      className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-2 inline-flex items-center"
+                      aria-label={
+                        showPasswordConfirmation
+                          ? 'Hide password confirmation'
+                          : 'Show password confirmation'
                       }
-                      if (formError) {
-                        setFormError(null)
-                      }
-                      registerMutation.reset()
-                      field.handleChange(nextValue)
-                    }}
-                    aria-invalid={Boolean(error)}
-                    aria-describedby="password-confirmation-error"
-                    className="pr-10"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPasswordConfirmation((prev) => !prev)}
-                    className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-2 inline-flex items-center"
-                    aria-label={showPasswordConfirmation ? 'Hide password confirmation' : 'Show password confirmation'}
-                  >
-                    {showPasswordConfirmation ? (
-                      <EyeOff className="h-5 w-5" aria-hidden />
-                    ) : (
-                      <Eye className="h-5 w-5" aria-hidden />
-                    )}
-                  </button>
-                </div>
-                {error ? (
-                  <p id="password-confirmation-error" className="text-sm text-destructive">
-                    {error}
-                  </p>
-                ) : null}
+                    >
+                      {showPasswordConfirmation ? (
+                        <EyeOff className="h-5 w-5" aria-hidden />
+                      ) : (
+                        <Eye className="h-5 w-5" aria-hidden />
+                      )}
+                    </button>
+                  </div>
+                  {error ? (
+                    <p id="password-confirmation-error" className="text-destructive text-sm">
+                      {error}
+                    </p>
+                  ) : null}
                 </div>
               )
             }}
@@ -484,10 +497,11 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
         </div>
       </div>
 
-      {formError ? <p className="text-sm text-destructive">{formError}</p> : null}
+      {formError ? <p className="text-destructive text-sm">{formError}</p> : null}
       {retryAfterSeconds !== null ? (
-        <p className="text-sm text-muted-foreground">
-          You can try again in approximately {retryAfterSeconds} second{retryAfterSeconds === 1 ? '' : 's'}.
+        <p className="text-muted-foreground text-sm">
+          You can try again in approximately {retryAfterSeconds} second
+          {retryAfterSeconds === 1 ? '' : 's'}.
         </p>
       ) : null}
 

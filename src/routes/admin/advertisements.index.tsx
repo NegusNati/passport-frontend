@@ -72,13 +72,13 @@ function AdminAdvertisementsPage() {
         <div className="flex gap-2">
           <a
             href="/admin/advertisements/stats"
-            className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+            className="border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-10 items-center justify-center rounded-md border px-4 text-sm font-medium transition-colors"
           >
             View Stats
           </a>
           <a
             href="/admin/advertisements/new"
-            className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90"
+            className="bg-primary text-primary-foreground inline-flex h-10 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium transition-colors hover:opacity-90"
           >
             <Plus className="h-4 w-4" />
             Create Advertisement

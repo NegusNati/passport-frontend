@@ -34,9 +34,7 @@ export function isAdminUser(candidate: AdminCandidate): candidate is User {
 
 export function hasPermission(candidate: AdminCandidate, permission: string) {
   if (!candidate) return false
-  return Array.isArray(candidate.permissions)
-    ? candidate.permissions.includes(permission)
-    : false
+  return Array.isArray(candidate.permissions) ? candidate.permissions.includes(permission) : false
 }
 
 export function ensureAdmin(options: {

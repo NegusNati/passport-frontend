@@ -5,10 +5,7 @@ import { adminKeys, hashParams } from '@/features/admin/lib/keys'
 
 import type { UsersSearchParams } from '../schemas/filters'
 import { sanitizeUsersQuery } from '../schemas/filters'
-import {
-  type AdminUsersListResponse,
-  AdminUsersListResponseSchema,
-} from '../schemas/user'
+import { type AdminUsersListResponse, AdminUsersListResponseSchema } from '../schemas/user'
 
 export async function fetchAdminUsers(params: UsersSearchParams) {
   const response = await api.get('/api/v1/admin/users', {

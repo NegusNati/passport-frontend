@@ -1,7 +1,7 @@
 import { createFileRoute, isRedirect, redirect } from '@tanstack/react-router'
 
 import { queryClient } from '@/api/queryClient'
-import { type ApiError,authKeys, fetchMe } from '@/features/auth/api'
+import { type ApiError, authKeys, fetchMe } from '@/features/auth/api'
 import { ProfilePage } from '@/features/auth/components/ProfilePage'
 
 export const Route = createFileRoute('/profile')({

@@ -31,7 +31,7 @@ function AdvertisementRequestPage() {
   }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-primary/10 via-background to-background">
+    <div className="from-primary/10 via-background to-background relative min-h-screen overflow-hidden bg-gradient-to-b">
       <Seo
         title="Advertisement Request"
         description="Submit your advertisement request and our team will get back to you shortly."
@@ -40,41 +40,39 @@ function AdvertisementRequestPage() {
 
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-40 top-24 hidden h-[480px] w-[480px] rounded-[120px] border border-primary/20 bg-primary/20 blur-3xl lg:block"
+        className="border-primary/20 bg-primary/20 pointer-events-none absolute top-24 -left-40 hidden h-[480px] w-[480px] rounded-[120px] border blur-3xl lg:block"
       />
 
       <Container>
         <div className="grid items-center gap-12 py-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:py-24">
           <div className="relative z-10 space-y-6">
             <div className="max-w-lg space-y-4">
-              <span className="text-sm font-semibold uppercase tracking-wide text-primary">
+              <span className="text-primary text-sm font-semibold tracking-wide uppercase">
                 Advertise with Passport Alerts
               </span>
               <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
                 Advertisement Request
               </h1>
               <p className="text-muted-foreground text-lg">
-                Submit your advertisement inquiry and we&apos;ll contact you within 1-2 business days to
-                discuss the next steps.
+                Submit your advertisement inquiry and we&apos;ll contact you within 1-2 business
+                days to discuss the next steps.
               </p>
             </div>
 
-            <div className="flex items-center gap-6 text-sm text-muted-foreground">
-              <div className="h-px flex-1 bg-border" />
+            <div className="text-muted-foreground flex items-center gap-6 text-sm">
+              <div className="bg-border h-px flex-1" />
               <p>Fast response · Tailored packages · Dedicated support</p>
-              <div className="h-px flex-1 bg-border" />
+              <div className="bg-border h-px flex-1" />
             </div>
           </div>
 
           <div className="relative z-10">
-            <div className="rounded-2xl border border-border/60 bg-card/90 p-6 shadow-lg backdrop-blur lg:p-8">
+            <div className="border-border/60 bg-card/90 rounded-2xl border p-6 shadow-lg backdrop-blur lg:p-8">
               {!submitted ? (
                 <AdvertisementRequestForm
                   onSubmit={handleSubmit}
                   isSubmitting={mutation.isPending}
-                  errorMessage={
-                    mutation.error instanceof Error ? mutation.error.message : null
-                  }
+                  errorMessage={mutation.error instanceof Error ? mutation.error.message : null}
                 />
               ) : (
                 <AdvertisementRequestSuccess onSubmitAnother={handleSubmitAnother} />

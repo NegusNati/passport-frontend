@@ -104,7 +104,7 @@ export function AdminShell({ user, role, children }: AdminShellProps) {
 
   return (
     <AdminShellContext.Provider value={contextValue}>
-      <div className="flex min-h-screen bg-background">
+      <div className="bg-background flex min-h-screen">
         <Sidebar
           isOpen={sidebarOpen}
           onClose={closeSidebar}
@@ -113,7 +113,7 @@ export function AdminShell({ user, role, children }: AdminShellProps) {
         />
         <div className="flex w-full flex-1 flex-col">
           <AdminHeader onMenuClick={openSidebar} />
-          <main className="flex-1 overflow-y-auto bg-background">
+          <main className="bg-background flex-1 overflow-y-auto">
             <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6 lg:px-8">{children}</div>
           </main>
         </div>

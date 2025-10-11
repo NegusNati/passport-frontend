@@ -1,13 +1,16 @@
 # Bug Fix: Pagination Arrays in Admin Response
 
 ## Issue
+
 The admin advertisement requests page was showing a Zod validation error when loading:
+
 ```
 "Invalid input: expected string, received array"
 "Invalid input: expected number, received array"
 ```
 
 The API was returning all pagination fields as arrays instead of single values:
+
 ```json
 {
   "links": {
@@ -28,23 +31,24 @@ The API was returning all pagination fields as arrays instead of single values:
 ```
 
 ## Root Cause
+
 This is a backend bug where pagination values are being duplicated as arrays. However, we need to handle this gracefully on the frontend to prevent the application from breaking.
 
 ## Solution
 
 ### 1. Created Normalization Helpers
+
 **File:** `src/features/admin/advertisement-requests/schemas/admin-advertisement-request.ts`
 
 Added helper functions to extract single values from arrays:
 
 ```typescript
 // Generic normalizer for arrays
-const normalizeValue = <T>(val: T | T[]): T => 
-  (Array.isArray(val) ? val[0] : val)
+const normalizeValue = <T>(val: T | T[]): T => (Array.isArray(val) ? val[0] : val)
 
 // Specialized normalizer for nullable strings (handles [null, null])
 const normalizeNullableString = (
-  val: string | (string | null)[] | null | undefined
+  val: string | (string | null)[] | null | undefined,
 ): string | null => {
   if (val === null || val === undefined) return null
   if (Array.isArray(val)) {
@@ -56,15 +60,28 @@ const normalizeNullableString = (
 ```
 
 ### 2. Updated PaginationLinks Schema
+
 Now accepts both single values and arrays, then normalizes them:
 
 ```typescript
 export const PaginationLinks = z
   .object({
-    first: z.union([z.string(), z.array(z.string().nullable())]).nullable().optional(),
-    last: z.union([z.string(), z.array(z.string().nullable())]).nullable().optional(),
-    prev: z.union([z.string(), z.array(z.string().nullable())]).nullable().optional(),
-    next: z.union([z.string(), z.array(z.string().nullable())]).nullable().optional(),
+    first: z
+      .union([z.string(), z.array(z.string().nullable())])
+      .nullable()
+      .optional(),
+    last: z
+      .union([z.string(), z.array(z.string().nullable())])
+      .nullable()
+      .optional(),
+    prev: z
+      .union([z.string(), z.array(z.string().nullable())])
+      .nullable()
+      .optional(),
+    next: z
+      .union([z.string(), z.array(z.string().nullable())])
+      .nullable()
+      .optional(),
   })
   .transform((links) => ({
     first: normalizeNullableString(links.first),
@@ -75,6 +92,7 @@ export const PaginationLinks = z
 ```
 
 ### 3. Updated PaginationMeta Schema
+
 Handles both single numbers and arrays of numbers:
 
 ```typescript
@@ -100,6 +118,7 @@ export const PaginationMeta = z
 ```
 
 ### 4. Added Better Error Logging
+
 **File:** `src/features/admin/advertisement-requests/api/get-requests.ts`
 
 Added `safeParse()` with detailed error logging:
@@ -124,6 +143,7 @@ if (!parsed.success) {
 ## Example Transformation
 
 **Input (from API):**
+
 ```json
 {
   "current_page": [1, 1],
@@ -134,6 +154,7 @@ if (!parsed.success) {
 ```
 
 **Output (after schema transform):**
+
 ```json
 {
   "current_page": 1,
@@ -144,6 +165,7 @@ if (!parsed.success) {
 ```
 
 ## Testing
+
 ✅ All TypeScript type checks pass
 ✅ Admin page loads successfully with paginated data
 ✅ Pagination controls work correctly
@@ -151,7 +173,9 @@ if (!parsed.success) {
 ✅ Gracefully handles arrays of null values
 
 ## Result
+
 The admin advertisement requests page now loads successfully and displays paginated data correctly, despite the backend bug.
 
 ## Recommendation
+
 While this fix allows the frontend to work, the **backend should be fixed** to return single values instead of arrays. This frontend fix is defensive programming to handle the issue gracefully until the backend is corrected.

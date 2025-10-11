@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import HabeshaFace from "@/assets/landingImages/habesha_face.svg"
+import HabeshaFace from '@/assets/landingImages/habesha_face.svg'
 
 import type { PassportSearchFilters } from '../schemas/passport'
 import { PassportSearchForm } from './PassportSearchForm'
@@ -12,18 +12,15 @@ export function PassportsPage() {
   const [searchFilters, setSearchFilters] = React.useState<PassportSearchFilters>({})
   const tableRef = React.useRef<HTMLDivElement>(null)
 
-  const isSameFilters = React.useCallback(
-    (a: PassportSearchFilters, b: PassportSearchFilters) => {
-      const keys = new Set([...Object.keys(a), ...Object.keys(b)])
-      for (const key of keys) {
-        if ((a as Record<string, string>)[key] !== (b as Record<string, string>)[key]) {
-          return false
-        }
+  const isSameFilters = React.useCallback((a: PassportSearchFilters, b: PassportSearchFilters) => {
+    const keys = new Set([...Object.keys(a), ...Object.keys(b)])
+    for (const key of keys) {
+      if ((a as Record<string, string>)[key] !== (b as Record<string, string>)[key]) {
+        return false
       }
-      return true
-    },
-    [],
-  )
+    }
+    return true
+  }, [])
 
   const scrollToResults = React.useCallback(() => {
     tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -52,11 +49,9 @@ export function PassportsPage() {
         onScrollToResults={scrollToResults}
       />
 
-      <div className="absolute left-[-10rem] top-[15rem] opacity-90  z-[-110]  ml-2 ">
-        <img src={HabeshaFace} alt="Habesha Face" className="h-150 w-150 " />
+      <div className="absolute top-[15rem] left-[-10rem] z-[-110] ml-2 opacity-90">
+        <img src={HabeshaFace} alt="Habesha Face" className="h-150 w-150" />
       </div>
-
-
 
       {/* Passports Table Section */}
       <PassportsTable ref={tableRef} searchFilters={searchFilters} searchMode={searchMode} />

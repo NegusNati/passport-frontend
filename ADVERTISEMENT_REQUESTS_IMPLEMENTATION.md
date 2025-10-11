@@ -1,7 +1,9 @@
 # Advertisement Request Feature - Implementation Summary
 
 ## Overview
+
 Successfully implemented a complete advertisement request management system with:
+
 - **Public form** for submitting advertisement requests (no authentication required)
 - **Admin dashboard** for managing requests with filtering, pagination, and status updates
 
@@ -49,6 +51,7 @@ src/routes/
 ### 2. API Endpoints
 
 **Added to `src/shared/lib/API_ENDPOINTS.ts`:**
+
 ```typescript
 ADVERTISEMENT_REQUESTS: {
   ROOT: '/api/v1/advertisement-requests',           // POST (public)
@@ -58,6 +61,7 @@ ADVERTISEMENT_REQUESTS: {
 ```
 
 **Updated `src/features/admin/lib/keys.ts`:**
+
 ```typescript
 advertisementRequests: {
   all: () => [...adminKeys.all, 'advertisement-requests'],
@@ -71,6 +75,7 @@ advertisementRequests: {
 **Route:** `/advertisement-requests`
 
 **Form Fields:**
+
 - Full Name (required)
 - Phone Number (required)
 - Email (optional)
@@ -79,6 +84,7 @@ advertisementRequests: {
 - File Upload (optional, PDF/DOC/DOCX/JPG/PNG, max 10MB)
 
 **Features:**
+
 - Client-side file validation (type and size)
 - Character counter for description
 - Success screen with "Submit Another" option
@@ -90,6 +96,7 @@ advertisementRequests: {
 **Route:** `/admin/advertisement-requests`
 
 **Filters:**
+
 - Status (All, Pending, Contacted, Approved, Rejected)
 - Full Name search
 - Company Name search
@@ -97,6 +104,7 @@ advertisementRequests: {
 - Clear filters button
 
 **Table Columns:**
+
 - ID
 - Full Name (with email)
 - Company
@@ -106,6 +114,7 @@ advertisementRequests: {
 - Actions (View, Delete)
 
 **Detail Dialog:**
+
 - View all request information
 - Edit status
 - Add/edit contacted date
@@ -113,6 +122,7 @@ advertisementRequests: {
 - Download attachment if available
 
 **Pagination:**
+
 - Shows current page and total pages
 - Previous/Next buttons
 - Displays record count
@@ -120,28 +130,33 @@ advertisementRequests: {
 ### 5. New UI Components Created
 
 **`src/shared/ui/textarea.tsx`:**
+
 - Accessible textarea component
 - Consistent styling with other form inputs
 
 **`src/shared/ui/dialog.tsx`:**
+
 - Modal dialog using Radix UI primitives
 - Overlay with backdrop blur
 - Smooth animations
 - Mobile-responsive
 
 **Updated `src/shared/ui/badge.tsx`:**
+
 - Added `success` and `destructive` variants
 - Used for status badges
 
 ### 6. Admin Navigation
 
 **Updated `src/features/admin/layout/Sidebar.tsx`:**
+
 - Added "Ad Requests" link with Megaphone icon
 - Positioned between Articles and PDF import
 
 ### 7. Type Safety
 
 All components are fully type-safe with:
+
 - Zod schemas for runtime validation
 - TypeScript types inferred from schemas
 - Proper API response parsing
@@ -164,6 +179,7 @@ pnpm add @radix-ui/react-dialog
 ## Usage
 
 ### Public Form
+
 1. Navigate to `/advertisement-requests`
 2. Fill in required fields (Name, Phone, Description)
 3. Optionally add Email, Company, and File attachment
@@ -171,6 +187,7 @@ pnpm add @radix-ui/react-dialog
 5. See success confirmation
 
 ### Admin Dashboard
+
 1. Navigate to `/admin/advertisement-requests` (requires authentication)
 2. View all requests in table format
 3. Use filters to narrow down results
@@ -184,9 +201,11 @@ pnpm add @radix-ui/react-dialog
 The implementation expects these API endpoints as documented:
 
 **Public:**
+
 - `POST /api/v1/advertisement-requests` - Submit request (multipart/form-data)
 
 **Admin (authenticated):**
+
 - `GET /api/v1/admin/advertisement-requests` - List with filters
 - `GET /api/v1/admin/advertisement-requests/{id}` - Get single request
 - `PATCH /api/v1/admin/advertisement-requests/{id}` - Update status/notes
@@ -219,6 +238,7 @@ The implementation expects these API endpoints as documented:
 ## Files Created/Modified
 
 **Created: 24 files**
+
 - 2 public schemas
 - 2 public API files
 - 2 public components
@@ -230,6 +250,7 @@ The implementation expects these API endpoints as documented:
 - 3 UI components
 
 **Modified: 3 files**
+
 - API_ENDPOINTS.ts
 - admin keys.ts
 - Sidebar.tsx
@@ -248,6 +269,7 @@ The implementation expects these API endpoints as documented:
 ## Conclusion
 
 The advertisement request feature is fully implemented following best practices:
+
 - Feature-based folder structure
 - Type-safe with Zod + TypeScript
 - Follows existing patterns from articles feature

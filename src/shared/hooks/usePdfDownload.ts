@@ -114,9 +114,7 @@ export function usePdfDownload({
       console.error('PDF download failed:', downloadError)
 
       if (showAlerts) {
-        alert(
-          'Failed to generate PDF. Please try again or contact support if the issue persists.',
-        )
+        alert('Failed to generate PDF. Please try again or contact support if the issue persists.')
       }
     } finally {
       // Restore original styles

@@ -34,7 +34,7 @@ function AdminPdfImportPage() {
 
       <PdfImportPanel info={infoQuery.data} isLoading={infoQuery.isLoading} />
 
-      <div className="rounded-lg border bg-background p-4">
+      <div className="bg-background rounded-lg border p-4">
         <h2 className="text-lg font-semibold">Upload batch</h2>
         <p className="text-muted-foreground text-sm">
           Provide the PDF and metadata required to trigger the ingestion job.
@@ -45,7 +45,9 @@ function AdminPdfImportPage() {
               await uploadMutation.mutateAsync(values)
             }}
             isSubmitting={uploadMutation.isPending}
-            errorMessage={uploadMutation.error instanceof Error ? uploadMutation.error.message : null}
+            errorMessage={
+              uploadMutation.error instanceof Error ? uploadMutation.error.message : null
+            }
           />
         </div>
       </div>

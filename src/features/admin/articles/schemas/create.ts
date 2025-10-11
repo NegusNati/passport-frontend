@@ -52,17 +52,19 @@ export const AdminArticleCreateSchema = AdminArticleBaseSchema.superRefine((data
   }
 })
 
-export const AdminArticleUpdateSchema = AdminArticleBaseSchema.partial().superRefine((data, ctx) => {
-  if (!data.status) return
-  const requiresPublishDate = data.status === 'published' || data.status === 'scheduled'
-  if (requiresPublishDate && data.published_at === undefined) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
-      path: ['published_at'],
-      message: 'Provide a publish date when publishing or scheduling an article',
-    })
-  }
-})
+export const AdminArticleUpdateSchema = AdminArticleBaseSchema.partial().superRefine(
+  (data, ctx) => {
+    if (!data.status) return
+    const requiresPublishDate = data.status === 'published' || data.status === 'scheduled'
+    if (requiresPublishDate && data.published_at === undefined) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ['published_at'],
+        message: 'Provide a publish date when publishing or scheduling an article',
+      })
+    }
+  },
+)
 
 export type AdminArticleCreateInput = z.infer<typeof AdminArticleCreateSchema>
 export type AdminArticleUpdateInput = z.infer<typeof AdminArticleUpdateSchema>

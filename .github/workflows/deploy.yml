@@ -11,7 +11,7 @@ jobs:
   deploy:
     name: Deploy Frontend to Server
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,30 +25,30 @@ jobs:
           port: ${{ secrets.DEPLOY_PORT || 22 }}
           script: |
             set -e
-            
+
             cd /opt/passport/passport-frontend
-            
+
             # Step 1: Pull the latest code
             echo "📥 Pulling latest code..."
             git fetch --all
             git reset --hard origin/${{ github.ref_name }}
-            
+
             # Step 2: Build new frontend image without removing old container yet
             echo "🔨 Building new frontend image..."
             docker compose build --no-cache passport-frontend
-            
+
             # Step 3: Pull latest images for other services (no rebuild needed)
             echo "📦 Pulling latest images for supporting services..."
             docker compose pull umami nginx-proxy-manager
-            
+
             # Step 4: Scale frontend to 2 instances for zero downtime
             echo "⚡ Starting new frontend instance alongside old one..."
             docker compose up -d --scale passport-frontend=2 --no-recreate
-            
+
             # Wait for new container to be healthy
             echo "⏳ Waiting for new container to become healthy..."
             sleep 15
-            
+
             # Step 5: Check if new container is healthy
             if docker ps --filter "name=passport-frontend" --filter "health=healthy" | grep -q passport-frontend; then
               echo "✅ New container is healthy, proceeding..."
@@ -56,19 +56,19 @@ jobs:
               echo "⚠️  New container health check not available, waiting additional time..."
               sleep 10
             fi
-            
+
             # Step 6: Scale back to 1 (removes old container, keeps new one)
             echo "♻️  Removing old container, keeping new one..."
             docker compose up -d --scale passport-frontend=1 --remove-orphans
-            
+
             # Step 7: Ensure all services are up (NPM, Umami)
             echo "🔄 Ensuring all services are running..."
             docker compose up -d
-            
+
             # Step 8: Clean up unused images and containers
             echo "🧹 Cleaning up old images..."
             docker image prune -f
-            
+
             # Step 9: Show final status
             echo "✅ Deployment complete!"
             echo ""

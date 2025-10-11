@@ -5,6 +5,7 @@ Guide to integrate the Passport frontend with your existing Laravel backend usin
 ## Current Setup
 
 You have:
+
 - **Laravel backend** running on port 80/443 (laraveldockerprod)
 - **Passport frontend** trying to start with NPM on port 80/443 (conflict!)
 
@@ -80,7 +81,7 @@ services:
       - redis
     networks:
       - laravel
-      - passport-web  # Add this line
+      - passport-web # Add this line
     # Add a container name for easy reference
     container_name: laravel-nginx
 
@@ -199,13 +200,14 @@ nginx-proxy-manager:
   container_name: nginx-proxy-manager
   restart: unless-stopped
   ports:
-    - '8080:80'    # NPM HTTP on 8080
-    - '8443:443'   # NPM HTTPS on 8443
-    - '81:81'      # Admin UI
+    - '8080:80' # NPM HTTP on 8080
+    - '8443:443' # NPM HTTPS on 8443
+    - '81:81' # Admin UI
   # ... rest unchanged
 ```
 
 Then access:
+
 - **NPM Admin:** `http://SERVER_IP:81`
 - **Frontend:** `http://SERVER_IP:8080` or `https://SERVER_IP:8443`
 - **Backend:** `http://SERVER_IP:80` (as before)

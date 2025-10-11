@@ -5,18 +5,37 @@ export const UsersSearchSchema = z
     page: z.coerce.number().int().min(1).default(1),
     page_size: z.coerce.number().int().min(1).max(200).default(20),
     // accept both `q` and `search` from the URL; unify to `search`
-    q: z.string().trim().optional().nullable().transform((val) => (val ? val : undefined)),
-    search: z.string().trim().optional().nullable().transform((val) => (val ? val : undefined)),
-    role: z.string().trim().optional().nullable().transform((val) => (val ? val : undefined)),
+    q: z
+      .string()
+      .trim()
+      .optional()
+      .nullable()
+      .transform((val) => (val ? val : undefined)),
+    search: z
+      .string()
+      .trim()
+      .optional()
+      .nullable()
+      .transform((val) => (val ? val : undefined)),
+    role: z
+      .string()
+      .trim()
+      .optional()
+      .nullable()
+      .transform((val) => (val ? val : undefined)),
     // admin + email_verified flags
     is_admin: z
       .union([z.boolean(), z.string()])
       .optional()
-      .transform((v) => (typeof v === 'string' ? (v === 'true' ? true : v === 'false' ? false : undefined) : v)),
+      .transform((v) =>
+        typeof v === 'string' ? (v === 'true' ? true : v === 'false' ? false : undefined) : v,
+      ),
     email_verified: z
       .union([z.boolean(), z.string()])
       .optional()
-      .transform((v) => (typeof v === 'string' ? (v === 'true' ? true : v === 'false' ? false : undefined) : v)),
+      .transform((v) =>
+        typeof v === 'string' ? (v === 'true' ? true : v === 'false' ? false : undefined) : v,
+      ),
   })
   .transform((value) => ({
     page: value.page,

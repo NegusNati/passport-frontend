@@ -153,7 +153,7 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
                   </Link>
                 )
               })}
-              <div className="flex items-center gap-3 ">
+              <div className="flex items-center gap-3">
                 <ThemeToggle className="h-10 w-20" />
               </div>
             </nav>

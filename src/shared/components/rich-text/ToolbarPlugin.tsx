@@ -1,5 +1,11 @@
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link'
-import { $isListNode, INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND, ListNode, REMOVE_LIST_COMMAND } from '@lexical/list'
+import {
+  $isListNode,
+  INSERT_ORDERED_LIST_COMMAND,
+  INSERT_UNORDERED_LIST_COMMAND,
+  ListNode,
+  REMOVE_LIST_COMMAND,
+} from '@lexical/list'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { $createHeadingNode, $createQuoteNode, $isHeadingNode } from '@lexical/rich-text'
 import { $setBlocksType } from '@lexical/selection'
@@ -16,7 +22,22 @@ import {
   type TextFormatType,
   UNDO_COMMAND,
 } from 'lexical'
-import { Bold, Code, Heading1, Heading2, Heading3, Image as ImageIcon, Italic, Link as LinkIcon, List, ListOrdered, Quote, Strikethrough, Underline, Video as VideoIcon } from 'lucide-react'
+import {
+  Bold,
+  Code,
+  Heading1,
+  Heading2,
+  Heading3,
+  Image as ImageIcon,
+  Italic,
+  Link as LinkIcon,
+  List,
+  ListOrdered,
+  Quote,
+  Strikethrough,
+  Underline,
+  Video as VideoIcon,
+} from 'lucide-react'
 import { useCallback, useEffect, useState } from 'react'
 
 import { INSERT_IMAGE_COMMAND, INSERT_VIDEO_COMMAND } from './ImagesPlugin'
@@ -24,7 +45,7 @@ import { INSERT_IMAGE_COMMAND, INSERT_VIDEO_COMMAND } from './ImagesPlugin'
 const LowPriority = 1
 
 function Divider() {
-  return <div className="mx-1 h-6 w-px bg-border" />
+  return <div className="bg-border mx-1 h-6 w-px" />
 }
 
 type BlockType = 'paragraph' | 'h1' | 'h2' | 'h3' | 'bullet' | 'number' | 'quote'
@@ -191,8 +212,9 @@ export function ToolbarPlugin() {
       if (!file) return
 
       try {
-        const { fileToDataURL, getImageDimensions, isValidImageFile, isValidFileSize } = await import('@/shared/lib/media-upload')
-        
+        const { fileToDataURL, getImageDimensions, isValidImageFile, isValidFileSize } =
+          await import('@/shared/lib/media-upload')
+
         if (!isValidImageFile(file)) {
           alert('Please select a valid image file (JPEG, PNG, GIF, or WebP)')
           return
@@ -208,7 +230,7 @@ export function ToolbarPlugin() {
           fileToDataURL(file),
           getImageDimensions(file).catch(() => ({ width: undefined, height: undefined })),
         ])
-        
+
         // Insert image with data URL
         const altText = file.name.replace(/\.[^/.]+$/, '') // Remove extension
         editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
@@ -234,8 +256,9 @@ export function ToolbarPlugin() {
       if (!file) return
 
       try {
-        const { fileToDataURL, getVideoDimensions, isValidVideoFile, isValidFileSize } = await import('@/shared/lib/media-upload')
-        
+        const { fileToDataURL, getVideoDimensions, isValidVideoFile, isValidFileSize } =
+          await import('@/shared/lib/media-upload')
+
         if (!isValidVideoFile(file)) {
           alert('Please select a valid video file (MP4, WebM, or OGG)')
           return
@@ -251,7 +274,7 @@ export function ToolbarPlugin() {
           fileToDataURL(file),
           getVideoDimensions(file).catch(() => ({ width: undefined, height: undefined })),
         ])
-        
+
         // Insert video with data URL
         editor.dispatchCommand(INSERT_VIDEO_COMMAND, {
           src: dataURL,
@@ -267,14 +290,14 @@ export function ToolbarPlugin() {
   }, [editor])
 
   return (
-    <div className="flex flex-wrap items-center gap-1 border-b border-border bg-muted/30 p-2">
+    <div className="border-border bg-muted/30 flex flex-wrap items-center gap-1 border-b p-2">
       <button
         type="button"
         disabled={!canUndo}
         onClick={() => {
           editor.dispatchCommand(UNDO_COMMAND, undefined)
         }}
-        className="rounded p-2 hover:bg-muted disabled:opacity-30"
+        className="hover:bg-muted rounded p-2 disabled:opacity-30"
         aria-label="Undo"
       >
         <svg
@@ -298,7 +321,7 @@ export function ToolbarPlugin() {
         onClick={() => {
           editor.dispatchCommand(REDO_COMMAND, undefined)
         }}
-        className="rounded p-2 hover:bg-muted disabled:opacity-30"
+        className="hover:bg-muted rounded p-2 disabled:opacity-30"
         aria-label="Redo"
       >
         <svg
@@ -322,7 +345,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={() => formatText('bold')}
-        className={`rounded p-2 hover:bg-muted ${isBold ? 'bg-muted' : ''}`}
+        className={`hover:bg-muted rounded p-2 ${isBold ? 'bg-muted' : ''}`}
         aria-label="Format Bold"
       >
         <Bold className="h-4 w-4" />
@@ -330,7 +353,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={() => formatText('italic')}
-        className={`rounded p-2 hover:bg-muted ${isItalic ? 'bg-muted' : ''}`}
+        className={`hover:bg-muted rounded p-2 ${isItalic ? 'bg-muted' : ''}`}
         aria-label="Format Italic"
       >
         <Italic className="h-4 w-4" />
@@ -338,7 +361,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={() => formatText('underline')}
-        className={`rounded p-2 hover:bg-muted ${isUnderline ? 'bg-muted' : ''}`}
+        className={`hover:bg-muted rounded p-2 ${isUnderline ? 'bg-muted' : ''}`}
         aria-label="Format Underline"
       >
         <Underline className="h-4 w-4" />
@@ -346,7 +369,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={() => formatText('strikethrough')}
-        className={`rounded p-2 hover:bg-muted ${isStrikethrough ? 'bg-muted' : ''}`}
+        className={`hover:bg-muted rounded p-2 ${isStrikethrough ? 'bg-muted' : ''}`}
         aria-label="Format Strikethrough"
       >
         <Strikethrough className="h-4 w-4" />
@@ -354,7 +377,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={() => formatText('code')}
-        className={`rounded p-2 hover:bg-muted ${isCode ? 'bg-muted' : ''}`}
+        className={`hover:bg-muted rounded p-2 ${isCode ? 'bg-muted' : ''}`}
         aria-label="Format Code"
       >
         <Code className="h-4 w-4" />
@@ -365,7 +388,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={() => formatHeading('h1')}
-        className={`rounded p-2 hover:bg-muted ${blockType === 'h1' ? 'bg-muted' : ''}`}
+        className={`hover:bg-muted rounded p-2 ${blockType === 'h1' ? 'bg-muted' : ''}`}
         aria-label="Heading 1"
       >
         <Heading1 className="h-4 w-4" />
@@ -373,7 +396,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={() => formatHeading('h2')}
-        className={`rounded p-2 hover:bg-muted ${blockType === 'h2' ? 'bg-muted' : ''}`}
+        className={`hover:bg-muted rounded p-2 ${blockType === 'h2' ? 'bg-muted' : ''}`}
         aria-label="Heading 2"
       >
         <Heading2 className="h-4 w-4" />
@@ -381,7 +404,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={() => formatHeading('h3')}
-        className={`rounded p-2 hover:bg-muted ${blockType === 'h3' ? 'bg-muted' : ''}`}
+        className={`hover:bg-muted rounded p-2 ${blockType === 'h3' ? 'bg-muted' : ''}`}
         aria-label="Heading 3"
       >
         <Heading3 className="h-4 w-4" />
@@ -392,7 +415,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={formatBulletList}
-        className={`rounded p-2 hover:bg-muted ${blockType === 'bullet' ? 'bg-muted' : ''}`}
+        className={`hover:bg-muted rounded p-2 ${blockType === 'bullet' ? 'bg-muted' : ''}`}
         aria-label="Bullet List"
       >
         <List className="h-4 w-4" />
@@ -400,7 +423,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={formatNumberedList}
-        className={`rounded p-2 hover:bg-muted ${blockType === 'number' ? 'bg-muted' : ''}`}
+        className={`hover:bg-muted rounded p-2 ${blockType === 'number' ? 'bg-muted' : ''}`}
         aria-label="Numbered List"
       >
         <ListOrdered className="h-4 w-4" />
@@ -408,7 +431,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={formatQuote}
-        className={`rounded p-2 hover:bg-muted ${blockType === 'quote' ? 'bg-muted' : ''}`}
+        className={`hover:bg-muted rounded p-2 ${blockType === 'quote' ? 'bg-muted' : ''}`}
         aria-label="Quote"
       >
         <Quote className="h-4 w-4" />
@@ -419,7 +442,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={insertLink}
-        className={`rounded p-2 hover:bg-muted ${isLink ? 'bg-muted' : ''}`}
+        className={`hover:bg-muted rounded p-2 ${isLink ? 'bg-muted' : ''}`}
         aria-label={isLink ? 'Remove Link' : 'Insert Link'}
       >
         <LinkIcon className="h-4 w-4" />
@@ -427,7 +450,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={insertImage}
-        className="rounded p-2 hover:bg-muted"
+        className="hover:bg-muted rounded p-2"
         aria-label="Insert Image"
       >
         <ImageIcon className="h-4 w-4" />
@@ -435,7 +458,7 @@ export function ToolbarPlugin() {
       <button
         type="button"
         onClick={insertVideo}
-        className="rounded p-2 hover:bg-muted"
+        className="hover:bg-muted rounded p-2"
         aria-label="Insert Video"
       >
         <VideoIcon className="h-4 w-4" />

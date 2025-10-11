@@ -47,7 +47,12 @@ export function ProfilePage({ initialUser, onSignedOut }: ProfilePageProps) {
 
   return (
     <main className="container mx-auto max-w-3xl space-y-8 p-4">
-      <Seo title="My profile" description="Manage your account and subscription." path="/profile" noindex />
+      <Seo
+        title="My profile"
+        description="Manage your account and subscription."
+        path="/profile"
+        noindex
+      />
       <header className="space-y-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -60,7 +65,7 @@ export function ProfilePage({ initialUser, onSignedOut }: ProfilePageProps) {
             <Link
               to="/admin"
               preload="intent"
-              className="inline-flex h-9 items-center justify-center gap-2 rounded-md border border-input bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+              className="border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground inline-flex h-9 items-center justify-center gap-2 rounded-md border px-3 text-sm font-medium transition-colors"
             >
               Go to dashboard
             </Link>
@@ -68,10 +73,10 @@ export function ProfilePage({ initialUser, onSignedOut }: ProfilePageProps) {
         </div>
       </header>
 
-      <section className="grid gap-6 rounded-lg border bg-card p-6 shadow-sm">
+      <section className="bg-card grid gap-6 rounded-lg border p-6 shadow-sm">
         <div className="grid gap-1">
           <h2 className="text-lg font-semibold">Personal details</h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             Information pulled directly from your account record.
           </p>
         </div>
@@ -137,12 +142,12 @@ export function ProfilePage({ initialUser, onSignedOut }: ProfilePageProps) {
         </dl>
       </section>
 
-      <section className="flex flex-col gap-4 rounded-lg border border-destructive/40 bg-destructive/5 p-6">
+      <section className="border-destructive/40 bg-destructive/5 flex flex-col gap-4 rounded-lg border p-6">
         <div className="flex items-start gap-3">
-          <BadgeInfo className="mt-0.5 h-5 w-5 text-destructive" aria-hidden="true" />
+          <BadgeInfo className="text-destructive mt-0.5 h-5 w-5" aria-hidden="true" />
           <div className="space-y-1">
             <h2 className="text-base font-semibold">Sign out on shared devices</h2>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Logging out revokes this device&apos;s personal access token immediately.
             </p>
           </div>
@@ -154,17 +159,21 @@ export function ProfilePage({ initialUser, onSignedOut }: ProfilePageProps) {
             onClick={() => logoutMutation.mutate()}
             disabled={logoutMutation.isPending}
           >
-          
-            {logoutMutation.isPending ? 'Signing out…' : <div className='flex flex-row items-center gap-2 '>  <LogOut className="h-4 w-4" aria-hidden="true" /> Sign out </div>}
+            {logoutMutation.isPending ? (
+              'Signing out…'
+            ) : (
+              <div className="flex flex-row items-center gap-2">
+                {' '}
+                <LogOut className="h-4 w-4" aria-hidden="true" /> Sign out{' '}
+              </div>
+            )}
           </Button>
           {logoutMutation.isError ? (
-            <p className="text-sm text-destructive">
-              Could not sign you out. Please try again.
-            </p>
+            <p className="text-destructive text-sm">Could not sign you out. Please try again.</p>
           ) : null}
         </div>
         {hasUploadPermission && !(isAdmin || isEditor) ? (
-          <p className="text-xs text-muted-foreground">
+          <p className="text-muted-foreground text-xs">
             You can upload passport PDFs from the{' '}
             <Link to="/admin/pdf-import" preload="intent" className="underline">
               PDF import dashboard
@@ -176,5 +185,3 @@ export function ProfilePage({ initialUser, onSignedOut }: ProfilePageProps) {
     </main>
   )
 }
-
-

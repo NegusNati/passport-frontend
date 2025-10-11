@@ -7,9 +7,7 @@ interface AdvertisementRequestSuccessProps {
   onSubmitAnother: () => void
 }
 
-export function AdvertisementRequestSuccess({
-  onSubmitAnother,
-}: AdvertisementRequestSuccessProps) {
+export function AdvertisementRequestSuccess({ onSubmitAnother }: AdvertisementRequestSuccessProps) {
   return (
     <div className="flex flex-col items-center justify-center space-y-6 py-6 text-center">
       <div className="bg-primary/10 text-primary rounded-full p-5">
@@ -37,20 +35,20 @@ export function AdvertisementRequestSuccess({
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary mt-0.5">•</span>
-            <span>We will discuss your advertising needs and provide you with available options</span>
+            <span>
+              We will discuss your advertising needs and provide you with available options
+            </span>
           </li>
         </ul>
       </div>
 
       <div className="mt-6 flex gap-2">
-      <Button onClick={onSubmitAnother} variant="outline" className="rounded-full px-6">
-        Submit Another Request
-      </Button>
-      <Button  className="rounded-full px-6 bg-primary">
-        <Link to="/" >
-          Go Home
-        </Link>
-      </Button>
+        <Button onClick={onSubmitAnother} variant="outline" className="rounded-full px-6">
+          Submit Another Request
+        </Button>
+        <Button className="bg-primary rounded-full px-6">
+          <Link to="/">Go Home</Link>
+        </Button>
       </div>
     </div>
   )
