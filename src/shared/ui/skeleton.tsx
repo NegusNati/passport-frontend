@@ -22,34 +22,131 @@ export function Skeleton({ className = '', width, height, ...props }: SkeletonPr
 
 export function ArticleCardSkeleton() {
   return (
-    <div className="border-border bg-card text-card-foreground rounded-xl border p-4 shadow-sm sm:p-6">
-      {/* Image skeleton */}
-      <Skeleton className="mb-4 h-48 w-full rounded-lg" />
+    <div className="border-border bg-card rounded-xl border overflow-hidden shadow-sm">
+      {/* Image skeleton - takes 60% height */}
+      <Skeleton className="h-48 w-full" />
 
-      {/* Title skeleton */}
-      <Skeleton className="mb-2 h-6 w-full" />
-      <Skeleton className="mb-3 h-6 w-3/4" />
+      {/* Content section - takes 40% height */}
+      <div className="p-4 space-y-3">
+        {/* Date skeleton */}
+        <Skeleton className="h-4 w-24" />
 
-      {/* Excerpt skeleton */}
-      <Skeleton className="mb-2 h-4 w-full" />
-      <Skeleton className="mb-3 h-4 w-5/6" />
+        {/* Title skeleton */}
+        <div className="space-y-2">
+          <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-3/4" />
+        </div>
 
-      {/* Author and date skeleton */}
-      <div className="flex items-center justify-between">
-        <Skeleton className="h-4 w-20" />
-        <Skeleton className="h-4 w-16" />
+        {/* Excerpt skeleton */}
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-5/6" />
+        </div>
       </div>
     </div>
   )
 }
 
-export function ArticleGridSkeleton({ count = 6 }: { count?: number }) {
+export function ArticleGridSkeleton({ count = 8 }: { count?: number }) {
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {Array.from({ length: count }).map((_, i) => (
         <ArticleCardSkeleton key={i} />
       ))}
     </div>
+  )
+}
+
+export function RelatedArticleCardSkeleton() {
+  return (
+    <div className="border-border bg-card rounded-xl border overflow-hidden shadow-sm">
+      {/* Image skeleton */}
+      <Skeleton className="aspect-16/9 w-full" />
+
+      {/* Content section */}
+      <div className="p-4 space-y-3">
+        {/* Date skeleton */}
+        <Skeleton className="h-4 w-24" />
+
+        {/* Title skeleton */}
+        <div className="space-y-2">
+          <Skeleton className="h-5 w-full" />
+          <Skeleton className="h-5 w-2/3" />
+        </div>
+
+        {/* Excerpt skeleton */}
+        <div className="space-y-2">
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-4/5" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function ArticleDetailSkeleton() {
+  return (
+    <section className="py-10 sm:py-16">
+      <div className="container mx-auto px-4">
+        <div className="mx-auto max-w-4xl space-y-8">
+          {/* Navigation Bar skeleton */}
+          <div className="flex items-center justify-between">
+            <Skeleton className="h-9 w-24" />
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-9 w-9 rounded-full" />
+              <Skeleton className="h-9 w-9 rounded-full" />
+            </div>
+          </div>
+
+          {/* Title and Subtitle skeleton */}
+          <div className="space-y-4 text-center">
+            <div className="space-y-3">
+              <Skeleton className="mx-auto h-12 w-full max-w-3xl" />
+              <Skeleton className="mx-auto h-12 w-5/6 max-w-2xl" />
+            </div>
+            <Skeleton className="mx-auto h-6 w-full max-w-2xl" />
+          </div>
+
+          {/* Author Section skeleton */}
+          <div className="flex items-center justify-center gap-3">
+            <Skeleton className="h-14 w-14 rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="h-4 w-40" />
+            </div>
+          </div>
+
+          {/* Featured Image skeleton */}
+          <Skeleton className="h-80 w-full rounded-2xl" />
+
+          {/* Article Content skeleton */}
+          <div className="space-y-4">
+            <Skeleton className="h-6 w-3/4" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-5/6" />
+            <div className="pt-4" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-4/5" />
+            <div className="pt-4" />
+            <Skeleton className="h-6 w-2/3" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
+
+          {/* Related Articles skeleton */}
+          <div className="space-y-6">
+            <Skeleton className="h-8 w-48" />
+            <div className="grid gap-6 sm:grid-cols-2">
+              <RelatedArticleCardSkeleton />
+              <RelatedArticleCardSkeleton />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }
 

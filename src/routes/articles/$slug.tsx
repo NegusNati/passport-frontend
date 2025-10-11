@@ -10,6 +10,7 @@ import AdSlot from '@/shared/ui/ad-slot'
 import { Card, CardContent, CardHeader } from '@/shared/ui/card'
 import { Container } from '@/shared/ui/container'
 import { Seo } from '@/shared/ui/Seo'
+import { ArticleDetailSkeleton, RelatedArticleCardSkeleton } from '@/shared/ui/skeleton'
 
 export const Route = createFileRoute('/articles/$slug')({
   component: ArticleDetail,
@@ -118,8 +119,7 @@ function ArticleBody({
     handleCopyLink()
   }, [article?.title, article?.excerpt, handleCopyLink])
 
-  if (isLoading)
-    return <div className="text-muted-foreground container mx-auto p-6 text-sm">Loading…</div>
+  if (isLoading) return <ArticleDetailSkeleton />
   if (isError || !article)
     return (
       <div className="container mx-auto p-6 text-center">
@@ -223,7 +223,13 @@ function ArticleBody({
 
             {/* Related Articles */}
             {relatedIsLoading ? (
-              <p className="text-muted-foreground text-sm">Loading similar articles…</p>
+              <div className="space-y-6">
+                <h2 className="text-foreground text-xl font-semibold">Others like this</h2>
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <RelatedArticleCardSkeleton />
+                  <RelatedArticleCardSkeleton />
+                </div>
+              </div>
             ) : relatedArticles.length ? (
               <div className="space-y-6">
                 <h2 className="text-foreground text-xl font-semibold">Others like this</h2>
@@ -234,6 +240,27 @@ function ArticleBody({
                 </div>
               </div>
             ) : null}
+
+            <div className="lg:hidden">
+              <AdSlot
+                orientation="horizontal"
+                preset="sponsored"
+                className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
+              />
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
           </div>
           <aside className="hidden md:sticky md:top-24 md:block">
             <AdSlot
@@ -242,6 +269,13 @@ function ArticleBody({
               className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
             />
           </aside>
+          <div className="hidden lg:block">
+            <AdSlot
+              orientation="vertical"
+              preset="sponsored"
+              className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
+            />
+          </div>
         </div>
       </Container>
     </section>
