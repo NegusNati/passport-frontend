@@ -6,13 +6,15 @@
     "dev": "vite --port 3000",
     "start": "vite --port 3000",
     "build": "vite build && tsc",
+    "postbuild": "tsx scripts/generate-sitemap.ts",
     "serve": "vite preview",
     "test": "vitest run",
     "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --cache --write .",
     "format:check": "prettier --check .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "generate:sitemap": "tsx scripts/generate-sitemap.ts"
   },
   "dependencies": {
     "@lexical/code": "^0.36.2",
@@ -81,6 +83,7 @@
     "jsdom": "^26.0.0",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
+    "tsx": "^4.20.6",
     "typescript": "^5.7.2",
     "vite": "^6.3.5",
     "vitest": "^3.0.5",

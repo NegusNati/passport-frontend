@@ -1,3 +1,136 @@
-# https://www.robotstxt.org/robotstxt.html
+# Robots.txt - Open to All Search Engines & AI Bots
+# Website: https://passport.et
+# Updated: 2024
+
+# ==============================================
+# ALLOW ALL BOTS - WELCOME ALL CRAWLERS
+# ==============================================
+
+# Default: Allow all robots
 User-agent: *
-Disallow:
+Allow: /
+Crawl-delay: 1
+
+# ==============================================
+# MAJOR SEARCH ENGINE BOTS (Explicitly Listed)
+# ==============================================
+
+# Google
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Googlebot-News
+User-agent: Googlebot-Video
+Allow: /
+
+# Bing
+User-agent: Bingbot
+User-agent: BingPreview
+Allow: /
+
+# Yahoo
+User-agent: Slurp
+Allow: /
+
+# DuckDuckGo
+User-agent: DuckDuckBot
+Allow: /
+
+# Baidu (China)
+User-agent: Baiduspider
+Allow: /
+
+# Yandex (Russia)
+User-agent: Yandex
+User-agent: YandexBot
+Allow: /
+
+# ==============================================
+# AI & LLM CRAWLERS (Training & Research)
+# ==============================================
+
+# OpenAI (ChatGPT, GPT-4)
+User-agent: GPTBot
+User-agent: ChatGPT-User
+Allow: /
+
+# Anthropic (Claude)
+User-agent: Claude-Web
+User-agent: ClaudeBot
+Allow: /
+
+# Google AI (Bard, Gemini)
+User-agent: Google-Extended
+Allow: /
+
+# Common Crawl (Open dataset)
+User-agent: CCBot
+Allow: /
+
+# Perplexity AI
+User-agent: PerplexityBot
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# Facebook/Meta AI
+User-agent: FacebookBot
+User-agent: facebookexternalhit
+Allow: /
+
+# ==============================================
+# SOCIAL MEDIA & PREVIEW BOTS
+# ==============================================
+
+# Twitter/X
+User-agent: Twitterbot
+Allow: /
+
+# LinkedIn
+User-agent: LinkedInBot
+Allow: /
+
+# Pinterest
+User-agent: Pinterestbot
+Allow: /
+
+# Telegram
+User-agent: TelegramBot
+Allow: /
+
+# Slack
+User-agent: Slackbot
+User-agent: Slackbot-LinkExpanding
+Allow: /
+
+# WhatsApp
+User-agent: WhatsApp
+Allow: /
+
+# Discord
+User-agent: Discordbot
+Allow: /
+
+# ==============================================
+# SEO & ANALYTICS TOOLS
+# ==============================================
+
+# Ahrefs
+User-agent: AhrefsBot
+Allow: /
+
+# SEMrush
+User-agent: SemrushBot
+Allow: /
+
+# Moz
+User-agent: rogerbot
+User-agent: dotbot
+Allow: /
+
+# ==============================================
+# SITEMAP LOCATION
+# ==============================================
+
+Sitemap: https://passport.et/sitemap.xml
