@@ -10,20 +10,19 @@ import { Button } from '@/shared/ui/button'
 
 const HERO_CARDS = [
   {
-    title: 'Real-time updates',
-    description:
-      'Track readiness without repeated trips. Status changes appear as soon as they’re available.',
+    title: 'Passport Search',
+    description: 'Use your reference number or full name with intelligent matching. from 1.2 million passports',
     image: LandingImageOne,
-    alt: 'Illustration representing real-time passport updates',
-  },
-  {
-    title: 'Simple search',
-    description: 'Use your reference number or full name with intelligent matching.',
-    image: LandingImageTwo,
     alt: 'Illustration showing a person searching on a phone',
   },
   {
-    title: 'Community tips',
+    title: 'Get Detailed Answer',
+    description: 'when to pick up the passport, location, time, ...',
+    image: LandingImageTwo,
+    alt: 'Collage of community members sharing travel tips',
+  },
+  {
+    title: 'Get Detailed',
     description: 'Join the Telegram group to learn from others’ experiences.',
     image: LandingImageOne,
     alt: 'Collage of community members sharing travel tips',
@@ -66,7 +65,7 @@ function renderHeroCard(
 export function Hero() {
   const reduce = useReducedMotion()
   return (
-    <section className="relative isolate overflow-hidden  ">
+    <section className="relative isolate overflow-hidden ">
       {/* Container to constrain width and center content */}
       <div className="container max-w-7xl px-4 md:px-6">
         {/* Two-column layout on md+; single column on mobile */}

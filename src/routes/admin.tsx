@@ -1,3 +1,4 @@
+import type { QueryClient } from '@tanstack/react-query'
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
 import { queryClient } from '@/api/queryClient'
@@ -9,6 +10,7 @@ import type { User } from '@/features/auth/schemas/user'
 declare module '@tanstack/react-router' {
   interface Register {
     context: {
+      queryClient: QueryClient
       adminUser?: User
       adminRole?: AdminPrimaryRole
     }
@@ -49,5 +51,4 @@ function AdminLayout() {
     </AdminShell>
   )
 }
-
 
