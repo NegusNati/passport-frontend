@@ -10,6 +10,7 @@ import {
 } from '@/features/articles/lib/ArticlesQuery'
 import type { ArticleApiItem } from '@/features/articles/lib/ArticlesSchema'
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
+import AdSlot from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardHeader } from '@/shared/ui/card'
 import { Container } from '@/shared/ui/container'
@@ -116,13 +117,23 @@ export function ArticlesPage() {
         extraLinks={getFeedLinks()}
       />
 
-      <div className="absolute bottom-[60rem] left-0 z-[-100] ml-2 translate-y-1/4 transform opacity-60 md:opacity-90">
+   
+
+      <div className="absolute bottom-[40rem] left-0 z-[-100] ml-2 translate-y-1/4 transform opacity-70 md:opacity-90">
         <img src={ethiopic_numbers} alt="logo" className="h-150 w-150" />
       </div>
 
       {/* Search Section */}
-      <section className="py-12">
+      <section className="py-2">
+    
         <Container>
+        <div className=" my-4  ">
+        <AdSlot
+          orientation="vertical"
+          preset="sponsored"
+          className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
+        />
+      </div>
           <h1 className="mb-4 text-4xl font-bold tracking-tight">Search for Articles</h1>
           <div className="flex flex-col justify-between gap-8 md:flex-row md:gap-20">
             <div className="flex flex-1 flex-row gap-2">
