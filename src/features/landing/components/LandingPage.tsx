@@ -12,7 +12,7 @@ export function LandingPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-4 overflow-x-hidden">
       {/* Hero band with gradient surface */}
-      <div className="relative h-[80svh] overflow-hidden overscroll-none pb-0 md:pb-[120px] lg:pb-[80px]">
+      <div className="relative h-[100svh] overflow-hidden overscroll-none pb-0 md:pb-[120px] lg:pb-[80px]">
         <Hero />
       </div>
 
