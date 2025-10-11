@@ -61,7 +61,7 @@ export function ArticlePagination({
     >
       {/* Previous button */}
       <Button
-        variant="outline"
+        variant={hasPrevPage ? 'primary' : 'outline'}
         size="sm"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={!hasPrevPage}
@@ -100,7 +100,7 @@ export function ArticlePagination({
 
       {/* Next button */}
       <Button
-        variant="outline"
+        variant={hasNextPage ? 'primary' : 'outline'}
         size="sm"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={!hasNextPage}

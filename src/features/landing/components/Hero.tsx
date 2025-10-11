@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRightIcon, IdCardIcon, Users2Icon } from 'lucide-react'
 
-import CardSwap, { Card } from '@/shared/components/common/CardSwap'
+import { AnimatedBorderCard, Card,CardSwap } from '@/shared/components/common'
 import { M } from '@/shared/lib/motion'
 import { Button } from '@/shared/ui/button'
 
@@ -22,19 +22,21 @@ export function Hero() {
             className="space-y-6 md:ml-6 md:mt-18"
           >
              {/* Stats row */}
-             <div className="flex flex-wrap  items-center gap-2">
-              <span className="bg-white/70 text-primary inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium">
-                <Users2Icon className="text-primary h-4 w-4" /> Over 1.5 million users
-              </span>
-              <span className="bg-white/70 text-primary inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium">
-                <IdCardIcon className="text-primary h-4 w-4" /> 1,278,980+ passports confirmed as issued
-              </span>
+             <div className="flex flex-wrap items-center gap-3">
+              <AnimatedBorderCard variant="primary" size="sm">
+                <Users2Icon className="text-primary h-4 w-4" /> 
+                Over 1.5 million users
+              </AnimatedBorderCard>
+              <AnimatedBorderCard variant="secondary" size="sm">
+                <IdCardIcon className="text-primary h-4 w-4" /> 
+                1,278,980+ passports confirmed as issued
+              </AnimatedBorderCard>
             </div>
 
             <h1 className="text-foreground max-w-[30ch] text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
               Tired of endless uncertainty? Instantly know if your Ethiopian passport is ready.
             </h1>
-            <p className="text-muted-foreground max-w-[52ch] text-base leading-relaxed">
+            <p className="text-muted-foreground dark:text-white/70 max-w-[52ch] text-base leading-relaxed">
               Search with your reference number or name and get real-time updates—no more repeated
               trips to the office.
             </p>
@@ -62,7 +64,7 @@ export function Hero() {
            
                 {/* CTA (kept centered by the grid wrapper) */}
                 <Button size="lg"   className="relative z-[1] py-5 rounded-full bg-transparent  ">
-                  <Link to="/passports" className="inline-flex items-center font-semibold bg-transparent text-primary-foreground">
+                  <Link to="/passports" className="inline-flex items-center font-semibold bg-transparent text-white">
                     Check My Passport Status
                     <ArrowRightIcon className="ml-2 h-4 w-4" aria-hidden />
                   </Link>

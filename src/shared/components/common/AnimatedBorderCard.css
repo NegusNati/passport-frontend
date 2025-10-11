@@ -1,0 +1,184 @@
+/* Modern CSS @property declarations for smooth animation control */
+@property --gradient-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@property --glow-opacity {
+  syntax: '<number>';
+  initial-value: 0.5;
+  inherits: false;
+}
+
+@property --border-width {
+  syntax: '<length>';
+  initial-value: 2px;
+  inherits: false;
+}
+
+/* Base animated border card styles */
+.animated-border-card {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animated border using conic gradient */
+.animated-border-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: var(--border-width, 2px);
+  background: conic-gradient(
+    from var(--gradient-angle, 0deg),
+    hsl(var(--primary) / 0.8),
+    hsl(var(--primary) / 0.4),
+    hsl(var(--primary) / 0.8),
+    hsl(var(--primary) / 0.2),
+    hsl(var(--primary) / 0.8)
+  );
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  animation: rotate-gradient var(--animation-duration, 3s) linear infinite;
+  opacity: var(--glow-opacity, 0.5);
+}
+
+/* Glow effect using pseudo-element */
+.animated-border-card::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  padding: var(--border-width, 2px);
+  background: conic-gradient(
+    from var(--gradient-angle, 0deg),
+    hsl(var(--primary) / 0.6),
+    hsl(var(--primary) / 0.3),
+    hsl(var(--primary) / 0.6),
+    hsl(var(--primary) / 0.1),
+    hsl(var(--primary) / 0.6)
+  );
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  filter: blur(8px);
+  opacity: 0.3;
+  animation: rotate-gradient var(--animation-duration, 3s) linear infinite;
+  z-index: -1;
+}
+
+/* Hover effects */
+.animated-border-card:hover::before {
+  --glow-opacity: 0.8;
+  --border-width: 3px;
+  filter: brightness(1.2);
+}
+
+.animated-border-card:hover::after {
+  filter: blur(12px);
+  opacity: 0.5;
+}
+
+/* Animation keyframes */
+@keyframes rotate-gradient {
+  0% {
+    --gradient-angle: 0deg;
+  }
+  100% {
+    --gradient-angle: 360deg;
+  }
+}
+
+/* Variant-specific styles */
+.animated-border-card.border-primary\/50::before {
+  background: conic-gradient(
+    from var(--gradient-angle, 0deg),
+    hsl(var(--primary) / 0.8),
+    hsl(var(--primary) / 0.4),
+    hsl(var(--primary) / 0.8),
+    hsl(var(--primary) / 0.2),
+    hsl(var(--primary) / 0.8)
+  );
+}
+
+.animated-border-card.border-primary\/50::after {
+  background: conic-gradient(
+    from var(--gradient-angle, 0deg),
+    hsl(var(--primary) / 0.6),
+    hsl(var(--primary) / 0.3),
+    hsl(var(--primary) / 0.6),
+    hsl(var(--primary) / 0.1),
+    hsl(var(--primary) / 0.6)
+  );
+}
+
+.animated-border-card.border-blue-500\/50::before {
+  background: conic-gradient(
+    from var(--gradient-angle, 0deg),
+    #3b82f6,
+    #1d4ed8,
+    #3b82f6,
+    #1e40af,
+    #3b82f6
+  );
+}
+
+.animated-border-card.border-blue-500\/50::after {
+  background: conic-gradient(
+    from var(--gradient-angle, 0deg),
+    #3b82f6,
+    #1d4ed8,
+    #3b82f6,
+    #1e40af,
+    #3b82f6
+  );
+}
+
+.animated-border-card.border-purple-500\/50::before {
+  background: conic-gradient(
+    from var(--gradient-angle, 0deg),
+    #8b5cf6,
+    #7c3aed,
+    #8b5cf6,
+    #6d28d9,
+    #8b5cf6
+  );
+}
+
+.animated-border-card.border-purple-500\/50::after {
+  background: conic-gradient(
+    from var(--gradient-angle, 0deg),
+    #8b5cf6,
+    #7c3aed,
+    #8b5cf6,
+    #6d28d9,
+    #8b5cf6
+  );
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .animated-border-card::before,
+  .animated-border-card::after {
+    animation: none;
+    --gradient-angle: 0deg;
+  }
+  
+  .animated-border-card:hover::before,
+  .animated-border-card:hover::after {
+    --glow-opacity: 0.5;
+    --border-width: 2px;
+    filter: none;
+  }
+}
+
+/* Ensure content is above the animated border */
+.animated-border-card > * {
+  position: relative;
+  z-index: 1;
+}

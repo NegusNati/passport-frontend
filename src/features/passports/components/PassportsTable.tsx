@@ -240,9 +240,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
               <span>
                 Showing {from} to {to} of {total} entries
               </span>
-            ) : (
-              <span>No entries</span>
-            )}
+            ): <></>}
           </div>
         </div>
       </Container>

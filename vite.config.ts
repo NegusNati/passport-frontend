@@ -10,15 +10,12 @@ export default defineConfig({
     port: 3000,
     host: true,
     proxy: {
-      // Forward all /api/* calls to app.localhost in dev to avoid CORS
-      // '/api': {
-      //   target: 'http://app.localhost',
-      //   changeOrigin: true,
-      //   secure: false,
-      // },
-
+      // Use app.localhost for API in dev, api.passport.et in prod
       '/api': {
-        target: 'http://api.passport.et',
+        target:
+          process.env.NODE_ENV === 'production'
+            ? 'http://api.passport.et'
+            : 'http://app.localhost',
         changeOrigin: true,
         secure: false,
       },
