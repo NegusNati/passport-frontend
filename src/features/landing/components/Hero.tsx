@@ -2,9 +2,66 @@ import { Link } from '@tanstack/react-router'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRightIcon, IdCardIcon, Users2Icon } from 'lucide-react'
 
+import LandingImageOne from '@/assets/landingImages/cardImages/Landing_img_1.png'
+import LandingImageTwo from '@/assets/landingImages/cardImages/Landing_img_2.png'
 import { AnimatedBorderCard, Card, CardSwap } from '@/shared/components/common'
 import { M } from '@/shared/lib/motion'
 import { Button } from '@/shared/ui/button'
+
+const HERO_CARDS = [
+  {
+    title: 'Real-time updates',
+    description:
+      'Track readiness without repeated trips. Status changes appear as soon as they’re available.',
+    image: LandingImageOne,
+    alt: 'Illustration representing real-time passport updates',
+  },
+  {
+    title: 'Simple search',
+    description: 'Use your reference number or full name with intelligent matching.',
+    image: LandingImageTwo,
+    alt: 'Illustration showing a person searching on a phone',
+  },
+  {
+    title: 'Community tips',
+    description: 'Join the Telegram group to learn from others’ experiences.',
+    image: LandingImageOne,
+    alt: 'Collage of community members sharing travel tips',
+  },
+] as const
+
+function renderHeroCard(
+  variant: 'desktop' | 'mobile',
+  card: (typeof HERO_CARDS)[number],
+) {
+  const padding = variant === 'desktop' ? 'p-8' : 'p-6'
+  const headingSize = variant === 'desktop' ? 'text-xl' : 'text-lg'
+  const descriptionSpacing = variant === 'desktop' ? 'mt-3' : 'mt-2'
+
+  return (
+    <Card
+      key={`${variant}-${card.title}`}
+      customClass="pointer-events-auto overflow-hidden border-0 bg-transparent  p-0"
+    >
+      <div className="relative h-full w-full">
+        <img
+          src={card.image}
+          alt={card.alt}
+          className="h-full w-full object-cover"
+          loading="lazy"
+          decoding="async"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/5 to-transparent" />
+        <div className={`absolute inset-x-0 bottom-0 space-y-2 ${padding}`}>
+          <h3 className={`${headingSize} font-semibold tracking-tight text-white`}>{card.title}</h3>
+          <p className={`text-sm leading-relaxed text-white/80 ${descriptionSpacing}`}>
+            {card.description}
+          </p>
+        </div>
+      </div>
+    </Card>
+  )
+}
 
 export function Hero() {
   const reduce = useReducedMotion()
@@ -97,20 +154,7 @@ export function Hero() {
                 delay={5000}
                 pauseOnHover={false}
               >
-                <Card customClass="pointer-events-auto border-border/60 bg-card/80 text-card-foreground shadow-sm p-8">
-                  <h3 className="text-xl font-semibold tracking-tight">Real-time updates</h3>
-                  <p className="text-muted-foreground mt-3 text-sm">
-                    Track readiness without repeated trips. Status changes appear as soon as they’re available.
-                  </p>
-                </Card>
-                <Card customClass="pointer-events-auto border-border/60 bg-card/80 text-card-foreground shadow-sm p-8">
-                  <h3 className="text-xl font-semibold tracking-tight">Simple search</h3>
-                  <p className="text-muted-foreground mt-3 text-sm">Use your reference number or full name with intelligent matching.</p>
-                </Card>
-                <Card customClass="pointer-events-auto border-border/60 bg-card/80 text-card-foreground shadow-sm p-8">
-                  <h3 className="text-xl font-semibold tracking-tight">Community tips</h3>
-                  <p className="text-muted-foreground mt-3 text-sm">Join the Telegram group to learn from others’ experiences.</p>
-                </Card>
+                {HERO_CARDS.map((card) => renderHeroCard('desktop', card))}
               </CardSwap>
             </div>
           </div>
@@ -129,20 +173,7 @@ export function Hero() {
             delay={5000}
             pauseOnHover={true}
           >
-            <Card customClass="border-border/60 bg-card/80 text-card-foreground shadow-sm p-6">
-              <h3 className="text-lg font-semibold tracking-tight">Real-time updates</h3>
-              <p className="text-muted-foreground mt-2 text-sm">
-                Track readiness without repeated trips. Status changes appear as soon as they’re available.
-              </p>
-            </Card>
-            <Card customClass="border-border/60 bg-card/80 text-card-foreground shadow-sm p-6">
-              <h3 className="text-lg font-semibold tracking-tight">Simple search</h3>
-              <p className="text-muted-foreground mt-2 text-sm">Use your reference number or full name with intelligent matching.</p>
-            </Card>
-            <Card customClass="border-border/60 bg-card/80 text-card-foreground shadow-sm p-6">
-              <h3 className="text-lg font-semibold tracking-tight">Community tips</h3>
-              <p className="text-muted-foreground mt-2 text-sm">Join the Telegram group to learn from others’ experiences.</p>
-            </Card>
+            {HERO_CARDS.map((card) => renderHeroCard('mobile', card))}
           </CardSwap>
         </div>
       </div>

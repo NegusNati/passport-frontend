@@ -1,6 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
 import * as React from 'react'
 
+import HabeshaFace from "@/assets/landingImages/habesha_face.svg"
 import { usePassportQuery } from '@/features/passports/lib/PassportsQuery'
 import type { PassportApiItem } from '@/features/passports/lib/PassportsSchema'
 import type { Passport } from '@/features/passports/schemas/passport'
@@ -129,7 +130,9 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
   return (
     <div className="min-h-screen">
       <PassportDetailCard passport={uiPassport} onCheckAnother={handleCheckAnother} />
-
+      <div className="absolute left-[-10rem] top-[15rem] opacity-90  z-[-110]  ml-2 ">
+        <img src={HabeshaFace} alt="Habesha Face" className="h-150 w-150 " />
+      </div>
       <section className="py-8">
         <div className="container mx-auto max-w-6xl px-4">
           <AdSlot preset="sponsored" orientation="horizontal" className="rounded-lg" />
