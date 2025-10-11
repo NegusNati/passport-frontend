@@ -25,6 +25,7 @@ const routes: RouteConfig[] = [
   // High priority pages
   { path: '/', priority: '1.0', changefreq: 'daily' },
   { path: '/articles', priority: '0.9', changefreq: 'daily' },
+  { path: '/passports', priority: '0.9', changefreq: 'daily' },
   { path: '/calendar', priority: '0.8', changefreq: 'weekly' },
 
   // Medium priority
