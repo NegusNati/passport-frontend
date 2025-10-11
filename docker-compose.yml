@@ -35,7 +35,6 @@ services:
         VITE_SITE_URL: ${VITE_SITE_URL:-https://passport.et}
         VITE_SITE_NAME: ${VITE_SITE_NAME:-Passport}
         VITE_HORIZON_URL: ${VITE_HORIZON_URL:-}
-    container_name: passport-frontend
     restart: unless-stopped
     networks:
       - web
