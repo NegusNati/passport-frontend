@@ -8,24 +8,24 @@ import { Container } from '@/shared/ui/container'
 const TABS = [
   {
     key: 'check',
-    label: 'How to Check Passport',
-    youtubeLink: 'https://youtu.be/bLhnw4hYZZU?si=JxYxrbj3-_y5xLy_',
+    label: 'የኢትዮጵያ ፓስፖርትን ለመያዝ የደረጃ በደረጃ መመሪያ',
+    youtubeLink: 'https://www.youtube.com/watch?v=tXIbgqvX3xg',
   },
   {
     key: 'apply',
-    label: 'How to Apply for Passport',
-    youtubeLink: 'https://youtu.be/0tnp8F5xx9Q',
+    label: 'Ethiopian Passport 2025 Guide',
+    youtubeLink: 'https://www.youtube.com/watch?v=kIaZsZ8Z8mI',
   },
-  {
-    key: 'renew',
-    label: 'How to Renew Passport',
-    youtubeLink: 'https://youtu.be/76YxXwvDtX0',
-  },
-  {
-    key: 'urgent',
-    label: 'How to Apply for Urgent Passport',
-    youtubeLink: 'https://youtu.be/bLhnw4hYZZU?si=JxYxrbj3-_y5xLy_',
-  },
+  // {
+  //   key: 'renew',
+  //   label: 'How to Renew Passport',
+  //   youtubeLink: 'https://youtu.be/76YxXwvDtX0',
+  // },
+  // {
+  //   key: 'urgent',
+  //   label: 'How to Apply for Urgent Passport',
+  //   youtubeLink: 'https://youtu.be/bLhnw4hYZZU?si=JxYxrbj3-_y5xLy_',
+  // },
 ] as const
 
 function toEmbedUrl(url?: string) {
