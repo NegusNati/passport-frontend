@@ -80,6 +80,9 @@ services:
       HASH_SALT: ${UMAMI_HASH_SALT:?UMAMI_HASH_SALT is required}
       DATABASE_TYPE: postgresql
       DISABLE_TELEMETRY: 'true'
+      # Fix for duplicate session key errors
+      IGNORE_IP: 127.0.0.1,::1
+      CLIENT_IP_HEADER: X-Forwarded-For
     networks:
       - web
       - internal

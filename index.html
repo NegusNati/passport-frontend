@@ -12,11 +12,20 @@
       data-cf-beacon='{"token":"a9bcb1d97b42448789842972c3848ebc"}'
     ></script>
 
-    <script
-      defer
-      src="https://analytics.passport.et/script.js"
-      data-website-id="75af1a4c-09a3-4397-adaa-f75f56dd81fd"
-    ></script>
+    <!-- Umami Analytics (only in production) -->
+    <script>
+      // Only load Umami in production to avoid dev hot-reload duplicate sessions
+      if (
+        window.location.hostname === 'passport.et' ||
+        window.location.hostname === 'www.passport.et'
+      ) {
+        var script = document.createElement('script')
+        script.defer = true
+        script.src = 'https://analytics.passport.et/script.js'
+        script.setAttribute('data-website-id', '75af1a4c-09a3-4397-adaa-f75f56dd81fd')
+        document.head.appendChild(script)
+      }
+    </script>
 
     <title>
       Urgent &amp; Regular Ethiopian Passport Services | Quick Status Check | ፈጣን እና መደበኛ ፓስፖርት |
