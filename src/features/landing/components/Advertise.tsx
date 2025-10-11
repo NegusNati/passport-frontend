@@ -2,7 +2,7 @@ import { ArrowRight } from 'lucide-react'
 
 import AmharicLetters from '@/assets/landingImages/amharic_letters.svg'
 import AmharicCallander from '@/assets/landingImages/AmharicCallander.svg'
-import LookingGuyImage from '@/assets/landingImages/looking_guy.png'
+import LookingGuyImage from '@/assets/landingImages/dude.png'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
 
@@ -59,13 +59,14 @@ export function AdvertiseSection() {
                 return (
                   <div
                     key={card.key}
-                    className="bg-primary/10 flex items-center justify-center rounded-md border border-primary px-0 py-4 "
+                    className="bg-primary/10 flex items-center justify-center rounded-md border border-primary px-0 py-4 overflow-hidden"
                   >
                     <img
                       src={card.image as string}
                       alt={card.imageAlt as string}
-                      className="h-full w-full max-w-[260px] scale-115 object-fill translate-y-2"
+                      className="h-auto w-full max-w-[260px] scale-115 object-fill translate-y-12"
                       loading="lazy"
+                      style={{ maxHeight: '180px', width: '100%', objectFit: 'cover' }}
                     />
                   </div>
                 )
