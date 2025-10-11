@@ -33,9 +33,10 @@ function truncate(text: string | null | undefined, maxLength = 120): string {
 }
 
 export function ArticleSection() {
-  const { data, isLoading, isError } = useLandingArticlesQuery()
+  const { data, isLoading, isError, isFetching } = useLandingArticlesQuery()
   const articles: LandingArticleItem[] = data?.data ?? []
-  const showArticles = !isLoading && !isError && articles.length > 0
+  const isPending = isLoading || (isFetching && articles.length === 0)
+  const isEmpty = !isPending && !isError && articles.length === 0
 
   return (
     <section id="blogs" className="py-14 sm:py-16">
@@ -49,7 +50,7 @@ export function ArticleSection() {
           </div>
         </div>
 
-        {isLoading && (
+        {isPending && (
           <div className="m-0 flex gap-6 overflow-x-auto p-1 sm:grid sm:grid-cols-2 sm:overflow-x-visible sm:p-0 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <Card
@@ -70,7 +71,7 @@ export function ArticleSection() {
           </div>
         )}
 
-        {showArticles && (
+        {!isPending && !isError && articles.length > 0 && (
           <div
             className="scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent m-0 flex gap-6 overflow-x-auto p-1 sm:grid sm:grid-cols-2 sm:overflow-x-visible sm:p-0 lg:grid-cols-3"
             aria-label="Articles"
@@ -113,6 +114,18 @@ export function ArticleSection() {
                 </Link>
               )
             })}
+          </div>
+        )}
+
+        {(isError || isEmpty) && (
+          <div
+            role="status"
+            aria-live="polite"
+            className="border-border bg-card text-muted-foreground mt-6 rounded-sm border border-dashed p-6 text-center text-sm"
+          >
+            {isError
+              ? 'We’re having trouble loading the latest articles. Please try again shortly.'
+              : 'New articles are on the way. Check back soon for the latest updates.'}
           </div>
         )}
 

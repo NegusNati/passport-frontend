@@ -150,4 +150,78 @@ export function ArticleDetailSkeleton() {
   )
 }
 
+export function PassportDetailSkeleton() {
+  return (
+    <section className="relative overflow-hidden py-12 md:py-16">
+      <div className="container relative z-10 mx-auto">
+        <div className="mx-auto max-w-4xl">
+          {/* Passport Card skeleton */}
+          <div className="relative overflow-hidden rounded-lg border-2 border-primary p-8 shadow-2xl backdrop-blur-md md:p-12">
+            {/* Header skeleton */}
+            <div className="relative z-10 mb-8 space-y-2 text-center">
+              <Skeleton className="mx-auto h-7 w-3/4 md:h-8" />
+              <Skeleton className="mx-auto h-6 w-2/3 md:h-7" />
+            </div>
+
+            {/* Personal Info skeleton */}
+            <div className="relative z-10 space-y-6">
+              <div className="space-y-4">
+                {/* Surname */}
+                <div>
+                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className="mt-1 h-6 w-48" />
+                </div>
+
+                {/* Given Name */}
+                <div>
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="mt-1 h-6 w-56" />
+                </div>
+
+                {/* Location */}
+                <div>
+                  <Skeleton className="h-4 w-16" />
+                  <Skeleton className="mt-1 h-6 w-40" />
+                </div>
+              </div>
+
+              {/* Date and Time Info skeleton */}
+              <div className="flex flex-wrap items-start gap-x-8 gap-y-4 pt-2">
+                <div>
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="mt-1 h-5 w-28" />
+                </div>
+
+                <div>
+                  <Skeleton className="h-4 w-28" />
+                  <Skeleton className="mt-1 h-5 w-24" />
+                </div>
+
+                <div>
+                  <Skeleton className="h-4 w-20" />
+                  <Skeleton className="mt-1 h-5 w-28" />
+                </div>
+              </div>
+
+              {/* Barcode skeleton */}
+              <div className="flex flex-col items-center pt-6">
+                <Skeleton className="h-24 w-64" />
+              </div>
+              <div className="flex flex-col items-center gap-3">
+                <Skeleton className="h-5 w-40" />
+              </div>
+            </div>
+          </div>
+
+          {/* Action buttons skeleton */}
+          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Skeleton className="h-11 w-full sm:w-32" />
+            <Skeleton className="h-11 w-full sm:w-56" />
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default Skeleton
