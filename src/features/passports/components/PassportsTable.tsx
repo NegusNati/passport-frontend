@@ -57,7 +57,8 @@ const DEFAULT_PAGINATION: PaginationState = {
   pageSize: 10,
 }
 
-export function PassportsTable({ searchFilters = {}, searchMode }: PassportsTableProps) {
+export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTableProps>(
+  ({ searchFilters = {}, searchMode }, ref) => {
   const router = useRouter()
   const [filters, setFilters] = React.useState<PassportFilters>({ date: 'all', city: 'all' })
   const [pagination, setPagination] = React.useState<PaginationState>(DEFAULT_PAGINATION)
@@ -210,7 +211,7 @@ export function PassportsTable({ searchFilters = {}, searchMode }: PassportsTabl
   )
 
   return (
-    <section className=" py-12">
+    <section ref={ref} className=" py-12">
       <Container>
         <div className="space-y-6">
           <div className="rounded-lg border bg-transparent p-6 shadow-sm">
@@ -247,7 +248,9 @@ export function PassportsTable({ searchFilters = {}, searchMode }: PassportsTabl
       </Container>
     </section>
   )
-}
+})
+
+PassportsTable.displayName = 'PassportsTable'
 
 function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) {
   const {

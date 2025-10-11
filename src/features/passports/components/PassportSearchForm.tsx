@@ -1,5 +1,6 @@
 import { useForm } from '@tanstack/react-form'
 import { useRouter } from '@tanstack/react-router'
+import { Loader2 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
@@ -22,9 +23,10 @@ type SearchMode = 'number' | 'name'
 interface PassportSearchFormProps {
   onSearch: (filters: PassportSearchFilters, mode: SearchMode) => void
   onQueryChange?: (filters: PassportSearchFilters, mode: SearchMode) => void
+  onScrollToResults?: () => void
 }
 
-export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFormProps) {
+export function PassportSearchForm({ onSearch, onQueryChange, onScrollToResults }: PassportSearchFormProps) {
   const router = useRouter()
   const [searchMode, setSearchMode] = useState<SearchMode>('number')
   // Local inputs for debounced interactive search
@@ -32,6 +34,7 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
   const [firstInput, setFirstInput] = useState('')
   const [middleInput, setMiddleInput] = useState('')
   const [lastInput, setLastInput] = useState('')
+  const [isDebouncing, setIsDebouncing] = useState(false)
 
   const debouncedNumber = useDebouncedValue(numberInput, 300)
   const nameQueryRaw = useMemo(
@@ -39,6 +42,26 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
     [firstInput, middleInput, lastInput],
   )
   const debouncedName = useDebouncedValue(nameQueryRaw, 300)
+
+  // Track debouncing state for number search
+  useEffect(() => {
+    if (searchMode === 'number' && numberInput.length >= 3) {
+      setIsDebouncing(true)
+      const timer = setTimeout(() => setIsDebouncing(false), 300)
+      return () => clearTimeout(timer)
+    }
+    setIsDebouncing(false)
+  }, [numberInput, searchMode])
+
+  // Track debouncing state for name search
+  useEffect(() => {
+    if (searchMode === 'name' && nameQueryRaw.length >= 3) {
+      setIsDebouncing(true)
+      const timer = setTimeout(() => setIsDebouncing(false), 300)
+      return () => clearTimeout(timer)
+    }
+    setIsDebouncing(false)
+  }, [nameQueryRaw, searchMode])
 
   const sanitizeRequestNumber = (value: string) =>
     value
@@ -91,6 +114,7 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
         } else {
           // Use existing search functionality for partial matches
           onSearch({ request_number: sanitized }, 'number')
+          onScrollToResults?.()
         }
       } catch (error) {
         console.error('Validation error:', error)
@@ -133,6 +157,7 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
             validatedData.lastName ?? '',
           )
           onSearch(filters, 'name')
+          onScrollToResults?.()
         }
       } catch (error) {
         console.error('Validation error:', error)
@@ -218,7 +243,14 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
                           Check Passport
                         </Button>
                       </div>
-                      <p className="text-muted-foreground text-xs">Type at least 3 characters to search</p>
+                      {isDebouncing ? (
+                        <div className="text-muted-foreground flex items-center gap-2 text-xs">
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                          <span>Searching...</span>
+                        </div>
+                      ) : (
+                        <p className="text-muted-foreground text-xs">Type at least 3 characters to search</p>
+                      )}
                     </div>
                   )}
                 </numberForm.Field>
@@ -300,7 +332,14 @@ export function PassportSearchForm({ onSearch, onQueryChange }: PassportSearchFo
                 <Button type="submit" className="bg-foreground hover:bg-foreground/90 w-full">
                   Check Passport
                 </Button>
-                <p className="text-muted-foreground text-xs">Type at least 3 characters in any name field to search</p>
+                {isDebouncing ? (
+                  <div className="text-muted-foreground flex items-center justify-center gap-2 text-xs">
+                    <Loader2 className="h-3 w-3 animate-spin" />
+                    <span>Searching...</span>
+                  </div>
+                ) : (
+                  <p className="text-muted-foreground text-xs">Type at least 3 characters in any name field to search</p>
+                )}
               </form>
             )}
 

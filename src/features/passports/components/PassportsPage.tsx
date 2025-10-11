@@ -9,6 +9,7 @@ type SearchMode = 'number' | 'name'
 export function PassportsPage() {
   const [searchMode, setSearchMode] = React.useState<SearchMode>('number')
   const [searchFilters, setSearchFilters] = React.useState<PassportSearchFilters>({})
+  const tableRef = React.useRef<HTMLDivElement>(null)
 
   const isSameFilters = React.useCallback(
     (a: PassportSearchFilters, b: PassportSearchFilters) => {
@@ -22,6 +23,10 @@ export function PassportsPage() {
     },
     [],
   )
+
+  const scrollToResults = React.useCallback(() => {
+    tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [])
 
   const updateFilters = React.useCallback(
     (filters: PassportSearchFilters, mode: SearchMode) => {
@@ -43,12 +48,13 @@ export function PassportsPage() {
       <PassportSearchForm
         onSearch={updateFilters}
         onQueryChange={updateFilters}
+        onScrollToResults={scrollToResults}
       />
 
     
 
       {/* Passports Table Section */}
-      <PassportsTable searchFilters={searchFilters} searchMode={searchMode} />
+      <PassportsTable ref={tableRef} searchFilters={searchFilters} searchMode={searchMode} />
     </div>
   )
 }
