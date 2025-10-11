@@ -1,7 +1,11 @@
 import { motion } from 'framer-motion'
 import { GithubIcon, InstagramIcon, LinkedinIcon, MegaphoneIcon, TwitterIcon } from 'lucide-react'
+import { useState } from 'react'
+
+import { ComingSoonDialog } from '@/shared/ui/coming-soon-dialog'
 
 const Footer = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const services = [
     { name: 'Advertisement', href: '/advertisement-requests' },
     { name: 'Passport Check', href: '/passports' },
@@ -151,23 +155,26 @@ const Footer = () => {
             </motion.p>
 
             <div className="flex space-x-6">
-              <motion.a
-                href="#"
+              <motion.button
+                type="button"
+                onClick={() => setIsDialogOpen(true)}
                 className="text-muted-foreground hover:text-foreground hover:border-foreground border-b border-transparent text-sm transition-colors duration-300"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
                 Terms & Conditions
-              </motion.a>
-              <motion.a
-                href="#"
+              </motion.button>
+              <motion.button
+                type="button"
+                onClick={() => setIsDialogOpen(true)}
                 className="text-muted-foreground hover:text-foreground hover:border-foreground border-b border-transparent text-sm transition-colors duration-300"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
                 Privacy Policy
-              </motion.a>
+              </motion.button>
             </div>
+              <ComingSoonDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
           </div>
         </motion.div>
       </div>
