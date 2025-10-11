@@ -40,17 +40,17 @@ function renderHeroCard(
   return (
     <Card
       key={`${variant}-${card.title}`}
-      customClass="pointer-events-auto overflow-hidden border-0 bg-transparent  p-0"
+      customClass="pointer-events-auto overflow-hidden border-0 bg-transparent rounded-xl p-0"
     >
       <div className="relative h-full w-full">
         <img
           src={card.image}
           alt={card.alt}
-          className="h-full w-full object-cover"
+          className="h-full w-full object-fill rounded-2xl"
           loading="lazy"
           decoding="async"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/40 via-primary/5 to-transparent" />
         <div className={`absolute inset-x-0 bottom-0 space-y-2 ${padding}`}>
           <h3 className={`${headingSize} font-semibold tracking-tight text-white`}>{card.title}</h3>
           <p className={`text-sm leading-relaxed text-white/80 ${descriptionSpacing}`}>
