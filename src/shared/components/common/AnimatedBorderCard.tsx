@@ -25,8 +25,8 @@ export function AnimatedBorderCard({
 
   const variantClasses = {
     primary: 'border-primary/50',
-    secondary: 'border-blue-500/50',
-    accent: 'border-purple-500/50',
+    secondary: 'border-accent/90',
+    accent: 'border-amber-500/50',
   }
 
   return (
@@ -37,7 +37,7 @@ export function AnimatedBorderCard({
       className={`animated-border-card text-primary relative inline-flex items-center gap-2 rounded-lg bg-white/70 dark:bg-white/80 ${sizeClasses[size]} font-medium ${variantClasses[variant]} ${className} `}
       style={
         {
-          '--animation-duration': reduce ? '0s' : '3s',
+          '--animation-duration': reduce ? '0s' : '2s',
           '--animation-delay': '0s',
         } as React.CSSProperties
       }
