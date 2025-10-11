@@ -1,9 +1,10 @@
 import * as React from 'react'
 
+import HabeshaFace from "@/assets/landingImages/habesha_face.svg"
+
 import type { PassportSearchFilters } from '../schemas/passport'
 import { PassportSearchForm } from './PassportSearchForm'
 import { PassportsTable } from './PassportsTable'
-
 type SearchMode = 'number' | 'name'
 
 export function PassportsPage() {
@@ -38,8 +39,8 @@ export function PassportsPage() {
 
   return (
     <div className="min-h-screen">
-        {/* Ad Banner Section */}
-        {/* <section className="bg-background py-8">
+      {/* Ad Banner Section */}
+      {/* <section className="bg-background py-8">
         <div className="container mx-auto max-w-6xl px-4">
           <AdSlot preset="sponsored" orientation="horizontal" />
         </div>
@@ -51,7 +52,11 @@ export function PassportsPage() {
         onScrollToResults={scrollToResults}
       />
 
-    
+      <div className="absolute left-[-10rem] top-[15rem] opacity-90  z-[-110]  ml-2 ">
+        <img src={HabeshaFace} alt="Habesha Face" className="h-150 w-150 " />
+      </div>
+
+
 
       {/* Passports Table Section */}
       <PassportsTable ref={tableRef} searchFilters={searchFilters} searchMode={searchMode} />

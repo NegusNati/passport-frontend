@@ -123,7 +123,7 @@ export function ArticlesPage() {
         extraLinks={getFeedLinks()}
       />
 
-        <div className="absolute left-0 bottom-[60rem] transform translate-y-1/4 z-[-100] opacity-60 md:opacity-90 ml-2 ">
+      <div className="absolute left-0 bottom-[60rem] transform translate-y-1/4 z-[-100] opacity-60 md:opacity-90 ml-2 ">
         <img src={ethiopic_numbers} alt="logo" className="h-150 w-150 " />
       </div>
 
@@ -133,67 +133,67 @@ export function ArticlesPage() {
           <h1 className="mb-4 text-4xl font-bold tracking-tight">Search for Articles</h1>
           <div className="flex flex-col gap-8 md:gap-20 md:flex-row justify-between">
             <div className="flex-1 flex flex-row gap-2">
-            {/* Search Input */}
-            <div className="relative flex-1  ">
-              <Input
-                placeholder="Enter blog title"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                className="h-11"
-              />
-              {isSearching && (
-                <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                  <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
-                </div>
-              )}
-            </div>
+              {/* Search Input */}
+              <div className="relative flex-1  ">
+                <Input
+                  placeholder="Enter blog title"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  className="h-11"
+                />
+                {isSearching && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <Loader2 className="text-muted-foreground h-4 w-4 animate-spin" />
+                  </div>
+                )}
+              </div>
 
-            {/* Search Button */}
-            <Button
-              onClick={handleSearch}
-              variant="primary"
-              size="lg"
-              className="md:w-auto"
-            >
-              Search 
-            </Button>
+              {/* Search Button */}
+              <Button
+                onClick={handleSearch}
+                variant="primary"
+                size="lg"
+                className="md:w-auto"
+              >
+                Search
+              </Button>
 
             </div>
             <div className="flex-1 flex flex-row gap-2">
-            {/* Filter By Label */}
-            <span className="text-muted-foreground hidden text-sm md:inline-block self-center">Filter by</span>
+              {/* Filter By Label */}
+              <span className="text-muted-foreground hidden text-sm md:inline-block self-center">Filter by</span>
 
-            {/* Category Filter */}
-            <Select value={filters.category} onValueChange={handleCategoryChange}>
-              <SelectTrigger className="h-11 w-full md:w-48">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                {(categories.data?.data ?? []).map((c) => (
-                  <SelectItem key={c.slug} value={c.slug}>
-                    {c.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Tags Filter */}
-            <Select value={filters.tag} onValueChange={handleTagChange}>
-              <SelectTrigger className="h-11 w-full md:w-48">
-                <SelectValue placeholder="Tags" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Tags</SelectItem>
-                {(tags.data?.data ?? []).map((t) => (
-                  <SelectItem key={t.slug} value={t.slug}>
-                    {t.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
+              {/* Category Filter */}
+              <Select value={filters.category} onValueChange={handleCategoryChange}>
+                <SelectTrigger className="h-11 w-full md:w-48">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {(categories.data?.data ?? []).map((c) => (
+                    <SelectItem key={c.slug} value={c.slug}>
+                      {c.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
               </Select>
-              </div>
+
+              {/* Tags Filter */}
+              <Select value={filters.tag} onValueChange={handleTagChange}>
+                <SelectTrigger className="h-11 w-full md:w-48">
+                  <SelectValue placeholder="Tags" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Tags</SelectItem>
+                  {(tags.data?.data ?? []).map((t) => (
+                    <SelectItem key={t.slug} value={t.slug}>
+                      {t.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </Container>
       </section>

@@ -196,8 +196,8 @@ export function PassportSearchForm({ onSearch, onQueryChange, onScrollToResults 
   }, [debouncedName, firstInput, middleInput, lastInput, searchMode, onQueryChange, buildNameFilters])
 
   return (
-    <section className=" py-12 md:py-16">
-      <Container className='border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm' >
+    <section className=" py-12 md:py-16 mx-2">
+      <Container className='border-border/60 bg-transparent supports-[backdrop-filter]:bg-transparent backdrop-blur-lg rounded-2xl border p-6 shadow-sm ' >
         <div className="mx-auto max-w-2xl text-center">
           {/* Header */}
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">

@@ -214,7 +214,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
     <section ref={ref} className=" py-12">
       <Container>
         <div className="space-y-6">
-          <div className="rounded-lg border bg-transparent p-6 shadow-sm">
+          <div className="rounded-lg border bg-transparent/80 p-6 shadow-sm backdrop-blur">
             <DataTable
               key={tableKey}
               tableTitle="Latest Passports"
