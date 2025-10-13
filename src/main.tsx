@@ -5,10 +5,13 @@ import { createRouter, RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { HelmetProvider } from 'react-helmet-async'
+import { PostHogProvider } from 'posthog-js/react'
 
 import { restoreAuthTokenFromStorage } from '@/api/client'
 import { queryClient } from '@/api/queryClient'
 import { ThemeProvider } from '@/shared/components/theme-provider'
+import { env } from '@/shared/lib/env'
+import { initializeErrorTracking } from '@/shared/lib/error-tracking'
 
 import reportWebVitals from './reportWebVitals.ts'
 // Import the generated route tree
@@ -32,19 +35,32 @@ declare module '@tanstack/react-router' {
   }
 }
 
+// Initialize global error tracking
+initializeErrorTracking()
+
 // Render the app
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
   const root = createRoot(rootElement)
   root.render(
     <StrictMode>
-      <ThemeProvider>
-        <HelmetProvider>
-          <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-          </QueryClientProvider>
-        </HelmetProvider>
-      </ThemeProvider>
+      <PostHogProvider
+        apiKey={env.VITE_PUBLIC_POSTHOG_KEY}
+        options={{
+          api_host: env.VITE_PUBLIC_POSTHOG_HOST,
+          defaults: '2025-05-24',
+          capture_exceptions: true,
+          debug: import.meta.env.MODE === 'development',
+        }}
+      >
+        <ThemeProvider>
+          <HelmetProvider>
+            <QueryClientProvider client={queryClient}>
+              <RouterProvider router={router} />
+            </QueryClientProvider>
+          </HelmetProvider>
+        </ThemeProvider>
+      </PostHogProvider>
     </StrictMode>,
   )
 }

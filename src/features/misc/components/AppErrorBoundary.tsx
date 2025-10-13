@@ -2,6 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 
 import { Button } from '@/shared/ui/button'
+import analytics from '@/shared/lib/analytics'
 
 type AppErrorFallbackProps = {
   error: Error | null
@@ -92,10 +93,35 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
   }
 
   componentDidCatch(error: Error, info: ErrorInfo): void {
+    // Capture error in PostHog with deduplication via stack hash
+    const stackHash = this.generateStackHash(error)
+    const currentRoute = window.location.pathname
+
+    analytics.capture('frontend_error', {
+      type: error.name || 'Error',
+      message: error.message,
+      'stack-hash': stackHash,
+      route: currentRoute,
+      'component-stack': info.componentStack?.slice(0, 500) || '', // Truncate long stacks
+      'error-boundary': 'AppErrorBoundary',
+    })
+
     if (import.meta.env.DEV) {
       // eslint-disable-next-line no-console
       console.error('AppErrorBoundary caught an error', error, info)
     }
+  }
+
+  private generateStackHash(error: Error): string {
+    // Simple hash for deduplication - use first line of stack
+    const stackLine = error.stack?.split('\n')[1] || error.message
+    let hash = 0
+    for (let i = 0; i < stackLine.length; i++) {
+      const char = stackLine.charCodeAt(i)
+      hash = (hash << 5) - hash + char
+      hash = hash & hash // Convert to 32bit integer
+    }
+    return `err_${Math.abs(hash).toString(36)}`
   }
 
   resetErrorBoundary = () => {
