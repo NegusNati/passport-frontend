@@ -1,6 +1,6 @@
-import LandingImageOne from '@/assets/landingImages/cardImages/Landing_img_1.png'
-import LandingImageTwo from '@/assets/landingImages/cardImages/Landing_img_2.png'
-import LandingImageThree from '@/assets/landingImages/cardImages/Landing_img_3.png'
+import LandingImageOne from '@/assets/landingImages/cardImages/Landing_img_1.webp'
+import LandingImageTwo from '@/assets/landingImages/cardImages/Landing_img_2.webp'
+import LandingImageThree from '@/assets/landingImages/cardImages/Landing_img_3.webp'
 import { Card, CardSwap } from '@/shared/components/common'
 
 const HERO_CARDS = [

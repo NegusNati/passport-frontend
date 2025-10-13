@@ -5,7 +5,7 @@ import { getHighlightsForDay, getHighlightsForMonth } from 'negus-ethiopic-grego
 import * as React from 'react'
 
 import ethiopic_numbers_pattern from '@/assets/landingImages/ethiopiac_num_pattern.svg'
-import ethiopic_numbers from '@/assets/landingImages/number.png'
+import ethiopic_numbers from '@/assets/landingImages/number.webp'
 import { AdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'

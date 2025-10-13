@@ -18,9 +18,11 @@ import { Route as AdvertisementRequestsRouteImport } from './routes/advertisemen
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PassportsIndexRouteImport } from './routes/passports/index'
+import { Route as LocationsIndexRouteImport } from './routes/locations/index'
 import { Route as ArticlesIndexRouteImport } from './routes/articles/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as PassportsPassportIdRouteImport } from './routes/passports/$passportId'
+import { Route as LocationsLocationSlugRouteImport } from './routes/locations/$locationSlug'
 import { Route as ArticlesSlugRouteImport } from './routes/articles/$slug'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AdminPdfImportRouteImport } from './routes/admin/pdf-import'
@@ -85,6 +87,11 @@ const PassportsIndexRoute = PassportsIndexRouteImport.update({
   path: '/passports/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LocationsIndexRoute = LocationsIndexRouteImport.update({
+  id: '/locations/',
+  path: '/locations/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
   id: '/articles/',
   path: '/articles/',
@@ -98,6 +105,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const PassportsPassportIdRoute = PassportsPassportIdRouteImport.update({
   id: '/passports/$passportId',
   path: '/passports/$passportId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocationsLocationSlugRoute = LocationsLocationSlugRouteImport.update({
+  id: '/locations/$locationSlug',
+  path: '/locations/$locationSlug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ArticlesSlugRoute = ArticlesSlugRouteImport.update({
@@ -211,9 +223,11 @@ export interface FileRoutesByFullPath {
   '/admin/pdf-import': typeof AdminPdfImportRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/articles/$slug': typeof ArticlesSlugRoute
+  '/locations/$locationSlug': typeof LocationsLocationSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
   '/admin/': typeof AdminIndexRoute
   '/articles': typeof ArticlesIndexRoute
+  '/locations': typeof LocationsIndexRoute
   '/passports': typeof PassportsIndexRoute
   '/admin/advertisements/$id': typeof AdminAdvertisementsIdRoute
   '/admin/advertisements/new': typeof AdminAdvertisementsNewRoute
@@ -239,9 +253,11 @@ export interface FileRoutesByTo {
   '/admin/pdf-import': typeof AdminPdfImportRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/articles/$slug': typeof ArticlesSlugRoute
+  '/locations/$locationSlug': typeof LocationsLocationSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
   '/admin': typeof AdminIndexRoute
   '/articles': typeof ArticlesIndexRoute
+  '/locations': typeof LocationsIndexRoute
   '/passports': typeof PassportsIndexRoute
   '/admin/advertisements/$id': typeof AdminAdvertisementsIdRoute
   '/admin/advertisements/new': typeof AdminAdvertisementsNewRoute
@@ -272,9 +288,11 @@ export interface FileRoutesById {
   '/admin/pdf-import': typeof AdminPdfImportRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
   '/articles/$slug': typeof ArticlesSlugRoute
+  '/locations/$locationSlug': typeof LocationsLocationSlugRoute
   '/passports/$passportId': typeof PassportsPassportIdRoute
   '/admin/': typeof AdminIndexRoute
   '/articles/': typeof ArticlesIndexRoute
+  '/locations/': typeof LocationsIndexRoute
   '/passports/': typeof PassportsIndexRoute
   '/admin/advertisements/$id': typeof AdminAdvertisementsIdRoute
   '/admin/advertisements/new': typeof AdminAdvertisementsNewRoute
@@ -306,9 +324,11 @@ export interface FileRouteTypes {
     | '/admin/pdf-import'
     | '/admin/users'
     | '/articles/$slug'
+    | '/locations/$locationSlug'
     | '/passports/$passportId'
     | '/admin/'
     | '/articles'
+    | '/locations'
     | '/passports'
     | '/admin/advertisements/$id'
     | '/admin/advertisements/new'
@@ -334,9 +354,11 @@ export interface FileRouteTypes {
     | '/admin/pdf-import'
     | '/admin/users'
     | '/articles/$slug'
+    | '/locations/$locationSlug'
     | '/passports/$passportId'
     | '/admin'
     | '/articles'
+    | '/locations'
     | '/passports'
     | '/admin/advertisements/$id'
     | '/admin/advertisements/new'
@@ -366,9 +388,11 @@ export interface FileRouteTypes {
     | '/admin/pdf-import'
     | '/admin/users'
     | '/articles/$slug'
+    | '/locations/$locationSlug'
     | '/passports/$passportId'
     | '/admin/'
     | '/articles/'
+    | '/locations/'
     | '/passports/'
     | '/admin/advertisements/$id'
     | '/admin/advertisements/new'
@@ -393,8 +417,10 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   TestRoute: typeof TestRoute
   ArticlesSlugRoute: typeof ArticlesSlugRoute
+  LocationsLocationSlugRoute: typeof LocationsLocationSlugRoute
   PassportsPassportIdRoute: typeof PassportsPassportIdRoute
   ArticlesIndexRoute: typeof ArticlesIndexRoute
+  LocationsIndexRoute: typeof LocationsIndexRoute
   PassportsIndexRoute: typeof PassportsIndexRoute
 }
 
@@ -463,6 +489,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PassportsIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/locations/': {
+      id: '/locations/'
+      path: '/locations'
+      fullPath: '/locations'
+      preLoaderRoute: typeof LocationsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/articles/': {
       id: '/articles/'
       path: '/articles'
@@ -482,6 +515,13 @@ declare module '@tanstack/react-router' {
       path: '/passports/$passportId'
       fullPath: '/passports/$passportId'
       preLoaderRoute: typeof PassportsPassportIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/locations/$locationSlug': {
+      id: '/locations/$locationSlug'
+      path: '/locations/$locationSlug'
+      fullPath: '/locations/$locationSlug'
+      preLoaderRoute: typeof LocationsLocationSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/articles/$slug': {
@@ -718,8 +758,10 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   TestRoute: TestRoute,
   ArticlesSlugRoute: ArticlesSlugRoute,
+  LocationsLocationSlugRoute: LocationsLocationSlugRoute,
   PassportsPassportIdRoute: PassportsPassportIdRoute,
   ArticlesIndexRoute: ArticlesIndexRoute,
+  LocationsIndexRoute: LocationsIndexRoute,
   PassportsIndexRoute: PassportsIndexRoute,
 }
 export const routeTree = rootRouteImport

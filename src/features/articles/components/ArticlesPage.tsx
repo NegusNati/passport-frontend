@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 
-import ethiopic_numbers from '@/assets/landingImages/number.png'
+import ethiopic_numbers from '@/assets/landingImages/number.webp'
 import {
   useArticlesQuery,
   useCategoriesQuery,
@@ -10,7 +10,7 @@ import {
 } from '@/features/articles/lib/ArticlesQuery'
 import type { ArticleApiItem } from '@/features/articles/lib/ArticlesSchema'
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
-import AdSlot from '@/shared/ui/ad-slot'
+import { AdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardHeader } from '@/shared/ui/card'
 import { Container } from '@/shared/ui/container'

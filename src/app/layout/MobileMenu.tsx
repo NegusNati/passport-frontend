@@ -9,7 +9,7 @@ import { toast } from '@/shared/ui/sonner'
 
 type NavItem = { label: string; href: string; external?: boolean; comingSoonMessage?: string }
 
-type AppPath = '/passports' | '/articles' | '/calendar'
+type AppPath = '/passports' | '/articles' | '/calendar' | '/locations'
 
 type MobileMenuProps = {
   open: boolean

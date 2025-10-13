@@ -16,6 +16,9 @@ import { type PassportFilters, type PassportSearchFilters } from '../schemas/pas
 type PassportsTableProps = {
   searchFilters?: PassportSearchFilters
   searchMode?: 'number' | 'name'
+  defaultCity?: string
+  tableTitle?: string
+  lockCity?: boolean
 }
 
 type FilterOption = { value: string; label: string }
@@ -27,6 +30,7 @@ type PassportsTableToolbarProps<TData> = {
   dateOptions: FilterOption[]
   locationOptions: FilterOption[]
   isLoadingLocations: boolean
+  isCitySelectDisabled?: boolean
 } & Pick<
   PassportsTableToolbarBaseProps<TData>,
   'table' | 'filterableColumns' | 'searchKey' | 'onAction' | 'actionTitle' | 'onExport'
@@ -58,16 +62,36 @@ const DEFAULT_PAGINATION: PaginationState = {
 }
 
 export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTableProps>(
-  ({ searchFilters = {}, searchMode }, ref) => {
+  ({ searchFilters = {}, searchMode, defaultCity, tableTitle, lockCity = false }, ref) => {
     const router = useRouter()
-    const [filters, setFilters] = React.useState<PassportFilters>({ date: 'all', city: 'all' })
+    const [filters, setFilters] = React.useState<PassportFilters>(() => ({
+      date: 'all',
+      city: defaultCity ?? 'all',
+    }))
     const [pagination, setPagination] = React.useState<PaginationState>(DEFAULT_PAGINATION)
 
     const locationsQuery = useLocationsQuery()
     const locationOptions = React.useMemo<FilterOption[]>(() => {
       const items = locationsQuery.data?.data ?? []
-      return items.map((value) => ({ value, label: value }))
-    }, [locationsQuery.data])
+      const options = items.map((value) => ({ value, label: value }))
+      if (defaultCity && defaultCity !== 'all' && !items.includes(defaultCity)) {
+        options.unshift({ value: defaultCity, label: defaultCity })
+      }
+      return options
+    }, [defaultCity, locationsQuery.data])
+
+    const lastDefaultCityRef = React.useRef<string | undefined>(defaultCity)
+
+    React.useEffect(() => {
+      if (defaultCity !== undefined) {
+        setFilters((prev) =>
+          prev.city === defaultCity ? prev : { ...prev, city: defaultCity },
+        )
+      } else if (lastDefaultCityRef.current !== undefined) {
+        setFilters((prev) => (prev.city === 'all' ? prev : { ...prev, city: 'all' }))
+      }
+      lastDefaultCityRef.current = defaultCity
+    }, [defaultCity])
 
     React.useEffect(() => {
       setPagination((prev) => (prev.pageIndex === 0 ? prev : { ...prev, pageIndex: 0 }))
@@ -108,10 +132,14 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       setPagination({ pageIndex: 0, pageSize: size })
     }, [])
 
-    const handleFilterChange = React.useCallback((key: keyof PassportFilters, value: string) => {
-      setFilters((prev) => ({ ...prev, [key]: value }))
-      setPagination((prev) => ({ ...prev, pageIndex: 0 }))
-    }, [])
+    const handleFilterChange = React.useCallback(
+      (key: keyof PassportFilters, value: string) => {
+        if (lockCity && key === 'city') return
+        setFilters((prev) => ({ ...prev, [key]: value }))
+        setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+      },
+      [lockCity],
+    )
 
     const columns = React.useMemo<ColumnDef<PassportApiItem>[]>(() => {
       return [
@@ -182,16 +210,17 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
         return (
           <PassportsTableToolbar
             {...props}
-            title="Latest Passports"
+            title={tableTitle ?? 'Latest Passports'}
             filters={filters}
             onFilterChange={handleFilterChange}
             dateOptions={DATE_PRESETS}
             locationOptions={locationOptions}
             isLoadingLocations={locationsQuery.isLoading}
+            isCitySelectDisabled={lockCity}
           />
         )
       }
-    }, [filters, handleFilterChange, locationOptions, locationsQuery.isLoading])
+    }, [filters, handleFilterChange, locationOptions, locationsQuery.isLoading, lockCity, tableTitle])
 
     const derivedError = isError
       ? error instanceof Error
@@ -220,7 +249,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
             <div className="rounded-lg border bg-transparent/80 p-6 shadow-sm backdrop-blur">
               <DataTable
                 key={tableKey}
-                tableTitle="Latest Passports"
+                tableTitle={tableTitle ?? 'Latest Passports'}
                 columns={columns}
                 data={rows}
                 isLoading={isLoading}
@@ -257,7 +286,15 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
 PassportsTable.displayName = 'PassportsTable'
 
 function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) {
-  const { title, filters, onFilterChange, dateOptions, locationOptions, isLoadingLocations } = props
+  const {
+    title,
+    filters,
+    onFilterChange,
+    dateOptions,
+    locationOptions,
+    isLoadingLocations,
+    isCitySelectDisabled,
+  } = props
 
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -284,8 +321,12 @@ function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) 
             </SelectContent>
           </Select>
 
-          <Select value={filters.city} onValueChange={(value) => onFilterChange('city', value)}>
-            <SelectTrigger className="w-48">
+          <Select
+            value={filters.city}
+            onValueChange={(value) => onFilterChange('city', value)}
+            disabled={isCitySelectDisabled}
+          >
+            <SelectTrigger className="w-48" disabled={isCitySelectDisabled}>
               <SelectValue placeholder="Location" />
             </SelectTrigger>
             <SelectContent>

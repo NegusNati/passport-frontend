@@ -22,13 +22,14 @@ type NavItem = {
 }
 
 // Supported internal paths used in header navigation
-type AppPath = '/passports' | '/articles' | '/calendar'
+type AppPath = '/passports' | '/articles' | '/calendar' | '/locations'
 
 const nav: ReadonlyArray<NavItem> = [
   { label: 'Advertise', href: '#advertise' },
   { label: 'Passports', href: '/passports' },
   { label: 'Articles', href: '/articles' },
   { label: 'Ethiopian Calendar', href: '/calendar' },
+  { label: 'Official ICS branch offices', href: '/locations' },
   {
     label: 'Download App',
     href: '#download',
