@@ -48,44 +48,59 @@ setTimeout(() => {
   analytics.setReleaseVersion(APP_VERSION)
 }, 100)
 
+// Check if PostHog is configured
+const POSTHOG_KEY = env.VITE_PUBLIC_POSTHOG_KEY
+const isPostHogEnabled = POSTHOG_KEY && POSTHOG_KEY.length > 0
+
+// Warn if PostHog is not configured in production
+if (!isPostHogEnabled && import.meta.env.PROD) {
+  console.warn('[PostHog] Analytics disabled: VITE_PUBLIC_POSTHOG_KEY not configured')
+}
+
 // Render the app
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
   const root = createRoot(rootElement)
+  
+  const AppContent = (
+    <ThemeProvider>
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+        </QueryClientProvider>
+      </HelmetProvider>
+    </ThemeProvider>
+  )
+
   root.render(
     <StrictMode>
-      <PostHogProvider
-        apiKey={env.VITE_PUBLIC_POSTHOG_KEY}
-        options={{
-          api_host: env.VITE_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com',
-          ui_host: 'https://eu.i.posthog.com', // Keep dashboard separate
-          defaults: '2025-05-24',
-          capture_exceptions: true,
-          debug: import.meta.env.MODE === 'development',
-          loaded: (posthog) => {
-            // Initialize analytics with PostHog instance
-            analytics.initialize(posthog)
-            // Track release version immediately
-            analytics.setReleaseVersion(APP_VERSION)
-            
-            if (import.meta.env.DEV) {
-              console.log('[PostHog] Successfully initialized')
-              console.log('[PostHog] API Host:', env.VITE_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com')
-            }
-          },
-          // Handle initialization errors gracefully
-          persistence: 'localStorage+cookie',
-          autocapture: true,
-        }}
-      >
-        <ThemeProvider>
-          <HelmetProvider>
-            <QueryClientProvider client={queryClient}>
-              <RouterProvider router={router} />
-            </QueryClientProvider>
-          </HelmetProvider>
-        </ThemeProvider>
-      </PostHogProvider>
+      {isPostHogEnabled ? (
+        <PostHogProvider
+          apiKey={POSTHOG_KEY}
+          options={{
+            api_host: env.VITE_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com',
+            ui_host: 'https://eu.i.posthog.com',
+            defaults: '2025-05-24',
+            capture_exceptions: true,
+            debug: import.meta.env.MODE === 'development',
+            loaded: (posthog) => {
+              analytics.initialize(posthog)
+              analytics.setReleaseVersion(APP_VERSION)
+              
+              if (import.meta.env.DEV) {
+                console.log('[PostHog] Successfully initialized')
+                console.log('[PostHog] API Host:', env.VITE_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com')
+              }
+            },
+            persistence: 'localStorage+cookie',
+            autocapture: true,
+          }}
+        >
+          {AppContent}
+        </PostHogProvider>
+      ) : (
+        AppContent
+      )}
     </StrictMode>,
   )
 }

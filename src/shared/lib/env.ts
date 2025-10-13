@@ -11,8 +11,8 @@ const EnvSchema = z.object({
   VITE_SITE_URL: z.string().url().optional(),
   VITE_SITE_NAME: z.string().optional(),
   VITE_HORIZON_URL: z.string().url().optional(),
-  VITE_PUBLIC_POSTHOG_KEY: z.string(),
-  VITE_PUBLIC_POSTHOG_HOST: z.string().url().optional(),
+  VITE_PUBLIC_POSTHOG_KEY: z.string().optional(), // Optional to allow graceful degradation
+  VITE_PUBLIC_POSTHOG_HOST: z.string().optional(), // Can be relative path or URL
 })
 
 type Env = z.infer<typeof EnvSchema>
