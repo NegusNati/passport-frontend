@@ -18,7 +18,9 @@ function shouldReportError(key: string): boolean {
   // Prevent memory leak by limiting cache size
   if (seenErrors.size > MAX_ERROR_CACHE) {
     const firstKey = seenErrors.values().next().value
-    seenErrors.delete(firstKey)
+    if (firstKey) {
+      seenErrors.delete(firstKey)
+    }
   }
 
   return true
@@ -33,7 +35,7 @@ export function initializeErrorTracking() {
   window.addEventListener('error', (event) => {
     const { message, filename, lineno, colno, error } = event
 
-    const errorKey = generateErrorKey(message, filename, lineno)
+    const errorKey = generateErrorKey(message, filename ?? undefined, lineno)
     if (!shouldReportError(errorKey)) return
 
     analytics.capture('frontend_error', {

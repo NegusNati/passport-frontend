@@ -3,6 +3,7 @@ import { type ReactNode } from 'react'
 import mdFooterPattern from '@/assets/landingImages/md_footer_pattern.png'
 import mobileFooterPattern from '@/assets/landingImages/mobile_footer_pattern.png'
 import shaderUrl from '@/assets/landingImages/shader_bg.svg?url'
+import { usePageTracking } from '@/shared/hooks/usePageTracking'
 import { BuyMeCoffee } from '@/shared/ui/BuyMeCoffee'
 import { Toaster } from '@/shared/ui/sonner'
 
@@ -10,6 +11,8 @@ import Footer from './Footer'
 import { Header } from './Header'
 
 export function AppShell({ children }: { children: ReactNode }) {
+  // Track all page views automatically
+  usePageTracking()
   return (
     <div className="bg-background text-foreground relative isolate min-h-dvh w-full overflow-x-hidden">
       {/* Hero surface tint + blobs */}

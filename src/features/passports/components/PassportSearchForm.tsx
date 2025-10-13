@@ -3,6 +3,7 @@ import { useRouter } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
+import { useAnalytics } from '@/shared/lib/analytics'
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
@@ -32,6 +33,7 @@ export function PassportSearchForm({
   onScrollToResults,
 }: PassportSearchFormProps) {
   const router = useRouter()
+  const { capture } = useAnalytics()
   const [searchMode, setSearchMode] = useState<SearchMode>('number')
   // Local inputs for debounced interactive search
   const [numberInput, setNumberInput] = useState('')
@@ -107,6 +109,15 @@ export function PassportSearchForm({
         const validatedData = PassportSearchByNumber.parse(value)
         const sanitized = sanitizeRequestNumber(validatedData.requestNumber)
 
+        // Track search started event
+        const searchStartTime = Date.now()
+        capture('passport_status_search_started', {
+          method: 'by-passport-number',
+          'request-number': sanitized,
+          'network-status': navigator.onLine ? 'online' : 'offline',
+          'search-start-time': searchStartTime,
+        })
+
         // Check if a specific passport is found
         const foundPassport = DUMMY_PASSPORTS.find(
           (p) => p.requestNumber.toLowerCase() === sanitized.toLowerCase(),
@@ -139,7 +150,8 @@ export function PassportSearchForm({
       try {
         const validatedData = PassportSearchByName.parse(value)
 
-        // Check if a specific passport is found by name
+        // Track search started event
+        const searchStartTime = Date.now()
         const searchName = [
           validatedData.firstName,
           validatedData.middleName?.trim(),
@@ -147,8 +159,18 @@ export function PassportSearchForm({
         ]
           .filter(Boolean)
           .join(' ')
-          .toLowerCase()
-        const foundPassport = DUMMY_PASSPORTS.find((p) => p.name.toLowerCase() === searchName)
+        
+        capture('passport_status_search_started', {
+          method: 'by-name',
+          'full-name': searchName,
+          'has-middle-name': !!validatedData.middleName?.trim(),
+          'network-status': navigator.onLine ? 'online' : 'offline',
+          'search-start-time': searchStartTime,
+        })
+
+        // Check if a specific passport is found by name
+        const searchNameLower = searchName.toLowerCase()
+        const foundPassport = DUMMY_PASSPORTS.find((p) => p.name.toLowerCase() === searchNameLower)
 
         if (foundPassport) {
           // Navigate to detail page

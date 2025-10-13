@@ -6,6 +6,7 @@ import LandingImageOne from '@/assets/landingImages/cardImages/Landing_img_1.web
 import LandingImageTwo from '@/assets/landingImages/cardImages/Landing_img_2.webp'
 import LandingImageThree from '@/assets/landingImages/cardImages/Landing_img_3.webp'
 import { AnimatedBorderCard, Card, CardSwap } from '@/shared/components/common'
+import { useAnalytics } from '@/shared/lib/analytics'
 import { M } from '@/shared/lib/motion'
 import { Button } from '@/shared/ui/button'
 
@@ -63,6 +64,15 @@ function renderHeroCard(variant: 'desktop' | 'mobile', card: (typeof HERO_CARDS)
 
 export function Hero() {
   const reduce = useReducedMotion()
+  const { capture } = useAnalytics()
+
+  const handleCTAClick = (surface: string, variant?: string) => {
+    capture('cta_click_track_passport', {
+      surface,
+      variant: variant || 'primary',
+    })
+  }
+
   return (
     <section className="relative isolate overflow-hidden">
       {/* Container to constrain width and center content */}
@@ -110,7 +120,11 @@ export function Hero() {
 
                 {/* CTA (kept centered by the grid wrapper) */}
 
-                <Button size="lg" className="relative z-[1] rounded-full bg-transparent py-5  text-sm md:text-base ">
+                <Button 
+                  size="lg" 
+                  className="relative z-[1] rounded-full bg-transparent py-5  text-sm md:text-base "
+                  onClick={() => handleCTAClick('hero', 'primary-glowing')}
+                >
                   <Link 
                     to="/passports"
                     className="inline-flex items-center bg-transparent font-semibold text-white " 
@@ -127,6 +141,7 @@ export function Hero() {
                   target="_blank"
                   className="text-primary inline-flex items-center text-base font-semibold "
                   rel="noreferrer"
+                  onClick={() => capture('telegram_group_click', { surface: 'hero' })}
                 >
                   Join The Telegram Group
                 </a>

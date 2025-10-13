@@ -27,14 +27,15 @@ function inferApiBaseUrl(env: Partial<Env>): string {
 
 export const env = (() => {
   const parsed = EnvSchema.safeParse(import.meta.env)
-  const values: Env = parsed.success ? parsed.data : {}
+  const values: Partial<Env> = parsed.success ? parsed.data : {}
   const apiBase = inferApiBaseUrl(values)
   const horizonUrl = values.VITE_HORIZON_URL ?? `${apiBase.replace(/\/$/, '')}/horizon`
   return {
     ...values,
+    VITE_PUBLIC_POSTHOG_KEY: values.VITE_PUBLIC_POSTHOG_KEY ?? '',
     API_BASE_URL: apiBase,
     HORIZON_URL: horizonUrl,
-  }
+  } as Env & { API_BASE_URL: string; HORIZON_URL: string }
 })()
 
 export type { Env }

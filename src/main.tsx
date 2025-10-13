@@ -10,12 +10,16 @@ import { PostHogProvider } from 'posthog-js/react'
 import { restoreAuthTokenFromStorage } from '@/api/client'
 import { queryClient } from '@/api/queryClient'
 import { ThemeProvider } from '@/shared/components/theme-provider'
+import analytics from '@/shared/lib/analytics'
 import { env } from '@/shared/lib/env'
 import { initializeErrorTracking } from '@/shared/lib/error-tracking'
 
 import reportWebVitals from './reportWebVitals.ts'
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
+
+// Read version from package.json
+const APP_VERSION = __APP_VERSION__ || 'dev'
 
 // Create a new router instance
 restoreAuthTokenFromStorage()
@@ -38,6 +42,12 @@ declare module '@tanstack/react-router' {
 // Initialize global error tracking
 initializeErrorTracking()
 
+// Set release version for tracking
+// This will be available after PostHog initializes
+setTimeout(() => {
+  analytics.setReleaseVersion(APP_VERSION)
+}, 100)
+
 // Render the app
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
@@ -47,10 +57,25 @@ if (rootElement && !rootElement.innerHTML) {
       <PostHogProvider
         apiKey={env.VITE_PUBLIC_POSTHOG_KEY}
         options={{
-          api_host: env.VITE_PUBLIC_POSTHOG_HOST,
+          api_host: env.VITE_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com',
+          ui_host: 'https://eu.i.posthog.com', // Keep dashboard separate
           defaults: '2025-05-24',
           capture_exceptions: true,
           debug: import.meta.env.MODE === 'development',
+          loaded: (posthog) => {
+            // Initialize analytics with PostHog instance
+            analytics.initialize(posthog)
+            // Track release version immediately
+            analytics.setReleaseVersion(APP_VERSION)
+            
+            if (import.meta.env.DEV) {
+              console.log('[PostHog] Successfully initialized')
+              console.log('[PostHog] API Host:', env.VITE_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com')
+            }
+          },
+          // Handle initialization errors gracefully
+          persistence: 'localStorage+cookie',
+          autocapture: true,
         }}
       >
         <ThemeProvider>

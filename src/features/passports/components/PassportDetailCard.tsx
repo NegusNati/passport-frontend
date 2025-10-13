@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import Barcode from 'react-barcode'
 
 import star from '@/assets/landingImages/star.svg'
+import { ShareButton } from '@/shared/components/ShareButton'
 import { usePdfDownload } from '@/shared/hooks/usePdfDownload'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
@@ -143,7 +144,13 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
           </div>
 
           {/* Actions below card */}
-          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center z-10">
+          <ShareButton 
+              url={typeof window !== 'undefined' ? window.location.href : ''}
+              title={`Passport ready for ${passport.name} - ${passport.city}`}
+              resultType="ready"
+              size="lg"
+            />
             <Button
               onClick={download}
               variant="outline"
@@ -153,9 +160,10 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
             >
               {isDownloading ? 'Preparing…' : 'Download'}
             </Button>
+           
             <Button
               onClick={onCheckAnother}
-              className="bg-emerald-600 hover:bg-emerald-700"
+              className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto"
               size="lg"
             >
               Check Another Passport

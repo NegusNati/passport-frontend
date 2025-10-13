@@ -1,5 +1,5 @@
-import { usePostHog } from 'posthog-js/react'
 import type { PostHog } from 'posthog-js'
+import { usePostHog } from 'posthog-js/react'
 
 // Event naming convention: snake_case (e.g., 'passport_status_search_started')
 // Property naming convention: kebab-case (e.g., 'country-code', 'result-type')
@@ -133,7 +133,8 @@ class Analytics {
     const ph = this.getPostHog()
     if (!ph) return undefined
 
-    return ph.getFeatureFlags() as Record<string, string | boolean> | undefined
+    // PostHog doesn't expose getFeatureFlags(), use individual flag checks instead
+    return undefined
   }
 
   /**

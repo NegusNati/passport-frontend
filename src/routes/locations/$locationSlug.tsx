@@ -9,6 +9,7 @@ import { PassportsByLocationPage } from '@/features/passports/components/Passpor
 import { matchLocationFromSlug } from '@/features/passports/lib/location-slug'
 import { fetchLocations, fetchPassports, type ListParams } from '@/features/passports/lib/PassportsApi'
 import { passportsKeys, useLocationsQuery } from '@/features/passports/lib/PassportsQuery'
+import { useAnalytics } from '@/shared/lib/analytics'
 
 type RouterContext = { queryClient: QueryClient }
 
@@ -48,6 +49,7 @@ export const Route = createFileRoute('/locations/$locationSlug')({
 
 function LocationPassportsRouteComponent() {
   const { locationSlug } = Route.useParams()
+  const { capture } = useAnalytics()
   const locationsQuery = useLocationsQuery()
 
   const locations = locationsQuery.data?.data
@@ -55,6 +57,17 @@ function LocationPassportsRouteComponent() {
     () => matchLocationFromSlug(locationSlug, locations ?? []),
     [locationSlug, locations],
   )
+
+  // Track location page view
+  React.useEffect(() => {
+    if (locationName) {
+      capture('location_page_view', {
+        'location-id': locationSlug,
+        'location-name': locationName,
+        'has-appointment-link': false, // Update based on actual data if available
+      })
+    }
+  }, [locationName, locationSlug, capture])
 
   if (locationsQuery.isLoading && !locations) {
     return (

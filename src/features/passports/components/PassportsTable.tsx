@@ -7,6 +7,7 @@ import { useLocationsQuery, usePassportsQuery } from '@/features/passports/lib/P
 import type { PassportApiItem } from '@/features/passports/lib/PassportsSchema'
 import { DataTable } from '@/features/table/DataTable'
 import { DataTableColumnHeader } from '@/features/table/DataTableColumnHeader'
+import { useAnalytics } from '@/shared/lib/analytics'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
@@ -64,11 +65,13 @@ const DEFAULT_PAGINATION: PaginationState = {
 export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTableProps>(
   ({ searchFilters = {}, searchMode, defaultCity, tableTitle, lockCity = false }, ref) => {
     const router = useRouter()
+    const { capture } = useAnalytics()
     const [filters, setFilters] = React.useState<PassportFilters>(() => ({
       date: 'all',
       city: defaultCity ?? 'all',
     }))
     const [pagination, setPagination] = React.useState<PaginationState>(DEFAULT_PAGINATION)
+    const searchStartTimeRef = React.useRef<number>(Date.now())
 
     const locationsQuery = useLocationsQuery()
     const locationOptions = React.useMemo<FilterOption[]>(() => {
@@ -114,6 +117,42 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       if (!data?.data) return []
       return [...data.data]
     }, [data?.data])
+
+    // Track search results
+    React.useEffect(() => {
+      if (isLoading) {
+        searchStartTimeRef.current = Date.now()
+        return
+      }
+
+      const hasSearchFilters = Object.keys(searchFilters).length > 0
+      if (!hasSearchFilters) return
+
+      const latency = Date.now() - searchStartTimeRef.current
+
+      if (isError) {
+        // Track error
+        capture('passport_status_result_error', {
+          'error-code': error instanceof Error ? error.message : 'unknown',
+          'latency-ms': latency,
+          retryable: true,
+          'search-mode': searchMode || 'unknown',
+        })
+      } else if (data) {
+        // Track success
+        const resultCount = data.data?.length || 0
+        const resultType = resultCount > 0 ? 'found' : 'not-found'
+        
+        capture('passport_status_result_success', {
+          'latency-ms': latency,
+          'result-type': resultType,
+          'result-count': resultCount,
+          retries: 0,
+          'search-mode': searchMode || 'unknown',
+          'total-available': data.meta?.total || 0,
+        })
+      }
+    }, [isLoading, isError, error, data, searchFilters, searchMode, capture])
 
     const meta = data?.meta
     const total = meta?.total ?? 0
