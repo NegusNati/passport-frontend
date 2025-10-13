@@ -2,10 +2,10 @@ import './styles.css'
 
 import { QueryClientProvider } from '@tanstack/react-query'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
+import { PostHogProvider } from 'posthog-js/react'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { HelmetProvider } from 'react-helmet-async'
-import { PostHogProvider } from 'posthog-js/react'
 
 import { restoreAuthTokenFromStorage } from '@/api/client'
 import { queryClient } from '@/api/queryClient'
@@ -93,7 +93,10 @@ if (rootElement && !rootElement.innerHTML) {
               }
             },
             persistence: 'localStorage+cookie',
-            autocapture: true,
+            autocapture: {
+              dom_event_allowlist: [],
+              capture_copied_text: true
+            },
           }}
         >
           {AppContent}
