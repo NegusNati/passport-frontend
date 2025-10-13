@@ -26,15 +26,15 @@ export function LocationsDirectoryPage() {
   return (
     <div className="min-h-screen">
       <Seo
-        title="Official ICS branch offices"
-        description="Browse official ICS branch offices to quickly view passport releases by city."
+        title="Official Immigration and Citizenship Services branch offices"
+        description="Browse official Immigration and Citizenship Services branch offices to quickly view passport releases by city."
         path="/locations"
       />
 
       <section className="mx-2 py-12 md:py-16">
         <Container className="border-border/60 rounded-2xl border bg-transparent p-6 text-center shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
-            Official ICS branch offices
+            Official Immigration and Citizenship Services (ICS) branch offices
           </h1>
           <p className="text-muted-foreground mt-4 text-lg">
             Pick a branch office to see the most recent passports released in that location.
