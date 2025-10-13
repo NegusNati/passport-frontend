@@ -33,6 +33,7 @@ export const env = (() => {
   return {
     ...values,
     VITE_PUBLIC_POSTHOG_KEY: values.VITE_PUBLIC_POSTHOG_KEY ?? '',
+    VITE_PUBLIC_POSTHOG_HOST: values.VITE_PUBLIC_POSTHOG_HOST ?? 'https://eu.i.posthog.com',
     API_BASE_URL: apiBase,
     HORIZON_URL: horizonUrl,
   } as Env & { API_BASE_URL: string; HORIZON_URL: string }
