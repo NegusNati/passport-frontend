@@ -1,6 +1,5 @@
 import analytics from './analytics'
 
-// Track seen errors to avoid duplicate reporting
 const seenErrors = new Set<string>()
 const MAX_ERROR_CACHE = 100
 
