@@ -49,7 +49,7 @@ setTimeout(() => {
 }, 100)
 
 // Check if PostHog is configured
-const POSTHOG_KEY = env.VITE_PUBLIC_POSTHOG_KEY
+const POSTHOG_KEY = import.meta.env.VITE_PUBLIC_POSTHOG_KEY
 const isPostHogEnabled = POSTHOG_KEY && POSTHOG_KEY.length > 0
 
 // Warn if PostHog is not configured in production
