@@ -15,9 +15,9 @@ const Footer = () => {
   ]
 
   const socials = [
-    { name: 'GitHub', icon: <GithubIcon className="size-4" />, url: '#' },
-    { name: 'X (Formerly Twitter)', icon: <TwitterIcon className="size-4" />, url: '#' },
-    { name: 'LinkedIn', icon: <LinkedinIcon className="size-4" />, url: '#' },
+    { name: 'GitHub', icon: <GithubIcon className="size-4" />, url: 'https://github.com/NegusNati/passport-frontend' },
+    { name: 'X (Formerly Twitter)', icon: <TwitterIcon className="size-4" />, url: 'https://x.com/Negusnati' },
+    { name: 'LinkedIn', icon: <LinkedinIcon className="size-4" />, url: 'https://www.linkedin.com/in/negusnati/' },
     { name: 'Instagram', icon: <InstagramIcon className="size-4" />, url: '#' },
   ]
 
