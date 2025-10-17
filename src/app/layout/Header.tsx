@@ -25,7 +25,7 @@ type NavItem = {
 type AppPath = '/passports' | '/articles' | '/calendar' | '/locations'
 
 const nav: ReadonlyArray<NavItem> = [
-  { label: 'Advertise', href: '#advertise' },
+  { label: 'Advertise', href: '/advertisment' },
   { label: 'Passports', href: '/passports' },
   { label: 'Articles', href: '/articles' },
   { label: 'Ethiopian Calendar', href: '/calendar' },

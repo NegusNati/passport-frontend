@@ -14,7 +14,6 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as CalendarRouteImport } from './routes/calendar'
-import { Route as AdvertisementRequestsRouteImport } from './routes/advertisement-requests'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PassportsIndexRouteImport } from './routes/passports/index'
@@ -30,6 +29,8 @@ import { Route as AdminPassportsRouteImport } from './routes/admin/passports'
 import { Route as AdminArticlesRouteImport } from './routes/admin/articles'
 import { Route as AdminAdvertisementsRouteImport } from './routes/admin/advertisements'
 import { Route as AdminAdvertisementRequestsRouteImport } from './routes/admin/advertisement-requests'
+import { Route as advertismentAdvertismentRouteImport } from './routes/(advertisment)/advertisment'
+import { Route as advertismentAdvertisementRequestsRouteImport } from './routes/(advertisment)/advertisement-requests'
 import { Route as AdminArticlesIndexRouteImport } from './routes/admin/articles.index'
 import { Route as AdminAdvertisementsIndexRouteImport } from './routes/admin/advertisements.index'
 import { Route as AdminAdvertisementRequestsIndexRouteImport } from './routes/admin/advertisement-requests.index'
@@ -65,11 +66,6 @@ const LoginRoute = LoginRouteImport.update({
 const CalendarRoute = CalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdvertisementRequestsRoute = AdvertisementRequestsRouteImport.update({
-  id: '/advertisement-requests',
-  path: '/advertisement-requests',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -148,6 +144,18 @@ const AdminAdvertisementRequestsRoute =
     path: '/advertisement-requests',
     getParentRoute: () => AdminRoute,
   } as any)
+const advertismentAdvertismentRoute =
+  advertismentAdvertismentRouteImport.update({
+    id: '/(advertisment)/advertisment',
+    path: '/advertisment',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const advertismentAdvertisementRequestsRoute =
+  advertismentAdvertisementRequestsRouteImport.update({
+    id: '/(advertisment)/advertisement-requests',
+    path: '/advertisement-requests',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AdminArticlesIndexRoute = AdminArticlesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -210,12 +218,13 @@ const AdminAdvertisementsIdRoute = AdminAdvertisementsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/advertisement-requests': typeof AdvertisementRequestsRoute
   '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/test': typeof TestRoute
+  '/advertisement-requests': typeof advertismentAdvertisementRequestsRoute
+  '/advertisment': typeof advertismentAdvertismentRoute
   '/admin/advertisement-requests': typeof AdminAdvertisementRequestsRouteWithChildren
   '/admin/advertisements': typeof AdminAdvertisementsRouteWithChildren
   '/admin/articles': typeof AdminArticlesRouteWithChildren
@@ -243,12 +252,13 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/advertisement-requests': typeof AdvertisementRequestsRoute
   '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/test': typeof TestRoute
+  '/advertisement-requests': typeof advertismentAdvertisementRequestsRoute
+  '/advertisment': typeof advertismentAdvertismentRoute
   '/admin/passports': typeof AdminPassportsRouteWithChildren
   '/admin/pdf-import': typeof AdminPdfImportRoute
   '/admin/users': typeof AdminUsersRouteWithChildren
@@ -275,12 +285,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/advertisement-requests': typeof AdvertisementRequestsRoute
   '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/test': typeof TestRoute
+  '/(advertisment)/advertisement-requests': typeof advertismentAdvertisementRequestsRoute
+  '/(advertisment)/advertisment': typeof advertismentAdvertismentRoute
   '/admin/advertisement-requests': typeof AdminAdvertisementRequestsRouteWithChildren
   '/admin/advertisements': typeof AdminAdvertisementsRouteWithChildren
   '/admin/articles': typeof AdminArticlesRouteWithChildren
@@ -311,12 +322,13 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
-    | '/advertisement-requests'
     | '/calendar'
     | '/login'
     | '/profile'
     | '/register'
     | '/test'
+    | '/advertisement-requests'
+    | '/advertisment'
     | '/admin/advertisement-requests'
     | '/admin/advertisements'
     | '/admin/articles'
@@ -344,12 +356,13 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/advertisement-requests'
     | '/calendar'
     | '/login'
     | '/profile'
     | '/register'
     | '/test'
+    | '/advertisement-requests'
+    | '/advertisment'
     | '/admin/passports'
     | '/admin/pdf-import'
     | '/admin/users'
@@ -375,12 +388,13 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
-    | '/advertisement-requests'
     | '/calendar'
     | '/login'
     | '/profile'
     | '/register'
     | '/test'
+    | '/(advertisment)/advertisement-requests'
+    | '/(advertisment)/advertisment'
     | '/admin/advertisement-requests'
     | '/admin/advertisements'
     | '/admin/articles'
@@ -410,12 +424,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  AdvertisementRequestsRoute: typeof AdvertisementRequestsRoute
   CalendarRoute: typeof CalendarRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   TestRoute: typeof TestRoute
+  advertismentAdvertisementRequestsRoute: typeof advertismentAdvertisementRequestsRoute
+  advertismentAdvertismentRoute: typeof advertismentAdvertismentRoute
   ArticlesSlugRoute: typeof ArticlesSlugRoute
   LocationsLocationSlugRoute: typeof LocationsLocationSlugRoute
   PassportsPassportIdRoute: typeof PassportsPassportIdRoute
@@ -459,13 +474,6 @@ declare module '@tanstack/react-router' {
       path: '/calendar'
       fullPath: '/calendar'
       preLoaderRoute: typeof CalendarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/advertisement-requests': {
-      id: '/advertisement-requests'
-      path: '/advertisement-requests'
-      fullPath: '/advertisement-requests'
-      preLoaderRoute: typeof AdvertisementRequestsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -572,6 +580,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/advertisement-requests'
       preLoaderRoute: typeof AdminAdvertisementRequestsRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/(advertisment)/advertisment': {
+      id: '/(advertisment)/advertisment'
+      path: '/advertisment'
+      fullPath: '/advertisment'
+      preLoaderRoute: typeof advertismentAdvertismentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(advertisment)/advertisement-requests': {
+      id: '/(advertisment)/advertisement-requests'
+      path: '/advertisement-requests'
+      fullPath: '/advertisement-requests'
+      preLoaderRoute: typeof advertismentAdvertisementRequestsRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/articles/': {
       id: '/admin/articles/'
@@ -751,12 +773,14 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  AdvertisementRequestsRoute: AdvertisementRequestsRoute,
   CalendarRoute: CalendarRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   TestRoute: TestRoute,
+  advertismentAdvertisementRequestsRoute:
+    advertismentAdvertisementRequestsRoute,
+  advertismentAdvertismentRoute: advertismentAdvertismentRoute,
   ArticlesSlugRoute: ArticlesSlugRoute,
   LocationsLocationSlugRoute: LocationsLocationSlugRoute,
   PassportsPassportIdRoute: PassportsPassportIdRoute,

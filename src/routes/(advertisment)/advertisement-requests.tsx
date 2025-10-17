@@ -8,7 +8,7 @@ import type { AdvertisementRequestCreatePayload } from '@/features/advertisement
 import { Container } from '@/shared/ui/container'
 import { Seo } from '@/shared/ui/Seo'
 
-export const Route = createFileRoute('/advertisement-requests')({
+export const Route = createFileRoute('/(advertisment)/advertisement-requests')({
   component: AdvertisementRequestPage,
 })
 

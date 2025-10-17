@@ -13,22 +13,29 @@ import {
 } from '@/features/admin/advertisement-requests/schemas/filters'
 
 export const Route = createFileRoute('/admin/advertisement-requests/')({
+  beforeLoad: async () => {
+    const { loadAdminUser } = await import('@/features/admin/lib/guards')
+    await loadAdminUser({ 
+      requiredPermission: 'manage-advertisements',
+      redirectTo: '/admin'
+    })
+  },
   validateSearch: (search): AdminAdvertisementRequestsSearchType => {
-    const result = AdminAdvertisementRequestsSearch.safeParse(search)
-    return result.success ? result.data : AdminAdvertisementRequestsSearch.parse({})
+    const result = AdminAdvertisementRequestsSearch.safeParse(search);
+    return result.success ? result.data : AdminAdvertisementRequestsSearch.parse({});
   },
   component: AdminAdvertisementRequestsIndexPage,
 })
 
 function AdminAdvertisementRequestsIndexPage() {
-  const navigate = useNavigate({ from: '/admin/advertisement-requests/' })
-  const search = Route.useSearch()
+  const navigate = useNavigate({ from: '/admin/advertisement-requests/' });
+  const search = Route.useSearch();
 
-  const requestsQuery = useAdminAdvertisementRequestsQuery(search)
-  const updateMutation = useUpdateAdminAdvertisementRequestMutation()
-  const deleteMutation = useDeleteAdminAdvertisementRequestMutation()
+  const requestsQuery = useAdminAdvertisementRequestsQuery(search);
+  const updateMutation = useUpdateAdminAdvertisementRequestMutation();
+  const deleteMutation = useDeleteAdminAdvertisementRequestMutation();
 
-  const data = requestsQuery.data?.data ?? []
+  const data = requestsQuery.data?.data ?? [];
   const meta = requestsQuery.data?.meta ?? {
     current_page: search.page,
     last_page: 1,
@@ -37,7 +44,7 @@ function AdminAdvertisementRequestsIndexPage() {
     has_more: false,
   }
 
-  const error = requestsQuery.error instanceof Error ? requestsQuery.error : null
+  const error = requestsQuery.error instanceof Error ? requestsQuery.error : null;
 
   const handleFilterChange = (
     updates: Partial<

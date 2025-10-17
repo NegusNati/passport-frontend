@@ -1,8 +1,8 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 
-import { Button } from '@/shared/ui/button'
 import analytics from '@/shared/lib/analytics'
+import { Button } from '@/shared/ui/button'
 
 type AppErrorFallbackProps = {
   error: Error | null
