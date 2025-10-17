@@ -117,23 +117,20 @@ export function ArticlesPage() {
         extraLinks={getFeedLinks()}
       />
 
-   
-
       <div className="absolute bottom-[40rem] left-0 z-[-100] ml-2 translate-y-1/4 transform opacity-70 md:opacity-90">
         <img src={ethiopic_numbers} alt="logo" className="h-150 w-150" />
       </div>
 
       {/* Search Section */}
       <section className="py-2">
-    
         <Container>
-        <div className=" my-4  ">
-        <AdSlot
-          orientation="vertical"
-          preset="sponsored"
-          className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
-        />
-      </div>
+          <div className="my-4">
+            <AdSlot
+              orientation="vertical"
+              preset="sponsored"
+              className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
+            />
+          </div>
           <h1 className="mb-4 text-4xl font-bold tracking-tight">Search for Articles</h1>
           <div className="flex flex-col justify-between gap-8 md:flex-row md:gap-20">
             <div className="flex flex-1 flex-row gap-2">

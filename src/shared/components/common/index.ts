@@ -1,5 +1,5 @@
 export { AnimatedBorderCard } from './AnimatedBorderCard'
 export { AnimatedBorderCardDemo } from './AnimatedBorderCardDemo'
-export { Card,default as CardSwap } from './CardSwap'
+export { Card, default as CardSwap } from './CardSwap'
 export { default as CTAButton } from './CTAButton'
 export { default as HeroWaveShader } from './HeroWaveShader'

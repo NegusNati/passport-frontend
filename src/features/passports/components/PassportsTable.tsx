@@ -87,9 +87,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
 
     React.useEffect(() => {
       if (defaultCity !== undefined) {
-        setFilters((prev) =>
-          prev.city === defaultCity ? prev : { ...prev, city: defaultCity },
-        )
+        setFilters((prev) => (prev.city === defaultCity ? prev : { ...prev, city: defaultCity }))
       } else if (lastDefaultCityRef.current !== undefined) {
         setFilters((prev) => (prev.city === 'all' ? prev : { ...prev, city: 'all' }))
       }
@@ -142,7 +140,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
         // Track success
         const resultCount = data.data?.length || 0
         const resultType = resultCount > 0 ? 'found' : 'not-found'
-        
+
         capture('passport_status_result_success', {
           'latency-ms': latency,
           'result-type': resultType,
@@ -259,7 +257,14 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
           />
         )
       }
-    }, [filters, handleFilterChange, locationOptions, locationsQuery.isLoading, lockCity, tableTitle])
+    }, [
+      filters,
+      handleFilterChange,
+      locationOptions,
+      locationsQuery.isLoading,
+      lockCity,
+      tableTitle,
+    ])
 
     const derivedError = isError
       ? error instanceof Error

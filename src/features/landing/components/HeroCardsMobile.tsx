@@ -27,7 +27,7 @@ const HERO_CARDS = [
 
 export function HeroCardsMobile() {
   return (
-    <section className="container mx-auto max-w-7xl px-4 py-2 md:hidden translate-y-[-40px]">
+    <section className="container mx-auto max-w-7xl translate-y-[-40px] px-4 py-2 md:hidden">
       <div className="relative mx-auto h-[400px] w-full">
         <CardSwap
           width={440}
@@ -50,7 +50,7 @@ export function HeroCardsMobile() {
                   loading="lazy"
                   decoding="async"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-primary/15 to-primary/5" />
+                <div className="from-primary/50 via-primary/15 to-primary/5 absolute inset-0 bg-gradient-to-t" />
                 <div className="absolute inset-x-0 bottom-0 space-y-2 p-4 sm:p-6">
                   <h3 className="text-base font-semibold tracking-tight text-white sm:text-lg">
                     {card.title}

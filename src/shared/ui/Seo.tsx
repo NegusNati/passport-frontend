@@ -33,7 +33,7 @@ export function Seo({
       <Helmet prioritizeSeoTags>
         {title && <title>{fullTitle}</title>}
         {description && <meta name="description" content={description} />}
-        
+
         {/* Robots meta tags - explicitly allow all bots including AI crawlers */}
         {noindex ? (
           <>
@@ -43,9 +43,18 @@ export function Seo({
           </>
         ) : (
           <>
-            <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-            <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-            <meta name="bingbot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+            <meta
+              name="robots"
+              content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+            />
+            <meta
+              name="googlebot"
+              content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+            />
+            <meta
+              name="bingbot"
+              content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+            />
             {/* AI bot specific permissions */}
             <meta name="GPTBot" content="index, follow" />
             <meta name="Claude-Web" content="index, follow" />
@@ -54,9 +63,9 @@ export function Seo({
             <meta name="PerplexityBot" content="index, follow" />
           </>
         )}
-        
+
         {url && <link rel="canonical" href={url} />}
-        
+
         {/* Open Graph / Facebook */}
         {title && <meta property="og:title" content={fullTitle} />}
         {description && <meta property="og:description" content={description} />}
@@ -66,14 +75,14 @@ export function Seo({
         {ogImage && <meta property="og:image" content={ogImage} />}
         {ogImage && <meta property="og:image:alt" content={fullTitle} />}
         <meta property="og:locale" content="en_US" />
-        
+
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         {title && <meta name="twitter:title" content={fullTitle} />}
         {description && <meta name="twitter:description" content={description} />}
         {ogImage && <meta name="twitter:image" content={ogImage} />}
         {ogImage && <meta name="twitter:image:alt" content={fullTitle} />}
-        
+
         {extraLinks.map((l, i) => (
           <link key={i} rel={l.rel} href={l.href} {...(l.type ? { type: l.type } : {})} />
         ))}

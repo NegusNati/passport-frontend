@@ -17,7 +17,7 @@ export function ShareButton({
   title = 'Check out this passport status',
   resultType,
   variant = 'outline',
-  size = 'md'
+  size = 'md',
 }: ShareButtonProps) {
   const { capture } = useAnalytics()
   const [copied, setCopied] = useState(false)
@@ -96,7 +96,7 @@ export function ShareButton({
               }
             }}
           />
-          <div className="absolute right-0 top-full z-[1001] mt-2 w-48 rounded-md border bg-white p-2 shadow-lg">
+          <div className="absolute top-full right-0 z-[1001] mt-2 w-48 rounded-md border bg-white p-2 shadow-lg">
             <button
               onClick={copyToClipboard}
               className="flex w-full items-center rounded px-3 py-2 text-sm hover:bg-gray-100"

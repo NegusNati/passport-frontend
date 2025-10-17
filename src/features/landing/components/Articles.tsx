@@ -87,7 +87,7 @@ export function ArticleSection() {
                   to="/articles/$slug"
                   params={{ slug: article.slug }}
                   preload="intent"
-                  className="block h-full rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                  className="focus-visible:ring-ring focus-visible:ring-offset-background block h-full rounded-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                 >
                   <Card className="m-0 flex h-full min-h-[360px] max-w-xs min-w-[85vw] flex-shrink-0 overflow-hidden rounded-sm p-0 transition-shadow hover:shadow-lg sm:max-w-none sm:min-w-0 sm:flex-shrink">
                     <CardContent className="flex flex-1 flex-col gap-3 p-1 sm:p-3">
@@ -106,7 +106,9 @@ export function ArticleSection() {
                           {article.title}
                         </h3>
                         {excerpt ? (
-                          <p className="flex-1 text-sm text-muted-foreground line-clamp-3">{excerpt}</p>
+                          <p className="text-muted-foreground line-clamp-3 flex-1 text-sm">
+                            {excerpt}
+                          </p>
                         ) : (
                           <span className="flex-1" />
                         )}

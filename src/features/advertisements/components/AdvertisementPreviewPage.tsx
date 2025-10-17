@@ -1,6 +1,3 @@
-
-
-
 import { Calendar, LayoutGrid, Smartphone } from 'lucide-react'
 
 import ad1 from '@/assets/advert/ad_1.png'

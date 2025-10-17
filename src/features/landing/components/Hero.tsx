@@ -50,8 +50,8 @@ function renderHeroCard(variant: 'desktop' | 'mobile', card: (typeof HERO_CARDS)
           loading="lazy"
           decoding="async"
         />
-        <div className=" absolute inset-0 bg-gradient-to-t from-primary/50 via-primary/15 to-primary/5" />
-        <div className={`absolute inset-x-0 bottom-0 space-y-2 ${padding} ` }>
+        <div className="from-primary/50 via-primary/15 to-primary/5 absolute inset-0 bg-gradient-to-t" />
+        <div className={`absolute inset-x-0 bottom-0 space-y-2 ${padding} `}>
           <h3 className={`${headingSize} font-semibold tracking-tight text-white`}>{card.title}</h3>
           <p className={`text-sm leading-relaxed text-white/90 ${descriptionSpacing}`}>
             {card.description}
@@ -76,7 +76,7 @@ export function Hero() {
   return (
     <section className="relative isolate overflow-hidden">
       {/* Container to constrain width and center content */}
-      <div className="container max-w-7xl px-4 md:px-6 ">
+      <div className="container max-w-7xl px-4 md:px-6">
         {/* Two-column layout on md+; single column on mobile */}
         <div className="grid items-center gap-8 pt-10 md:mt-10 md:grid-cols-2 md:pt-24">
           {/* Left: copy / CTA */}
@@ -92,7 +92,7 @@ export function Hero() {
                 <Users2Icon className="text-primary h-4 w-4" />
                 Over 1.5 million users
               </AnimatedBorderCard>
-              <AnimatedBorderCard variant="secondary" size="sm" className=' border-amber-100/50' >
+              <AnimatedBorderCard variant="secondary" size="sm" className="border-amber-100/50">
                 <IdCardIcon className="text-primary h-4 w-4" />
                 1,278,980+ passports confirmed as issued
               </AnimatedBorderCard>
@@ -120,14 +120,14 @@ export function Hero() {
 
                 {/* CTA (kept centered by the grid wrapper) */}
 
-                <Button 
-                  size="lg" 
-                  className="relative z-[1] rounded-full bg-transparent py-5  text-sm md:text-base "
+                <Button
+                  size="lg"
+                  className="relative z-[1] rounded-full bg-transparent py-5 text-sm md:text-base"
                   onClick={() => handleCTAClick('hero', 'primary-glowing')}
                 >
-                  <Link 
+                  <Link
                     to="/passports"
-                    className="inline-flex items-center bg-transparent font-semibold text-white " 
+                    className="inline-flex items-center bg-transparent font-semibold text-white"
                   >
                     Check My Passport Status
                     <ArrowRightIcon className="ml-2 h-4 w-4" aria-hidden />
@@ -139,7 +139,7 @@ export function Hero() {
                 <a
                   href="https://t.me/passportdotet_group"
                   target="_blank"
-                  className="text-primary inline-flex items-center text-base font-semibold "
+                  className="text-primary inline-flex items-center text-base font-semibold"
                   rel="noreferrer"
                   onClick={() => capture('telegram_group_click', { surface: 'hero' })}
                 >
@@ -150,7 +150,7 @@ export function Hero() {
           </motion.div>
 
           {/* Right: CardSwap (visible on md+) */}
-          <div className="hidden md:block translate-y-[-65px] translate-x-[-45px]">
+          <div className="hidden translate-x-[-45px] translate-y-[-65px] md:block">
             <div className="relative justify-self-end md:h-[580px] md:w-[538px]">
               <CardSwap
                 width={538}

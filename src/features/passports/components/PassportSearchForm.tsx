@@ -159,7 +159,7 @@ export function PassportSearchForm({
         ]
           .filter(Boolean)
           .join(' ')
-        
+
         capture('passport_status_search_started', {
           method: 'by-name',
           'full-name': searchName,

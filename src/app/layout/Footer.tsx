@@ -174,7 +174,7 @@ const Footer = () => {
                 Privacy Policy
               </motion.button>
             </div>
-              <ComingSoonDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+            <ComingSoonDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
           </div>
         </motion.div>
       </div>

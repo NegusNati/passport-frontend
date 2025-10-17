@@ -5,9 +5,9 @@ import { ArticlesSearchSchema } from '@/features/admin/articles/schemas/filters'
 export const Route = createFileRoute('/admin/articles')({
   beforeLoad: async () => {
     const { loadAdminUser } = await import('@/features/admin/lib/guards')
-    await loadAdminUser({ 
+    await loadAdminUser({
       requiredPermission: 'manage-articles',
-      redirectTo: '/admin'
+      redirectTo: '/admin',
     })
   },
   validateSearch: ArticlesSearchSchema.parse,

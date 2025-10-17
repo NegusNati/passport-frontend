@@ -7,7 +7,11 @@ import { z } from 'zod'
 import { NotFound } from '@/features/misc/components/NotFound'
 import { PassportsByLocationPage } from '@/features/passports/components/PassportsByLocationPage'
 import { matchLocationFromSlug } from '@/features/passports/lib/location-slug'
-import { fetchLocations, fetchPassports, type ListParams } from '@/features/passports/lib/PassportsApi'
+import {
+  fetchLocations,
+  fetchPassports,
+  type ListParams,
+} from '@/features/passports/lib/PassportsApi'
 import { passportsKeys, useLocationsQuery } from '@/features/passports/lib/PassportsQuery'
 import { useAnalytics } from '@/shared/lib/analytics'
 

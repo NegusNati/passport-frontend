@@ -61,7 +61,7 @@ if (!isPostHogEnabled && import.meta.env.PROD) {
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
   const root = createRoot(rootElement)
-  
+
   const AppContent = (
     <ThemeProvider>
       <HelmetProvider>
@@ -86,16 +86,19 @@ if (rootElement && !rootElement.innerHTML) {
             loaded: (posthog) => {
               analytics.initialize(posthog)
               analytics.setReleaseVersion(APP_VERSION)
-              
+
               if (import.meta.env.DEV) {
                 console.log('[PostHog] Successfully initialized')
-                console.log('[PostHog] API Host:', env.VITE_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com')
+                console.log(
+                  '[PostHog] API Host:',
+                  env.VITE_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com',
+                )
               }
             },
             persistence: 'localStorage+cookie',
             autocapture: {
               dom_event_allowlist: [],
-              capture_copied_text: true
+              capture_copied_text: true,
             },
           }}
         >

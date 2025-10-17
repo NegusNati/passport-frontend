@@ -144,8 +144,8 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
           </div>
 
           {/* Actions below card */}
-          <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center z-10">
-          <ShareButton 
+          <div className="z-10 mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <ShareButton
               url={typeof window !== 'undefined' ? window.location.href : ''}
               title={`Passport ready for ${passport.name} - ${passport.city}`}
               resultType="ready"
@@ -160,10 +160,10 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
             >
               {isDownloading ? 'Preparing…' : 'Download'}
             </Button>
-           
+
             <Button
               onClick={onCheckAnother}
-              className="bg-emerald-600 hover:bg-emerald-700 w-full sm:w-auto"
+              className="w-full bg-emerald-600 hover:bg-emerald-700 sm:w-auto"
               size="lg"
             >
               Check Another Passport

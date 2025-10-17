@@ -11,12 +11,14 @@ export function MockAdContent({ orientation = 'horizontal' }: MockAdContentProps
 
   return (
     <div
-      className={`bg-gradient-to-br from-emerald-50 to-teal-50 flex h-full w-full ${
-        isVertical ? 'flex-col items-start justify-between p-6' : 'flex-row items-center justify-between gap-6 p-8'
+      className={`flex h-full w-full bg-gradient-to-br from-emerald-50 to-teal-50 ${
+        isVertical
+          ? 'flex-col items-start justify-between p-6'
+          : 'flex-row items-center justify-between gap-6 p-8'
       }`}
     >
       <div className={`flex-1 space-y-3 ${isVertical ? 'w-full' : ''}`}>
-        <div className="text-xs font-semibold uppercase tracking-wider text-emerald-700">
+        <div className="text-xs font-semibold tracking-wider text-emerald-700 uppercase">
           Featured Service
         </div>
         <h3

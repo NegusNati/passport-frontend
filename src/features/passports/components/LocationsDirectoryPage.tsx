@@ -55,9 +55,7 @@ export function LocationsDirectoryPage() {
                 <span>Loading branch offices…</span>
               </div>
             ) : hasError ? (
-              <div className="text-destructive text-center text-sm">
-                {error.message}
-              </div>
+              <div className="text-destructive text-center text-sm">{error.message}</div>
             ) : locations.length === 0 ? (
               <div className="text-muted-foreground text-center text-sm">
                 No branch offices available right now.
@@ -73,9 +71,9 @@ export function LocationsDirectoryPage() {
                         to="/locations/$locationSlug"
                         params={{ locationSlug: slug }}
                         preload="intent"
-                        className="border-border/60 hover:border-border hover:bg-background/90 focus-visible:ring-ring block rounded-xl border bg-background/70 p-4 text-left text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                        className="border-border/60 hover:border-border hover:bg-background/90 focus-visible:ring-ring bg-background/70 block rounded-xl border p-4 text-left text-sm font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                       >
-                        <span className="text-lg font-semibold leading-tight">{location}</span>
+                        <span className="text-lg leading-tight font-semibold">{location}</span>
                         <span className="text-muted-foreground mt-1 block text-sm">
                           View latest passports from this branch
                         </span>

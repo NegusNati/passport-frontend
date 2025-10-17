@@ -102,16 +102,16 @@ function identifyUser(user: User, additionalProps?: Record<string, unknown>) {
     is_admin: user.is_admin,
     created_at: user.created_at,
     updated_at: user.updated_at,
-    
+
     // Verification status
     'email-verified': !!user.email_verified_at,
     'email-verified-at': user.email_verified_at || undefined,
-    
+
     // Roles and permissions
     'role-count': user.roles.length,
     'permission-count': user.permissions.length,
     roles: user.roles.join(','),
-    
+
     ...additionalProps,
   })
 }

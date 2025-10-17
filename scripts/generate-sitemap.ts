@@ -177,4 +177,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   })
 }
 
-export { API_BASE_URL, dedupeRoutes, generateSitemapXML, getLocationRoutes,STATIC_ROUTES }
+export { API_BASE_URL, dedupeRoutes, generateSitemapXML, getLocationRoutes, STATIC_ROUTES }

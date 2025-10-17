@@ -133,7 +133,7 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
       <div className="absolute top-[15rem] left-[-10rem] z-[-110] ml-2 opacity-90">
         <img src={HabeshaFace} alt="Habesha Face" className="h-150 w-150" />
       </div>
-      <section className="py-8 ">
+      <section className="py-8">
         <div className="container mx-auto max-w-6xl px-4">
           <AdSlot preset="sponsored" orientation="horizontal" className="rounded-lg" />
         </div>
