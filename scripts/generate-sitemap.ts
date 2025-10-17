@@ -121,7 +121,7 @@ async function getLocationRoutes(): Promise<RouteConfig[]> {
     .filter((entry) => entry.slug.length > 0)
     .map<RouteConfig>((entry) => ({
       path: `/locations/${entry.slug}`,
-      priority: '0.7',
+      priority: '0.8',
       changefreq: 'daily',
     }))
 }
