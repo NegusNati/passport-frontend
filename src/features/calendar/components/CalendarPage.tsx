@@ -9,6 +9,7 @@ import ethiopic_numbers from '@/assets/landingImages/number.webp'
 import { AdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
+import { Seo } from '@/shared/ui/Seo'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 
 import {
@@ -328,6 +329,11 @@ export function CalendarPage() {
 
   return (
     <section className="relative py-14 sm:py-20">
+      <Seo
+        title="Ethiopian Calendar - Passport Release Schedule"
+        description="View the Ethiopian calendar to track passport release dates and important deadlines. Plan your passport application with our traditional calendar view."
+        path="/calendar"
+      />
       <div className="absolute bottom-[240rem] left-0 z-0 ml-2 translate-y-1/4 transform opacity-60 md:hidden md:opacity-90">
         <img src={ethiopic_numbers_pattern} alt="logo" className="h-150 w-150" />
       </div>

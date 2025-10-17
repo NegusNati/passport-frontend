@@ -1,5 +1,7 @@
 import { Helmet } from 'react-helmet-async'
 
+import landingOgImage from '@/assets/landingImages/landing_og.webp'
+
 type Props = {
   title?: string
   description?: string
@@ -27,6 +29,13 @@ export function Seo({
   const base = SITE?.replace(/\/$/, '') || ''
   const url = canonical || (base && path ? `${base}${path}` : '')
   const fullTitle = title ? (SITE_NAME ? `${title} · ${SITE_NAME}` : title) : SITE_NAME
+
+  // Default OG image with absolute URL handling
+  const ogImageUrl = ogImage
+    ? ogImage.startsWith('http')
+      ? ogImage
+      : `${base}${ogImage}`
+    : `${base}${landingOgImage}`
 
   return (
     <>
@@ -72,16 +81,18 @@ export function Seo({
         {url && <meta property="og:url" content={url} />}
         <meta property="og:type" content="article" />
         <meta property="og:site_name" content={SITE_NAME} />
-        {ogImage && <meta property="og:image" content={ogImage} />}
-        {ogImage && <meta property="og:image:alt" content={fullTitle} />}
+        <meta property="og:image" content={ogImageUrl} />
+        <meta property="og:image:alt" content={fullTitle} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:locale" content="en_US" />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         {title && <meta name="twitter:title" content={fullTitle} />}
         {description && <meta name="twitter:description" content={description} />}
-        {ogImage && <meta name="twitter:image" content={ogImage} />}
-        {ogImage && <meta name="twitter:image:alt" content={fullTitle} />}
+        <meta name="twitter:image" content={ogImageUrl} />
+        <meta name="twitter:image:alt" content={fullTitle} />
 
         {extraLinks.map((l, i) => (
           <link key={i} rel={l.rel} href={l.href} {...(l.type ? { type: l.type } : {})} />

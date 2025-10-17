@@ -11,8 +11,8 @@ export function AdvertisementPreviewPage() {
   return (
     <div className="from-primary/5 via-background to-background relative min-h-screen overflow-hidden bg-gradient-to-b">
       <Seo
-        title="Advertisement Preview"
-        description="See where your advertisements will appear across Passport.ET"
+        title="Advertisement Placements - Desktop & Mobile Preview"
+        description="Preview how advertisements appear across Passport.ET on desktop and mobile devices. See actual ad placements on calendar, content, and listing pages."
         path="/advertisment"
       />
 

@@ -46,8 +46,8 @@ export function PassportsByLocationPage({ locationName }: PassportsByLocationPag
   return (
     <div className="min-h-screen">
       <Seo
-        title={`${locationName} passports`}
-        description={`Check the latest passports released at the ${locationName} ICS branch.`}
+        title={`${locationName} - Latest Passport Releases`}
+        description={`Check real-time passport releases at ${locationName} ICS branch office. Track your urgent and regular Ethiopian passport application status for this location.`}
         path={`/locations/${slug}`}
       />
 

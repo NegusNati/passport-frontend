@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import HabeshaFace from '@/assets/landingImages/habesha_face.svg'
+import { Seo } from '@/shared/ui/Seo'
 
 import type { PassportSearchFilters } from '../schemas/passport'
 import { PassportSearchForm } from './PassportSearchForm'
@@ -36,6 +37,11 @@ export function PassportsPage() {
 
   return (
     <div className="min-h-screen">
+      <Seo
+        title="Search All Ethiopian Passports - Real-time Status Updates"
+        description="Search and track Ethiopian passports released from all Immigration and Citizenship Services (ICS) offices. Real-time updates for urgent and regular applications."
+        path="/passports"
+      />
       {/* Ad Banner Section */}
       {/* <section className="bg-background py-8">
         <div className="container mx-auto max-w-6xl px-4">

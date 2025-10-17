@@ -1,3 +1,5 @@
+import { Seo } from '@/shared/ui/Seo'
+
 import { AdBanner } from './AdBanner'
 import { AdvertiseSection } from './Advertise'
 import { ArticleSection } from './Articles'
@@ -11,6 +13,11 @@ import { VideoTabs } from './VideoTabs'
 export function LandingPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-4 overflow-x-hidden">
+      <Seo
+        title="Ethiopian Passport Status Check - Urgent & Regular Services"
+        description="Track your Ethiopian passport application status instantly. Check urgent and regular passport releases from all ICS branch offices across Ethiopia. ፓስፖርት ሁኔታ ያረጋግጡ።"
+        path="/"
+      />
       {/* Hero band with gradient surface */}
       <div className="relative h-[100svh] overflow-hidden overscroll-none pb-0 md:pb-[120px] lg:pb-[80px]">
         <Hero />
