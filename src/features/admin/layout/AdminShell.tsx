@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { prefersReducedMotion } from '@/features/admin/lib/a11y'
 import type { AdminPrimaryRole } from '@/features/admin/lib/roles'
 import type { User } from '@/features/auth/schemas/user'
+import { Seo } from '@/shared/ui/Seo'
 
 import { AdminUnauthorized } from '../components/AdminUnauthorized'
 import { AdminHeader } from './Header'
@@ -104,6 +105,7 @@ export function AdminShell({ user, role, children }: AdminShellProps) {
 
   return (
     <AdminShellContext.Provider value={contextValue}>
+      <Seo title="Admin dashboard" description="Manage content and users." noindex />
       <div className="bg-background flex min-h-screen">
         <Sidebar
           isOpen={sidebarOpen}

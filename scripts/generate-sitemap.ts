@@ -25,16 +25,20 @@ type RouteConfig = {
 }
 
 const STATIC_ROUTES: RouteConfig[] = [
-  // High priority pages
+  // High priority pages - Public content only
   { path: '/', priority: '1.0', changefreq: 'daily' },
   { path: '/articles', priority: '0.9', changefreq: 'daily' },
   { path: '/passports', priority: '0.9', changefreq: 'daily' },
-  { path: '/calendar', priority: '0.8', changefreq: 'weekly' },
+  { path: '/calendar', priority: '0.9', changefreq: 'weekly' },
 
   // Medium priority
-  { path: '/locations', priority: '0.8', changefreq: 'weekly' },
-  { path: '/register', priority: '0.7', changefreq: 'monthly' },
-  { path: '/login', priority: '0.6', changefreq: 'monthly' },
+  { path: '/locations', priority: '0.9', changefreq: 'weekly' },
+
+  // NOTE: Auth routes (/login, /register, /profile) are excluded because:
+  // - They redirect when users are already authenticated (non-canonical)
+  // - They are functional pages, not content pages
+  // - They should not be indexed by search engines
+  // Admin routes are also excluded as they require authentication
 ]
 
 // Routes to exclude from sitemap (reserved for future auto-discovery feature)

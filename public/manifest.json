@@ -3,18 +3,8 @@
   "name": "Passport.ET - Ethiopian Passport Status Tracker",
   "description": "Track your Ethiopian passport application status instantly. Search by reference number or name from over 1.2 million passports. No more repeated trips to the office.",
   "icons": [
-    {
-      "src": "passport_et.png",
-      "type": "image/png",
-      "sizes": "181x137",
-      "purpose": "any"
-    },
-    {
-      "src": "PASSPORT1.webp",
-      "type": "image/webp",
-      "sizes": "1920x1080",
-      "purpose": "any"
-    }
+    {"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},
+    {"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}
   ],
   "start_url": ".",
   "scope": "/",
