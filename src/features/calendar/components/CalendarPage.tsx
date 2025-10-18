@@ -9,8 +9,8 @@ import ethiopic_numbers from '@/assets/landingImages/number.webp'
 import { AdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
-import { Seo } from '@/shared/ui/Seo'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
+import { Seo } from '@/shared/ui/Seo'
 
 import {
   ETHIOPIAN_MONTHS,

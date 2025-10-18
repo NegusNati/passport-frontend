@@ -10,6 +10,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import { restoreAuthTokenFromStorage } from '@/api/client'
 import { queryClient } from '@/api/queryClient'
 import { ThemeProvider } from '@/shared/components/theme-provider'
+import { PWAInstallProvider } from '@/shared/hooks/usePWAInstall'
 import analytics from '@/shared/lib/analytics'
 import { env } from '@/shared/lib/env'
 import { initializeErrorTracking } from '@/shared/lib/error-tracking'
@@ -57,19 +58,37 @@ if (!isPostHogEnabled && import.meta.env.PROD) {
   console.warn('[PostHog] Analytics disabled: VITE_PUBLIC_POSTHOG_KEY not configured')
 }
 
+// Register service worker for PWA
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        if (import.meta.env.DEV) {
+          console.log('[SW] Registered successfully:', registration.scope)
+        }
+      })
+      .catch((error) => {
+        console.warn('[SW] Registration failed:', error)
+      })
+  })
+}
+
 // Render the app
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
   const root = createRoot(rootElement)
 
   const AppContent = (
-    <ThemeProvider>
-      <HelmetProvider>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </HelmetProvider>
-    </ThemeProvider>
+    <PWAInstallProvider>
+      <ThemeProvider>
+        <HelmetProvider>
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+          </QueryClientProvider>
+        </HelmetProvider>
+      </ThemeProvider>
+    </PWAInstallProvider>
   )
 
   root.render(

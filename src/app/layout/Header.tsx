@@ -8,8 +8,11 @@ import { authKeys } from '@/features/auth/api'
 import { useAuthUser } from '@/features/auth/hooks'
 import type { User } from '@/features/auth/schemas/user'
 import { ThemeToggle } from '@/shared/components/theme-toggle'
+import { usePWAInstall } from '@/shared/hooks/usePWAInstall'
+import { useAnalytics } from '@/shared/lib/analytics'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
+import { InstallInstructionsDialog } from '@/shared/ui/InstallInstructionsDialog'
 import { toast } from '@/shared/ui/sonner'
 
 import { MobileMenu } from './MobileMenu'
@@ -34,16 +37,18 @@ const nav: ReadonlyArray<NavItem> = [
     label: 'Download App',
     href: '#download',
     external: true,
-    comingSoonMessage: 'Native mobile apps are under construction. Stay tuned for the launch!',
   },
 ]
 
-function renderNavItem(item: NavItem) {
+function renderNavItem(item: NavItem, customOnClick?: () => void) {
   const className =
     'text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm font-semibold transition-colors'
 
-  const handleComingSoonClick = () => {
-    if (item.comingSoonMessage) {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (customOnClick) {
+      e.preventDefault()
+      customOnClick()
+    } else if (item.comingSoonMessage) {
       toast('Under construction 🚧', {
         description: item.comingSoonMessage,
       })
@@ -52,7 +57,7 @@ function renderNavItem(item: NavItem) {
 
   if (item.external || item.href.startsWith('#')) {
     return (
-      <a key={item.label} href={item.href} className={className} onClick={handleComingSoonClick}>
+      <a key={item.label} href={item.href} className={className} onClick={handleClick}>
         <span>{item.label}</span>
         {item.external ? <ArrowUpRight className="h-4 w-4" aria-hidden /> : null}
       </a>
@@ -65,7 +70,7 @@ function renderNavItem(item: NavItem) {
       to={item.href as AppPath}
       preload="intent"
       className={className}
-      onClick={handleComingSoonClick}
+      onClick={handleClick}
     >
       <span>{item.label}</span>
     </Link>
@@ -74,8 +79,11 @@ function renderNavItem(item: NavItem) {
 
 export function Header() {
   const [open, setOpen] = useState(false)
+  const [showIOSDialog, setShowIOSDialog] = useState(false)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { canInstall, isStandalone, platform, promptInstall } = usePWAInstall()
+  const { capture } = useAnalytics()
 
   const cachedUser = queryClient.getQueryData(authKeys.user()) as User | undefined
   const token = getAuthToken()
@@ -90,6 +98,46 @@ export function Header() {
   const user = fetchedUser ?? cachedUser ?? null
   const isAuthenticated = Boolean(user)
 
+  const handleDownloadAppClick = async () => {
+    capture('pwa_install_attempt', {
+      source: 'header-nav',
+      platform,
+      'can-install': canInstall,
+      'is-standalone': isStandalone,
+    })
+
+    if (isStandalone) {
+      toast('Already installed!', {
+        description: 'Passport.ET is already installed on your device.',
+      })
+      return
+    }
+
+    if (canInstall) {
+      const result = await promptInstall()
+      if (result === 'accepted') {
+        toast('App installed!', {
+          description: 'Passport.ET has been added to your home screen.',
+        })
+      } else if (result === 'dismissed') {
+        toast('Installation cancelled', {
+          description: 'You can install the app anytime from this menu.',
+        })
+      }
+      return
+    }
+
+    if (platform === 'ios') {
+      capture('pwa_install_ios_instructions_shown', { source: 'header-nav' })
+      setShowIOSDialog(true)
+      return
+    }
+
+    toast('Installation not available', {
+      description: 'Please open this site in Chrome or Safari to install the app.',
+    })
+  }
+
   return (
     <header className="border-border bg-background/95 sm:bg-background/80 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full border-b sm:backdrop-blur">
       <Container className="flex h-16 items-center justify-between">
@@ -100,7 +148,13 @@ export function Header() {
           <span className="sr-only">Go to homepage</span>
         </div>
 
-        <nav className="hidden items-center gap-6 md:flex">{nav.map(renderNavItem)}</nav>
+        <nav className="hidden items-center gap-6 md:flex">
+          {nav.map((item) =>
+            item.label === 'Download App'
+              ? renderNavItem(item, handleDownloadAppClick)
+              : renderNavItem(item),
+          )}
+        </nav>
 
         <div className="hidden items-center gap-2 md:flex">
           <ThemeToggle />
@@ -151,6 +205,11 @@ export function Header() {
         onClose={() => setOpen(false)}
         nav={nav}
         isAuthenticated={isAuthenticated}
+      />
+      <InstallInstructionsDialog
+        open={showIOSDialog}
+        onOpenChange={setShowIOSDialog}
+        platform={platform}
       />
     </header>
   )
