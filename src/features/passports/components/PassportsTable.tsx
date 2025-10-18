@@ -228,6 +228,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
             <Button
               variant="outline"
               size="sm"
+              className="hidden md:inline-flex"
               onClick={() =>
                 router.navigate({
                   to: '/passports/$passportId',
@@ -307,6 +308,12 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
                   onPageSizeChange: handlePageSizeChange,
                 }}
                 toolbar={toolbarComponent}
+                onRowClick={(passport) =>
+                  router.navigate({
+                    to: '/passports/$passportId',
+                    params: { passportId: String(passport.id) },
+                  })
+                }
               />
             </div>
             <div className="text-muted-foreground flex items-center justify-between text-sm">

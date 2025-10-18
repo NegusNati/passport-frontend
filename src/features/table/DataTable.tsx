@@ -51,6 +51,7 @@ interface DataTableProps<TData, TValue> {
   onExport?: () => void
   onAction?: () => void
   actionTitle?: string
+  onRowClick?: (row: TData) => void
 }
 
 export function DataTable<TData, TValue>({
@@ -67,6 +68,7 @@ export function DataTable<TData, TValue>({
   onExport,
   onAction,
   actionTitle,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -196,7 +198,39 @@ export function DataTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && 'selected'}
-                    className="odd:bg-muted/30"
+                    className={`odd:bg-muted/30 ${
+                      onRowClick
+                        ? 'md:cursor-auto cursor-pointer active:bg-muted/60 md:active:bg-transparent'
+                        : ''
+                    }`}
+                    onClick={
+                      onRowClick
+                        ? (e) => {
+                            // Only trigger on mobile (when Detail button is hidden)
+                            const target = e.target as HTMLElement
+                            if (target.closest('button, a')) return
+                            if (window.innerWidth < 768) {
+                              onRowClick(row.original)
+                            }
+                          }
+                        : undefined
+                    }
+                    onKeyDown={
+                      onRowClick
+                        ? (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              const target = e.target as HTMLElement
+                              if (target.closest('button, a')) return
+                              if (window.innerWidth < 768) {
+                                e.preventDefault()
+                                onRowClick(row.original)
+                              }
+                            }
+                          }
+                        : undefined
+                    }
+                    tabIndex={onRowClick && window.innerWidth < 768 ? 0 : undefined}
+                    role={onRowClick && window.innerWidth < 768 ? 'button' : undefined}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}>

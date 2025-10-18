@@ -55,7 +55,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
   })
 
   return (
-    <section className="relative overflow-hidden py-12 md:py-16">
+    <section className="relative py-12 md:py-16">
       {/* Green gradient background */}
       <div className="absolute inset-0" />
 

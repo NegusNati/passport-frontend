@@ -2,6 +2,7 @@ import { motion } from 'framer-motion'
 import { GithubIcon, InstagramIcon, LinkedinIcon, MegaphoneIcon, TwitterIcon } from 'lucide-react'
 import { useState } from 'react'
 
+import telegramIcon from '@/assets/logos/telegram-logo.svg'
 import { ComingSoonDialog } from '@/shared/ui/coming-soon-dialog'
 
 const Footer = () => {
@@ -93,8 +94,8 @@ const Footer = () => {
               whileHover={{ x: 5 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span>💬</span>
-              <span className="font-medium">Join Telegram Group</span>
+               <img src={telegramIcon} alt="Telegram" className="h-6 w-6" />
+              <span className="text-muted-foreground hover:text-primary font-medium">Join Telegram Group</span>
             </motion.a>
           </motion.div>
 
