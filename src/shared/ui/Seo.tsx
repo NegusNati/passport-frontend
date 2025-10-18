@@ -27,7 +27,9 @@ export function Seo({
   extraLinks = [],
 }: Props) {
   const base = SITE?.replace(/\/$/, '') || ''
-  const url = canonical || (base && path ? `${base}${path}` : '')
+  // Normalize path: root path '/' becomes empty to avoid trailing slash
+  const normalizedPath = path === '/' ? '' : path
+  const url = canonical || (base && normalizedPath ? `${base}${normalizedPath}` : base)
   const fullTitle = title ? (SITE_NAME ? `${title} · ${SITE_NAME}` : title) : SITE_NAME
 
   // Default OG image with absolute URL handling
