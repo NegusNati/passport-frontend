@@ -73,7 +73,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
             </div>
 
             {/* Header */}
-            <div className="relative z-10 mb-8 text-center">
+            <div className="relative z-10 mb-8 text-center text-[#8D2041]">
               <h1 className="mb-1 text-xl font-bold text-red-900 md:text-2xl">
                 የኢትዮጵያ ፌዴራላዊ ዲሞክራሲያዊ ሪፐብሊክ
               </h1>
