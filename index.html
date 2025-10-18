@@ -160,6 +160,26 @@
         } catch (_) { }
       })()
   </script>
+
+  <!-- Static navigation for crawlers (visually hidden but accessible to bots) -->
+  <!-- This ensures search engines can discover and follow internal links even without JavaScript -->
+  <nav aria-label="Site navigation" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;">
+    <h2>Main Navigation</h2>
+    <ul>
+      <li><a href="/">Home - Ethiopian Passport Status Check</a></li>
+      <li><a href="/passports">Check Passport Status - Search by Number or Name</a></li>
+      <li><a href="/articles">Articles & Travel Guides</a></li>
+      <li><a href="/calendar">Ethiopian Calendar - Ge'ez Numbers</a></li>
+      <li><a href="/locations">ICS Branch Offices - All Locations</a></li>
+      <li><a href="/advertisement-requests">Advertise With Us</a></li>
+    </ul>
+    <h2>Community & Support</h2>
+    <ul>
+      <li><a href="https://t.me/passportdotet_group" rel="noopener noreferrer" target="_blank">Join Telegram Community - 1.5M+ Users</a></li>
+      <li><a href="https://github.com/NegusNati/passport-frontend" rel="noopener noreferrer" target="_blank">GitHub Repository</a></li>
+    </ul>
+  </nav>
+
   <div id="app"></div>
   <script type="module" src="/src/main.tsx"></script>
 </body>
