@@ -12,31 +12,34 @@ import { VideoTabs } from './VideoTabs'
 
 export function LandingPage() {
   return (
-    <div className="mx-auto max-w-7xl space-y-4 overflow-x-hidden">
+    <>
       <Seo
         title="Ethiopian Passport Status - Track Urgent & Regular"
         description="Track your Ethiopian passport application status instantly. Check urgent and regular passport releases from all ICS branch offices across Ethiopia. ፓስፖርት ሁኔታ ያረጋግጡ።"
         path="/"
       />
-      {/* Hero section - optimized for fast paint */}
+
+      {/* Hero section - kept outside layout wrapper for earlier paint */}
       <Hero />
 
-      {/* Mobile-only CardSwap section */}
-      <HeroCardsMobile />
+      {/* Supporting sections */}
+      <div className="mx-auto mt-6 max-w-7xl space-y-4 overflow-x-hidden px-4 md:px-6">
+        <HeroCardsMobile />
 
-      <div className="relative z-[1]">
-        <Testimonials />
+        <div className="relative z-[1]">
+          <Testimonials />
+        </div>
+
+        <AdBanner />
+
+        <VideoTabs />
+        <AdvertiseSection />
+        <ArticleSection />
+        <FAQsSection />
+        <DownloadAppSection />
+
+        {/* <Footer /> */}
       </div>
-
-      <AdBanner />
-
-      <VideoTabs />
-      <AdvertiseSection />
-      <ArticleSection />
-      <FAQsSection />
-      <DownloadAppSection />
-
-      {/* <Footer /> */}
-    </div>
+    </>
   )
 }

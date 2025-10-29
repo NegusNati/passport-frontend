@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRightIcon, IdCardIcon, Users2Icon } from 'lucide-react'
+import { useEffect, useState } from 'react'
 
 import LandingImageOne from '@/assets/landingImages/cardImages/Landing_img_1.webp'
 import LandingImageTwo from '@/assets/landingImages/cardImages/Landing_img_2.webp'
@@ -33,6 +34,11 @@ const HERO_CARDS = [
   },
 ] as const
 
+const CARD_DIMENSIONS = {
+  desktop: { width: 538, height: 560 },
+  mobile: { width: 440, height: 580 },
+} as const
+
 function renderHeroCard(
   variant: 'desktop' | 'mobile',
   card: (typeof HERO_CARDS)[number],
@@ -42,22 +48,30 @@ function renderHeroCard(
   const headingSize = variant === 'desktop' ? 'text-xl' : 'text-base sm:text-lg'
   const descriptionSpacing = variant === 'desktop' ? 'mt-3' : 'mt-2'
   const isFirstCard = index === 0
+  const { width, height } = CARD_DIMENSIONS[variant]
+
+  const sizes =
+    variant === 'desktop'
+      ? '(min-width: 1024px) 538px, (min-width: 768px) 480px, 90vw'
+      : '(max-width: 767px) 80vw, 440px'
 
   return (
     <Card
       key={`${variant}-${card.title}`}
       customClass="pointer-events-auto overflow-hidden border-0 bg-transparent rounded-xl p-0"
+      style={{ width, height }}
     >
       <div className="relative h-full w-full">
         <img
           src={card.image}
           alt={card.alt}
-          width={538}
-          height={560}
-          className="h-full w-full rounded-2xl object-fill"
+          width={width}
+          height={height}
+          className="h-full w-full rounded-2xl object-cover"
           loading={isFirstCard ? 'eager' : 'lazy'}
           decoding="async"
           fetchPriority={isFirstCard ? 'high' : undefined}
+          sizes={sizes}
         />
         <div className="from-primary/50 via-primary/15 to-primary/5 absolute inset-0 bg-gradient-to-t" />
         <div className={`absolute inset-x-0 bottom-0 space-y-2 ${padding} `}>
@@ -74,6 +88,7 @@ function renderHeroCard(
 export function Hero() {
   const reduce = useReducedMotion()
   const { capture } = useAnalytics()
+  const [enableCardSwap, setEnableCardSwap] = useState(false)
 
   const handleCTAClick = (surface: string, variant?: string) => {
     capture('cta_click_track_passport', {
@@ -81,6 +96,69 @@ export function Hero() {
       variant: variant || 'primary',
     })
   }
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    const heroImageUrl = HERO_CARDS[0]?.image
+    if (!heroImageUrl) return
+
+    const existing = document.head.querySelector(
+      `link[rel="preload"][href="${heroImageUrl}"]`,
+    ) as HTMLLinkElement | null
+    if (existing) {
+      existing.setAttribute('fetchpriority', 'high')
+      return
+    }
+
+    const link = document.createElement('link')
+    link.rel = 'preload'
+    link.as = 'image'
+    link.href = heroImageUrl
+    link.setAttribute('fetchpriority', 'high')
+    document.head.appendChild(link)
+  }, [])
+
+  useEffect(() => {
+    if (reduce || enableCardSwap) return
+    if (typeof window === 'undefined') return
+
+    const mediaQuery = window.matchMedia('(min-width: 768px)')
+    let timeoutId: number | undefined
+
+    const scheduleEnable = () => {
+      if (timeoutId) {
+        window.clearTimeout(timeoutId)
+      }
+      timeoutId = window.setTimeout(() => setEnableCardSwap(true), 800)
+    }
+
+    if (mediaQuery.matches) {
+      scheduleEnable()
+    }
+
+    const handleChange = (event: MediaQueryListEvent) => {
+      if (event.matches) {
+        scheduleEnable()
+      }
+    }
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', handleChange)
+    } else if (typeof mediaQuery.addListener === 'function') {
+      mediaQuery.addListener(handleChange)
+    }
+
+    return () => {
+      if (typeof mediaQuery.removeEventListener === 'function') {
+        mediaQuery.removeEventListener('change', handleChange)
+      } else if (typeof mediaQuery.removeListener === 'function') {
+        mediaQuery.removeListener(handleChange)
+      }
+      if (timeoutId) {
+        window.clearTimeout(timeoutId)
+      }
+    }
+  }, [reduce, enableCardSwap])
 
   return (
     <section className="relative isolate min-h-[90svh] overflow-hidden pb-0 md:min-h-[80svh] md:pb-[120px] lg:pb-[80px]">
@@ -161,16 +239,28 @@ export function Hero() {
           {/* Right: CardSwap (visible on md+) */}
           <div className="hidden translate-x-[-45px] translate-y-[-65px] md:block">
             <div className="relative justify-self-end md:h-[580px] md:w-[538px]">
-              <CardSwapLazy
-                width={538}
-                height={560}
-                cardDistance={50}
-                verticalDistance={60}
-                delay={5000}
-                pauseOnHover={false}
-              >
-                {HERO_CARDS.map((card, index) => renderHeroCard('desktop', card, index))}
-              </CardSwapLazy>
+              {enableCardSwap ? (
+                <CardSwapLazy
+                  width={CARD_DIMENSIONS.desktop.width}
+                  height={CARD_DIMENSIONS.desktop.height}
+                  cardDistance={50}
+                  verticalDistance={60}
+                  delay={5000}
+                  pauseOnHover={false}
+                >
+                  {HERO_CARDS.map((card, index) => renderHeroCard('desktop', card, index))}
+                </CardSwapLazy>
+              ) : (
+                <div
+                  className="absolute top-1/2 left-1/2 origin-center -translate-x-1/2 -translate-y-1/2 scale-[0.7] overflow-visible sm:scale-[0.85] md:top-auto md:right-0 md:bottom-0 md:left-auto md:origin-bottom-right md:translate-x-[5%] md:translate-y-[20%] md:scale-100 lg:translate-x-[2%] lg:translate-y-[10%]"
+                  style={{
+                    width: CARD_DIMENSIONS.desktop.width,
+                    height: CARD_DIMENSIONS.desktop.height,
+                  }}
+                >
+                  {renderHeroCard('desktop', HERO_CARDS[0], 0)}
+                </div>
+              )}
             </div>
           </div>
         </div>

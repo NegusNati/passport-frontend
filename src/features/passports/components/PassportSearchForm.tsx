@@ -389,7 +389,9 @@ export function PassportSearchForm({
               type="button"
               onClick={handleToggleMode}
               className="text-foreground mt-4 text-sm font-semibold underline underline-offset-4 hover:no-underline"
-            >  {searchMode === 'number' ? 'Use name instead' : 'Use request number instead'}
+            >
+              {' '}
+              {searchMode === 'number' ? 'Use name instead' : 'Use request number instead'}
             </button>
 
             {/* Sample Request Numbers (only shown in number mode) */}

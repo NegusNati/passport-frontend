@@ -51,10 +51,11 @@ export function HeroCardsMobile() {
                     alt={card.alt}
                     width={440}
                     height={580}
-                    className="h-full w-full rounded-2xl object-fill"
+                    className="h-full w-full rounded-2xl object-cover"
                     loading={isFirstCard ? 'eager' : 'lazy'}
                     decoding="async"
                     fetchPriority={isFirstCard ? 'high' : undefined}
+                    sizes="(max-width: 767px) 90vw, 440px"
                   />
                   <div className="from-primary/50 via-primary/15 to-primary/5 absolute inset-0 bg-gradient-to-t" />
                   <div className="absolute inset-x-0 bottom-0 space-y-2 p-4 sm:p-6">

@@ -26,15 +26,14 @@ Each entry captures before/after metrics to demonstrate progress toward our Nort
 | Date       | Phase   | Task                       | LCP   | FCP  | TBT   | INP | CLS | PSI Mobile | Notes                                       |
 | ---------- | ------- | -------------------------- | ----- | ---- | ----- | --- | --- | ---------- | ------------------------------------------- |
 | 2025-10-29 | Phase 0 | Baseline capture           | 15.5s | 5-9s | 350ms | ?   | ?   | <50        | Initial state, no optimizations yet         |
-| 2025-10-29 | Phase 0 | Wire Web Vitals to PostHog | 17.4s    | 5.5s | 750ms   | -   | -   | -          | RUM enabled, no performance change expected |
+| 2025-10-29 | Phase 0 | Wire Web Vitals to PostHog | 17.4s | 5.5s | 750ms | -   | -   | -          | RUM enabled, no performance change expected |
 
 ### Phase 1 - Critical Rendering Path
 
-| Date       | Phase   | Task                                    | LCP            | FCP            | TBT           | INP | CLS     | PSI Mobile | Notes                                                                                    |
-| ---------- | ------- | --------------------------------------- | -------------- | -------------- | ------------- | --- | ------- | ---------- | ---------------------------------------------------------------------------------------- |
-| 2025-10-30 | Phase 1 | Initial optimizations (broken preload)  | 17.4s → 24.8s  | 5.5s → 11.7s   | 750ms → 220ms | -   | ? → 0   | -          | ❌ Regression! Broken image preload path blocked rendering. TBT improved 70%, CLS fixed. |
-| 2025-10-30 | Phase 1 | Fix: Remove broken image preload        | Awaiting test  | Awaiting test  | Should stay   | -   | Stay 0  | -          | Removed /src/assets path that doesn't exist in production build                          |
-
+| Date       | Phase   | Task                                   | LCP           | FCP           | TBT           | INP | CLS    | PSI Mobile | Notes                                                                                    |
+| ---------- | ------- | -------------------------------------- | ------------- | ------------- | ------------- | --- | ------ | ---------- | ---------------------------------------------------------------------------------------- |
+| 2025-10-30 | Phase 1 | Initial optimizations (broken preload) | 17.4s → 24.8s | 5.5s → 11.7s  | 750ms → 220ms | -   | ? → 0  | -          | ❌ Regression! Broken image preload path blocked rendering. TBT improved 70%, CLS fixed. |
+| 2025-10-30 | Phase 1 | Fix: Remove broken image preload       | Awaiting test | Awaiting test | Should stay   | -   | Stay 0 | -          | Removed /src/assets path that doesn't exist in production build                          |
 
 ### Phase 2 - JavaScript & CSS Budget
 

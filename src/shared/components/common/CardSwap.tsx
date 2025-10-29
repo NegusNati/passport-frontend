@@ -109,15 +109,8 @@ const CardSwap: React.FC<CardSwapProps> = ({
   easing = 'elastic',
   children,
 }) => {
-  // Check if user prefers reduced motion
   const prefersReducedMotion =
-    typeof window !== 'undefined' &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-  // If user prefers reduced motion, show static stack
-  if (prefersReducedMotion) {
-    return <StaticCardStack width={width} height={height}>{children}</StaticCardStack>
-  }
+    typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
   const config = useMemo(
     () =>
@@ -154,6 +147,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
   const container = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (prefersReducedMotion) return
     const total = refs.length
     refs.forEach((r, i) =>
       placeNow(r.current!, makeSlot(i, cardDistance, verticalDistance, total), skewAmount),
@@ -239,7 +233,17 @@ const CardSwap: React.FC<CardSwapProps> = ({
       }
     }
     return () => clearInterval(intervalRef.current)
-  }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing, config, refs])
+  }, [
+    prefersReducedMotion,
+    cardDistance,
+    verticalDistance,
+    delay,
+    pauseOnHover,
+    skewAmount,
+    easing,
+    config,
+    refs,
+  ])
 
   const rendered = childArr.map((child, i) =>
     isValidElement<CardProps>(child)
@@ -254,6 +258,14 @@ const CardSwap: React.FC<CardSwapProps> = ({
         } as CardProps & React.RefAttributes<HTMLDivElement>)
       : child,
   )
+
+  if (prefersReducedMotion) {
+    return (
+      <StaticCardStack width={width} height={height}>
+        {children}
+      </StaticCardStack>
+    )
+  }
 
   return (
     <div
