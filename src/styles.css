@@ -117,6 +117,10 @@
 }
 
 @theme {
+  --font-sans: 'Playfair Display', 'Geist', ui-sans-serif, system-ui, sans-serif,
+    'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-cursive: 'Brush Script MT', 'Lucida Handwriting', cursive;
+
   /* Map CSS variables to Tailwind v4 color tokens */
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));
@@ -165,6 +169,8 @@
   /* Tailwind reset for shadcn components */
   * {
     @apply border-border;
+    font-family: 'Playfair Display', 'Geist', ui-sans-serif, system-ui, sans-serif,
+      'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   }
   body {
     @apply bg-background text-foreground;
@@ -247,9 +253,6 @@
 
 body {
   @apply m-0;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
-    'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overscroll-behavior: contain;

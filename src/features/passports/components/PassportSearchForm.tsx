@@ -240,10 +240,10 @@ export function PassportSearchForm({
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
             Check your passport
           </h1>
-          <p className="text-muted-foreground mt-4 text-lg">
+          <h2 className="text-muted-foreground mt-4 text-lg">
             Search with your reference number or name and get real-time updates—no more repeated
             trips to the office.
-          </p>
+          </h2>
 
           {/* Search Form */}
           <div className="mt-8">
@@ -388,9 +388,8 @@ export function PassportSearchForm({
             <button
               type="button"
               onClick={handleToggleMode}
-              className="text-primary mt-4 text-sm underline underline-offset-4 hover:no-underline"
-            >
-              {searchMode === 'number' ? 'Use name instead' : 'Use request number instead'}
+              className="text-foreground mt-4 text-sm font-semibold underline underline-offset-4 hover:no-underline"
+            >  {searchMode === 'number' ? 'Use name instead' : 'Use request number instead'}
             </button>
 
             {/* Sample Request Numbers (only shown in number mode) */}

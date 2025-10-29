@@ -35,3 +35,5 @@ These baseline metrics establish our starting point before optimization work. Al
 1. Run actual tests and save results here
 2. Begin Phase 1 optimizations
 3. Compare all future tests against these baselines
+
+i get this on phase 0 https://pagespeed.web.dev/analysis/https-passport-et/7tpozf9evn?form_factor=mobile

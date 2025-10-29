@@ -37,11 +37,11 @@
 
 **Outcome:** Above-the-fold content paints quickly with minimal blocking work.
 
-- [ ] Refactor `src/features/landing/components/LandingPage.tsx` to move the hero markup earlier in the route tree and strip non-essential wrappers.
-- [ ] Optimize hero imagery in `src/assets/landingImages/` (WebP/AVIF variants, responsive sizes) and update `Hero.tsx` with `width`/`height`, `loading="eager"` for the primary hero image, and `decoding="async"` elsewhere.
-- [ ] Add `<link rel="preload">` entries in `index.html` for the hero image, primary font files, and the main CSS bundle.
-- [ ] Gate `CardSwap` animations in `Hero.tsx` behind `prefers-reduced-motion` and delay its hydration on mobile (render a static card first).
-- [ ] Inline critical Tailwind styles for the hero (e.g., via `critters` in `vite.config.ts`) so the first paint is not blocked by the full CSS payload.
+- [x] Refactor `src/features/landing/components/LandingPage.tsx` to move the hero markup earlier in the route tree and strip non-essential wrappers.
+- [x] Optimize hero imagery in `src/assets/landingImages/` (WebP/AVIF variants, responsive sizes) and update `Hero.tsx` with `width`/`height`, `loading="eager"` for the primary hero image, and `decoding="async"` elsewhere.
+- [x] Add `<link rel="preload">` entries in `index.html` for the hero image, primary font files, and the main CSS bundle.
+- [x] Gate `CardSwap` animations in `Hero.tsx` behind `prefers-reduced-motion` and delay its hydration on mobile (render a static card first).
+- [ ] Inline critical Tailwind styles for the hero (e.g., via `critters` in `vite.config.ts`) so the first paint is not blocked by the full CSS payload. _(Deferred - requires additional tooling)_
 - [ ] Re-run PSI (mobile) and record new LCP/FCP values before checking off the phase.
 
 ## Phase 2 — JavaScript & CSS Budget (TBT & Unused Code)

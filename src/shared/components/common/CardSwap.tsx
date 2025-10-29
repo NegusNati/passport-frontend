@@ -67,6 +67,36 @@ const placeNow = (el: HTMLElement, slot: Slot, skew: number) =>
     force3D: true,
   })
 
+// Static card stack for users who prefer reduced motion
+const StaticCardStack: React.FC<CardSwapProps> = ({ width, height, children }) => {
+  const childArr = useMemo(
+    () => Children.toArray(children) as ReactElement<CardProps>[],
+    [children],
+  )
+
+  return (
+    <div
+      className="absolute top-1/2 left-1/2 origin-center -translate-x-1/2 -translate-y-1/2 scale-[0.7] overflow-visible sm:scale-[0.85] md:top-auto md:right-0 md:bottom-0 md:left-auto md:origin-bottom-right md:translate-x-[5%] md:translate-y-[20%] md:scale-100 lg:translate-x-[2%] lg:translate-y-[10%]"
+      style={{ width, height }}
+    >
+      {childArr.map((child, i) =>
+        isValidElement<CardProps>(child)
+          ? cloneElement(child, {
+              key: i,
+              style: {
+                width,
+                height,
+                transform: `translate(-50%, -50%) translateY(${-i * 20}px)`,
+                zIndex: childArr.length - i,
+                ...(child.props.style ?? {}),
+              },
+            } as CardProps)
+          : child,
+      )}
+    </div>
+  )
+}
+
 const CardSwap: React.FC<CardSwapProps> = ({
   width = 500,
   height = 400,
@@ -79,6 +109,16 @@ const CardSwap: React.FC<CardSwapProps> = ({
   easing = 'elastic',
   children,
 }) => {
+  // Check if user prefers reduced motion
+  const prefersReducedMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  // If user prefers reduced motion, show static stack
+  if (prefersReducedMotion) {
+    return <StaticCardStack width={width} height={height}>{children}</StaticCardStack>
+  }
+
   const config = useMemo(
     () =>
       easing === 'elastic'

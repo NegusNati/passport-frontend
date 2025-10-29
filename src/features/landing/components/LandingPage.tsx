@@ -18,10 +18,8 @@ export function LandingPage() {
         description="Track your Ethiopian passport application status instantly. Check urgent and regular passport releases from all ICS branch offices across Ethiopia. ፓስፖርት ሁኔታ ያረጋግጡ።"
         path="/"
       />
-      {/* Hero band with gradient surface */}
-      <div className="relative h-[100svh] overflow-hidden overscroll-none pb-0 md:pb-[120px] lg:pb-[80px]">
-        <Hero />
-      </div>
+      {/* Hero section - optimized for fast paint */}
+      <Hero />
 
       {/* Mobile-only CardSwap section */}
       <HeroCardsMobile />

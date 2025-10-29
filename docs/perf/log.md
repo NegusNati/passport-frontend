@@ -26,7 +26,7 @@ Each entry captures before/after metrics to demonstrate progress toward our Nort
 | Date       | Phase   | Task                       | LCP   | FCP  | TBT   | INP | CLS | PSI Mobile | Notes                                       |
 | ---------- | ------- | -------------------------- | ----- | ---- | ----- | --- | --- | ---------- | ------------------------------------------- |
 | 2025-10-29 | Phase 0 | Baseline capture           | 15.5s | 5-9s | 350ms | ?   | ?   | <50        | Initial state, no optimizations yet         |
-| 2025-10-29 | Phase 0 | Wire Web Vitals to PostHog | -     | -    | -     | -   | -   | -          | RUM enabled, no performance change expected |
+| 2025-10-29 | Phase 0 | Wire Web Vitals to PostHog | 17.4s    | 5.5s | 750ms   | -   | -   | -          | RUM enabled, no performance change expected |
 
 ### Phase 1 - Critical Rendering Path
 

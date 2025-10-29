@@ -5,7 +5,8 @@ import { ArrowRightIcon, IdCardIcon, Users2Icon } from 'lucide-react'
 import LandingImageOne from '@/assets/landingImages/cardImages/Landing_img_1.webp'
 import LandingImageTwo from '@/assets/landingImages/cardImages/Landing_img_2.webp'
 import LandingImageThree from '@/assets/landingImages/cardImages/Landing_img_3.webp'
-import { AnimatedBorderCard, Card, CardSwap } from '@/shared/components/common'
+import { AnimatedBorderCard, Card } from '@/shared/components/common'
+import { CardSwapLazy } from '@/shared/components/common/CardSwapLazy'
 import { useAnalytics } from '@/shared/lib/analytics'
 import { M } from '@/shared/lib/motion'
 import { Button } from '@/shared/ui/button'
@@ -32,10 +33,15 @@ const HERO_CARDS = [
   },
 ] as const
 
-function renderHeroCard(variant: 'desktop' | 'mobile', card: (typeof HERO_CARDS)[number]) {
+function renderHeroCard(
+  variant: 'desktop' | 'mobile',
+  card: (typeof HERO_CARDS)[number],
+  index: number,
+) {
   const padding = variant === 'desktop' ? 'p-8' : 'p-4 sm:p-6'
   const headingSize = variant === 'desktop' ? 'text-xl' : 'text-base sm:text-lg'
   const descriptionSpacing = variant === 'desktop' ? 'mt-3' : 'mt-2'
+  const isFirstCard = index === 0
 
   return (
     <Card
@@ -46,9 +52,12 @@ function renderHeroCard(variant: 'desktop' | 'mobile', card: (typeof HERO_CARDS)
         <img
           src={card.image}
           alt={card.alt}
+          width={538}
+          height={560}
           className="h-full w-full rounded-2xl object-fill"
-          loading="lazy"
+          loading={isFirstCard ? 'eager' : 'lazy'}
           decoding="async"
+          fetchPriority={isFirstCard ? 'high' : undefined}
         />
         <div className="from-primary/50 via-primary/15 to-primary/5 absolute inset-0 bg-gradient-to-t" />
         <div className={`absolute inset-x-0 bottom-0 space-y-2 ${padding} `}>
@@ -74,7 +83,7 @@ export function Hero() {
   }
 
   return (
-    <section className="relative isolate overflow-hidden">
+    <section className="relative isolate min-h-[90svh] overflow-hidden pb-0 md:min-h-[80svh] md:pb-[120px] lg:pb-[80px]">
       {/* Container to constrain width and center content */}
       <div className="container max-w-7xl px-4 md:px-6">
         {/* Two-column layout on md+; single column on mobile */}
@@ -152,7 +161,7 @@ export function Hero() {
           {/* Right: CardSwap (visible on md+) */}
           <div className="hidden translate-x-[-45px] translate-y-[-65px] md:block">
             <div className="relative justify-self-end md:h-[580px] md:w-[538px]">
-              <CardSwap
+              <CardSwapLazy
                 width={538}
                 height={560}
                 cardDistance={50}
@@ -160,8 +169,8 @@ export function Hero() {
                 delay={5000}
                 pauseOnHover={false}
               >
-                {HERO_CARDS.map((card) => renderHeroCard('desktop', card))}
-              </CardSwap>
+                {HERO_CARDS.map((card, index) => renderHeroCard('desktop', card, index))}
+              </CardSwapLazy>
             </div>
           </div>
         </div>

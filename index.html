@@ -4,6 +4,18 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+    />
+
     <!-- Analytics -->
     <!-- <script defer src="https://static.cloudflareinsights.com/beacon.min.js"
     data-cf-beacon='{"token":"a9bcb1d97b42448789842972c3848ebc"}'></script> -->
@@ -156,6 +168,29 @@
     <link
       rel="stylesheet"
       href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap"
+    />
+
+    <!-- Preload critical resources for faster FCP/LCP -->
+    <link
+      rel="preload"
+      as="image"
+      href="/src/assets/landingImages/cardImages/Landing_img_1.webp"
+      fetchpriority="high"
+      type="image/webp"
+    />
+    <link
+      rel="preload"
+      as="font"
+      href="https://fonts.bunny.net/figtree/files/figtree-latin-400-normal.woff2"
+      crossorigin="anonymous"
+      type="font/woff2"
+    />
+    <link
+      rel="preload"
+      as="font"
+      href="https://fonts.bunny.net/figtree/files/figtree-latin-600-normal.woff2"
+      crossorigin="anonymous"
+      type="font/woff2"
     />
 
     <!-- Structured Data (JSON-LD) -->
