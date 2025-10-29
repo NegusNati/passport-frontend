@@ -23,7 +23,7 @@ export function LandingPage() {
       <Hero />
 
       {/* Supporting sections */}
-      <div className="mx-auto mt-6 max-w-7xl space-y-4 overflow-x-hidden px-4 md:px-6">
+      <div className="mx-auto  max-w-7xl space-y-4 overflow-x-hidden px-4 md:px-6">
         <HeroCardsMobile />
 
         <div className="relative z-[1]">
