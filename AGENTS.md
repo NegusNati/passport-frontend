@@ -504,7 +504,7 @@ The app uses **Lexical** as the rich text editor with real-time **Markdown short
 import { LexicalEditor } from '@/shared/components/rich-text/LexicalEditor'
 
 // In your form
-<LexicalEditor
+;<LexicalEditor
   value={field.state.value ?? ''}
   onChange={(html) => field.handleChange(html)}
   placeholder="Write your content here..."
@@ -533,7 +533,10 @@ The editor includes a help icon (?) in the toolbar that displays all available M
 **Export/Import Utilities**
 
 ```ts
-import { exportEditorStateAsMarkdown, importMarkdownToEditorState } from '@/shared/lib/lexical/markdown-utils'
+import {
+  exportEditorStateAsMarkdown,
+  importMarkdownToEditorState,
+} from '@/shared/lib/lexical/markdown-utils'
 
 // Export current content as Markdown
 const markdown = exportEditorStateAsMarkdown(editor)
@@ -545,12 +548,14 @@ importMarkdownToEditorState(editor, markdownString)
 **Custom Transformers**
 
 The editor includes custom transformers for `ImageNode` and `VideoNode` to handle media in Markdown:
+
 - Images use standard Markdown syntax: `![alt](url)`
 - Videos use custom syntax: `[video](url)` (since Markdown has no native video support)
 
 **Storage Format**
 
 Content is stored as **sanitized HTML** (backward compatible). Markdown is a convenience layer for authoring; the editor:
+
 1. Accepts HTML as input (existing articles work unchanged)
 2. Enables Markdown shortcuts during editing
 3. Outputs sanitized HTML on change

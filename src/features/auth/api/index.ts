@@ -6,7 +6,7 @@ import {
   setAuthToken,
 } from '@/api/client'
 import { queryClient } from '@/api/queryClient'
-import analytics from '@/shared/lib/analytics'
+import { analytics } from '@/shared/lib/analytics'
 
 import type { LoginInput } from '../schemas/login'
 import type { RegisterInput } from '../schemas/register'

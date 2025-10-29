@@ -16,9 +16,21 @@ const Footer = () => {
   ]
 
   const socials = [
-    { name: 'GitHub', icon: <GithubIcon className="size-4" />, url: 'https://github.com/NegusNati/passport-frontend' },
-    { name: 'X (Formerly Twitter)', icon: <TwitterIcon className="size-4" />, url: 'https://x.com/Negusnati' },
-    { name: 'LinkedIn', icon: <LinkedinIcon className="size-4" />, url: 'https://www.linkedin.com/in/negusnati/' },
+    {
+      name: 'GitHub',
+      icon: <GithubIcon className="size-4" />,
+      url: 'https://github.com/NegusNati/passport-frontend',
+    },
+    {
+      name: 'X (Formerly Twitter)',
+      icon: <TwitterIcon className="size-4" />,
+      url: 'https://x.com/Negusnati',
+    },
+    {
+      name: 'LinkedIn',
+      icon: <LinkedinIcon className="size-4" />,
+      url: 'https://www.linkedin.com/in/negusnati/',
+    },
     { name: 'Instagram', icon: <InstagramIcon className="size-4" />, url: '#' },
   ]
 
@@ -94,8 +106,10 @@ const Footer = () => {
               whileHover={{ x: 5 }}
               whileTap={{ scale: 0.95 }}
             >
-               <img src={telegramIcon} alt="Telegram" className="h-6 w-6" />
-              <span className="text-muted-foreground hover:text-primary font-medium">Join Telegram Group</span>
+              <img src={telegramIcon} alt="Telegram" className="h-6 w-6" />
+              <span className="text-muted-foreground hover:text-primary font-medium">
+                Join Telegram Group
+              </span>
             </motion.a>
           </motion.div>
 

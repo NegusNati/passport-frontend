@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
 import { $isImageNode } from '../ImageNode'
-import { $isVideoNode } from '../VideoNode'
 import { IMAGE, PASSPORT_TRANSFORMERS, VIDEO } from '../markdown-transformers'
+import { $isVideoNode } from '../VideoNode'
 
 describe('Markdown Transformers', () => {
   describe('Transformer Configuration', () => {

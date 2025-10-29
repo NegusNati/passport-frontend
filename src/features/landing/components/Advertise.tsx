@@ -135,9 +135,7 @@ export function AdvertiseSection() {
                 size="md"
                 rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
               >
-                <Link to="/advertisment">
-                  Contact Us Now
-                </Link>
+                <Link to="/advertisment">Contact Us Now</Link>
               </Button>
               <p className="text-muted-foreground text-xs font-medium tracking-[0.3em] uppercase">
                 Limited slots available

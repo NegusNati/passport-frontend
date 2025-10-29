@@ -60,9 +60,9 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-umami}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
       DISABLE_UPDATES: 'true'
-      TRACKER_SCRIPT_NAME: 'script'  
+      TRACKER_SCRIPT_NAME: 'script'
       FORCE_SSL: 'true'
-      LOG_LEVEL: 'warn'  
+      LOG_LEVEL: 'warn'
 
     volumes:
       - ../data/umami-db:/var/lib/postgresql/data

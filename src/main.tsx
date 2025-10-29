@@ -11,7 +11,7 @@ import { restoreAuthTokenFromStorage } from '@/api/client'
 import { queryClient } from '@/api/queryClient'
 import { ThemeProvider } from '@/shared/components/theme-provider'
 import { PWAInstallProvider } from '@/shared/hooks/usePWAInstall'
-import analytics from '@/shared/lib/analytics'
+import { analytics } from '@/shared/lib/analytics'
 import { env } from '@/shared/lib/env'
 import { initializeErrorTracking } from '@/shared/lib/error-tracking'
 
@@ -130,7 +130,12 @@ if (rootElement && !rootElement.innerHTML) {
   )
 }
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals()
+// Start measuring Web Vitals and sending to PostHog
+// In development, also log to console for debugging
+if (import.meta.env.DEV) {
+  reportWebVitals((metric) => {
+    console.log('[Web Vitals]', metric.name, metric.value, metric.rating)
+  })
+} else {
+  reportWebVitals()
+}

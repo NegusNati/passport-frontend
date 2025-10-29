@@ -1,4 +1,4 @@
-import analytics from './analytics'
+import { analytics } from './analytics'
 
 const seenErrors = new Set<string>()
 const MAX_ERROR_CACHE = 100

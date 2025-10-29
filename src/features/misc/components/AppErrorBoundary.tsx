@@ -1,7 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Component, type ErrorInfo, type ReactNode } from 'react'
 
-import analytics from '@/shared/lib/analytics'
+import { analytics } from '@/shared/lib/analytics'
 import { Button } from '@/shared/ui/button'
 
 type AppErrorFallbackProps = {

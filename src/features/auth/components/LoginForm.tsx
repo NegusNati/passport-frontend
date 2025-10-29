@@ -112,7 +112,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
       try {
         await loginMutation.mutateAsync(sanitized)
-      } catch (err) {
+      } catch {
         /* mutation onError handles state */
       }
     },

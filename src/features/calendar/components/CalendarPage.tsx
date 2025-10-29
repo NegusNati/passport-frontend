@@ -782,7 +782,7 @@ export function CalendarPage() {
                                 const u = new SpeechSynthesisUtterance(am)
                                 u.lang = 'am-ET'
                                 window.speechSynthesis?.speak(u)
-                              } catch (_) {
+                              } catch {
                                 // no-op if speech synthesis not available
                               }
                             }}

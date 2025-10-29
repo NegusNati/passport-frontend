@@ -31,7 +31,7 @@ export const Route = createFileRoute('/admin')({
         adminUser: user as User,
         adminRole: role,
       }
-    } catch (error) {
+    } catch {
       throw redirect({ to: '/login', search: { redirect: '/admin' } })
     }
   },

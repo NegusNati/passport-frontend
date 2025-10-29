@@ -200,7 +200,7 @@ export function DataTable<TData, TValue>({
                     data-state={row.getIsSelected() && 'selected'}
                     className={`odd:bg-muted/30 ${
                       onRowClick
-                        ? 'md:cursor-auto cursor-pointer active:bg-muted/60 md:active:bg-transparent'
+                        ? 'active:bg-muted/60 cursor-pointer md:cursor-auto md:active:bg-transparent'
                         : ''
                     }`}
                     onClick={

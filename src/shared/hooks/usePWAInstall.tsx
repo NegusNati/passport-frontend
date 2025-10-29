@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { createContext, useContext, useEffect, useState } from 'react'
 
-import analytics from '@/shared/lib/analytics'
+import { analytics } from '@/shared/lib/analytics'
 
 type Platform = 'ios' | 'android' | 'desktop' | 'unknown'
 type InstallResult = 'accepted' | 'dismissed' | 'unavailable'
@@ -22,15 +22,15 @@ const PWAInstallContext = createContext<PWAInstallContextValue | null>(null)
 
 function detectPlatform(): Platform {
   const ua = navigator.userAgent.toLowerCase()
-  
+
   if (/(iphone|ipad|ipod)/i.test(ua)) {
     return 'ios'
   }
-  
+
   if (/android/i.test(ua)) {
     return 'android'
   }
-  
+
   return 'desktop'
 }
 
@@ -53,7 +53,7 @@ export function PWAInstallProvider({ children }: { children: ReactNode }) {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
-      
+
       if (import.meta.env.DEV) {
         console.log('[PWA] Install prompt available')
       }
@@ -63,12 +63,12 @@ export function PWAInstallProvider({ children }: { children: ReactNode }) {
     const handleAppInstalled = () => {
       setIsStandalone(true)
       setDeferredPrompt(null)
-      
+
       analytics.capture('pwa_install_completed', {
         platform,
         timestamp: new Date().toISOString(),
       })
-      
+
       if (import.meta.env.DEV) {
         console.log('[PWA] App installed successfully')
       }
@@ -107,7 +107,7 @@ export function PWAInstallProvider({ children }: { children: ReactNode }) {
 
       await deferredPrompt.prompt()
       const choiceResult = await deferredPrompt.userChoice
-      
+
       analytics.capture('pwa_install_user_choice', {
         outcome: choiceResult.outcome,
         platform,
@@ -137,10 +137,10 @@ export function PWAInstallProvider({ children }: { children: ReactNode }) {
 
 export function usePWAInstall(): PWAInstallContextValue {
   const context = useContext(PWAInstallContext)
-  
+
   if (!context) {
     throw new Error('usePWAInstall must be used within PWAInstallProvider')
   }
-  
+
   return context
 }

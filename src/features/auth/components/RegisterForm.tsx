@@ -163,7 +163,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
 
       try {
         await registerMutation.mutateAsync(sanitized)
-      } catch (err) {
+      } catch {
         /* handled in onError */
       }
     },

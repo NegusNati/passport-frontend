@@ -25,6 +25,70 @@ This project uses [Vitest](https://vitest.dev/) for testing. You can run the tes
 pnpm test
 ```
 
+## Performance Testing
+
+### Lab Testing Workflow
+
+Run these steps before and after performance changes to measure impact:
+
+1. **Build production bundle:**
+
+   ```bash
+   pnpm build
+   ```
+
+2. **Preview locally:**
+
+   ```bash
+   pnpm serve
+   ```
+
+   Opens preview at `http://localhost:4173`
+
+3. **Run PageSpeed Insights (Web):**
+   - Visit https://pagespeed.web.dev/
+   - Test: `https://www.passport.et` (production) or `http://localhost:4173` (local)
+   - Run both mobile and desktop tests
+   - Save JSON reports to `docs/perf/baseline/` or current phase folder
+
+4. **Run Lighthouse CLI (Alternative):**
+
+   ```bash
+   npx @lhci/cli@latest autorun --collect.url=http://localhost:4173
+   ```
+
+5. **WebPageTest (Optional but comprehensive):**
+   - Visit https://www.webpagetest.org/
+   - Test URL: `https://www.passport.et`
+   - Location: Frankfurt/London (closer to Ethiopia)
+   - Device: Moto G4 (mobile baseline)
+
+6. **Log results:**
+   Update `docs/perf/log.md` with before/after metrics
+
+### Real User Monitoring
+
+Web Vitals are automatically captured and sent to PostHog:
+
+- **LCP** (Largest Contentful Paint)
+- **FCP** (First Contentful Paint)
+- **INP** (Interaction to Next Paint)
+- **CLS** (Cumulative Layout Shift)
+- **TTFB** (Time to First Byte)
+
+View metrics in PostHog dashboard under event: `web_vitals_reported`
+
+### Performance Goals
+
+- **LCP:** ≤ 2.5s on mobile
+- **FCP:** ≤ 1.8s on mobile
+- **TBT:** ≤ 150ms
+- **INP:** ≤ 200ms
+- **CLS:** ≤ 0.1
+- **PageSpeed Score:** ≥ 90 (mobile)
+
+See `perf.md` for the full performance roadmap.
+
 ## Styling
 
 This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
