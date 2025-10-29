@@ -12,9 +12,10 @@ export function AdvertisementPreviewPage() {
     <div className="from-primary/5 via-background to-background relative min-h-screen overflow-hidden bg-gradient-to-b">
       <Seo
         title="Advertisement Placements - Desktop & Mobile Preview"
-        description="Preview how advertisements appear across Passport.ET on desktop and mobile devices. See actual ad placements on calendar, content, and listing pages."
+        description="Preview advertisement placements on Passport.ET. See how ads appear on desktop and mobile across calendar, content, and listing pages."
         path="/advertisment"
       />
+      <h1 className="sr-only">Advertisement Placements Preview - Desktop & Mobile</h1>
 
       {/* Background decoration */}
       <div

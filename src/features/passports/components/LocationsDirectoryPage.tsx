@@ -26,8 +26,8 @@ export function LocationsDirectoryPage() {
   return (
     <div className="min-h-screen">
       <Seo
-        title="All ICS Branch Offices - Ethiopian Passport Locations"
-        description="Complete directory of Immigration and Citizenship Services (ICS) branch offices across Ethiopia. Find your nearest office and check passport releases by location."
+        title="ICS Branch Offices - Ethiopian Passport"
+        description="Directory of ICS branch offices across Ethiopia. Find your nearest location and check passport releases for urgent and regular applications."
         path="/locations"
       />
 

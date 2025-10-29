@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
 
 import AmharicLetters from '@/assets/landingImages/amharic_letters.svg'
@@ -129,8 +130,14 @@ export function AdvertiseSection() {
               creative tailored to your brand voice.
             </p>
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-start">
-              <Button size="md" rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}>
-                Contact Us Now
+              <Button
+                asChild
+                size="md"
+                rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
+              >
+                <Link to="/advertisment">
+                  Contact Us Now
+                </Link>
               </Button>
               <p className="text-muted-foreground text-xs font-medium tracking-[0.3em] uppercase">
                 Limited slots available

@@ -101,10 +101,10 @@ export function Hero() {
             <h1 className="text-foreground max-w-[30ch] text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl">
               Tired of endless uncertainty? Instantly know if your Ethiopian passport is ready.
             </h1>
-            <p className="text-muted-foreground max-w-[52ch] text-base leading-relaxed dark:text-white/70">
+            <h2 className="text-muted-foreground max-w-[52ch] text-base leading-relaxed dark:text-white/70">
               Search with your reference number or name and get real-time updates—no more repeated
               trips to the office.
-            </p>
+            </h2>
 
             {/* CTA row */}
             <div className="mt-2 grid w-full place-items-center gap-4 sm:w-auto sm:grid-cols-2">

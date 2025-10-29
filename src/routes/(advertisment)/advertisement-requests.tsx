@@ -37,6 +37,7 @@ function AdvertisementRequestPage() {
         description="Submit your advertisement request and our team will get back to you shortly."
         path="/advertisement-requests"
       />
+      <h1 className="sr-only">Submit Advertisement Request</h1>
 
       <div
         aria-hidden="true"

@@ -112,7 +112,7 @@ export function ArticlesPage() {
     <div className="min-h-screen">
       <Seo
         title="Passport Application Guides & News - Ethiopia"
-        description="Read expert guides on Ethiopian passport applications, renewal processes, requirements, and latest immigration news. Stay informed about ICS updates and policy changes."
+        description="Expert guides on Ethiopian passport applications, renewal, and requirements. Stay updated on ICS immigration news, policy changes, and procedures."
         path="/articles"
         extraLinks={getFeedLinks()}
       />

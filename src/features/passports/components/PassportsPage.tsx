@@ -38,8 +38,8 @@ export function PassportsPage() {
   return (
     <div className="min-h-screen">
       <Seo
-        title="Search All Ethiopian Passports - Real-time Status Updates"
-        description="Search and track Ethiopian passports released from all Immigration and Citizenship Services (ICS) offices. Real-time updates for urgent and regular applications."
+        title="Search Ethiopian Passports - Live Updates"
+        description="Search Ethiopian passports from all ICS offices. Track urgent and regular applications with real-time updates. Get instant status information."
         path="/passports"
       />
       <h1 className="sr-only">Search Ethiopian Passport Status - Real-time Updates</h1>

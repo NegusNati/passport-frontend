@@ -14,7 +14,7 @@ export function LandingPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-4 overflow-x-hidden">
       <Seo
-        title="Ethiopian Passport Status Check - Urgent & Regular Services"
+        title="Ethiopian Passport Status - Track Urgent & Regular"
         description="Track your Ethiopian passport application status instantly. Check urgent and regular passport releases from all ICS branch offices across Ethiopia. ፓስፖርት ሁኔታ ያረጋግጡ።"
         path="/"
       />
