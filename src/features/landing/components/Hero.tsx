@@ -181,7 +181,7 @@ export function Hero() {
               </AnimatedBorderCard>
               <AnimatedBorderCard variant="secondary" size="sm" className="border-amber-100/50">
                 <IdCardIcon className="text-primary h-4 w-4" />
-                1,278,980+ passports confirmed as issued
+                1,300,173+ passports confirmed as issued
               </AnimatedBorderCard>
             </div>
 
