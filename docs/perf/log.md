@@ -30,7 +30,11 @@ Each entry captures before/after metrics to demonstrate progress toward our Nort
 
 ### Phase 1 - Critical Rendering Path
 
-_(Entries will be added as Phase 1 tasks complete)_
+| Date       | Phase   | Task                                    | LCP            | FCP            | TBT           | INP | CLS     | PSI Mobile | Notes                                                                                    |
+| ---------- | ------- | --------------------------------------- | -------------- | -------------- | ------------- | --- | ------- | ---------- | ---------------------------------------------------------------------------------------- |
+| 2025-10-30 | Phase 1 | Initial optimizations (broken preload)  | 17.4s → 24.8s  | 5.5s → 11.7s   | 750ms → 220ms | -   | ? → 0   | -          | ❌ Regression! Broken image preload path blocked rendering. TBT improved 70%, CLS fixed. |
+| 2025-10-30 | Phase 1 | Fix: Remove broken image preload        | Awaiting test  | Awaiting test  | Should stay   | -   | Stay 0  | -          | Removed /src/assets path that doesn't exist in production build                          |
+
 
 ### Phase 2 - JavaScript & CSS Budget
 

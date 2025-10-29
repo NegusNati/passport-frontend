@@ -170,14 +170,9 @@
       href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap"
     />
 
-    <!-- Preload critical resources for faster FCP/LCP -->
-    <link
-      rel="preload"
-      as="image"
-      href="/src/assets/landingImages/cardImages/Landing_img_1.webp"
-      fetchpriority="high"
-      type="image/webp"
-    />
+    <!-- Preload critical fonts for faster FCP -->
+    <!-- Note: Hero image preload removed - Vite hashes asset URLs making static preload impossible -->
+    <!-- The img tag's loading="eager" + fetchpriority="high" provides sufficient prioritization -->
     <link
       rel="preload"
       as="font"

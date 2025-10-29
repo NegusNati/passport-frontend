@@ -59,7 +59,7 @@
 
 **Outcome:** Static assets arrive fast and stay cached between visits.
 
-- [ ] Extend `vercel.json` with `headers` to set `Cache-Control: public, max-age=31536000, immutable` for hashed assets in `/assets`, `/fonts`, and other static files.
+- [ ] Configure the VPS reverse proxy (e.g., Nginx/Caddy) and Cloudflare caching rules to serve hashed assets in `/assets`, `/fonts`, and other static files with `Cache-Control: public, max-age=31536000, immutable`.
 - [ ] Verify Vite emits hashed filenames; if any asset is unversioned, update `vite.config.ts` or the import path to include content hashing.
 - [ ] Add a build step (e.g., `scripts/optimize-images.ts` using `sharp`) to compress images in `public/media` and `src/assets` before deployment.
 - [ ] Introduce responsive source sets (`srcset`/`sizes`) for large marketing imagery (`Hero.tsx`, `Testimonials.tsx`, `DownloadApp.tsx`).
