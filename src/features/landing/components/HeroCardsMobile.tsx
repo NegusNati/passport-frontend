@@ -28,8 +28,8 @@ const HERO_CARDS = [
 
 export function HeroCardsMobile() {
   return (
-    <section className="container mx-auto max-w-7xl translate-y-[-40px] px-4 py-2 md:hidden">
-      <div className="relative mx-auto h-[400px] w-full">
+    <section className="container mx-auto max-w-7xl translate-y-[-70px] px-4 py-2 md:hidden">
+      <div className="relative mx-auto h-[580px] w-full">
         <CardSwapLazy
           width={440}
           height={580}

@@ -161,7 +161,7 @@ export function Hero() {
   }, [reduce, enableCardSwap])
 
   return (
-    <section className="relative isolate min-h-[100svh] overflow-hidden pb-0 md:min-h-[90svh] md:pb-[120px] lg:pb-[80px] overscroll-none">
+    <section className="relative overflow-hidden overscroll-none isolate min-h-[80svh] pb-0 md:min-h-[90svh] md:overflow-hidden md:pb-[120px] lg:pb-[80px]">
       {/* Container to constrain width and center content */}
       <div className="container mx-auto max-w-7xl px-4 md:px-6 ">
         {/* Two-column layout on md+; single column on mobile */}
