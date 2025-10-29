@@ -9,6 +9,7 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary'
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin'
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin'
 import { ListPlugin } from '@lexical/react/LexicalListPlugin'
+import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin'
 import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin'
 import DOMPurify from 'isomorphic-dompurify'
@@ -21,6 +22,7 @@ import {
 import { useEffect } from 'react'
 
 import { createEditorConfig } from '@/shared/lib/lexical/initial-config'
+import { PASSPORT_TRANSFORMERS } from '@/shared/lib/lexical/markdown-transformers'
 
 import { ImagesPlugin } from './ImagesPlugin'
 import { TabIndentationPlugin } from './TabIndentationPlugin'
@@ -186,6 +188,7 @@ export function LexicalEditor({
           <ListPlugin />
           <LinkPlugin />
           <AutoLinkPlugin matchers={MATCHERS} />
+          <MarkdownShortcutPlugin transformers={PASSPORT_TRANSFORMERS} />
           <ImagesPlugin />
           <TabIndentationPlugin />
           <OnChangePlugin onChange={handleChange} />

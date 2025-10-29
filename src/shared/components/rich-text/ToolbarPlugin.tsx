@@ -41,6 +41,7 @@ import {
 import { useCallback, useEffect, useState } from 'react'
 
 import { INSERT_IMAGE_COMMAND, INSERT_VIDEO_COMMAND } from './ImagesPlugin'
+import { MarkdownHelpTooltip } from './MarkdownHelpTooltip'
 
 const LowPriority = 1
 
@@ -463,6 +464,10 @@ export function ToolbarPlugin() {
       >
         <VideoIcon className="h-4 w-4" />
       </button>
+
+      <Divider />
+
+      <MarkdownHelpTooltip />
     </div>
   )
 }

@@ -494,6 +494,77 @@ export const Route = createFileRoute('/login')({
 
 ---
 
+## 10.1) Rich Text Editing with Markdown Support
+
+The app uses **Lexical** as the rich text editor with real-time **Markdown shortcuts** for enhanced authoring experience.
+
+**Editor Component**
+
+```tsx
+import { LexicalEditor } from '@/shared/components/rich-text/LexicalEditor'
+
+// In your form
+<LexicalEditor
+  value={field.state.value ?? ''}
+  onChange={(html) => field.handleChange(html)}
+  placeholder="Write your content here..."
+/>
+```
+
+**Markdown Shortcuts**
+
+Authors can type Markdown syntax for instant formatting:
+
+- **Headings**: `# `, `## `, `### ` (followed by space)
+- **Bold**: `**text**` or `__text__`
+- **Italic**: `*text*` or `_text_`
+- **Inline code**: `` `code` ``
+- **Strikethrough**: `~~text~~`
+- **Lists**: `- ` or `* ` for bullets, `1. ` for numbered
+- **Blockquote**: `> ` (followed by space)
+- **Links**: `[text](url)`
+- **Images**: `![alt text](url)`
+- **Videos**: `[video](url)` (custom syntax)
+
+**Toolbar Help**
+
+The editor includes a help icon (?) in the toolbar that displays all available Markdown shortcuts. Users can click it to see a quick reference.
+
+**Export/Import Utilities**
+
+```ts
+import { exportEditorStateAsMarkdown, importMarkdownToEditorState } from '@/shared/lib/lexical/markdown-utils'
+
+// Export current content as Markdown
+const markdown = exportEditorStateAsMarkdown(editor)
+
+// Import Markdown content (replaces current content)
+importMarkdownToEditorState(editor, markdownString)
+```
+
+**Custom Transformers**
+
+The editor includes custom transformers for `ImageNode` and `VideoNode` to handle media in Markdown:
+- Images use standard Markdown syntax: `![alt](url)`
+- Videos use custom syntax: `[video](url)` (since Markdown has no native video support)
+
+**Storage Format**
+
+Content is stored as **sanitized HTML** (backward compatible). Markdown is a convenience layer for authoring; the editor:
+1. Accepts HTML as input (existing articles work unchanged)
+2. Enables Markdown shortcuts during editing
+3. Outputs sanitized HTML on change
+
+**Best Practices**
+
+- The editor automatically sanitizes all content (both HTML and Markdown-derived)
+- Custom media nodes (ImageNode, VideoNode) preserve dimensions and are responsive
+- Markdown shortcuts work alongside toolbar buttons without conflicts
+- Reduced motion preferences are respected for animations
+- All formatting is keyboard accessible
+
+---
+
 ## 11) Accessibility
 
 - All interactive elements must be reachable and operable by keyboard.

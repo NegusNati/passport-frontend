@@ -351,9 +351,9 @@ function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) 
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
-        <p className="text-muted-foreground mt-1 text-sm">
+        <h3 className="text-muted-foreground mt-1 text-sm">
           Track passport processing updates with quick filters and smart search.
-        </p>
+        </h3>
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
