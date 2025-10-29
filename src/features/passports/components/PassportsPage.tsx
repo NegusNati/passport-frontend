@@ -42,6 +42,7 @@ export function PassportsPage() {
         description="Search and track Ethiopian passports released from all Immigration and Citizenship Services (ICS) offices. Real-time updates for urgent and regular applications."
         path="/passports"
       />
+      <h1 className="sr-only">Search Ethiopian Passport Status - Real-time Updates</h1>
       {/* Ad Banner Section */}
       {/* <section className="bg-background py-8">
         <div className="container mx-auto max-w-6xl px-4">
