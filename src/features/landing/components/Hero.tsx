@@ -252,7 +252,7 @@ export function Hero() {
                 </CardSwapLazy>
               ) : (
                 <div
-                  className="absolute top-1/2 left-1/2 origin-center -translate-x-1/2 -translate-y-1/2 scale-[0.7] overflow-visible sm:scale-[0.85] md:top-auto md:right-0 md:bottom-0 md:left-auto md:origin-bottom-right md:translate-x-[5%] md:translate-y-[20%] md:scale-100 lg:translate-x-[2%] lg:translate-y-[10%]"
+                  className="absolute top-1/2 left-1/2 origin-center -translate-x-1/2 -translate-y-1/2 scale-[0.7] overflow-visible perspective-[900px] sm:scale-[0.85] md:top-auto md:right-0 md:bottom-0 md:left-auto md:origin-bottom-right md:translate-x-[5%] md:translate-y-[20%] md:scale-100 lg:translate-x-[2%] lg:translate-y-[10%]"
                   style={{
                     width: CARD_DIMENSIONS.desktop.width,
                     height: CARD_DIMENSIONS.desktop.height,
