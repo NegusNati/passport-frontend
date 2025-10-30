@@ -3,14 +3,16 @@ import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import { defineConfig, type PluginOption } from 'vite'
 
-type CrittersOptions = {
+type CriticalCssOptions = {
   preload?: 'none' | 'js' | 'css' | 'media' | 'swap' | string
   pruneSource?: boolean
   reduceInlineStyles?: boolean
   logLevel?: 'info' | 'warn' | 'error' | 'silent'
+  path?: string
+  publicPath?: string
 }
 
-type CrittersConstructor = new (options: CrittersOptions) => {
+type CriticalCssConstructor = new (options: CriticalCssOptions) => {
   process(html: string): Promise<string>
 }
 
@@ -19,10 +21,14 @@ async function loadCriticalCssPlugin(): Promise<PluginOption | null> {
     return null
   }
 
+  if (process.env.VITE_ENABLE_CRITICAL_CSS !== 'true') {
+    return null
+  }
+
   try {
-    const CrittersClass = await resolveCriticalCssConstructor()
-    if (!CrittersClass) {
-      throw new Error('No critical CSS inliner (beasties/critters) is installed')
+    const BeastiesClass = await resolveCriticalCssConstructor()
+    if (!BeastiesClass) {
+      throw new Error('No critical CSS inliner (beasties) is installed')
     }
 
     return {
@@ -30,11 +36,13 @@ async function loadCriticalCssPlugin(): Promise<PluginOption | null> {
       enforce: 'post',
       apply: 'build',
       async generateBundle(_, bundle) {
-        const critters = new CrittersClass({
+        const beasties = new BeastiesClass({
           preload: 'swap',
           pruneSource: false,
           reduceInlineStyles: false,
           logLevel: 'info',
+          path: 'dist',
+          publicPath: '/',
         })
 
         await Promise.all(
@@ -43,8 +51,18 @@ async function loadCriticalCssPlugin(): Promise<PluginOption | null> {
             if (typeof asset.source !== 'string') return
             if (!asset.fileName.endsWith('.html')) return
 
-            const inlined = await critters.process(asset.source)
-            asset.source = inlined
+            try {
+              const inlined = await beasties.process(asset.source)
+              asset.source = inlined
+            } catch (error) {
+              if (process.env.NODE_ENV !== 'production') {
+                console.warn(
+                  `[perf] Critical CSS inline failed for ${asset.fileName}: ${
+                    (error as Error).message
+                  }`,
+                )
+              }
+            }
           }),
         )
       },
@@ -53,29 +71,25 @@ async function loadCriticalCssPlugin(): Promise<PluginOption | null> {
     if (process.env.NODE_ENV !== 'production') {
       const reason = (error as Error)?.message ?? 'unknown error'
       console.warn(
-        `[perf] Critical CSS inlining skipped (${reason}). Install "beasties" (or "critters") to enable.`,
+        `[perf] Critical CSS inlining skipped (${reason}). Install "beasties" to enable.`,
       )
     }
     return null
   }
 }
 
-async function resolveCriticalCssConstructor(): Promise<CrittersConstructor | null> {
-  const candidates = ['beasties', 'critters'] as const
-
-  for (const name of candidates) {
-    try {
-      const mod = (await import(name)) as CrittersConstructor | { default?: CrittersConstructor }
-      const ctor = typeof mod === 'function' ? mod : mod.default
-      if (typeof ctor === 'function') {
-        return ctor
-      }
-    } catch (err) {
-      if (process.env.NODE_ENV !== 'production' && process.env.PERF_DEBUG === 'true') {
-        console.info(
-          `[perf] Critical CSS inliner "${name}" not available: ${(err as Error).message}`,
-        )
-      }
+async function resolveCriticalCssConstructor(): Promise<CriticalCssConstructor | null> {
+  try {
+    const mod = (await import('beasties')) as
+      | CriticalCssConstructor
+      | { default?: CriticalCssConstructor }
+    const ctor = typeof mod === 'function' ? mod : mod.default
+    if (typeof ctor === 'function') {
+      return ctor
+    }
+  } catch (error) {
+    if (process.env.NODE_ENV !== 'production' && process.env.PERF_DEBUG === 'true') {
+      console.info(`[perf] Critical CSS inliner missing: ${(error as Error).message}`)
     }
   }
 
@@ -99,6 +113,24 @@ export default defineConfig(async () => {
     plugins,
     define: {
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version || 'dev'),
+    },
+    build: {
+      sourcemap: true,
+      rollupOptions: {
+        output: {
+          manualChunks(id: string) {
+            if (!id.includes('node_modules')) return undefined
+
+            if (id.includes('posthog-js')) return 'analytics'
+            if (id.includes('sonner')) return 'ui-feedback'
+            if (id.includes('lucide-react')) return 'icons'
+            if (id.includes('@tanstack')) return 'tanstack'
+            if (id.includes('zod')) return 'validation'
+            if (id.includes('react')) return 'react'
+            return undefined
+          },
+        },
+      },
     },
     server: {
       port: 3000,

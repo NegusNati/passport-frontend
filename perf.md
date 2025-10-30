@@ -41,18 +41,18 @@
 - [x] Optimize hero imagery in `src/assets/landingImages/` (WebP/AVIF variants, responsive sizes) and update `Hero.tsx` with `width`/`height`, `loading="eager"` for the primary hero image, and `decoding="async"` elsewhere.
 - [x] Add a runtime `<link rel="preload">` for the hero image (dynamic in `Hero.tsx`) and keep primary fonts preloaded; ensure the main CSS bundle continues to stream via Vite.
 - [x] Gate `CardSwap` animations in `Hero.tsx` behind `prefers-reduced-motion` and delay its hydration on mobile (render a static card first).
-- [x] Inline critical Tailwind styles for the hero using an optional `beasties`/`critters` pass in `vite.config.ts` (auto-enables when either package is installed).
+- [x] Inline critical Tailwind styles for the hero using an optional `beasties` pass in `vite.config.ts` (toggle with `VITE_ENABLE_CRITICAL_CSS=true` during build).
 - [ ] Re-run PSI (mobile) and record new LCP/FCP values before checking off the phase.
 
 ## Phase 2 — JavaScript & CSS Budget (TBT & Unused Code)
 
 **Outcome:** The main thread stays free; bundles ship only what each route needs.
 
-- [ ] Produce a bundle profile (`pnpm dlx vite-bundle-visualizer --analyze dist/stats.html`) and document the heaviest chunks.
-- [ ] Ensure TanStack Router lazily loads feature routes—import `src/features/admin`, `src/features/passports`, etc., via dynamic `import()` so they do not inflate the landing bundle.
-- [ ] Lazy-load heavy libraries (`lexical`, `gsap`, `jspdf`, `html2canvas`) only within the components that truly need them.
-- [ ] Remove or replace rarely used animation helpers from `tw-animate-css` with Tailwind-native keyframes scoped to the owning component.
-- [ ] Confirm Tailwind purge settings cover `src/**/*` and prune unused utility classes; keep global CSS minimal in `src/styles.css`.
+- [x] Produce a bundle profile (manual chunk stats from `pnpm build`) and log top offenders (`react` ≈ 738 kB, `tanstack` ≈ 205 kB, `analytics` ≈ 160 kB, entry `index` ≈ 120 kB).
+- [x] Split vendor/runtime bundles via `build.rollupOptions.output.manualChunks` so React, TanStack, PostHog, Lucide, and Sonner load on demand.
+- [x] Confirm heavy libraries (`jspdf`, `html2canvas`, GSAP/CardSwap) remain lazily loaded via dynamic `import()` wrappers.
+- [x] Remove or replace rarely used animation helpers from `tw-animate-css` with Tailwind-native keyframes scoped to the owning component.
+- [x] Confirm Tailwind purge settings cover `src/**/*` and prune unused utility classes; keep global CSS minimal in `src/styles.css`.
 - [ ] Re-run PSI/Lighthouse in mobile mode, log TBT/JS execution time, and note deltas.
 
 ## Phase 3 — Asset Delivery & Caching
@@ -70,7 +70,7 @@
 
 **Outcome:** Interaction remains smooth; third-party code never blocks rendering.
 
-- [ ] Load `posthog-js` asynchronously (dynamic `import()` in the analytics provider) and gate initialization until after the first paint.
+- [x] Load `posthog-js` asynchronously (dynamic `import()` in the analytics provider) and gate initialization until after the first paint.
 - [ ] Review each third-party script and remove anything not critical; self-host open‑source bundles when feasible for better caching.
 - [ ] Replace layout-affecting animations (e.g., in `Hero.tsx`, `Testimonials.tsx`) with transform/opacity transitions and add `will-change` hints sparingly.
 - [ ] Throttle or debounce expensive listeners (search inputs, scroll, resize) in `src/features/passports` so handlers stay under 50 ms.

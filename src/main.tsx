@@ -2,7 +2,7 @@ import './styles.css'
 
 import { QueryClientProvider } from '@tanstack/react-query'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
-import { PostHogProvider } from 'posthog-js/react'
+import type { PostHog } from 'posthog-js'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { HelmetProvider } from 'react-helmet-async'
@@ -14,6 +14,7 @@ import { PWAInstallProvider } from '@/shared/hooks/usePWAInstall'
 import { analytics } from '@/shared/lib/analytics'
 import { env } from '@/shared/lib/env'
 import { initializeErrorTracking } from '@/shared/lib/error-tracking'
+import { PostHogBoundary } from '@/shared/providers/PostHogBoundary'
 
 import reportWebVitals from './reportWebVitals.ts'
 // Import the generated route tree
@@ -91,41 +92,40 @@ if (rootElement && !rootElement.innerHTML) {
     </PWAInstallProvider>
   )
 
+  const posthogOptions = {
+    api_host: env.VITE_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com',
+    ui_host: 'https://eu.i.posthog.com',
+    defaults: '2025-05-24',
+    capture_exceptions: true,
+    debug: import.meta.env.MODE === 'development',
+    loaded: (posthog: PostHog | undefined) => {
+      analytics.initialize(posthog ?? null)
+      analytics.setReleaseVersion(APP_VERSION)
+
+      if (import.meta.env.DEV) {
+        console.log('[PostHog] Successfully initialized')
+        console.log(
+          '[PostHog] API Host:',
+          env.VITE_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com',
+        )
+      }
+    },
+    persistence: 'localStorage+cookie',
+    autocapture: {
+      dom_event_allowlist: [],
+      capture_copied_text: true,
+    },
+  }
+
   root.render(
     <StrictMode>
-      {isPostHogEnabled ? (
-        <PostHogProvider
-          apiKey={POSTHOG_KEY}
-          options={{
-            api_host: env.VITE_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com',
-            ui_host: 'https://eu.i.posthog.com',
-            defaults: '2025-05-24',
-            capture_exceptions: true,
-            debug: import.meta.env.MODE === 'development',
-            loaded: (posthog) => {
-              analytics.initialize(posthog)
-              analytics.setReleaseVersion(APP_VERSION)
-
-              if (import.meta.env.DEV) {
-                console.log('[PostHog] Successfully initialized')
-                console.log(
-                  '[PostHog] API Host:',
-                  env.VITE_PUBLIC_POSTHOG_HOST || 'https://eu.i.posthog.com',
-                )
-              }
-            },
-            persistence: 'localStorage+cookie',
-            autocapture: {
-              dom_event_allowlist: [],
-              capture_copied_text: true,
-            },
-          }}
-        >
-          {AppContent}
-        </PostHogProvider>
-      ) : (
-        AppContent
-      )}
+      <PostHogBoundary
+        enabled={Boolean(isPostHogEnabled)}
+        apiKey={POSTHOG_KEY ?? ''}
+        options={posthogOptions}
+      >
+        {AppContent}
+      </PostHogBoundary>
     </StrictMode>,
   )
 }
