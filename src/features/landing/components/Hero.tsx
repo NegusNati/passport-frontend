@@ -14,6 +14,7 @@ import { Button } from '@/shared/ui/button'
 
 const HERO_CARDS = [
   {
+    id: 'hero-card-1',
     title: 'Passport Search',
     description:
       'Use your reference number or full name with intelligent matching. from 1.2 million passports',
@@ -21,12 +22,14 @@ const HERO_CARDS = [
     alt: 'Illustration showing a person searching on a phone',
   },
   {
+    id: 'hero-card-2',
     title: 'Get Detailed Answer',
     description: 'when to pick up the passport, location, time, ...',
     image: LandingImageTwo,
     alt: 'Collage of community members sharing travel tips',
   },
   {
+    id: 'hero-card-3',
     title: 'Join Our Community',
     description: 'Join the Telegram group to learn from others’ experiences.',
     image: LandingImageThree,
@@ -38,6 +41,29 @@ const CARD_DIMENSIONS = {
   desktop: { width: 538, height: 560 },
   mobile: { width: 440, height: 580 },
 } as const
+
+const CARD_SOURCES: Record<
+  (typeof HERO_CARDS)[number]['id'],
+  {
+    avif: string
+    webp: string
+  }
+> = {
+  'hero-card-1': {
+    avif: '/media/landing/hero-card-1-480w.avif 480w, /media/landing/hero-card-1-768w.avif 768w, /media/landing/hero-card-1-1080w.avif 1080w',
+    webp: '/media/landing/hero-card-1-480w.webp 480w, /media/landing/hero-card-1-768w.webp 768w, /media/landing/hero-card-1-1080w.webp 1080w',
+  },
+  'hero-card-2': {
+    avif: '/media/landing/hero-card-2-480w.avif 480w, /media/landing/hero-card-2-768w.avif 768w, /media/landing/hero-card-2-1080w.avif 1080w',
+    webp: '/media/landing/hero-card-2-480w.webp 480w, /media/landing/hero-card-2-768w.webp 768w, /media/landing/hero-card-2-1080w.webp 1080w',
+  },
+  'hero-card-3': {
+    avif: '/media/landing/hero-card-3-480w.avif 480w, /media/landing/hero-card-3-768w.avif 768w, /media/landing/hero-card-3-1080w.avif 1080w',
+    webp: '/media/landing/hero-card-3-480w.webp 480w, /media/landing/hero-card-3-768w.webp 768w, /media/landing/hero-card-3-1080w.webp 1080w',
+  },
+}
+
+export const HERO_CARD_IMAGE_SOURCES = CARD_SOURCES
 
 function renderHeroCard(
   variant: 'desktop' | 'mobile',
@@ -54,6 +80,7 @@ function renderHeroCard(
     variant === 'desktop'
       ? '(min-width: 1024px) 538px, (min-width: 768px) 480px, 90vw'
       : '(max-width: 767px) 80vw, 440px'
+  const sources = CARD_SOURCES[card.id]
 
   return (
     <Card
@@ -62,17 +89,21 @@ function renderHeroCard(
       style={{ width, height }}
     >
       <div className="relative h-full w-full">
-        <img
-          src={card.image}
-          alt={card.alt}
-          width={width}
-          height={height}
-          className="h-full w-full rounded-2xl object-cover"
-          loading={isFirstCard ? 'eager' : 'lazy'}
-          decoding="async"
-          fetchPriority={isFirstCard ? 'high' : undefined}
-          sizes={sizes}
-        />
+        <picture>
+          <source type="image/avif" srcSet={sources.avif} sizes={sizes} />
+          <source type="image/webp" srcSet={sources.webp} sizes={sizes} />
+          <img
+            src={card.image}
+            alt={card.alt}
+            width={width}
+            height={height}
+            className="h-full w-full rounded-2xl object-cover"
+            loading={isFirstCard ? 'eager' : 'lazy'}
+            decoding="async"
+            fetchPriority={isFirstCard ? 'high' : undefined}
+            sizes={sizes}
+          />
+        </picture>
         <div className="from-primary/50 via-primary/15 to-primary/5 absolute inset-0 bg-gradient-to-t" />
         <div className={`absolute inset-x-0 bottom-0 space-y-2 ${padding} `}>
           <h3 className={`${headingSize} font-semibold tracking-tight text-white`}>{card.title}</h3>

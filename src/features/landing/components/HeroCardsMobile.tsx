@@ -3,9 +3,11 @@ import LandingImageTwo from '@/assets/landingImages/cardImages/Landing_img_2.web
 import LandingImageThree from '@/assets/landingImages/cardImages/Landing_img_3.webp'
 import { Card } from '@/shared/components/common'
 import { CardSwapLazy } from '@/shared/components/common/CardSwapLazy'
+import { HERO_CARD_IMAGE_SOURCES } from './Hero'
 
 const HERO_CARDS = [
   {
+    id: 'hero-card-1',
     title: 'Passport Search',
     description:
       'Use your reference number or full name with intelligent matching. from 1.2 million passports',
@@ -13,12 +15,14 @@ const HERO_CARDS = [
     alt: 'Illustration showing a person searching on a phone',
   },
   {
+    id: 'hero-card-2',
     title: 'Get Detailed Answer',
     description: 'when to pick up the passport, location, time, ...',
     image: LandingImageTwo,
     alt: 'Collage of community members sharing travel tips',
   },
   {
+    id: 'hero-card-3',
     title: 'Join Our Community',
     description: "Join the Telegram group to learn from others' experiences.",
     image: LandingImageThree,
@@ -46,17 +50,29 @@ export function HeroCardsMobile() {
                 customClass="pointer-events-auto overflow-hidden border-0 bg-transparent rounded-xl p-0"
               >
                 <div className="relative h-full w-full">
-                  <img
-                    src={card.image}
-                    alt={card.alt}
-                    width={440}
-                    height={580}
-                    className="h-full w-full rounded-2xl object-cover"
-                    loading={isFirstCard ? 'eager' : 'lazy'}
-                    decoding="async"
-                    fetchPriority={isFirstCard ? 'high' : undefined}
-                    sizes="(max-width: 767px) 90vw, 440px"
-                  />
+                  <picture>
+                    <source
+                      type="image/avif"
+                      srcSet={HERO_CARD_IMAGE_SOURCES[card.id].avif}
+                      sizes="(max-width: 767px) 90vw, 440px"
+                    />
+                    <source
+                      type="image/webp"
+                      srcSet={HERO_CARD_IMAGE_SOURCES[card.id].webp}
+                      sizes="(max-width: 767px) 90vw, 440px"
+                    />
+                    <img
+                      src={card.image}
+                      alt={card.alt}
+                      width={440}
+                      height={580}
+                      className="h-full w-full rounded-2xl object-cover"
+                      loading={isFirstCard ? 'eager' : 'lazy'}
+                      decoding="async"
+                      fetchPriority={isFirstCard ? 'high' : undefined}
+                      sizes="(max-width: 767px) 90vw, 440px"
+                    />
+                  </picture>
                   <div className="from-primary/50 via-primary/15 to-primary/5 absolute inset-0 bg-gradient-to-t" />
                   <div className="absolute inset-x-0 bottom-0 space-y-2 p-4 sm:p-6">
                     <h3 className="text-base font-semibold tracking-tight text-white sm:text-lg">

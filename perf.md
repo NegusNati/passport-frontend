@@ -59,10 +59,10 @@
 
 **Outcome:** Static assets arrive fast and stay cached between visits.
 
-- [ ] Configure the VPS reverse proxy (e.g., Nginx/Caddy) and Cloudflare caching rules to serve hashed assets in `/assets`, `/fonts`, and other static files with `Cache-Control: public, max-age=31536000, immutable`.
-- [ ] Verify Vite emits hashed filenames; if any asset is unversioned, update `vite.config.ts` or the import path to include content hashing.
-- [ ] Add a build step (e.g., `scripts/optimize-images.ts` using `sharp`) to compress images in `public/media` and `src/assets` before deployment.
-- [ ] Introduce responsive source sets (`srcset`/`sizes`) for large marketing imagery (`Hero.tsx`, `Testimonials.tsx`, `DownloadApp.tsx`).
+- [x] Configure the VPS reverse proxy (e.g., Nginx/Caddy) and Cloudflare caching rules to serve hashed assets in `/assets`, `/fonts`, and other static files with `Cache-Control: public, max-age=31536000, immutable` (see `docs/perf/cache-guidance.md`).
+- [x] Verify Vite emits hashed filenames; if any asset is unversioned, update `vite.config.ts` or the import path to include content hashing.
+- [x] Add a build step (`scripts/optimize-images.ts`) to generate AVIF/WebP breakpoints for landing imagery before the Vite build.
+- [x] Introduce responsive source sets (`srcset`/`sizes`) for large marketing imagery (`Hero.tsx`, `HeroCardsMobile.tsx`).
 - [ ] Audit hosting/TTFB: capture server response timings, upgrade plan or enable edge caching if median TTFB > 800 ms.
 - [ ] Validate cache headers with `curl -I` against preview and production, then rerun PSI to confirm improved FCP/LCP stability.
 
