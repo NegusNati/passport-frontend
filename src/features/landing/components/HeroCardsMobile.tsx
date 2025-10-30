@@ -3,6 +3,7 @@ import LandingImageTwo from '@/assets/landingImages/cardImages/Landing_img_2.web
 import LandingImageThree from '@/assets/landingImages/cardImages/Landing_img_3.webp'
 import { Card } from '@/shared/components/common'
 import { CardSwapLazy } from '@/shared/components/common/CardSwapLazy'
+
 import { HERO_CARD_IMAGE_SOURCES } from './Hero'
 
 const HERO_CARDS = [
