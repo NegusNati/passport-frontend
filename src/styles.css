@@ -1,3 +1,41 @@
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/playfairdisplay-latin-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
+    U+20AC, U+2122;
+}
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/playfairdisplay-latin-700.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
+    U+20AC, U+2122;
+}
+
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/figtree-latin-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
+    U+20AC, U+2122;
+}
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/figtree-latin-600.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F,
+    U+20AC, U+2122;
+}
+
 @import 'tailwindcss';
 
 /* Base: teal-green accent #009966  → hsl(160 100% 30%) */
@@ -117,9 +155,9 @@
 
 @theme {
   --font-sans:
-    'Playfair Display', 'Geist', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Figtree', 'Playfair Display', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
     'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  --font-cursive: 'Brush Script MT', 'Lucida Handwriting', cursive;
+  --font-cursive: 'Playfair Display', 'Brush Script MT', 'Lucida Handwriting', cursive;
 
   /* Map CSS variables to Tailwind v4 color tokens */
   --color-background: hsl(var(--background));
@@ -170,7 +208,7 @@
   * {
     @apply border-border;
     font-family:
-      'Playfair Display', 'Geist', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+      'Figtree', 'Playfair Display', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
       'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   }
   body {

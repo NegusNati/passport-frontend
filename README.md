@@ -40,7 +40,7 @@ Run these steps before and after performance changes to measure impact:
 2. **Preview locally:**
 
    ```bash
-   pnpm serve
+   pnpm preview
    ```
 
    Opens preview at `http://localhost:4173`
@@ -51,11 +51,13 @@ Run these steps before and after performance changes to measure impact:
    - Run both mobile and desktop tests
    - Save JSON reports to `docs/perf/baseline/` or current phase folder
 
-4. **Run Lighthouse CLI (Alternative):**
+4. **Run Lighthouse CLI (CI-ready):**
 
    ```bash
-   npx @lhci/cli@latest autorun --collect.url=http://localhost:4173
+   pnpm dlx @lhci/cli@latest autorun --collect.staticDistDir=dist
    ```
+
+   Uses the already-built `dist` output and respects budgets you set in `docs/perf/budgets.json`.
 
 5. **WebPageTest (Optional but comprehensive):**
    - Visit https://www.webpagetest.org/
@@ -76,7 +78,7 @@ Web Vitals are automatically captured and sent to PostHog:
 - **CLS** (Cumulative Layout Shift)
 - **TTFB** (Time to First Byte)
 
-View metrics in PostHog dashboard under event: `web_vitals_reported`
+Events are enriched with `page-path`, `device-class`, `connection-type`, viewport size, and navigation type. View them in the PostHog event stream under `web_vitals_reported` and filter by route or device to validate real-user performance.
 
 ### Performance Goals
 

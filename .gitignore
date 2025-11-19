@@ -7,3 +7,16 @@ count.txt
 .env
 .nitro
 .tanstack
+.cache
+.cache/
+.pnpm-*
+/.pnpm-home/
+/.cache/
+/.lighthouseci/
+dist/
+dist-ssr/
+node_modules/
+*.log
+pnpm-debug.log
+coverage/
+/.DS_Store
