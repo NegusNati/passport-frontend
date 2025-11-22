@@ -238,7 +238,7 @@ export function PassportSearchForm({
         <div className="mx-auto max-w-2xl text-center">
           {/* Header */}
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
-            Check your passport
+            Check Ethiopian Passport Status
           </h1>
           <h2 className="text-muted-foreground mt-4 text-lg">
             Search with your reference number or name and get real-time updates—no more repeated

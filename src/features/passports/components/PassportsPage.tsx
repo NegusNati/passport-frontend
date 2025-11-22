@@ -42,7 +42,6 @@ export function PassportsPage() {
         description="Search Ethiopian passports from all ICS offices. Track urgent and regular applications with real-time updates. Get instant status information."
         path="/passports"
       />
-      <h1 className="sr-only">Search Ethiopian Passport Status - Real-time Updates</h1>
       {/* Ad Banner Section */}
       {/* <section className="bg-background py-8">
         <div className="container mx-auto max-w-6xl px-4">

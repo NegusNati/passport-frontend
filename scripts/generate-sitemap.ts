@@ -108,6 +108,58 @@ async function fetchLocationsFromApi(): Promise<string[]> {
   }
 }
 
+async function fetchArticlesFromApi(): Promise<{ slug: string; updated_at: string }[]> {
+  const articles: { slug: string; updated_at: string }[] = []
+  let page = 1
+  let hasMore = true
+  const perPage = 100 // Fetch reasonably large chunks
+
+  try {
+    // Loop to fetch all pages
+    while (hasMore) {
+      const endpoint = `${API_BASE_URL}${API_ENDPOINTS.V1.ARTICLES.ROOT}?page=${page}&page_size=${perPage}`
+      const response = await fetch(endpoint, {
+        headers: {
+          Accept: 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        console.warn(`⚠️  Failed to fetch articles page ${page} (status ${response.status})`)
+        break
+      }
+
+      const json = (await response.json()) as {
+        data?: Array<{ slug: string; updated_at: string }>
+        meta?: { current_page: number; last_page: number }
+      }
+
+      if (json.data && Array.isArray(json.data)) {
+        articles.push(
+          ...json.data.map((a) => ({
+            slug: a.slug,
+            updated_at: a.updated_at,
+          })),
+        )
+      }
+
+      // Check pagination
+      if (json.meta && json.meta.current_page < json.meta.last_page) {
+        page++
+      } else {
+        hasMore = false
+      }
+
+      // Safety limit
+      if (page > 50) hasMore = false
+    }
+  } catch (error) {
+    console.warn('⚠️  Error fetching articles for sitemap:', error)
+  }
+
+  return articles
+}
+
 async function getLocationRoutes(): Promise<RouteConfig[]> {
   const locations = await fetchLocationsFromApi()
   if (!locations.length) return []
@@ -124,6 +176,18 @@ async function getLocationRoutes(): Promise<RouteConfig[]> {
       priority: '0.8',
       changefreq: 'daily',
     }))
+}
+
+async function getArticleRoutes(): Promise<RouteConfig[]> {
+  const articles = await fetchArticlesFromApi()
+  if (!articles.length) return []
+
+  return articles.map((article) => ({
+    path: `/articles/${article.slug}`,
+    priority: '0.7',
+    changefreq: 'weekly',
+    lastmod: article.updated_at ? article.updated_at.split('T')[0] : undefined,
+  }))
 }
 
 function dedupeRoutes(routes: RouteConfig[]) {
@@ -143,14 +207,24 @@ async function main() {
   console.log('🗺️  Generating sitemap for Passport.ET...')
   console.log(`Site URL: ${SITE_URL}`)
 
-  const locationRoutes = await getLocationRoutes()
+  const [locationRoutes, articleRoutes] = await Promise.all([
+    getLocationRoutes(),
+    getArticleRoutes(),
+  ])
+
   if (locationRoutes.length) {
     console.log(`📍 Including ${locationRoutes.length} location routes`)
   } else {
-    console.warn('⚠️  No location routes discovered; sitemap will omit location detail pages')
+    console.warn('⚠️  No location routes discovered')
   }
 
-  const allRoutes = dedupeRoutes([...STATIC_ROUTES, ...locationRoutes])
+  if (articleRoutes.length) {
+    console.log(`📄 Including ${articleRoutes.length} article routes`)
+  } else {
+    console.warn('⚠️  No article routes discovered')
+  }
+
+  const allRoutes = dedupeRoutes([...STATIC_ROUTES, ...locationRoutes, ...articleRoutes])
 
   // Generate sitemap XML
   const sitemapXML = generateSitemapXML(allRoutes)
