@@ -1,7 +1,6 @@
 import { Play } from 'lucide-react'
 import { useState } from 'react'
 
-import { M } from '@/shared/lib/motion'
 
 interface LiteYouTubeEmbedProps {
   videoId: string
