@@ -69,7 +69,13 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
           >
             {/* Ethiopian Seal Background - Prominent Yellow Star */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-20">
-              <img src={star} alt="Ethiopian Star" className="h-64 w-64 md:h-80 md:w-80" />
+              <img
+                src={star}
+                alt="Ethiopian Star"
+                className="h-64 w-64 md:h-80 md:w-80"
+                width="320"
+                height="320"
+              />
             </div>
 
             {/* Header */}

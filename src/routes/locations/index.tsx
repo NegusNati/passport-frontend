@@ -1,7 +1,6 @@
 import type { QueryClient } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 
-import { LocationsDirectoryPage } from '@/features/passports/components/LocationsDirectoryPage'
 import { fetchLocations } from '@/features/passports/lib/PassportsApi'
 import { passportsKeys } from '@/features/passports/lib/PassportsQuery'
 
@@ -17,9 +16,5 @@ export const Route = createFileRoute('/locations/')({
       staleTime: 5 * 60_000,
     })
   },
-  component: LocationsDirectoryRouteComponent,
+  // Component is lazy-loaded in index.lazy.tsx
 })
-
-function LocationsDirectoryRouteComponent() {
-  return <LocationsDirectoryPage />
-}

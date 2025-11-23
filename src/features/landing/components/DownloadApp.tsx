@@ -77,7 +77,13 @@ export function DownloadAppSection() {
                 aria-label="Get it on Google Play"
                 className="focus-visible:outline-primary rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
-                <img src={playStore} alt="Get it on Google Play" className="h-[45px]" />
+                <img
+                  src={playStore}
+                  alt="Get it on Google Play"
+                  className="h-[45px]"
+                  width="135"
+                  height="45"
+                />
               </button>
               <button
                 type="button"
@@ -85,7 +91,13 @@ export function DownloadAppSection() {
                 aria-label="Download on the App Store"
                 className="focus-visible:outline-primary rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
               >
-                <img src={appStore} alt="Download on the App Store" className="h-[45px]" />
+                <img
+                  src={appStore}
+                  alt="Download on the App Store"
+                  className="h-[45px]"
+                  width="135"
+                  height="45"
+                />
               </button>
             </div>
           </div>

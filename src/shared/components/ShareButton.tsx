@@ -129,7 +129,13 @@ export function ShareButton({
               onClick={shareToTelegram}
               className="hover:bg-accent hover:text-accent-foreground flex w-full items-center rounded px-3 py-2 text-sm transition-colors"
             >
-              <img src={telegramIcon} alt="Telegram" className="mr-2 h-5 w-5" />
+              <img
+                src={telegramIcon}
+                alt="Telegram"
+                className="mr-2 h-5 w-5"
+                width="20"
+                height="20"
+              />
               Telegram
             </button>
             {typeof navigator !== 'undefined' && 'share' in navigator && (

@@ -1,14 +1,23 @@
+import { lazy, Suspense } from 'react'
+
 import { Seo } from '@/shared/ui/Seo'
 
-import { AdBanner } from './AdBanner'
 import { AdvertiseSection } from './Advertise'
 import { ArticleSection } from './Articles'
 import { DownloadAppSection } from './DownloadApp'
 import { FAQsSection } from './FAQs'
 import { Hero } from './Hero'
 import { HeroCardsMobile } from './HeroCardsMobile'
-import { Testimonials } from './Testimonials'
-import { VideoTabs } from './VideoTabs'
+
+const AdBanner = lazy(() => import('./AdBanner').then((m) => ({ default: m.AdBanner })))
+const Testimonials = lazy(() => import('./Testimonials').then((m) => ({ default: m.Testimonials })))
+const VideoTabs = lazy(() => import('./VideoTabs'))
+
+const SectionSkeleton = () => (
+  <div className="mx-auto w-full max-w-7xl px-4 md:px-6">
+    <div className="bg-muted/50 h-96 w-full animate-pulse rounded-3xl" />
+  </div>
+)
 
 export function LandingPage() {
   return (
@@ -25,12 +34,19 @@ export function LandingPage() {
         <HeroCardsMobile />
 
         <div className="relative z-[1]">
-          <Testimonials />
+          <Suspense fallback={<SectionSkeleton />}>
+            <Testimonials />
+          </Suspense>
         </div>
 
-        <AdBanner />
+        <Suspense fallback={<div className="h-32 w-full" />}>
+          <AdBanner />
+        </Suspense>
 
-        <VideoTabs />
+        <Suspense fallback={<SectionSkeleton />}>
+          <VideoTabs />
+        </Suspense>
+
         <AdvertiseSection />
         <ArticleSection />
         <FAQsSection />

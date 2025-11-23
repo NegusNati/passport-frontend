@@ -121,12 +121,24 @@ export default defineConfig(async () => {
           manualChunks(id: string) {
             if (!id.includes('node_modules')) return undefined
 
+            // Core React vendor - keep minimal
+            if (
+              id.includes('/node_modules/react/') ||
+              id.includes('/node_modules/react-dom/') ||
+              id.includes('/node_modules/scheduler/')
+            ) {
+              return 'react-vendor'
+            }
+
+            // Large ecosystem libraries
             if (id.includes('posthog-js')) return 'analytics'
             if (id.includes('sonner')) return 'ui-feedback'
             if (id.includes('lucide-react')) return 'icons'
             if (id.includes('@tanstack')) return 'tanstack'
             if (id.includes('zod')) return 'validation'
-            if (id.includes('react')) return 'react'
+            if (id.includes('framer-motion')) return 'animation'
+
+            // Let Vite handle the rest automatically
             return undefined
           },
         },
@@ -141,7 +153,7 @@ export default defineConfig(async () => {
           target:
             process.env.NODE_ENV === 'production'
               ? 'http://api.passport.et'
-              : 'http://app.localhost',
+              : 'http://api.passport.et',
           changeOrigin: true,
           secure: false,
         },

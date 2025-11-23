@@ -37,7 +37,13 @@ export function ComingSoonDialog({ open, onOpenChange, title }: ComingSoonDialog
             animate={{ rotate: 0 }}
             transition={{ duration: 0.4, type: 'spring' }}
           >
-            <img src={ShhhImage} alt="Shh gesture" className="h-32 w-auto sm:h-36" />
+            <img
+              src={ShhhImage}
+              alt="Shh gesture"
+              className="h-32 w-auto sm:h-36"
+              width="144"
+              height="144"
+            />
           </motion.div>
 
           {/* Text */}

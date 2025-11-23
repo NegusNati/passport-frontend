@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { useMemo, useState } from 'react'
 
+import { LiteYouTubeEmbed } from '@/shared/components/LiteYouTubeEmbed'
 import { M } from '@/shared/lib/motion'
 import { Card } from '@/shared/ui/card'
 import { Container } from '@/shared/ui/container'
@@ -28,7 +29,7 @@ const TABS = [
   // },
 ] as const
 
-function toEmbedUrl(url?: string) {
+function extractVideoId(url?: string) {
   if (!url) return null
 
   try {
@@ -36,12 +37,12 @@ function toEmbedUrl(url?: string) {
 
     if (parsed.hostname === 'youtu.be') {
       const id = parsed.pathname.replace('/', '')
-      return id ? `https://www.youtube.com/embed/${id}?rel=0` : null
+      return id || null
     }
 
     if (parsed.hostname.includes('youtube.com')) {
       const id = parsed.searchParams.get('v') ?? parsed.pathname.split('/').pop()
-      return id ? `https://www.youtube.com/embed/${id}?rel=0` : null
+      return id || null
     }
   } catch (error) {
     console.warn('Invalid YouTube URL provided for VideoTabs:', url, error)
@@ -53,7 +54,10 @@ function toEmbedUrl(url?: string) {
 export function VideoTabs() {
   const [tab, setTab] = useState<(typeof TABS)[number]['key']>(TABS[0]?.key)
   const activeTab = useMemo(() => TABS.find((t) => t.key === tab) ?? TABS[0], [tab])
-  const embedUrl = useMemo(() => toEmbedUrl(activeTab?.youtubeLink), [activeTab?.youtubeLink])
+  const videoId = useMemo(
+    () => extractVideoId(activeTab?.youtubeLink),
+    [activeTab?.youtubeLink],
+  )
 
   return (
     <section className="py-12 sm:py-16" id="videos">
@@ -107,16 +111,8 @@ export function VideoTabs() {
                 transition={{ duration: M.duration, ease: M.ease }}
                 className="border-border overflow-hidden rounded-xl border shadow-lg"
               >
-                {embedUrl ? (
-                  <div className="bg-card relative aspect-video w-full">
-                    <iframe
-                      title={activeTab.label}
-                      src={embedUrl}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                      className="absolute inset-0 h-full w-full"
-                    />
-                  </div>
+                {videoId ? (
+                  <LiteYouTubeEmbed videoId={videoId} title={activeTab.label} />
                 ) : (
                   <div className="bg-muted flex aspect-video w-full items-center justify-center">
                     <div className="text-muted-foreground text-center text-sm">
@@ -132,5 +128,6 @@ export function VideoTabs() {
     </section>
   )
 }
+
 
 export default VideoTabs

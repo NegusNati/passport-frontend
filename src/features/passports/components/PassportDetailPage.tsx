@@ -131,7 +131,13 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
     <div className="min-h-screen">
       <PassportDetailCard passport={uiPassport} onCheckAnother={handleCheckAnother} />
       <div className="absolute top-[15rem] left-[-10rem] z-[-110] ml-2 opacity-90">
-        <img src={HabeshaFace} alt="Habesha Face" className="h-150 w-150" />
+        <img
+          src={HabeshaFace}
+          alt="Habesha Face"
+          className="h-150 w-150"
+          width="600"
+          height="600"
+        />
       </div>
       <section className="py-8">
         <div className="container mx-auto max-w-6xl px-4">

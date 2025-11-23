@@ -118,7 +118,13 @@ export function ArticlesPage() {
       />
 
       <div className="absolute bottom-[40rem] left-0 z-[-100] ml-2 translate-y-1/4 transform opacity-70 md:opacity-90">
-        <img src={ethiopic_numbers} alt="logo" className="h-150 w-150" />
+        <img
+          src={ethiopic_numbers}
+          alt="logo"
+          className="h-150 w-150"
+          width="600"
+          height="600"
+        />
       </div>
 
       {/* Search Section */}

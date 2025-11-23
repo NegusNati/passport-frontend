@@ -8,12 +8,13 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TestRouteImport } from './routes/test'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PassportsIndexRouteImport } from './routes/passports/index'
@@ -43,6 +44,13 @@ import { Route as AdminAdvertisementsStatsRouteImport } from './routes/admin/adv
 import { Route as AdminAdvertisementsNewRouteImport } from './routes/admin/advertisements.new'
 import { Route as AdminAdvertisementsIdRouteImport } from './routes/admin/advertisements.$id'
 
+const CalendarLazyRouteImport = createFileRoute('/calendar')()
+
+const CalendarLazyRoute = CalendarLazyRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any).lazy(() => import('./routes/calendar.lazy').then((d) => d.Route))
 const TestRoute = TestRouteImport.update({
   id: '/test',
   path: '/test',
@@ -63,11 +71,6 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CalendarRoute = CalendarRouteImport.update({
-  id: '/calendar',
-  path: '/calendar',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -82,17 +85,23 @@ const PassportsIndexRoute = PassportsIndexRouteImport.update({
   id: '/passports/',
   path: '/passports/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/passports/index.lazy').then((d) => d.Route),
+)
 const LocationsIndexRoute = LocationsIndexRouteImport.update({
   id: '/locations/',
   path: '/locations/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/locations/index.lazy').then((d) => d.Route),
+)
 const ArticlesIndexRoute = ArticlesIndexRouteImport.update({
   id: '/articles/',
   path: '/articles/',
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any).lazy(() =>
+  import('./routes/articles/index.lazy').then((d) => d.Route),
+)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -218,11 +227,11 @@ const AdminAdvertisementsIdRoute = AdminAdvertisementsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/test': typeof TestRoute
+  '/calendar': typeof CalendarLazyRoute
   '/advertisement-requests': typeof advertismentAdvertisementRequestsRoute
   '/advertisment': typeof advertismentAdvertismentRoute
   '/admin/advertisement-requests': typeof AdminAdvertisementRequestsRouteWithChildren
@@ -252,11 +261,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/test': typeof TestRoute
+  '/calendar': typeof CalendarLazyRoute
   '/advertisement-requests': typeof advertismentAdvertisementRequestsRoute
   '/advertisment': typeof advertismentAdvertismentRoute
   '/admin/passports': typeof AdminPassportsRouteWithChildren
@@ -285,11 +294,11 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
-  '/calendar': typeof CalendarRoute
   '/login': typeof LoginRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
   '/test': typeof TestRoute
+  '/calendar': typeof CalendarLazyRoute
   '/(advertisment)/advertisement-requests': typeof advertismentAdvertisementRequestsRoute
   '/(advertisment)/advertisment': typeof advertismentAdvertismentRoute
   '/admin/advertisement-requests': typeof AdminAdvertisementRequestsRouteWithChildren
@@ -322,11 +331,11 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
-    | '/calendar'
     | '/login'
     | '/profile'
     | '/register'
     | '/test'
+    | '/calendar'
     | '/advertisement-requests'
     | '/advertisment'
     | '/admin/advertisement-requests'
@@ -356,11 +365,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/calendar'
     | '/login'
     | '/profile'
     | '/register'
     | '/test'
+    | '/calendar'
     | '/advertisement-requests'
     | '/advertisment'
     | '/admin/passports'
@@ -388,11 +397,11 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
-    | '/calendar'
     | '/login'
     | '/profile'
     | '/register'
     | '/test'
+    | '/calendar'
     | '/(advertisment)/advertisement-requests'
     | '/(advertisment)/advertisment'
     | '/admin/advertisement-requests'
@@ -424,11 +433,11 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
-  CalendarRoute: typeof CalendarRoute
   LoginRoute: typeof LoginRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
   TestRoute: typeof TestRoute
+  CalendarLazyRoute: typeof CalendarLazyRoute
   advertismentAdvertisementRequestsRoute: typeof advertismentAdvertisementRequestsRoute
   advertismentAdvertismentRoute: typeof advertismentAdvertismentRoute
   ArticlesSlugRoute: typeof ArticlesSlugRoute
@@ -441,6 +450,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarLazyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/test': {
       id: '/test'
       path: '/test'
@@ -467,13 +483,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/calendar': {
-      id: '/calendar'
-      path: '/calendar'
-      fullPath: '/calendar'
-      preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -773,11 +782,11 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
-  CalendarRoute: CalendarRoute,
   LoginRoute: LoginRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
   TestRoute: TestRoute,
+  CalendarLazyRoute: CalendarLazyRoute,
   advertismentAdvertisementRequestsRoute:
     advertismentAdvertisementRequestsRoute,
   advertismentAdvertismentRoute: advertismentAdvertismentRoute,

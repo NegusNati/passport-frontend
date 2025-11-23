@@ -106,7 +106,7 @@ const Footer = () => {
               whileHover={{ x: 5 }}
               whileTap={{ scale: 0.95 }}
             >
-              <img src={telegramIcon} alt="Telegram" className="h-6 w-6" />
+              <img src={telegramIcon} alt="Telegram" className="h-6 w-6" width="24" height="24" />
               <span className="text-muted-foreground hover:text-primary font-medium">
                 Join Telegram Group
               </span>

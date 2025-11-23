@@ -25,6 +25,8 @@ export function ArticleCard({ article, onClick }: ArticleCardProps) {
             alt={article.title}
             className="h-full w-full object-cover transition-transform duration-200 group-hover:scale-105"
             loading="lazy"
+            width="640"
+            height="400"
           />
         ) : (
           <div className="bg-muted flex h-full w-full items-center justify-center">
