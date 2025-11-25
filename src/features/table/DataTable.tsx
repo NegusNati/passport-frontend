@@ -241,8 +241,13 @@ export function DataTable<TData, TValue>({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center font-semibold">
-                    No Passport Found, please check back tomorrow.
+                  <TableCell
+                    colSpan={columns.length}
+                    className="h-24 text-center font-semibold leading-relaxed"
+                  >
+                    <span role="img" aria-label="sad" className="mr-2">😔</span>
+                    Your passport is not ready yet. Our team is still processing it—please check back
+                    tomorrow for an update.
                   </TableCell>
                 </TableRow>
               )}

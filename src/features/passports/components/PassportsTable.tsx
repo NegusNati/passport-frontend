@@ -11,6 +11,7 @@ import { useAnalytics } from '@/shared/lib/analytics'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
+import { toast } from '@/shared/ui/sonner'
 
 import { type PassportFilters, type PassportSearchFilters } from '../schemas/passport'
 
@@ -116,6 +117,14 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       return [...data.data]
     }, [data?.data])
 
+    const listParamsKey = React.useMemo(() => JSON.stringify(listParams), [listParams])
+    const lastToastKeyRef = React.useRef<string | null>(null)
+    const hasUserIntent = React.useMemo(() => {
+      const hasSearchFilters = Object.keys(searchFilters ?? {}).length > 0
+      const hasTableFilters = filters.city !== 'all' || filters.date !== 'all'
+      return hasSearchFilters || hasTableFilters
+    }, [filters.city, filters.date, searchFilters])
+
     // Track search results
     React.useEffect(() => {
       if (isLoading) {
@@ -151,6 +160,35 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
         })
       }
     }, [isLoading, isError, error, data, searchFilters, searchMode, capture])
+
+    React.useEffect(() => {
+      if (isLoading || isError) return
+      if (!hasUserIntent) {
+        lastToastKeyRef.current = null
+        return
+      }
+
+      const resultCount = data?.data?.length ?? 0
+      if (resultCount === 0) {
+        const toastKey = `${passportsQuery.dataUpdatedAt}-${listParamsKey}`
+        if (lastToastKeyRef.current !== toastKey) {
+          toast('😔 Your passport is not ready yet', {
+            description:
+              'We could not find a matching record right now. Please check back tomorrow for the latest update.',
+          })
+          lastToastKeyRef.current = toastKey
+        }
+      } else {
+        lastToastKeyRef.current = null
+      }
+    }, [
+      data?.data?.length,
+      hasUserIntent,
+      isError,
+      isLoading,
+      listParamsKey,
+      passportsQuery.dataUpdatedAt,
+    ])
 
     const meta = data?.meta
     const total = meta?.total ?? 0
