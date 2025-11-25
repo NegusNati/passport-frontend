@@ -17,3 +17,7 @@
 Notes: No automated tests were executed for this change.
 
 Additional tweak: Updated empty-state and toast copy with a sad emoji and clearer guidance so users understand their passport isn’t ready yet but should be soon.
+
+## Phase 4 – Default Search Mode Update
+- [x] Switch default search mode to “name” in `PassportsPage` and `PassportSearchForm` so users start with name search.
+- [x] Verify toggling still works and UI hints align with the new default (logic review; not manually tested).

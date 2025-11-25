@@ -34,7 +34,7 @@ export function PassportSearchForm({
 }: PassportSearchFormProps) {
   const router = useRouter()
   const { capture } = useAnalytics()
-  const [searchMode, setSearchMode] = useState<SearchMode>('number')
+  const [searchMode, setSearchMode] = useState<SearchMode>('name')
   // Local inputs for debounced interactive search
   const [numberInput, setNumberInput] = useState('')
   const [firstInput, setFirstInput] = useState('')
