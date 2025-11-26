@@ -13,12 +13,12 @@ import {
 } from '@lexical/markdown'
 import type { LexicalNode, TextNode } from 'lexical'
 
-import { $createImageNode, $isImageNode, type ImageNode } from './ImageNode'
-import { $createVideoNode, $isVideoNode, type VideoNode } from './VideoNode'
+import { $createImageNode, $isImageNode, ImageNode } from './ImageNode'
+import { $createVideoNode, $isVideoNode, VideoNode } from './VideoNode'
 
 // Custom transformer for ImageNode: ![alt text](url)
 export const IMAGE: TextMatchTransformer = {
-  dependencies: [],
+  dependencies: [ImageNode],
   export: (node: LexicalNode) => {
     if (!$isImageNode(node)) {
       return null
@@ -45,7 +45,7 @@ export const IMAGE: TextMatchTransformer = {
 // Custom transformer for VideoNode: [video](url)
 // Non-standard syntax since Markdown has no native video support
 export const VIDEO: TextMatchTransformer = {
-  dependencies: [],
+  dependencies: [VideoNode],
   export: (node: LexicalNode) => {
     if (!$isVideoNode(node)) {
       return null
@@ -68,21 +68,23 @@ export const VIDEO: TextMatchTransformer = {
 }
 
 // Export combined transformers including defaults and custom ones
-export const PASSPORT_TRANSFORMERS: Array<Transformer> = [
-  // Block-level transformers
+// Note: we intentionally curate the transformer list instead of using
+// the exported TRANSFORMERS constant so we avoid transformers that rely
+// on nodes we don’t register (e.g., HorizontalRuleNode).
+const BASE_TRANSFORMERS: Array<Transformer> = [
   HEADING,
   QUOTE,
   CODE,
   UNORDERED_LIST,
   ORDERED_LIST,
   CHECK_LIST,
-  // Link transformer
   LINK,
-  // Text format transformers (bold, italic, inline code, strikethrough)
   ...TEXT_FORMAT_TRANSFORMERS,
-  // Text match transformers
   ...TEXT_MATCH_TRANSFORMERS,
-  // Custom media transformers
+]
+
+export const PASSPORT_TRANSFORMERS: Array<Transformer> = [
+  ...BASE_TRANSFORMERS,
   IMAGE,
   VIDEO,
 ]

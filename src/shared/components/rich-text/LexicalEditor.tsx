@@ -1,6 +1,7 @@
 import './lexical.css'
 
 import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html'
+import { $convertFromMarkdownString, $convertToMarkdownString } from '@lexical/markdown'
 import { AutoLinkPlugin } from '@lexical/react/LexicalAutoLinkPlugin'
 import { LexicalComposer } from '@lexical/react/LexicalComposer'
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
@@ -25,6 +26,7 @@ import { createEditorConfig } from '@/shared/lib/lexical/initial-config'
 import { PASSPORT_TRANSFORMERS } from '@/shared/lib/lexical/markdown-transformers'
 
 import { ImagesPlugin } from './ImagesPlugin'
+import { MarkdownPastePlugin } from './MarkdownPastePlugin'
 import { TabIndentationPlugin } from './TabIndentationPlugin'
 import { ToolbarPlugin } from './ToolbarPlugin'
 
@@ -47,15 +49,29 @@ const MATCHERS = [
   },
 ]
 
-function InitialContentPlugin({ html }: { html: string }) {
+type InitialContentPluginProps = {
+  value: string
+  format: 'html' | 'markdown'
+}
+
+function InitialContentPlugin({ value, format }: InitialContentPluginProps) {
   const [editor] = useLexicalComposerContext()
 
   useEffect(() => {
-    if (!html) return
+    if (!value) return
 
     editor.update(() => {
+      const root = $getRoot()
+      root.clear()
+      root.select()
+
+      if (format === 'markdown') {
+        $convertFromMarkdownString(value, PASSPORT_TRANSFORMERS)
+        return
+      }
+
       const parser = new DOMParser()
-      const sanitizedHtml = DOMPurify.sanitize(html, {
+      const sanitizedHtml = DOMPurify.sanitize(value, {
         ALLOWED_TAGS: [
           'p',
           'br',
@@ -96,12 +112,9 @@ function InitialContentPlugin({ html }: { html: string }) {
       })
       const dom = parser.parseFromString(sanitizedHtml, 'text/html')
       const nodes = $generateNodesFromDOM(editor, dom)
-      const root = $getRoot()
-      root.clear()
-      root.select()
       $insertNodes(nodes)
     })
-  }, [editor, html])
+  }, [editor, format, value])
 
   return null
 }
@@ -109,12 +122,16 @@ function InitialContentPlugin({ html }: { html: string }) {
 type LexicalEditorProps = {
   value: string
   onChange: (html: string) => void
+  onMarkdownChange?: (markdown: string) => void
+  valueFormat?: 'html' | 'markdown'
   placeholder?: string
 }
 
 export function LexicalEditor({
   value,
   onChange,
+  onMarkdownChange,
+  valueFormat = 'html',
   placeholder = 'Start writing...',
 }: LexicalEditorProps) {
   const initialConfig = {
@@ -165,6 +182,11 @@ export function LexicalEditor({
         ADD_URI_SAFE_ATTR: ['src'],
       })
       onChange(sanitized)
+
+      if (onMarkdownChange) {
+        const markdown = $convertToMarkdownString(PASSPORT_TRANSFORMERS)
+        onMarkdownChange(markdown)
+      }
     })
   }
 
@@ -189,10 +211,11 @@ export function LexicalEditor({
           <LinkPlugin />
           <AutoLinkPlugin matchers={MATCHERS} />
           <MarkdownShortcutPlugin transformers={PASSPORT_TRANSFORMERS} />
+          <MarkdownPastePlugin />
           <ImagesPlugin />
           <TabIndentationPlugin />
           <OnChangePlugin onChange={handleChange} />
-          <InitialContentPlugin html={value} />
+          <InitialContentPlugin value={value} format={valueFormat} />
         </div>
       </div>
     </LexicalComposer>

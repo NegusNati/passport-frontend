@@ -4,6 +4,8 @@ import { useEffect } from 'react'
 
 import { $createImageNode, type ImagePayload } from '@/shared/lib/lexical/ImageNode'
 import { $createVideoNode, type VideoPayload } from '@/shared/lib/lexical/VideoNode'
+import { ImageNode } from '@/shared/lib/lexical/ImageNode'
+import { VideoNode } from '@/shared/lib/lexical/VideoNode'
 
 export const INSERT_IMAGE_COMMAND: LexicalCommand<ImagePayload> =
   createCommand('INSERT_IMAGE_COMMAND')
@@ -14,11 +16,7 @@ export function ImagesPlugin(): null {
   const [editor] = useLexicalComposerContext()
 
   useEffect(() => {
-    if (
-      !editor.hasNodes([
-        // ImageNode and VideoNode are already registered in the editor config
-      ])
-    ) {
+    if (!editor.hasNodes([ImageNode, VideoNode])) {
       throw new Error('ImagesPlugin: ImageNode or VideoNode not registered on editor')
     }
 

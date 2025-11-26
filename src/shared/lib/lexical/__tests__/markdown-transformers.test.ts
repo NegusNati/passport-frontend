@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
-import { $isImageNode } from '../ImageNode'
+import { $isImageNode, ImageNode } from '../ImageNode'
 import { IMAGE, PASSPORT_TRANSFORMERS, VIDEO } from '../markdown-transformers'
-import { $isVideoNode } from '../VideoNode'
+import { $isVideoNode, VideoNode } from '../VideoNode'
 
 describe('Markdown Transformers', () => {
   describe('Transformer Configuration', () => {
@@ -27,6 +27,10 @@ describe('Markdown Transformers', () => {
       expect(IMAGE.type).toBe('text-match')
     })
 
+    it('should include ImageNode dependency', () => {
+      expect(IMAGE.dependencies?.includes(ImageNode)).toBe(true)
+    })
+
     it('should have correct trigger', () => {
       expect(IMAGE.trigger).toBe(')')
     })
@@ -47,6 +51,10 @@ describe('Markdown Transformers', () => {
   describe('VIDEO transformer', () => {
     it('should have correct type', () => {
       expect(VIDEO.type).toBe('text-match')
+    })
+
+    it('should include VideoNode dependency', () => {
+      expect(VIDEO.dependencies?.includes(VideoNode)).toBe(true)
     })
 
     it('should have correct trigger', () => {

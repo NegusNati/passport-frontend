@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { LexicalEditor } from '../LexicalEditor'
@@ -37,5 +37,23 @@ describe('LexicalEditor Markdown Support', () => {
 
     const helpButton = screen.getByLabelText('Markdown shortcuts help')
     expect(helpButton).toBeTruthy()
+  })
+
+  it('should render initial markdown content when valueFormat is markdown', async () => {
+    const handleChange = vi.fn()
+
+    render(
+      <LexicalEditor
+        value="# Heading from markdown"
+        valueFormat="markdown"
+        onChange={handleChange}
+        placeholder="Type here..."
+      />,
+    )
+
+    await waitFor(() => {
+      const heading = document.querySelector('.lexical-editor h1')
+      expect(heading?.textContent).toBe('Heading from markdown')
+    })
   })
 })

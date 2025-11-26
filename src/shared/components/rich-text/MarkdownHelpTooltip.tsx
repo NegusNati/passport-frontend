@@ -14,6 +14,7 @@ const MARKDOWN_SHORTCUTS = [
   { syntax: '> ', description: 'Blockquote' },
   { syntax: '[text](url)', description: 'Link' },
   { syntax: '![alt](url)', description: 'Image' },
+  { syntax: '[video](url)', description: 'Video (custom syntax)' },
 ]
 
 export function MarkdownHelpTooltip() {
