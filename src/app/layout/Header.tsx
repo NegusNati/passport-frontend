@@ -28,16 +28,11 @@ type NavItem = {
 type AppPath = '/passports' | '/articles' | '/calendar' | '/locations'
 
 const nav: ReadonlyArray<NavItem> = [
-  { label: 'Advertise', href: '/advertisment' },
   { label: 'Passports', href: '/passports' },
   { label: 'Articles', href: '/articles' },
-  { label: 'Ethiopian Calendar', href: '/calendar' },
+  { label: 'Advertise', href: '/advertisment' },
   { label: 'Official ICS branch offices', href: '/locations' },
-  {
-    label: 'Download App',
-    href: '#download',
-    external: true,
-  },
+ 
 ]
 
 function renderNavItem(item: NavItem, customOnClick?: () => void) {

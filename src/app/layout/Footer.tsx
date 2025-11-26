@@ -10,9 +10,9 @@ const Footer = () => {
   const services = [
     { name: 'Advertisement', href: '/advertisement-requests' },
     { name: 'Passport Check', href: '/passports' },
-    { name: 'Ethiopian Calendar', href: '/calendar' },
-    { name: "Gee'z Numbers", href: '/calendar#geez-numbers' },
-    { name: 'Amharic Alphabets', href: '/articles' },
+    { name: 'Ethiopian Calendar', href: 'https://calendar.passport.et/' },
+    { name: "Gee'z Numbers", href: 'https://calendar.passport.et/#geez-numbers' },
+    { name: 'Articles', href: '/articles' },
   ]
 
   const socials = [
