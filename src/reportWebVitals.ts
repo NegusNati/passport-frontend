@@ -2,15 +2,24 @@ import type { Metric } from 'web-vitals'
 
 import { analytics } from '@/shared/lib/analytics'
 
+type NavigatorConnection = {
+  effectiveType?: string
+  type?: string
+}
+
 const reportWebVitals = (onPerfEntry?: (metric: Metric) => void) => {
   import('web-vitals').then(({ onCLS, onINP, onFCP, onLCP, onTTFB }) => {
     const sendToAnalytics = (metric: Metric) => {
-      const connection = (navigator as any)?.connection
+      const connection =
+        'connection' in navigator
+          ? (navigator as Navigator & { connection?: NavigatorConnection }).connection
+          : undefined
       const pagePath = window.location?.pathname ?? ''
       const pageSearch = window.location?.search ?? ''
       const viewportWidth = window.innerWidth
       const viewportHeight = window.innerHeight
-      const deviceClass = viewportWidth < 640 ? 'mobile' : viewportWidth < 1024 ? 'tablet' : 'desktop'
+      const deviceClass =
+        viewportWidth < 640 ? 'mobile' : viewportWidth < 1024 ? 'tablet' : 'desktop'
       const connectionType = connection?.effectiveType ?? connection?.type ?? 'unknown'
 
       // Send to PostHog for real-user monitoring

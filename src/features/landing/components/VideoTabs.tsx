@@ -54,10 +54,7 @@ function extractVideoId(url?: string) {
 export function VideoTabs() {
   const [tab, setTab] = useState<(typeof TABS)[number]['key']>(TABS[0]?.key)
   const activeTab = useMemo(() => TABS.find((t) => t.key === tab) ?? TABS[0], [tab])
-  const videoId = useMemo(
-    () => extractVideoId(activeTab?.youtubeLink),
-    [activeTab?.youtubeLink],
-  )
+  const videoId = useMemo(() => extractVideoId(activeTab?.youtubeLink), [activeTab?.youtubeLink])
 
   return (
     <section className="py-12 sm:py-16" id="videos">
@@ -128,6 +125,5 @@ export function VideoTabs() {
     </section>
   )
 }
-
 
 export default VideoTabs

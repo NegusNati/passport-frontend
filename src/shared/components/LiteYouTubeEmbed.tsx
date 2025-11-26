@@ -1,7 +1,6 @@
 import { Play } from 'lucide-react'
 import { useState } from 'react'
 
-
 interface LiteYouTubeEmbedProps {
   videoId: string
   title: string
@@ -43,7 +42,7 @@ export function LiteYouTubeEmbed({ videoId, title }: LiteYouTubeEmbedProps) {
           src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
-          className="absolute inset-0 h-full w-full animate-in fade-in duration-500"
+          className="animate-in fade-in absolute inset-0 h-full w-full duration-500"
         />
       )}
     </div>

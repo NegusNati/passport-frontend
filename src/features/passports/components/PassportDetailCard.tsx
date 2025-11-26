@@ -1,3 +1,4 @@
+import { Download } from 'lucide-react'
 import { useRef } from 'react'
 import Barcode from 'react-barcode'
 
@@ -163,6 +164,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
               className="w-full sm:w-auto"
               size="lg"
               disabled={isDownloading}
+              leftIcon={<Download className="h-5 w-5" aria-hidden="true" />}
             >
               {isDownloading ? 'Preparing…' : 'Download'}
             </Button>

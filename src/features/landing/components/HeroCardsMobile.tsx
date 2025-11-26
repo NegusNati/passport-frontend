@@ -134,7 +134,9 @@ export function HeroCardsMobile() {
                 <h3 className="text-base font-semibold tracking-tight text-white sm:text-lg">
                   {firstCard.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/90">{firstCard.description}</p>
+                <p className="mt-2 text-sm leading-relaxed text-white/90">
+                  {firstCard.description}
+                </p>
               </div>
             </div>
           </Card>

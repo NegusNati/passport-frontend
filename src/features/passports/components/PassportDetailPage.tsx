@@ -1,4 +1,5 @@
 import { useRouter } from '@tanstack/react-router'
+import { AnimatePresence, motion } from 'framer-motion'
 import * as React from 'react'
 
 import HabeshaFace from '@/assets/landingImages/habesha_face.svg'
@@ -8,6 +9,7 @@ import type { Passport } from '@/features/passports/schemas/passport'
 import { AdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
+import { Confetti } from '@/shared/ui/confetti'
 import { PassportDetailSkeleton } from '@/shared/ui/skeleton'
 
 import { PassportDetailCard } from './PassportDetailCard'
@@ -39,6 +41,15 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
   }, [])
 
   const uiPassport = data?.data ? mapToUi(data.data) : null
+
+  const [showBanner, setShowBanner] = React.useState(true)
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowBanner(false)
+    }, 7000)
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleCheckAnother = React.useCallback(() => {
     router.navigate({ to: '/passports' })
@@ -129,7 +140,26 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
 
   return (
     <div className="min-h-screen">
-      <PassportDetailCard passport={uiPassport} onCheckAnother={handleCheckAnother} />
+      {showBanner && <Confetti />}
+      <AnimatePresence>
+        {showBanner && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 1.3, ease: 'easeInOut' }}
+            className="overflow-hidden bg-emerald-600 text-white"
+          >
+            <div className="container mx-auto px-4 py-4 text-center text-lg font-medium">
+              🎉 Congratulations! Your passport is ready for pick up. 📄✈️ Head to the ICS Branch
+              office ({uiPassport.city}) to collect it.
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      <motion.div layout transition={{ duration: 1.3, ease: 'easeInOut' }}>
+        <PassportDetailCard passport={uiPassport} onCheckAnother={handleCheckAnother} />
+      </motion.div>
       <div className="absolute top-[15rem] left-[-10rem] z-[-110] ml-2 opacity-90">
         <img
           src={HabeshaFace}
