@@ -1,114 +1,114 @@
 {
   "search": {
     "seo": {
-      "title": "Paaspoortii Itoophiyaa Barbaadi - Odeeffannoo Yeroo Dhugaa",
-      "description": "Waajjiraalee ICS hunda irraa paaspoortii Itoophiyaa barbaadi. Iyyaatawwan ariifachiisaa fi idilee haaromsa yeroo dhugaan hordofi."
+      "title": "Paaspoortii Itoophiyaa Barbaadaa - Odeeffannoo Kallattii",
+      "description": "Paaspoortii Itoophiyaa waajjiraalee Imigreeshinii hunda irraa barbaadaa. Iyyannoo ariifachiisaa fi idilee odeeffannoo yeroo wajjin hordofaa. Haala battalaa argadhaa."
     },
-    "title": "Haala Paaspoortii Itoophiyaa Mirkaneessi",
-    "subtitle": "Lakkoofsa wabii ykn maqaan barbaadii haaromsa yeroo dhugaa argadhu—deddeebii waajjiraa deemuu hin barbaachisu.",
+    "title": "Haala Paaspoortii Itoophiyaa Mirkaneeffadhaa",
+    "subtitle": "Lakkoofsa wabii yookiin maqaa keessan fayyadamuun barbaadaa, odeeffannoo yeroos argadhaa—waajjira deddeebi'uun hafeera.",
     "form": {
-      "requestNumber": "Lakkoofsa Gaaffii",
-      "requestNumberPlaceholder": "Lakkoofsa gaaffii galchi",
-      "firstName": "Maqaa Jalqabaa",
-      "firstNamePlaceholder": "Maqaa jalqabaa galchi",
-      "middleName": "Maqaa Abbaa (dirqamaa miti)",
-      "middleNamePlaceholder": "Maqaa abbaa galchi",
+      "requestNumber": "Lakkoofsa Gaaffii/Wabii",
+      "requestNumberPlaceholder": "Lakkoofsa gaaffii galchaa",
+      "firstName": "Maqaa",
+      "firstNamePlaceholder": "Maqaa galchaa",
+      "middleName": "Maqaa Abbaa (Filannoo)",
+      "middleNamePlaceholder": "Maqaa abbaa galchaa",
       "lastName": "Maqaa Akaakayyuu",
-      "lastNamePlaceholder": "Maqaa akaakayyuu galchi",
-      "submit": "Paaspoortii Mirkaneessi",
+      "lastNamePlaceholder": "Maqaa akaakayyuu galchaa",
+      "submit": "Paaspoortii Ilaali",
       "searching": "Barbaadaa jira...",
-      "minCharacters": "Barbaaduuf yoo xiqqaate arfii 3 barreessi",
-      "minCharactersName": "Barbaaduuf dirree maqaa kamiyyuu keessatti yoo xiqqaate arfii 3 barreessi"
+      "minCharacters": "Barbaaduuf yoo xiqqaate lakkoofsa 3 galchaa",
+      "minCharactersName": "Barbaaduuf yoo xiqqaate qubee 3 galchaa"
     },
     "toggle": {
-      "useNameInstead": "Maqaa fayyadami",
-      "useNumberInstead": "Lakkoofsa gaaffii fayyadami"
+      "useNameInstead": "Maqaan barbaaduuf",
+      "useNumberInstead": "Lakkoofsa gaaffiitiin barbaaduuf"
     }
   },
   "table": {
     "title": "Paaspoortiiwwan Haaraa",
-    "subtitle": "Haaromsa adeemsa paaspoortii fiiltarii ariifataa fi barbaada ismaartiin hordofi.",
+    "subtitle": "Adeemsa qophii paaspoortii calaltuu ariifachiisaa fi barbaacha ammayyaa fayyadamuun hordofaa.",
     "columns": {
       "name": "Maqaa",
-      "location": "Bakka",
-      "published": "Maxxanfame",
-      "requestNumber": "Lakkoofsa gaaffii"
+      "location": "Bakka/Waajjira",
+      "published": "Guyyaa maxxanfame",
+      "requestNumber": "Lakkoofsa Gaaffii"
     },
     "actions": {
       "detail": "Bal'ina"
     },
     "filters": {
-      "filterBy": "Tiin filadhu",
+      "filterBy": "Kanaan calali",
       "date": "Guyyaa",
       "location": "Bakka",
       "allDates": "Guyyoota hunda",
       "last7Days": "Guyyoota 7 darban",
       "last30Days": "Guyyoota 30 darban",
-      "thisYear": "Waggaa kana",
-      "allLocations": "Bakka hunda",
-      "loadingLocations": "Bakka fe'aa jira..."
+      "thisYear": "Bara kana",
+      "allLocations": "Bakkeewwan hunda",
+      "loadingLocations": "Bakkeewwan fe'aa jira..."
     },
     "pagination": {
       "loadingSummary": "Cuunfaa fe'aa jira...",
-      "showing": "{{from}} hanga {{to}} waliigala {{total}} keessaa agarsiisaa"
+      "showing": "Bu'aa {{total}} keessaa {{from}} hanga {{to}} agarsiisaa jira"
     },
     "empty": {
-      "toastTitle": "😔 Paaspoortiin kee ammas qophii miti",
-      "toastDescription": "Yeroo kanatti galmeewwan walsimu argachuu hin dandeenye. Maaloo haaromsa haaraadhaaf boru deebi'i ilaalii."
+      "toastTitle": "😔 Paaspoortiin keessan ammatti qophii miti",
+      "toastDescription": "Odeeffannoo kana wajjin kan wal gitu ammatti hin argine. Maaloo odeeffannoo haaraa argachuuf boru deebi'aa ilaalaa."
     }
   },
   "detail": {
     "seo": {
       "title": "{{name}} - Haala Paaspoortii",
-      "description": "Bal'ina haala paaspoortii {{name}} ilaali. Guyyaa fudhachuu, bakka, fi odeeffannoo sagantaa mirkaneessi."
+      "description": "Bal'ina haala paaspoortii {{name}} ilaalaa. Guyyaa itti fudhatamu, bakka fi sagantaa isaa mirkaneeffadhaa."
     },
     "lookup": {
-      "title": "Barbaada Paaspoortii",
-      "description": "Maaloo lakkoofsa gaaffii {{requestNumber}} barbaaduuf barbaada fayyadami.",
-      "backToSearch": "Gara Barbaadaatti Deebi'i"
+      "title": "Barbaacha Paaspoortii",
+      "description": "Maaloo lakkoofsa gaaffii {{requestNumber}} argachuuf barbaacha fayyadamaa.",
+      "backToSearch": "Gara Barbaachaatti Deebi'i"
     },
     "notFound": {
       "title": "Paaspoortiin Hin Argamne",
-      "description": "Paaspoortiin gaafatame argamuu hin dandeenye. Maaloo ID mirkaneessii irra deebi'ii yaali.",
-      "backToSearch": "Gara Barbaadaatti Deebi'i"
+      "description": "Paaspoortiin gaafatame kun hin argamne. Maaloo lakkoofsa wabii mirkaneessaa irra deebi'aa yaalaa.",
+      "backToSearch": "Gara Barbaachaatti Deebi'i"
     },
     "banner": {
-      "title": "🎉 Oduu gaarii!",
-      "description": "Paaspoortii walsimu arganne. Maaloo bal'ina armaan gadii ilaali.",
-      "congratulations": "🎉 Baga gammaddan! Paaspoortiin keessan fudhatamuu qophaa'eera. 📄✈️ Fudhataniif gara waajjira damee ICS ({{city}}) deemaa."
+      "title": "🎉 Oduu Gaarii!",
+      "description": "Paaspoortii wal fakkaatu arganneerra. Maaloo bal'ina isaa armaan gaditti ilaalaa.",
+      "congratulations": "🎉 Baga Gammaddan! Paaspoortiin keessan fudhachuuf qophiidha. 📄✈️ Waajjira damee Imigreeshinii ({{city}}) deemuu dhaan fudhachuu dandeessu."
     },
     "card": {
-      "ethTitle": "የኢትዮጵያ ፌዴራላዊ ዲሞክራሲያዊ ሪፐብሊክ",
+      "ethTitle": "Ripaabilika Diimokiraatawaa Federaalawaa Itoophiyaa",
       "engTitle": "FEDERAL DEMOCRATIC REPUBLIC OF ETHIOPIA",
-      "surname": "Maqaa Abbaa",
-      "givenName": "Maqaa Kenname",
+      "surname": "Maqaa Akaakayyuu",
+      "givenName": "Maqaa",
       "location": "Bakka",
-      "receiveAfter": "Erga Kanaa Booda Fudhachuu Dandeessa",
-      "dayOfWeek": "Guyyaa Torbanitti",
+      "receiveAfter": "Guyyaa itti fudhachuu dandeessan",
+      "dayOfWeek": "Guyyaa Torbanii",
       "exactTime": "Sa'aatii Sirrii",
-      "timeRange": "3:00 - 9:00 sa'aatii naannoo",
-      "checkSchedule": "Maaloo sagantaa ilaali ykn Dilbata kottuu"
+      "timeRange": "3:00 - 9:00 (Sa'aatii Biyya Keessaa)",
+      "checkSchedule": "Maaloo sagantaa ilaalaa yookiin Dilbata ganama koottaa"
     },
     "actions": {
-      "download": "Buusi",
-      "downloading": "Buusaa jira...",
-      "checkAnother": "Kan Biraa Mirkaneessi"
+      "download": "Buufadhaa (Download)",
+      "downloading": "Buufachaa jira...",
+      "checkAnother": "Kan biraa ilaali"
     }
   },
   "locations": {
     "seo": {
-      "title": "Galmee Waajjiraalee Damee ICS - Bakkeewwan Paaspoortii Itoophiyaa",
-      "description": "Galmee waajjiraalee damee ICS Itoophiyaa keessa. Bakka siif dhihoo argadhuu iyyaatawwan ariifachiisaa fi idileef bahiinsa paaspoortii mirkaneessi."
+      "title": "Kutaaleen Waajjira Imigreeshinii - Bakkeewwan Paaspoortii Itoophiyaa",
+      "description": "Kutaalee waajjira Imigreeshinii (ICS) guutuu Itoophiyaa keessa jiran. Waajjira isinitti dhi’u barbaadaa; paaspoortii ariifachiisaa fi idilee achi jiranis ilaalaa."
     },
-    "title": "Waajjiraalee damee Tajaajila Godaansaa fi Lammummaa (ICS) ofiisaa",
-    "subtitle": "Paaspoortiiwwan dhiheenya bakka sanatti bahaan arguuf waajjira damee filadhu.",
-    "loading": "Waajjiraalee damee fe'aa jira...",
-    "error": "Bakkeewwan fe'uun hin danda'amne.",
-    "empty": "Yeroo kanatti waajjiraaleen damee hin jiran.",
-    "viewLatest": "Paaspoortiiwwan haaraa damee kana irraa ilaali",
+    "title": "Waajjiraalee Damee Tajaajila Imigreeshinii fi Lammummaa (ICS)",
+    "subtitle": "Paaspoortiiwwan dhiyeenya bakka sanatti gadhiifaman ilaaluuf waajjira filadhaa.",
+    "loading": "Waajjiraalee fe'aa jira...",
+    "error": "Bakkeewwan fe'uu hin dandeenye.",
+    "empty": "Yeroo ammaa waajjirri kamuu hin jiru.",
+    "viewLatest": "Paaspoortiiwwan haaraa waajjira kana irraa gadhiifaman ilaalaa",
     "byLocation": {
-      "seoTitle": "{{location}} - Bahiinsa Paaspoortii Haaraa",
-      "seoDescription": "Waajjira damee ICS {{location}} irratti bahiinsa paaspoortii yeroo dhugaa mirkaneessi. Bakka kanaaf haala iyyaata paaspoortii Itoophiyaa ariifachiisaa fi idilee hordofi."
+      "seoTitle": "{{location}} - Paaspoortiiwwan Haaraa",
+      "seoDescription": "Paaspoortiiwwan waajjira Imigreeshinii {{location}} irraa gadhiifaman kallattiin ilaalaa. Haala iyyannoo paaspoortii ariifachiisaa fi idilee bakka kanaa hordofaa."
     }
   }
 }

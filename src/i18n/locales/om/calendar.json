@@ -1,26 +1,26 @@
 {
   "seo": {
-    "title": "Kaalaandarii Itoophiyaa - Sagantaa Paaspootii Gadhiisuu",
-    "description": "Guyyaa paaspootii gadhiifamuu fi yeroo dhumaa barbaachisaa hordofuuf kaalaandarii Itoophiyaa ilaali. Iyyannoo paaspootii kee ilaalcha kaalaandarii aadaa keenya waliin karoora baasi."
+    "title": "Kaalendaarii Itoophiyaa - Sagantaa Gadhiifama Paaspoortii",
+    "description": "Guyyoota paaspoortiin itti gadhiifamuu fi beellama barbaachisoo hordofuuf Kaalendaarii Itoophiyaa ilaalaa. Iyyannoo paaspoortii keessan kaalendaarii aadaa keenyaan karoorfadhaa."
   },
   "header": {
-    "title": "Kaalaandarii Itoophiyaa",
-    "description": "Guyyaa, ayyaanaa fi wangeelaa ilaali"
+    "title": "Kaalendaarii Itoophiyaa",
+    "description": "Guyyaa, ayyaanotaa fi odeeffannoo guyyaa ilaalaa"
   },
   "digits": {
-    "label": "Sirna Lakkoofsa",
-    "placeholder": "Lakkoofsa Giiʼz Fayyadami",
-    "geez": "Lakkoofsa Giiʼz Fayyadami",
-    "arabic": "Lakkoofsa Arabaa Fayyadami"
+    "label": "Sirna Lakkoofsaa",
+    "placeholder": "Lakkoofsa Ge'ez Fayyadami",
+    "geez": "Lakkoofsa Ge'ez Fayyadami",
+    "arabic": "Lakkoofsa Arabiffaa (1, 2...) Fayyadami"
   },
   "navigation": {
-    "previousMonth": "Ji'a darbee",
-    "nextMonth": "Ji'a itti aanee",
-    "previous": "Duraa",
-    "next": "Itti Aanee"
+    "previousMonth": "Ji'a Darbe",
+    "nextMonth": "Ji'a Itti Aanu",
+    "previous": "Kan Duraa",
+    "next": "Kan Itti Aanu"
   },
   "viewMode": {
-    "label": "Ilaalcha kaalaandarii jijjiiri",
+    "label": "Ilaalcha kaalendaarii jijjiiri",
     "month": "Ji'a",
     "week": "Torban"
   },
@@ -37,7 +37,7 @@
     "wed": "Rob",
     "thu": "Kam",
     "fri": "Jim",
-    "sat": "Sab",
+    "sat": "San",
     "sun": "Dil"
   },
   "holidays": {
@@ -48,25 +48,25 @@
     "ariaLabel": "Ayyaanota: {{names}}"
   },
   "selectedDate": {
-    "label": "Guyyaa filatame",
-    "noHighlights": "Guyyaa kanaaf odeeffannoo galmeeffame ammaaf hin qabnu."
+    "label": "Guyyaa Filatame",
+    "noHighlights": "Guyyaa kanaaf wanti adda ta'e galmaa'e hin jiru."
   },
   "geezNumbers": {
-    "title": "Sirna Lakkoofsa Giiʼz",
-    "description1": "Afaan Oromoo sirna lakkoofsa aadaa ofii kan haala aadaa fi amantaa keessatti ammayyuu fayyadamu qaba. \"Lakkoofsa Arabaa\" (0–9) addunyaa irratti beekamaa ta'e irraa adda.",
-    "description2": "Kunooti lakkoofsa Amaaraa bu'uuraa (፩–፼):",
-    "tapHint": "maqaa Amaaraa tuqi dhageeffachuuf ↘︎",
+    "title": "Sirna Lakkoofsa Ge'ez",
+    "description1": "Sirni barreeffama Ge'ez lakkoofsa mataa isaa kan qabu yoo ta'u, kunis ammayyuu tajaajila aadaa fi amantii keessatti ni fayyada. Kunis lakkoofsa \"Arabiffaa\" (0-9) addunyaa irratti beekamu irraa adda.",
+    "description2": "Lakkoofsonni Ge'ez bu'uuraa (፩–፼) kanneenidha:",
+    "tapHint": "waamama isaa dhaga'uuf maqaa Ge'ez tuqaa ↘︎",
     "tableHeaders": {
       "number": "Lakkoofsa",
       "symbol": "Mallattoo",
-      "amharicName": "Maqaa Amaaraa"
+      "amharicName": "Maqaa (Ge'ez)"
     },
-    "pronounceAriaLabel": "{{name}} dubbisi",
-    "examplesTitle": "Fakkeenyaota Lakkoofsa"
+    "pronounceAriaLabel": "Waamama {{name}}",
+    "examplesTitle": "Fakkeenya Lakkoofsaa"
   },
   "readingTips": {
-    "title": "Yaadannoo Dubbisuu",
-    "tip1": "Lakkoofsa Giiʼz gatii guddaa irraa gara xiqqaatti walitti fidi. ፳፻፲፫ = 2013 BA: ፳ (20) × ፻ (100) kan argamu 2000, achumaan ፲፫ ni ida'a 13.",
-    "tip2": "Paagumeen guyyaa shan qofa qaba—jaarsa irratti jahha—kanaaf bara haaraa Itoophiyaa dura qabiyyee wayitawaa ibsuuf mudaa hin qabu."
+    "title": "Gorsa Dubbisuu",
+    "tip1": "Lakkoofsa Ge'ez gatii guddaa irraa gara xiqqaa ta'utti walitti fiduun dubbifama. ፳፻፲፫ = 2013: ፳ (20) × ፻ (100) yoo baay'isan 2000 kenna, sana booda ፲፫ (13) itti dabaluun 2013 ta'a.",
+    "tip2": "Phaagumeen guyyoota shan (bara Yohaannis ja'a) qofa waan qabduuf, Bara Haaraa Itoophiyaa dura waan jiru ilaaluuf mijattuudha."
   }
 }

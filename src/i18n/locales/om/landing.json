@@ -1,101 +1,101 @@
 {
   "seo": {
-    "title": "Haala Paaspoortii Itoophiyaa - Ariifataa fi Idilee Hordofaa",
-    "description": "Haala iyyata paaspoortii Itoophiyaa keessan battalatti hordofaa. Buufataalee damee ICS hunda Itoophiyaa keessaa paaspoortii ariifataa fi idilee gadhiifaman mirkaneeffadhaa."
+    "title": "Haala Paaspoortii Itoophiyaa - Hordoffii Ariifachiisaa fi Idilee",
+    "description": "Haala iyyannoo paaspoortii Itoophiyaa battalumatti hordofaa. Paaspoortii ariifachiisaa fi idilee waajjiraalee damee Imigreeshinii hundarraa gadhiifaman mirkaneeffadhaa."
   },
   "hero": {
     "stats": {
       "users": "Fayyadamtoota miliyoona 1.5 ol",
-      "passportsConfirmed": "Paaspoortiiwwan {{count}}+ akka kennamanitti mirkaneeffaman"
+      "passportsConfirmed": "Paaspoortiiwwan {{count}}+ kennamuun mirkanaa'eera"
     },
-    "headline": "Shakkii xumura hin qabne dadhabdee? Paaspoortiin Itoophiyaa kee qophaa'uu isaa battalatti beeki.",
-    "subheadline": "Lakkoofsa wabii kee ykn maqaa keeniin barbaadi—haaromsa yeroo dhugaa argadhu—waajjira irra deddeebi'anii deemuu hin barbaachisu.",
-    "cta": "Haala Paaspoortii Koo Ilaali",
-    "telegramCta": "Garee Telegram Qunnami",
+    "headline": "Haala hin beekamneen dhiphachuun, deddeebi'uun isin nuffisiisee? Paaspoortiin keessan qophii ta'uu battalumatti beekaa.",
+    "subheadline": "Lakkoofsa wabii yookiin maqaa keessan fayyadamuun barbaadaa, odeeffannoo yeroos argadhaa—waajjira deddeebi'uun hafeera.",
+    "cta": "Haala Paaspoortii Koo Ilaaluuf",
+    "telegramCta": "Gareen Telegraamaa Keenya",
     "cards": {
       "search": {
-        "title": "Barbaadcha Paaspoortii",
-        "description": "Lakkoofsa wabii ykn maqaa guutuu walitti kan walsiman fayyadami. Paaspoortiiwwan miliyoona 1.2 irraa",
-        "alt": "Namni bilbilaan barbaadaa jiru agarsiisu"
+        "title": "Barbaacha Paaspoortii",
+        "description": "Lakkoofsa wabii yookiin maqaa guutuu fayyadamuun paaspoortiiwwan miliyoona 1.2 keessaa barbaadaa",
+        "alt": "Fakkii namni tokko bilbilaan yeroo barbaadu agarsiisu"
       },
       "details": {
-        "title": "Deebii Bal'aa Argadhu",
-        "description": "paaspoortii yoom akka fudhatamu, bakka, sa'aatii, ...",
-        "alt": "Walitti qabama miseensota hawaasaa gorsa imaltummaa qoodanii"
+        "title": "Deebii Bal'aa Argadhaa",
+        "description": "Yoom akka fudhattan, eessaa, sa'aatii meeqatti fi kkf...",
+        "alt": "Miseensota hawaasaa gorsa imalaa yeroo wal jijjiiran"
       },
       "community": {
-        "title": "Hawaasa Keenya Qunnami",
-        "description": "Muuxannoo namoota biraa irraa barachuuf garee Telegram qunnami.",
-        "alt": "Walitti qabama miseensota hawaasaa gorsa imaltummaa qoodanii"
+        "title": "Hawaasa Keenyaitti Makamaa",
+        "description": "Muuxannoo warra kaanii irraa barachuuf garee Telegraamaa keenyatti makamaa.",
+        "alt": "Miseensota hawaasaa gorsa imalaa yeroo wal jijjiiran"
       }
     }
   },
   "faqs": {
-    "title": "Gaaffilee Baay'ee Gaafataman",
-    "subtitle": "Passport.ET akkamitti akka hojjatu fi maal akka eeggattu odeeffannoo amanamaa argadhu.",
+    "title": "Gaaffilee Yeroo Baay'ee Gaafataman",
+    "subtitle": "Passport.ET akkamitti akka hojjetuu fi maal eeguu akka qabdan odeeffannoo amansiisaa argadhaa.",
     "items": [
       {
-        "q": "Paaspoortiin koo qophaa'uu isaa akkamitti mirkaneessuu danda'a?",
-        "a": "Haala qophaa'ummaa haaromsawwan mootummaa irraa haarame argachuuf lakkoofsa wabii ykn barbaadcha maqaa guutuu fayyadami."
+        "q": "Paaspoortiin koo qophii ta'uu akkamittan mirkaneeffadha?",
+        "a": "Lakkoofsa wabii yookiin maqaa guutuu keessan fayyadamuun odeeffannoo haarawaa daataa beezii irraa argamuu ilaaluu dandeessu."
       },
       {
-        "q": "Portaala kana fayyadamuuf odeeffannoo maalii nan barbaachisa?",
-        "a": "Lakkoofsa wabii kee ykn maqaa seeraa guutuu kee. Dabalataan, bakka jirutti magaalaan calaltuu gochuu dandeessa."
+        "q": "Poortaalii kana fayyadamuuf odeeffannoo maalitu na barbaachisa?",
+        "a": "Lakkoofsa wabii yookiin maqaa guutuu seeraa isin barbaachisa. Yoo danda'ame, magaalaa itti iyyattan filachuun fayyadamuu dandeessu."
       },
       {
-        "q": "Passport.ET tajaajila mootummaa ta'ee?",
-        "a": "Passport.ET marsariitii mootummaa idilee miti. Meeshaa hawaasaa qophaa'ummaa mirkaneessuu fi hubaannoo qooduu irratti xiyyeeffatu dha."
+        "q": "Passport.ET tajaajila mootummaatii?",
+        "a": "Passport.ET weebsaayitii mootummaa miti. Kun meeshaa hawaasaa paaspoortii qophii ta'uu hordofuu fi odeeffannoo wal jijjiiruuf qophaa'eedha."
       },
       {
-        "q": "Haalli paaspoortii agarsiifamu hammam sirrii dha?",
-        "a": "Haalonni walsimsiifama yeroo dhiyootti argamu irratti hundaa'an. Imala yeroo itti xiyyeeffatan, dura bakka dhaquun dura chanaalota idilee waliin mirkaneeffadhu."
+        "q": "Haalli paaspoortii mul'isu hammam sirriidha?",
+        "a": "Odeeffannoon kan maddan 'sync' daataa yeroo dhumaa irraati. Imala murteessaa fi ariifachiisaaf, qaamaan deemuu keessan dura qaama mootummaa biraa mirkaneeffachuun gaariidha."
       },
       {
-        "q": "Portaala kana karaa paaspoortii haaraa iyyachuu danda'aa?",
-        "a": "Lakki. Portaalli qophaa'ummaa mirkaneessuu fi hubaannoo argachuuf qofa ijaarame. Iyyachuuf, chanaalota iyyannoo idilee hordofuu qabda."
+        "q": "Poortaalii kanaan paaspoortii haaraa iyyachuu nan danda'aa?",
+        "a": "Hin dandeessan. Poortaaliin kun paaspoortii qophii ta'uu hordofuuf qofa kan qophaa'eedha. Iyyachuuf karaa sirrii mootummaa hordofuu qabdu."
       }
     ]
   },
   "testimonials": {
     "quotes": [
-      { "name": "Abebee Kaabbadaa", "quote": "Haala onlaayiniin mirkaneessuun yeroo koo baay'ee hambiseera. Paaspoortiin koo yoom akka qophaa'u sirriitti beekeera!" },
-      { "name": "Tigist Hayilee", "quote": "Adeemsi sirrii ture marsariitichis itti fayyadamuuf salphaa ture. Paaspoortii koo kan yaade caalaa dafee argadhe." },
-      { "name": "Yohaannis Gabra", "quote": "Amalli ergaa gabaabaa (SMS) ajaa'ibaa dha. Haaromsaaf marsariitii irra deddeebi'ee ilaaluu hin barbaachisu ture." },
-      { "name": "Daawit Mangistuu", "quote": "Imaltuu yeroo hunda ta'ee, adeemsi hammam bu'a qabeessa akka ta'e fi as odeeffannoo argachuun hammam salphaa akka ta'e nan galateeffadha." },
-      { "name": "Meeroon Alamuu", "quote": "Gareen deeggarsa maamilaa Telegram irratti yeroo gaaffilee iyyannoo koo qabu baay'ee gargaarsaa turan." },
-      { "name": "Fireewoot Taaddasaa", "quote": "Wiirtuu fayyadamaa jaallatamaan ajaa'ibsifameera. Haala paaspoortii koo mirkaneessuun salphaa godheera." },
-      { "name": "Naatinaa'el Taaddasaa", "quote": "Haala paaspoortii koo mirkaneessuun hammam salphaa akka ture jaalladheera. Gargaarsa fi deeggarsa garichaaf nan galateeffadha." },
-      { "name": "Barakatuu Taaddasaa", "quote": "Iftoominsa adeemsa keessa jiru nan galateeffadha. Sagantaan yeroo kenname sirrii fi gargaarsa ture." }
+      { "name": "Abebe Kebede", "quote": "Haala onlaayiniin hordofuun yeroo koo baay'ee naaf qusateera. Paaspoortiin koo yoom akka qophaa'e sirriittan beeke!" },
+      { "name": "Tigist Haile", "quote": "Adeemsi isaa ifaa fi weebsaayitichi fayyadamuuf baay'ee salphaadha. Paaspoortii koo yeroon eeguree dafee argadhe." },
+      { "name": "Yohannes Gebre", "quote": "Tajaajilli ergaa gabaabaa (SMS) baay'ee gaariidha. Jijjiirama ilaaluuf weebsaayiticha deddeebi'ee ilaaluun natti hin barbaachisne." },
+      { "name": "Dawit Mengistu", "quote": "Nama yeroo baay'ee imalu waanan ta'eef, hojmaanni isaa hammam si'ataa akka ta'ee fi odeeffannoo argachuun hammam salphaa akka ta'e nan dinqisiifadha." },
+      { "name": "Meron Alemu", "quote": "Yeroon iyyannoo koo ilaalchisee gaaffii qabaadhu gareen deeggarsa maamilaa Telegraama irratti argaman baay'ee na gargaaraniiru." },
+      { "name": "Freiwhot Tadesse", "quote": "Salphaatti fayyadamuun kan danda'amu ta'uun isaa na gammachiiseera. Haala paaspoortii koo mirkaneeffachuun baay'ee salphaa akka ta'u taasiseera." },
+      { "name": "Natnael Tadesse", "quote": "Haala paaspoortii koo mirkaneeffachuun hammam salphaa akka ta'e jaalladheera. Gargaarsa fi deeggarsa garee kanaa nan dinqisiifadha." },
+      { "name": "Bereket Tadesse", "quote": "Iftoomina adeemsa kanaatiin baay'een gammade. Yeroon kenname sirrii fi bu'a qabeessa ture." }
     ]
   },
   "advertise": {
-    "title": "Passport.ET Waliin Beeksisi",
-    "description": "Karaa portaala qophaa'ummaa paaspoortii idilee lammiiwwan Itoophiyaa miliyoonaan lakkaa'aman fi imaltoota bira ga'i. Dhaabbannaan bakka tarsiimoo, beeksisa guutuu marsariitii, fi uumama sagalee biraandii keef kan mijaa'e of keessaa qaba.",
-    "cta": "Amma Nu Qunnami",
-    "limitedSlots": "Bakkeewwan murtaa'an jiru",
-    "packageDescription": "Paakeejiin beeksisa keenyaa mul'annoo fuula gubbaa Passport.ET irratti fuula jalqabaa, giddugala hubaannoo, fi fuulawwan bu'aa haala paaspoortii irratti bakkeewwan olaanaa waliin kenna."
+    "title": "Passport.ET irratti Beeksisaa",
+    "description": "Poortaalii odeeffannoo paaspoortii kanaan lammiilee Itoophiyaa fi imaltoota miliyoonaan lakkaa'aman bira ga'aa. Duulli beeksisaa iddoo tarsiimowaa, uwwisa bal'aa fi brandii keessaniif kan malu of keessatti qabata.",
+    "cta": "Amma Nu Qunnamaa",
+    "limitedSlots": "Iddoo murtaa'aa qofatu hafe",
+    "packageDescription": "Paakejiin beeksisaa keenya fuula jalqabaa Passport.ET, giddu-gala odeeffannoo fi fuula bu'aa irratti brandii keessaniif mul'inoota olaanaa kenna."
   },
   "downloadApp": {
-    "title": "Appilikeeshinii Passport.ET Buufadhu",
-    "description": "Haala paaspoortii kee yeroo kamiyyuu, bakka kamiyyuu—bilbila kee irraa kallattiin ilaali."
+    "title": "Appii Passport.ET Buufadhaa",
+    "description": "Haala paaspoortii keessanii yeroo kamiyyuu fi bakka kamiyyuu bilbila keessaniin mirkaneeffadhaa."
   },
   "articles": {
-    "title": "Barreeffamoota",
-    "subtitle": "Barreeffamoota paaspoortii, gorsaa fi odeeffannoo imaltummaaf madda amanamaa kee.",
-    "readMore": "Dabalata Dubbisi",
-    "viewAll": "Barreeffamoota Hunda Ilaali",
-    "empty": "Hanga ammaatti barreeffamoonni hin jiran.",
-    "error": "Barreeffamoota fe'uun hin milkoofne."
+    "title": "Barruulee",
+    "subtitle": "Odeeffannoo paaspoortii, gorsaawwan barbaachisoo fi odeeffannoo imalaaf madda amansiisaa keessan.",
+    "readMore": "Dabalata Dubbisaa",
+    "viewAll": "Barruulee Hunda Ilaalaa",
+    "empty": "Ammatti barruun hin jiru.",
+    "error": "Barruulee fe'uu hin dandeenye."
   },
   "adBanner": {
-    "sponsored": "Ispoonsara Godhamee",
-    "title": "Passport Alerts Waliin Beeksisi",
-    "description": "Haaromsawwan paaspoortii fi tajaajilawwan walitti dhufeenya qaban barbaadan imaltoota kumaatamaan lakkaa'aman bira ga'i. Baanerri olaanoo kun biraandii keef qabadhu.",
-    "cta": "Daldalaa Kee Beeksisi"
+    "sponsored": "Isponserii Ta'e",
+    "title": "Passport Alerts wajjin Beeksisaa",
+    "description": "Imaltoota kumaan lakkaa'aman kanneen odeeffannoo paaspoortii barbaadan bira ga'aa. Banarii olaanaa kana brandii keessaniif qabadhaa.",
+    "cta": "Dhaabbata Keessan Beeksisaa"
   },
   "videoTabs": {
     "title": "Agarsiisa Viidiyoo",
-    "subtitle": "Akkamitti paaspoortiin kee qophaa'uu isaa mirkaneessuu dandeessu ykn tajaajilawwan kennamanii",
-    "authority": "DHIMMA BAQATTUMMAA FI LAMMUMMAA"
+    "subtitle": "Paaspoortiin keessan qophii ta'uu isaa akkamitti akka mirkaneeffattan yookiin tajaajiloota dhaabbata kanaa gadii irraa kennaman akkamitti akka argattan ilaalaa",
+    "authority": "Imigreeshinii fi Lammummaa"
   }
 }

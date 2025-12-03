@@ -1,54 +1,54 @@
 {
   "list": {
     "seo": {
-      "title": "Qajeelfamoota Iyyata Paaspoortii fi Oduu - Itoophiyaa",
-      "description": "Qajeelfamoota ogeessaa iyyata paaspoortii Itoophiyaa, haaromsa, fi ulaagaalee irratti. Oduu godaansaa ICS, jijjiirama imaammata, fi adeemsa irratti odeeffannoo haaraa argadhaa."
+      "title": "Qajeelfama Iyyannoo Paaspoortii fi Oduu - Itoophiyaa",
+      "description": "Qajeelfama ogeessotaa kan iyyannoo paaspoortii Itoophiyaa, haaromsa fi ulaagaalee ilaalchisee. Oduuwwan Imiigreeshinii (ICS), jijjiirama imaammataa fi hojmaataa irratti odeeffannoo yeroo argadhaa."
     },
-    "title": "Barreeffamoota Barbaadi",
+    "title": "Barruulee Barbaadi",
     "search": {
-      "placeholder": "Mata duree biloogii galchi",
+      "placeholder": "Mataduree bloogii galchi",
       "button": "Barbaadi"
     },
     "filters": {
-      "filterBy": "Filteera",
-      "category": "Akaakuu",
-      "allCategories": "Akaakuulee Hunda",
-      "tags": "Mallattoolee",
-      "allTags": "Mallattoolee Hunda"
+      "filterBy": "Kanaan calali",
+      "category": "Ramaddii",
+      "allCategories": "Ramaddiiwwan Hunda",
+      "tags": "Taagiiwwan",
+      "allTags": "Taagiiwwan Hunda"
     },
     "empty": {
       "icon": "📄",
-      "title": "Barreeffamoonni hin argamne",
-      "descriptionWithSearch": "Barbaadni kee \"{{search}}\" waliin walsimu hin argamne. Jechootakalaaqaa adda addaa yaali ykn barbaada kee haqi.",
-      "descriptionNoSearch": "Filteeroota ammaa kee waliin walsimu hin argamne. Filteeroota kee sirreessi ykn haqi.",
-      "showAll": "Barreeffamoota hunda agarsiisi"
+      "title": "Barruun tokkoyyuu hin argamne",
+      "descriptionWithSearch": "Barbaacha kee \"{{search}}\" wajjin barruun wal qabatu hin jiru. Maaloo jechoota furtuu biraa yaalaa yookiin barbaacha keessan qulqulleessaa.",
+      "descriptionNoSearch": "Calaltuu keessan ammaa wajjin barruun wal qabatu hin jiru. Maaloo calaltuu keessan sirreessaa yookiin qulqulleessaa.",
+      "showAll": "Barruulee hunda agarsiisi"
     },
     "pagination": {
-      "previous": "Duraa",
-      "next": "Itti Aanee",
-      "ariaLabel": "Fuula barreeffamoota naannessuu",
+      "previous": "Kan Duraa",
+      "next": "Kan Itti Aanu",
+      "ariaLabel": "Fuula barruu",
       "goToPage": "Gara fuula {{page}} deemi",
-      "goToPrevious": "Gara fuula duraatti deebi'i",
-      "goToNext": "Gara fuula itti aanutti deemi"
+      "goToPrevious": "Gara fuula duraatti deemi",
+      "goToNext": "Gara fuula itti aanuutti deemi"
     }
   },
   "detail": {
     "notFound": {
-      "title": "Barreeffamni Hin Argamne",
-      "description": "Maaloo URL mirkaneessii irra deebi'ii yaali."
+      "title": "Barruun Hin Argamne",
+      "description": "Maaloo URLicha mirkaneessaa irra deebi'aa yaalaa."
     },
     "navigation": {
-      "back": "Biloogota",
-      "share": "Barreeffama qoodi",
-      "copyLink": "Geessituu barreeffamaa kooppii godhi"
+      "back": "Bloogiiwwan",
+      "share": "Barruu qoodi",
+      "copyLink": "Liinkii barruu garagalchi"
     },
     "author": {
-      "defaultName": "Passport.ET Gulaallii",
+      "defaultName": "Kutaa Qophii Passport.ET",
       "readTime": "Daqiiqaa {{time}}"
     },
     "related": {
-      "title": "Kan biroo akka kanaa",
-      "readMore": "Seenaa guutuu dubbisi."
+      "title": "Kanneen biroo kan kana fakkaatan",
+      "readMore": "Seenaa guutuu dubbisaa."
     }
   }
 }

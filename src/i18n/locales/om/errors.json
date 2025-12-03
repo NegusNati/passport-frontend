@@ -5,16 +5,16 @@
       "description": "Fuulli kun hin jiru."
     },
     "errorCode": "DOGOGGORA 404",
-    "title": "Karaa kee dhabdee?",
-    "description": "Fuulli ati barbaaddu hin jiru, socho'ee, ykn URL irratti dogoggorri jira. Gara karaa keetti si deebisna.",
-    "goHome": "Gara Manaatti Deemi",
-    "goBack": "Duubatti Deebi'i",
-    "hint": "URL irratti dogoggora ilaali, ykn qajeelfama fayyadami."
+    "title": "Karaan isin jalaa badee?",
+    "description": "Fuulli isin barbaaddan hin jiru, bakka jijjiirrateera yookiin URL irratti dogoggorri jira. Gara bakka sirriitti isin haa deebisnu.",
+    "goHome": "Gara Manaa",
+    "goBack": "Deebi'i",
+    "hint": "Maaloo URLicha mirkaneessaa, yookiin menyuu fayyadamaa."
   },
   "errorBoundary": {
-    "title": "Wanti tokko sirrii hin deemne",
-    "description": "Gugurroon paaspoortii keenyaa dhimmicha irratti hojjechaa jiru. Haaromsi ykn gara manaatti deebi'i.",
-    "goHome": "Gara manaatti deemi",
+    "title": "Dogoggorri uumameera",
+    "description": "Gareen keenya rakkoo kana hiikuuf hojjechaa jira. Maaloo 'Refresh' godhaa yookiin gara manaa deebi'aa.",
+    "goHome": "Gara Manaa",
     "tryAgain": "Irra deebi'ii yaali"
   }
 }

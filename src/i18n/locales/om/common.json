@@ -4,38 +4,38 @@
     "passports": "Paaspoortii",
     "articles": "Barruulee",
     "advertise": "Beeksisa",
-    "locations": "Waajjiraalee damee ICS ofiisaa",
-    "myProfile": "Eenyummaa koo",
-    "register": "Galmaa'i",
-    "login": "Seeni",
-    "downloadApp": "Appii buufadhu"
+    "locations": "Waajjiraalee Damee Imigreeshinii",
+    "myProfile": "Piroofaayilii Koo",
+    "register": "Galmaa'aa",
+    "login": "Seenaa",
+    "downloadApp": "Appii Buufadhaa"
   },
   "footer": {
-    "tagline": "Imala gatii hin qabne biraa hin jiru. Haala paaspoortii keessanii battalumatti beekaa.",
-    "joinTelegram": "Garee Telegraama makamaa",
-    "services": "Tajaajilawwan",
+    "tagline": "Si'achi deddeebi'uun hafeera. Haala paaspoortii keessanii battalumatti beekaa.",
+    "joinTelegram": "Gareen Telegraamaa Keenya",
+    "services": "Tajaajiloota",
     "advertisement": "Beeksisa",
-    "passportCheck": "Paaspoortii mirkaneessuu",
-    "ethiopianCalendar": "Kaalaandara Itoophiyaa",
-    "geezNumbers": "Lakkoofsa Gi'izii",
+    "passportCheck": "Ilaalcha Paaspoortii",
+    "ethiopianCalendar": "Kaalendaarii Itoophiyaa",
+    "geezNumbers": "Lakkoofsa Ge'ez",
     "articles": "Barruulee",
-    "developerSocials": "Miidiyaa hawaasaa hojjetaa",
-    "copyright": "©2025 Passport.ET. Mirgi hundi kan eegame.",
-    "terms": "Haala fi waliigaltee",
-    "privacy": "Imaammata dhuunfaa"
+    "developerSocials": "Teessoo Misoomstotaa",
+    "copyright": "©2017 Passport.ET. Mirgi isaa seeraan eegamaadha.",
+    "terms": "Haalata Tajaajilaa",
+    "privacy": "Imaammata Iccitii"
   },
   "pwa": {
-    "alreadyInstalled": "Duraan fe'amee jira!",
-    "alreadyInstalledDesc": "Passport.ET meeshaa keessan irratti duraan fe'amee jira.",
-    "appInstalled": "Appiin fe'amee jira!",
-    "appInstalledDesc": "Passport.ET gara fuula jalqabaa keessaniitti dabalamee jira.",
-    "installCancelled": "Fe'uun haqamee jira",
-    "installCancelledDesc": "Appii yeroo barbaaddan menu kana irraa fe'uu dandeessu.",
+    "alreadyInstalled": "Fe'ameera!",
+    "alreadyInstalledDesc": "Passport.ET meeshaa keessan irratti fe'ameera.",
+    "appInstalled": "Appiin fe'ameera!",
+    "appInstalledDesc": "Passport.ET skiriinii jalqabaa keessatti dabalameera.",
+    "installCancelled": "Fe'uun addaan citeera",
+    "installCancelledDesc": "Yeroo barbaaddanitti menyuu kana irraa appicha fe'uu dandeessu.",
     "installNotAvailable": "Fe'uun hin danda'amu",
-    "installNotAvailableDesc": "Appii fe'uuf marsariitii kana Chrome ykn Safari irratti banaa."
+    "installNotAvailableDesc": "Appicha fe'uuf maaloo weebsaayitii kana Chrome yookiin Safari dhaan banaa."
   },
   "status": {
     "loading": "Fe'aa jira..."
   },
-  "underConstruction": "Ijaarsarra jira 🚧"
+  "underConstruction": "Ijaarsa irra jira 🚧"
 }

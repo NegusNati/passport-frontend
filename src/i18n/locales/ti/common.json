@@ -1,41 +1,41 @@
 {
   "siteName": "Passport.ET",
   "nav": {
-    "passports": "ፓስፖርትታት",
+    "passports": "ፓስፖርት",
     "articles": "ጽሑፋት",
-    "advertise": "ማስታወቒያ",
-    "locations": "ወግዓውያን ናይ ICS ጨንፈር ቤት ጽሕፈታት",
+    "advertise": "ምልክታ",
+    "locations": "ወግዓዊ ቤት ጽሕፈታት ኢሚግሬሽን",
     "myProfile": "ናተይ ፕሮፋይል",
-    "register": "ተመዝገብ",
-    "login": "እቶ",
-    "downloadApp": "ኣፕሊኬሽን ኣውርድ"
+    "register": "ተመዝገቡ",
+    "login": "እተዉ",
+    "downloadApp": "ኣፕሊኬሽን ኣውርዱ"
   },
   "footer": {
-    "tagline": "ዘይጠቅም ጉዕዞታት ካብ ሕጂ የለን። ኩነታት ፓስፖርትኩም ብቕጽበት ፍለጡ።",
-    "joinTelegram": "ናይ ተለግራም ጉጅለ ተጸንበሩ",
+    "tagline": "ደጊም ኪድ ምጽእ ተሪፉ። ኩነታት ፓስፖርትኩም ብቀልጢፉ ፍለጡ።",
+    "joinTelegram": "ናይ ቴሌግራም ግሩፕ ተሓወሱ",
     "services": "ኣገልግሎታት",
-    "advertisement": "ማስታወቒያ",
-    "passportCheck": "ፓስፖርት ምርግጋጽ",
-    "ethiopianCalendar": "ናይ ኢትዮጵያ ዓውደ-ኣዋርሕ",
-    "geezNumbers": "ናይ ግእዝ ቁጽርታት",
+    "advertisement": "ምልክታ",
+    "passportCheck": "ፓስፖርት ምክትታል",
+    "ethiopianCalendar": "ዓውደ ኣዋርሕ ኢትዮጵያ",
+    "geezNumbers": "ግዕዝ ቁጽሪ",
     "articles": "ጽሑፋት",
-    "developerSocials": "ናይ ደቨሎፐር ማሕበራዊ ሜድያታት",
-    "copyright": "©2025 Passport.ET. ኩሉ መሰላት ዝተሓለወ።",
-    "terms": "ውዕላትን ኩነታትን",
-    "privacy": "ናይ ውልቃውነት ፖሊሲ"
+    "developerSocials": "ማሕበራዊ ገጻት ኣልሚ",
+    "copyright": "©2017 Passport.ET. መሰሉ ብሕጊ ዝተሓለወ እዩ።",
+    "terms": "ውል ን ኣገልግሎት",
+    "privacy": "ፖሊሲ ሓለዋ ሓበሬታ"
   },
   "pwa": {
-    "alreadyInstalled": "ድሮ ተጫዊኑ ኣሎ!",
-    "alreadyInstalledDesc": "Passport.ET ኣብ መሳርሒኹም ድሮ ተጫዊኑ ኣሎ።",
-    "appInstalled": "ኣፕሊኬሽን ተጫዊኑ!",
-    "appInstalledDesc": "Passport.ET ናብ ናይ መበገሲ ገጽኩም ተወሲኹ።",
-    "installCancelled": "ምጽዓን ተሰሪዙ",
-    "installCancelledDesc": "ኣፕሊኬሽን ኣብ ዝኾነ ግዜ ካብዚ ሜኑ ክትጽዕኑ ትኽእሉ።",
+    "alreadyInstalled": "ተጻዒኑ ኣሎ!",
+    "alreadyInstalledDesc": "Passport.ET ኣብ መሳርሒኹም ተጻዒኑ ኣሎ።",
+    "appInstalled": "ኣፕሊኬሽን ተጻዒኑ!",
+    "appInstalledDesc": "Passport.ET ናብ ናይ ስልክኹም መእተዊ ገጽ ተወሲኹ ኣሎ።",
+    "installCancelled": "ምጽዓን ተቋሪጹ",
+    "installCancelledDesc": "ካብዚ ሜኑ ነቲ ኣፕሊኬሽን ኣብ ዝደለኹምዎ ግዜ ክትጽዕንዎ ትኽእሉ ኢኹም።",
     "installNotAvailable": "ምጽዓን ኣይከኣልን",
-    "installNotAvailableDesc": "ኣፕሊኬሽን ንምጽዓን በጃኹም ነዚ ወብሳይት ኣብ Chrome ወይ Safari ክፈትዎ።"
+    "installNotAvailableDesc": "ነቲ ኣፕሊኬሽን ንምጽዓን በጃኹም ነዚ ዌብሳይት ብ Chrome ወይ Safari ክፈትዎ።"
   },
   "status": {
-    "loading": "ይጽዓና ኣሎ..."
+    "loading": "ይጽዕን ኣሎ..."
   },
-  "underConstruction": "ኣብ ህንጸት ኣሎ 🚧"
+  "underConstruction": "ኣብ ህንጸት ይርከብ 🚧"
 }
