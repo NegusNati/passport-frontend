@@ -2,7 +2,9 @@ import { Link, useNavigate } from '@tanstack/react-router'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight, X } from 'lucide-react'
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 
+import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { ThemeToggle } from '@/shared/components/theme-toggle'
 import { Button } from '@/shared/ui/button'
 import { toast } from '@/shared/ui/sonner'
@@ -20,6 +22,7 @@ type MobileMenuProps = {
 
 export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   useEffect(() => {
     const handleEsc = (event: KeyboardEvent) => {
@@ -38,7 +41,7 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
         navigate({ to: '/profile' })
       }}
     >
-      My profile
+      {t('nav.myProfile')}
     </Button>
   ) : (
     <>
@@ -50,7 +53,7 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
           navigate({ to: '/register' })
         }}
       >
-        Register
+        {t('nav.register')}
       </Button>
       <Button
         className="flex-1 text-sm"
@@ -59,7 +62,7 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
           navigate({ to: '/login' })
         }}
       >
-        Login
+        {t('nav.login')}
       </Button>
     </>
   )
@@ -113,7 +116,7 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
                   'text-foreground hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring flex items-center justify-between rounded-lg px-3 py-3 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none'
                 const handleComingSoonClick = () => {
                   if (item.comingSoonMessage) {
-                    toast('Under construction 🚧', {
+                    toast(t('underConstruction'), {
                       description: item.comingSoonMessage,
                     })
                   }
@@ -154,6 +157,7 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
                 )
               })}
               <div className="flex items-center gap-3">
+                <LanguageSwitcher className="h-10 flex-1 text-sm" />
                 <ThemeToggle className="h-10 w-20" />
               </div>
             </nav>

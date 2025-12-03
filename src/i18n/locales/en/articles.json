@@ -1,0 +1,54 @@
+{
+  "list": {
+    "seo": {
+      "title": "Passport Application Guides & News - Ethiopia",
+      "description": "Expert guides on Ethiopian passport applications, renewal, and requirements. Stay updated on ICS immigration news, policy changes, and procedures."
+    },
+    "title": "Search for Articles",
+    "search": {
+      "placeholder": "Enter blog title",
+      "button": "Search"
+    },
+    "filters": {
+      "filterBy": "Filter by",
+      "category": "Category",
+      "allCategories": "All Categories",
+      "tags": "Tags",
+      "allTags": "All Tags"
+    },
+    "empty": {
+      "icon": "📄",
+      "title": "No articles found",
+      "descriptionWithSearch": "No articles match your search for \"{{search}}\". Try different keywords or clear your search.",
+      "descriptionNoSearch": "No articles match your current filters. Try adjusting your filters or clearing them.",
+      "showAll": "Show all articles"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "ariaLabel": "Article pagination",
+      "goToPage": "Go to page {{page}}",
+      "goToPrevious": "Go to previous page",
+      "goToNext": "Go to next page"
+    }
+  },
+  "detail": {
+    "notFound": {
+      "title": "Article Not Found",
+      "description": "Please check the URL and try again."
+    },
+    "navigation": {
+      "back": "Blogs",
+      "share": "Share article",
+      "copyLink": "Copy article link"
+    },
+    "author": {
+      "defaultName": "Passport.ET Editorial",
+      "readTime": "{{time}} Min"
+    },
+    "related": {
+      "title": "Others like this",
+      "readMore": "Read the full story."
+    }
+  }
+}

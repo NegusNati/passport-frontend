@@ -13,6 +13,7 @@ import {
   type ListParams,
 } from '@/features/passports/lib/PassportsApi'
 import { passportsKeys, useLocationsQuery } from '@/features/passports/lib/PassportsQuery'
+import { loadI18nNamespaces } from '@/i18n/loader'
 import { useAnalytics } from '@/shared/lib/analytics'
 
 type RouterContext = { queryClient: QueryClient }
@@ -26,11 +27,14 @@ export const Route = createFileRoute('/locations/$locationSlug')({
   loader: async ({ context, params }) => {
     const { queryClient } = context as RouterContext
 
-    const locationsResponse = await queryClient.ensureQueryData({
-      queryKey: passportsKeys.locations(),
-      queryFn: fetchLocations,
-      staleTime: 5 * 60_000,
-    })
+    const [locationsResponse] = await Promise.all([
+      queryClient.ensureQueryData({
+        queryKey: passportsKeys.locations(),
+        queryFn: fetchLocations,
+        staleTime: 5 * 60_000,
+      }),
+      loadI18nNamespaces(['passports']),
+    ])
 
     const locationName = matchLocationFromSlug(params.locationSlug, locationsResponse.data ?? [])
 

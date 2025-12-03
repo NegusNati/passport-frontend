@@ -1,18 +1,21 @@
 import { motion } from 'framer-motion'
 import { GithubIcon, InstagramIcon, LinkedinIcon, MegaphoneIcon, TwitterIcon } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import telegramIcon from '@/assets/logos/telegram-logo.svg'
 import { ComingSoonDialog } from '@/shared/ui/coming-soon-dialog'
 
 const Footer = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const { t } = useTranslation()
+
   const services = [
-    { name: 'Advertisement', href: '/advertisement-requests' },
-    { name: 'Passport Check', href: '/passports' },
-    { name: 'Ethiopian Calendar', href: 'https://calendar.passport.et/' },
-    { name: "Gee'z Numbers", href: 'https://calendar.passport.et/#geez-numbers' },
-    { name: 'Articles', href: '/articles' },
+    { name: t('footer.advertisement'), href: '/advertisement-requests' },
+    { name: t('footer.passportCheck'), href: '/passports' },
+    { name: t('footer.ethiopianCalendar'), href: 'https://calendar.passport.et/' },
+    { name: t('footer.geezNumbers'), href: 'https://calendar.passport.et/#geez-numbers' },
+    { name: t('footer.articles'), href: '/articles' },
   ]
 
   const socials = [
@@ -94,7 +97,7 @@ const Footer = () => {
                 Passport.ET
               </motion.h2>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                No more wasted trips. Know your passport status instantly.
+                {t('footer.tagline')}
               </p>
             </div>
 
@@ -108,14 +111,14 @@ const Footer = () => {
             >
               <img src={telegramIcon} alt="Telegram" className="h-6 w-6" width="24" height="24" />
               <span className="text-muted-foreground hover:text-primary font-medium">
-                Join Telegram Group
+                {t('footer.joinTelegram')}
               </span>
             </motion.a>
           </motion.div>
 
           {/* Services */}
           <motion.div className="space-y-4" variants={itemVariants}>
-            <h3 className="text-foreground text-lg font-semibold">Services</h3>
+            <h3 className="text-foreground text-lg font-semibold">{t('footer.services')}</h3>
             <ul className="space-y-3">
               {services.map((service) => (
                 <motion.li key={service.name}>
@@ -141,7 +144,7 @@ const Footer = () => {
 
           {/* Developer Socials */}
           <motion.div className="space-y-6" variants={itemVariants}>
-            <h3 className="text-foreground text-lg font-semibold">Developer Socials</h3>
+            <h3 className="text-foreground text-lg font-semibold">{t('footer.developerSocials')}</h3>
             <ul className="space-y-3">
               {socials.map((social) => (
                 <motion.li key={social.name}>
@@ -166,7 +169,7 @@ const Footer = () => {
         <motion.div className="border-border border-t pt-8" variants={itemVariants}>
           <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
             <motion.p className="text-muted-foreground text-sm" whileHover={{ scale: 1.02 }}>
-              ©2025 Passport.ET. All rights reserved.
+              {t('footer.copyright')}
             </motion.p>
 
             <div className="flex space-x-6">
@@ -177,7 +180,7 @@ const Footer = () => {
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Terms & Conditions
+                {t('footer.terms')}
               </motion.button>
               <motion.button
                 type="button"
@@ -186,7 +189,7 @@ const Footer = () => {
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Privacy Policy
+                {t('footer.privacy')}
               </motion.button>
             </div>
             <ComingSoonDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />

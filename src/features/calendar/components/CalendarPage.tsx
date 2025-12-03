@@ -3,6 +3,7 @@ import { addDays, ethiopicToJdn, today as getToday, weekdayFromJdn } from 'negus
 import type { Highlight } from 'negus-ethiopic-gregorian/highlights'
 import { getHighlightsForDay, getHighlightsForMonth } from 'negus-ethiopic-gregorian/highlights'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import ethiopic_numbers_pattern from '@/assets/landingImages/ethiopiac_num_pattern.svg'
 import ethiopic_numbers from '@/assets/landingImages/number.webp'
@@ -133,6 +134,7 @@ function formatWeekRange(cells: CalendarCell[], useGeezDigits: boolean) {
 }
 
 export function CalendarPage() {
+  const { t } = useTranslation('calendar')
   const today = useTodayEthiopianDate()
   const [viewYear, setViewYear] = React.useState(today.year)
   const [viewMonth, setViewMonth] = React.useState(today.month)
@@ -330,8 +332,8 @@ export function CalendarPage() {
   return (
     <section className="relative py-14 sm:py-20">
       <Seo
-        title="Ethiopian Calendar - Passport Release Schedule"
-        description="View the Ethiopian calendar to track passport release dates and important deadlines. Plan your passport application with our traditional calendar view."
+        title={t('seo.title')}
+        description={t('seo.description')}
         path="/calendar"
       />
       <div className="absolute bottom-[240rem] left-0 z-0 ml-2 translate-y-1/4 transform opacity-60 md:hidden md:opacity-90">
@@ -369,10 +371,10 @@ export function CalendarPage() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                Ethiopian Calendar
+                {t('header.title')}
               </h1>
               <p className="text-muted-foreground mt-1 text-sm sm:text-base">
-                Check out the date, holidays and wengalat
+                {t('header.description')}
               </p>
             </div>
             <div className="min-w-[220px]">
@@ -381,11 +383,11 @@ export function CalendarPage() {
                 onValueChange={(v) => setUseGeezDigits(v === 'geez')}
               >
                 <SelectTrigger className="bg-muted/80 backdrop-blur-sm">
-                  <SelectValue placeholder="Use Geeʼz Numbers" />
+                  <SelectValue placeholder={t('digits.placeholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="geez">Use Geeʼz Numbers</SelectItem>
-                  <SelectItem value="arabic">Use Arabic Numbers</SelectItem>
+                  <SelectItem value="geez">{t('digits.geez')}</SelectItem>
+                  <SelectItem value="arabic">{t('digits.arabic')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -400,11 +402,11 @@ export function CalendarPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  aria-label="Previous month"
+                  aria-label={t('navigation.previousMonth')}
                   onClick={goToPreviousMonth}
                   leftIcon={<ChevronLeft className="h-4 w-4" />}
                 >
-                  <span className="sr-only">Previous</span>
+                  <span className="sr-only">{t('navigation.previous')}</span>
                 </Button>
                 <div
                   className={
@@ -427,11 +429,11 @@ export function CalendarPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  aria-label="Next month"
+                  aria-label={t('navigation.nextMonth')}
                   onClick={goToNextMonth}
                   rightIcon={<ChevronRight className="h-4 w-4" />}
                 >
-                  <span className="sr-only">Next</span>
+                  <span className="sr-only">{t('navigation.next')}</span>
                 </Button>
               </div>
               <div className="bg-border/50 h-px w-full" />
@@ -439,7 +441,7 @@ export function CalendarPage() {
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div
                   role="group"
-                  aria-label="Toggle calendar view"
+                  aria-label={t('viewMode.label')}
                   className="bg-muted/40 inline-flex rounded-full p-1 text-xs font-semibold"
                 >
                   <button
@@ -453,7 +455,7 @@ export function CalendarPage() {
                         : 'text-muted-foreground hover:text-foreground',
                     ].join(' ')}
                   >
-                    Month
+                    {t('viewMode.month')}
                   </button>
                   <button
                     type="button"
@@ -466,11 +468,11 @@ export function CalendarPage() {
                         : 'text-muted-foreground hover:text-foreground',
                     ].join(' ')}
                   >
-                    Week
+                    {t('viewMode.week')}
                   </button>
                 </div>
                 <Button variant="outline" size="sm" onClick={goToToday}>
-                  Today
+                  {t('actions.today')}
                 </Button>
               </div>
 
@@ -480,7 +482,7 @@ export function CalendarPage() {
                     htmlFor="month-select"
                     className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase"
                   >
-                    Month
+                    {t('selectors.monthLabel')}
                   </label>
                   <select
                     id="month-select"
@@ -498,7 +500,7 @@ export function CalendarPage() {
                     htmlFor="year-select"
                     className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase"
                   >
-                    Year
+                    {t('selectors.yearLabel')}
                   </label>
                   <select
                     id="year-select"
@@ -606,7 +608,7 @@ export function CalendarPage() {
             {/* Holidays glass card */}
             <div className="border-border/60 rounded-2xl border bg-transparent p-6 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
               <h3 className="text-foreground text-base font-semibold tracking-tight">
-                {viewMode === 'month' ? 'Holidays this month' : 'Holidays this week'}
+                {viewMode === 'month' ? t('holidays.titleMonth') : t('holidays.titleWeek')}
               </h3>
               <div className="mt-4 space-y-3">
                 {viewMode === 'month' ? (
@@ -633,7 +635,7 @@ export function CalendarPage() {
                       </div>
                     ))
                   ) : (
-                    <p className="text-muted-foreground text-sm">No holidays this month</p>
+                    <p className="text-muted-foreground text-sm">{t('holidays.noHolidaysMonth')}</p>
                   )
                 ) : weekHighlights.length ? (
                   weekHighlights.map(({ highlight, date }) => (
@@ -661,7 +663,7 @@ export function CalendarPage() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-muted-foreground text-sm">No holidays this week</p>
+                  <p className="text-muted-foreground text-sm">{t('holidays.noHolidaysWeek')}</p>
                 )}
               </div>
             </div>
@@ -676,7 +678,7 @@ export function CalendarPage() {
               ].join(' ')}
             >
               <p className="text-muted-foreground text-xs font-semibold tracking-[0.35em] uppercase">
-                Selected date
+                {t('selectedDate.label')}
               </p>
               <h3 className="text-foreground mt-2 text-lg font-semibold tracking-tight">
                 {formatEthiopianDate(selectedDate, useGeezDigits)}
@@ -719,7 +721,7 @@ export function CalendarPage() {
                     </div>
                   ))
                 ) : (
-                  <p>We don&apos;t have any recorded highlights for this date yet.</p>
+                  <p>{t('selectedDate.noHighlights')}</p>
                 )}
               </div>
             </div>
@@ -744,21 +746,19 @@ export function CalendarPage() {
             <div className="flex flex-col gap-6 p-6 sm:p-8">
               <header className="space-y-2">
                 <h2 className="text-2xl font-semibold tracking-tight">
-                  Gee&apos;z Numbering System
+                  {t('geezNumbers.title')}
                 </h2>
                 <p className="text-muted-foreground text-sm">
-                  Amharic has its own traditional number system that is still used in some cultural
-                  and liturgical contexts. It’s different from the “Arabic numerals” (0–9) that are
-                  common worldwide.
+                  {t('geezNumbers.description1')}
                 </p>
                 <p className="text-muted-foreground text-sm">
-                  Here are the basic Amharic numerals (፩–፼):
+                  {t('geezNumbers.description2')}
                 </p>
               </header>
 
               {/* small hint line */}
               <div className="text-primary/80 -mt-2 text-right text-sm italic">
-                tap the Amharic name to hear pronunciation ↘︎
+                {t('geezNumbers.tapHint')}
               </div>
 
               {/* data table with separated rows */}
@@ -767,11 +767,11 @@ export function CalendarPage() {
                   <thead>
                     <tr className="text-muted-foreground text-left text-xs tracking-[0.25em] uppercase">
                       <th className="bg-secondary/60 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">
-                        Number
+                        {t('geezNumbers.tableHeaders.number')}
                       </th>
-                      <th className="bg-secondary/60 px-4 py-3">Symbol</th>
+                      <th className="bg-secondary/60 px-4 py-3">{t('geezNumbers.tableHeaders.symbol')}</th>
                       <th className="bg-secondary/60 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">
-                        Amharic Name
+                        {t('geezNumbers.tableHeaders.amharicName')}
                       </th>
                     </tr>
                   </thead>
@@ -798,7 +798,7 @@ export function CalendarPage() {
                                 // no-op if speech synthesis not available
                               }
                             }}
-                            aria-label={`Pronounce ${row.name}`}
+                            aria-label={t('geezNumbers.pronounceAriaLabel', { name: row.name })}
                           >
                             <span className="text-foreground font-medium">{row.name}</span>
                           </button>
@@ -811,7 +811,7 @@ export function CalendarPage() {
 
               {/* examples */}
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold tracking-tight">Example Numbers</h3>
+                <h3 className="text-lg font-semibold tracking-tight">{t('geezNumbers.examplesTitle')}</h3>
                 <ul className="text-foreground/80 list-disc pl-6 text-sm">
                   {[2025, 187, 50000].map((value) => (
                     <li key={value} className="">
@@ -827,15 +827,13 @@ export function CalendarPage() {
           <aside className="flex flex-col gap-6">
             <div className="border-border/60 rounded-2xl border bg-transparent p-6 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
               <h3 className="text-foreground text-base font-semibold tracking-tight">
-                Reading tips
+                {t('readingTips.title')}
               </h3>
               <p className="mt-2">
-                Combine Geeʼz numerals from largest value to smallest. ፳፻፲፫ = 2013 EC: ፳ (20) × ፻
-                (100) gives 2000, then ፲፫ adds 13.
+                {t('readingTips.tip1')}
               </p>
               <p className="mt-2">
-                Pagume includes only five days—six on leap years—so it is perfect for highlighting
-                seasonal content before the Ethiopian New Year.
+                {t('readingTips.tip2')}
               </p>
             </div>
             <AdSlot

@@ -1,7 +1,8 @@
 import { Link } from '@tanstack/react-router'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRightIcon, IdCardIcon, Users2Icon } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import LandingImageOne from '@/assets/landingImages/cardImages/Landing_img_1.webp'
 import LandingImageTwo from '@/assets/landingImages/cardImages/Landing_img_2.webp'
@@ -12,30 +13,22 @@ import { useAnalytics } from '@/shared/lib/analytics'
 import { M } from '@/shared/lib/motion'
 import { Button } from '@/shared/ui/button'
 
-const HERO_CARDS = [
-  {
-    id: 'hero-card-1',
-    title: 'Passport Search',
-    description:
-      'Use your reference number or full name with intelligent matching. from 1.2 million passports',
-    image: LandingImageOne,
-    alt: 'Illustration showing a person searching on a phone',
-  },
-  {
-    id: 'hero-card-2',
-    title: 'Get Detailed Answer',
-    description: 'when to pick up the passport, location, time, ...',
-    image: LandingImageTwo,
-    alt: 'Collage of community members sharing travel tips',
-  },
-  {
-    id: 'hero-card-3',
-    title: 'Join Our Community',
-    description: 'Join the Telegram group to learn from others’ experiences.',
-    image: LandingImageThree,
-    alt: 'Collage of community members sharing travel tips',
-  },
-] as const
+// Card keys for i18n
+type HeroCardKey = 'search' | 'details' | 'community'
+
+const HERO_CARD_KEYS: HeroCardKey[] = ['search', 'details', 'community']
+
+const HERO_CARD_IMAGES: Record<HeroCardKey, string> = {
+  search: LandingImageOne,
+  details: LandingImageTwo,
+  community: LandingImageThree,
+}
+
+const HERO_CARD_IDS: Record<HeroCardKey, string> = {
+  search: 'hero-card-1',
+  details: 'hero-card-2',
+  community: 'hero-card-3',
+}
 
 const CARD_DIMENSIONS = {
   desktop: { width: 538, height: 560 },
@@ -43,7 +36,7 @@ const CARD_DIMENSIONS = {
 } as const
 
 const CARD_SOURCES: Record<
-  (typeof HERO_CARDS)[number]['id'],
+  'hero-card-1' | 'hero-card-2' | 'hero-card-3',
   {
     avif: string
     webp: string
@@ -65,62 +58,91 @@ const CARD_SOURCES: Record<
 
 export const HERO_CARD_IMAGE_SOURCES = CARD_SOURCES
 
-function renderHeroCard(
-  variant: 'desktop' | 'mobile',
-  card: (typeof HERO_CARDS)[number],
-  index: number,
-) {
-  const padding = variant === 'desktop' ? 'p-8' : 'p-4 sm:p-6'
-  const headingSize = variant === 'desktop' ? 'text-xl' : 'text-base sm:text-lg'
-  const descriptionSpacing = variant === 'desktop' ? 'mt-3' : 'mt-2'
-  const isFirstCard = index === 0
-  const { width, height } = CARD_DIMENSIONS[variant]
-
-  const sizes =
-    variant === 'desktop'
-      ? '(min-width: 1024px) 538px, (min-width: 768px) 480px, 90vw'
-      : '(max-width: 767px) 80vw, 440px'
-  const sources = CARD_SOURCES[card.id]
-
-  return (
-    <Card
-      key={`${variant}-${card.title}`}
-      customClass="pointer-events-auto overflow-hidden border-0 bg-transparent rounded-xl p-0"
-      style={{ width, height }}
-    >
-      <div className="relative h-full w-full">
-        <picture>
-          <source type="image/avif" srcSet={sources.avif} sizes={sizes} />
-          <source type="image/webp" srcSet={sources.webp} sizes={sizes} />
-          <img
-            src={card.image}
-            alt={card.alt}
-            width={width}
-            height={height}
-            className="h-full w-full rounded-2xl object-cover"
-            loading={isFirstCard ? 'eager' : 'lazy'}
-            decoding="async"
-            fetchPriority={isFirstCard ? 'high' : undefined}
-            sizes={sizes}
-          />
-        </picture>
-        <div className="from-primary/50 via-primary/15 to-primary/5 absolute inset-0 bg-gradient-to-t" />
-        <div className={`absolute inset-x-0 bottom-0 space-y-2 ${padding} `}>
-          <h3 className={`${headingSize} font-semibold tracking-tight text-white`}>{card.title}</h3>
-          <p className={`text-sm leading-relaxed text-white/90 ${descriptionSpacing}`}>
-            {card.description}
-          </p>
-        </div>
-      </div>
-    </Card>
-  )
+interface HeroCardData {
+  id: string
+  key: HeroCardKey
+  title: string
+  description: string
+  image: string
+  alt: string
 }
 
+interface HeroCardProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant: 'desktop' | 'mobile'
+  card: HeroCardData
+  index: number
+}
+
+const HeroCard = forwardRef<HTMLDivElement, HeroCardProps>(
+  ({ variant, card, index, style, ...props }, ref) => {
+    const padding = variant === 'desktop' ? 'p-8' : 'p-4 sm:p-6'
+    const headingSize = variant === 'desktop' ? 'text-xl' : 'text-base sm:text-lg'
+    const descriptionSpacing = variant === 'desktop' ? 'mt-3' : 'mt-2'
+    const isFirstCard = index === 0
+    const { width, height } = CARD_DIMENSIONS[variant]
+
+    const sizes =
+      variant === 'desktop'
+        ? '(min-width: 1024px) 538px, (min-width: 768px) 480px, 90vw'
+        : '(max-width: 767px) 80vw, 440px'
+    const sources = CARD_SOURCES[card.id as keyof typeof CARD_SOURCES]
+
+    return (
+      <Card
+        ref={ref}
+        key={`${variant}-${card.key}`}
+        customClass="pointer-events-auto overflow-hidden border-0 bg-transparent rounded-xl p-0"
+        style={{ width, height, ...style }}
+        {...props}
+      >
+        <div className="relative h-full w-full">
+          <picture>
+            <source type="image/avif" srcSet={sources.avif} sizes={sizes} />
+            <source type="image/webp" srcSet={sources.webp} sizes={sizes} />
+            <img
+              src={card.image}
+              alt={card.alt}
+              width={width}
+              height={height}
+              className="h-full w-full rounded-2xl object-cover"
+              loading={isFirstCard ? 'eager' : 'lazy'}
+              decoding="async"
+              fetchPriority={isFirstCard ? 'high' : undefined}
+              sizes={sizes}
+            />
+          </picture>
+          <div className="from-primary/50 via-primary/15 to-primary/5 absolute inset-0 bg-gradient-to-t" />
+          <div className={`absolute inset-x-0 bottom-0 space-y-2 ${padding} `}>
+            <h3 className={`${headingSize} font-semibold tracking-tight text-white`}>
+              {card.title}
+            </h3>
+            <p className={`text-sm leading-relaxed text-white/90 ${descriptionSpacing}`}>
+              {card.description}
+            </p>
+          </div>
+        </div>
+      </Card>
+    )
+  },
+)
+HeroCard.displayName = 'HeroCard'
+
 export function Hero() {
+  const { t } = useTranslation('landing')
   const reduce = useReducedMotion()
   const { capture } = useAnalytics()
   const [enableCardSwap, setEnableCardSwap] = useState(false)
   const pulseEnabled = !reduce
+
+  // Build translated hero cards
+  const heroCards: HeroCardData[] = HERO_CARD_KEYS.map((key) => ({
+    id: HERO_CARD_IDS[key],
+    key,
+    title: t(`hero.cards.${key}.title`),
+    description: t(`hero.cards.${key}.description`),
+    image: HERO_CARD_IMAGES[key],
+    alt: t(`hero.cards.${key}.alt`),
+  }))
 
   const handleCTAClick = (surface: string, variant?: string) => {
     capture('cta_click_track_passport', {
@@ -131,7 +153,7 @@ export function Hero() {
 
   useEffect(() => {
     if (typeof document === 'undefined') return
-    const heroImageUrl = HERO_CARDS[0]?.image
+    const heroImageUrl = heroCards[0]?.image
     if (!heroImageUrl) return
 
     const existing = document.head.querySelector(
@@ -148,7 +170,7 @@ export function Hero() {
     link.href = heroImageUrl
     link.setAttribute('fetchpriority', 'high')
     document.head.appendChild(link)
-  }, [])
+  }, [heroCards])
 
   useEffect(() => {
     if (reduce || enableCardSwap) return
@@ -209,20 +231,19 @@ export function Hero() {
             <div className="flex flex-wrap items-center gap-3">
               <AnimatedBorderCard variant="primary" size="sm">
                 <Users2Icon className="text-primary h-4 w-4" />
-                Over 1.5 million users
+                {t('hero.stats.users')}
               </AnimatedBorderCard>
               <AnimatedBorderCard variant="secondary" size="sm" className="border-amber-100/50">
                 <IdCardIcon className="text-primary h-4 w-4" />
-                1,300,173+ passports confirmed as issued
+                {t('hero.stats.passportsConfirmed', { count: 1300173 })}
               </AnimatedBorderCard>
             </div>
 
             <h1 className="text-foreground max-w-[30ch] text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl">
-              Tired of endless uncertainty? Instantly know if your Ethiopian passport is ready.
+              {t('hero.headline')}
             </h1>
             <h2 className="text-muted-foreground max-w-[52ch] text-base leading-relaxed dark:text-white/70">
-              Search with your reference number or name and get real-time updates—no more repeated
-              trips to the office.
+              {t('hero.subheadline')}
             </h2>
 
             {/* CTA row */}
@@ -263,7 +284,7 @@ export function Hero() {
                     to="/passports"
                     className="inline-flex items-center bg-transparent font-semibold text-white"
                   >
-                    Check My Passport Status
+                    {t('hero.cta')}
                     <ArrowRightIcon className="ml-2 h-4 w-4" aria-hidden />
                   </Link>
                 </Button>
@@ -277,7 +298,7 @@ export function Hero() {
                   rel="noreferrer"
                   onClick={() => capture('telegram_group_click', { surface: 'hero' })}
                 >
-                  Join The Telegram Group
+                  {t('hero.telegramCta')}
                 </a>
               </div>
             </div>
@@ -295,7 +316,9 @@ export function Hero() {
                   delay={5000}
                   pauseOnHover={false}
                 >
-                  {HERO_CARDS.map((card, index) => renderHeroCard('desktop', card, index))}
+                  {heroCards.map((card, index) => (
+                    <HeroCard key={card.key} variant="desktop" card={card} index={index} />
+                  ))}
                 </CardSwapLazy>
               ) : (
                 <div
@@ -305,7 +328,7 @@ export function Hero() {
                     height: CARD_DIMENSIONS.desktop.height,
                   }}
                 >
-                  {renderHeroCard('desktop', HERO_CARDS[0], 0)}
+                  <HeroCard variant="desktop" card={heroCards[0]} index={0} />
                 </div>
               )}
             </div>

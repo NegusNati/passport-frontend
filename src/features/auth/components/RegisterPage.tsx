@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 import mesh from '@/assets/landingImages/mesh.svg'
 import { Seo } from '@/shared/ui/Seo'
@@ -12,11 +13,13 @@ type RegisterPageProps = {
 }
 
 export function RegisterPage({ onSuccess, redirectPath }: RegisterPageProps) {
+  const { t } = useTranslation('auth')
+
   return (
     <main className="flex min-h-screen flex-col md:flex-row">
       <Seo
-        title="Create an account"
-        description="Register to manage your digital passports and profile."
+        title={t('register.seo.title')}
+        description={t('register.seo.description')}
         path="/register"
         noindex
       />
@@ -37,10 +40,10 @@ export function RegisterPage({ onSuccess, redirectPath }: RegisterPageProps) {
           <div className="flex h-32 w-32 items-center justify-center bg-transparent shadow-transparent"></div>
           <div className="space-y-2 pb-8">
             <h1 className="text-foreground/90 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Passport.ET
+              {t('register.branding.title')}
             </h1>
             <p className="text-sm text-emerald-100 sm:text-base">
-              Instantly know if your Ethiopian passport is ready.
+              {t('register.branding.tagline')}
             </p>
           </div>
         </div>
@@ -50,9 +53,9 @@ export function RegisterPage({ onSuccess, redirectPath }: RegisterPageProps) {
 
       <div className="border-border bg-card translate-y-[-20px] rounded-t-3xl border-t px-6 py-8 sm:px-8 sm:py-10 md:hidden">
         <header className="space-y-2">
-          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">Create your account</h2>
+          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">{t('register.title')}</h2>
           <p className="text-muted-foreground text-sm md:text-base">
-            Fill in your details to access passport services.
+            {t('register.subtitle')}
           </p>
         </header>
 
@@ -60,13 +63,13 @@ export function RegisterPage({ onSuccess, redirectPath }: RegisterPageProps) {
           <RegisterForm onSuccess={onSuccess} />
 
           <p className="text-muted-foreground text-center text-sm">
-            Already have an account?{' '}
+            {t('register.hasAccount')}{' '}
             <Link
               to="/login"
               search={(prev) => ({ ...prev, redirect: redirectPath ?? prev.redirect })}
               className="font-medium text-emerald-600 hover:text-emerald-700 hover:underline"
             >
-              Sign in
+              {t('register.signIn')}
             </Link>
           </p>
         </div>
@@ -76,10 +79,10 @@ export function RegisterPage({ onSuccess, redirectPath }: RegisterPageProps) {
         <div className="bg-card px-6 py-8 sm:px-8 sm:py-10">
           <header className="space-y-2">
             <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
-              Create your account
+              {t('register.title')}
             </h2>
             <p className="text-muted-foreground text-sm md:text-base">
-              Fill in your details to access passport services.
+              {t('register.subtitle')}
             </p>
           </header>
 
@@ -87,13 +90,13 @@ export function RegisterPage({ onSuccess, redirectPath }: RegisterPageProps) {
             <RegisterForm onSuccess={onSuccess} />
 
             <p className="text-muted-foreground text-center text-sm">
-              Already have an account?{' '}
+              {t('register.hasAccount')}{' '}
               <Link
                 to="/login"
                 search={(prev) => ({ ...prev, redirect: redirectPath ?? prev.redirect })}
                 className="font-medium text-emerald-600 hover:text-emerald-700 hover:underline"
               >
-                Sign in
+                {t('register.signIn')}
               </Link>
             </p>
           </div>

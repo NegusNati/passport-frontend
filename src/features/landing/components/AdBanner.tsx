@@ -1,9 +1,12 @@
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
 
 export function AdBanner() {
+  const { t } = useTranslation('landing')
+
   return (
     <section className="py-10 sm:py-12" aria-label="Sponsored advertisement">
       <Container>
@@ -11,18 +14,17 @@ export function AdBanner() {
           <div className="flex flex-col items-center justify-between gap-6 px-6 py-10 text-center sm:px-10 sm:py-12 lg:flex-row lg:text-left">
             <div className="max-w-2xl space-y-3">
               <p className="text-muted-foreground text-xs font-semibold tracking-[0.4em] uppercase">
-                Sponsored
+                {t('adBanner.sponsored')}
               </p>
               <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-                Advertise with Passport Alerts
+                {t('adBanner.title')}
               </h2>
               <p className="text-muted-foreground text-sm sm:text-base">
-                Reach thousands of travelers looking for passport updates and related services.
-                Reserve this premium banner for your brand.
+                {t('adBanner.description')}
               </p>
             </div>
             <Button size="sm" className="" asChild>
-              <Link to="/advertisement-requests">Promote Your Business</Link>
+              <Link to="/advertisement-requests">{t('adBanner.cta')}</Link>
             </Button>
           </div>
         </div>

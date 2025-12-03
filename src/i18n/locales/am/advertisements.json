@@ -1,0 +1,99 @@
+{
+  "request": {
+    "seo": {
+      "title": "የማስታወቂያ ጥያቄ",
+      "description": "የማስታወቂያ ጥያቄዎን ያስገቡ፤ ቡድናችን በአጭር ጊዜ ውስጥ ምላሽ ይሰጣል።"
+    },
+    "header": {
+      "badge": "በPassport Alerts ላይ ያስተዋውቁ",
+      "title": "የማስታወቂያ ጥያቄ",
+      "description": "የማስታወቂያ ጥያቄዎን ያስገቡ፤ ቀጣይ ሂደቶችን ለመወያየት በ1-2 የሥራ ቀናት ውስጥ እናገኝዎታለን።",
+      "features": "ፈጣን ምላሽ · ለእርስዎ የተዘጋጁ ጥቅሎች · ቀጥተኛ ድጋፍ"
+    },
+    "form": {
+      "fullName": {
+        "label": "ሙሉ ስም",
+        "placeholder": "ሙሉ ስም"
+      },
+      "phoneNumber": {
+        "label": "ስልክ ቁጥር",
+        "placeholder": "ስልክ ቁጥር"
+      },
+      "email": {
+        "label": "ኢሜይል",
+        "placeholder": "ኢሜይል"
+      },
+      "companyName": {
+        "label": "የድርጅቱ ስም",
+        "placeholder": "የድርጅቱ ስም"
+      },
+      "description": {
+        "label": "የማስታወቂያው ዝርዝር",
+        "placeholder": "የማስታወቂያው ዝርዝር መረጃ",
+        "charCount": "{{count}} / 5000 ፊደላት"
+      },
+      "file": {
+        "label": "አባሪ ፋይል",
+        "help": "PDF, DOC, DOCX, JPG, ወይም PNG (ከ10MB ያልበለጠ)",
+        "selectedInfo": "{{name}} · {{size}}MB"
+      },
+      "submit": "ጥያቄውን ላክ",
+      "submitting": "በመላክ ላይ...",
+      "processing": "ጥያቄዎን በማስኬድ ላይ..."
+    },
+    "validation": {
+      "fileTooLarge": "የፋይሉ መጠን ከ10MB ማነስ አለበት",
+      "invalidFileType": "የማይደገፍ የፋይል አይነት። እባክዎ PDF, DOC, DOCX, JPG, ወይም PNG ፋይሎችን ይጫኑ።"
+    },
+    "success": {
+      "title": "ጥያቄዎ በተሳካ ሁኔታ ተልኳል!",
+      "description": "ከእኛ ጋር ለማስተዋወቅ ስላሳዩት ፍላጎት እናመሰግናለን። ጥያቄዎ ደርሶናል፤ ቡድናችንም በቅርቡ ይገመግመዋል።",
+      "whatNext": {
+        "title": "ቀጥሎ ምን ይፈጠራል?",
+        "step1": "ቡድናችን በ1-2 የሥራ ቀናት ውስጥ ጥያቄዎን ይገመግማል",
+        "step2": "በሰጡን ስልክ ቁጥር ወይም ኢሜይል በኩል እናገኝዎታለን",
+        "step3": "ስለ ማስታወቂያ ፍላጎትዎ ተወያይጠን ያሉትን አማራጮች እናቀርብልዎታለን"
+      },
+      "submitAnother": "ሌላ ጥያቄ ያስገቡ",
+      "goHome": "ወደ መነሻ ገጽ ተመለስ"
+    }
+  },
+  "preview": {
+    "seo": {
+      "title": "የማስታወቂያ ቦታዎች - የዴስክቶፕ እና ሞባይል ቅድመ እይታ",
+      "description": "በPassport.ET ላይ የማስታወቂያ ቦታዎችን ይመልከቱ። ማስታወቂያዎች በዴስክቶፕ እና በሞባይል በካላንደር፣ በይዘት እና በዝርዝር ገጾች ላይ እንዴት እንደሚታዩ ይመልከቱ።"
+    },
+    "header": {
+      "badge": "የማስታወቂያ ማሳያ",
+      "title": "የማስታወቂያ ቅድመ እይታ",
+      "description": "ማስታወቂያዎ በዴስክቶፕ እና በሞባይል መሳሪያዎች ላይ ይህን ይመስላል"
+    },
+    "placements": {
+      "desktopCalendar": {
+        "title": "የዴስክቶፕ Check Landscape እይታ",
+        "description": "የካላንደር ገጽ ከካላንደር ግሪድ በታች የሚታይ አግድም ባነር ቦታ",
+        "imageAlt": "የማስታወቂያ ቦታ ያለው የካላንደር ገጽ"
+      },
+      "belowPocket": {
+        "title": "ከይዘት በታች የሚገኝ",
+        "description": "በይዘት ገጾች ላይ የሚገኙ የተለያዩ አግድም እና ቋሚ የማስታወቂያ ቦታዎች",
+        "imageAlt": "የተለያዩ የማስታወቂያ ቦታዎች ያሉት የይዘት ገጽ"
+      },
+      "mobileBanner": {
+        "title": "የሞባይል ባነር እይታ",
+        "description": "ለሞባይል ተጠቃሚዎች የተመቻቸ ቋሚ የማስታወቂያ ቦታ",
+        "imageAlt": "የማስታወቂያ ቦታ ያለው የሞባይል እይታ"
+      }
+    }
+  },
+  "shared": {
+    "sponsoredTag": "ስፖንሰር የተደረገ",
+    "ctaTitle": "በPassport Alerts ላይ ያስተዋውቁ",
+    "ctaDescription": "የፓስፖርት መረጃ የሚፈልጉ በሺዎች የሚቆጠሩ ተጓዦችን ይድረሱ። ይህንን የፕሪሚየም ባነር ለብራንድዎ ይያዙ።",
+    "ctaButton": "ድርጅትዎን ያስተዋውቁ",
+    "slotLabel": "የማስታወቂያ ቦታ",
+    "badge": "ማስታወቂያ",
+    "ariaLabel": "ማስታወቂያ",
+    "imageAlt": "ማስታወቂያ"
+  }
+}

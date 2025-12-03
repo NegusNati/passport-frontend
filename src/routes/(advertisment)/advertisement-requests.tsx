@@ -1,18 +1,22 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { AdvertisementRequestForm } from '@/features/advertisement-requests/components/AdvertisementRequestForm'
 import { AdvertisementRequestSuccess } from '@/features/advertisement-requests/components/AdvertisementRequestSuccess'
 import { useSubmitAdvertisementRequestMutation } from '@/features/advertisement-requests/lib/queries'
 import type { AdvertisementRequestCreatePayload } from '@/features/advertisement-requests/schemas/create'
+import { loadI18nNamespaces } from '@/i18n'
 import { Container } from '@/shared/ui/container'
 import { Seo } from '@/shared/ui/Seo'
 
 export const Route = createFileRoute('/(advertisment)/advertisement-requests')({
+  loader: () => loadI18nNamespaces(['advertisements']),
   component: AdvertisementRequestPage,
 })
 
 function AdvertisementRequestPage() {
+  const { t } = useTranslation('advertisements')
   const [submitted, setSubmitted] = useState(false)
   const mutation = useSubmitAdvertisementRequestMutation()
 
@@ -33,11 +37,11 @@ function AdvertisementRequestPage() {
   return (
     <div className="from-primary/10 via-background to-background relative min-h-screen overflow-hidden bg-gradient-to-b">
       <Seo
-        title="Advertisement Request"
-        description="Submit your advertisement request and our team will get back to you shortly."
+        title={t('request.seo.title')}
+        description={t('request.seo.description')}
         path="/advertisement-requests"
       />
-      <h1 className="sr-only">Submit Advertisement Request</h1>
+      <h1 className="sr-only">{t('request.seo.title')}</h1>
 
       <div
         aria-hidden="true"
@@ -49,20 +53,19 @@ function AdvertisementRequestPage() {
           <div className="relative z-10 space-y-6">
             <div className="max-w-lg space-y-4">
               <span className="text-primary text-sm font-semibold tracking-wide uppercase">
-                Advertise with Passport Alerts
+                {t('request.header.badge')}
               </span>
               <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
-                Advertisement Request
+                {t('request.header.title')}
               </h1>
               <p className="text-muted-foreground text-lg">
-                Submit your advertisement inquiry and we&apos;ll contact you within 1-2 business
-                days to discuss the next steps.
+                {t('request.header.description')}
               </p>
             </div>
 
             <div className="text-muted-foreground flex items-center gap-6 text-sm">
               <div className="bg-border h-px flex-1" />
-              <p>Fast response · Tailored packages · Dedicated support</p>
+              <p>{t('request.header.features')}</p>
               <div className="bg-border h-px flex-1" />
             </div>
           </div>

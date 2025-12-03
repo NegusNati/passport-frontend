@@ -2,6 +2,7 @@ import { useForm } from '@tanstack/react-form'
 import { useRouter } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
 import { useAnalytics } from '@/shared/lib/analytics'
@@ -32,6 +33,7 @@ export function PassportSearchForm({
   onQueryChange,
   onScrollToResults,
 }: PassportSearchFormProps) {
+  const { t } = useTranslation('passports')
   const router = useRouter()
   const { capture } = useAnalytics()
   const [searchMode, setSearchMode] = useState<SearchMode>('name')
@@ -238,11 +240,10 @@ export function PassportSearchForm({
         <div className="mx-auto max-w-2xl text-center">
           {/* Header */}
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
-            Check Ethiopian Passport Status
+            {t('search.title')}
           </h1>
           <h2 className="text-muted-foreground mt-4 text-lg">
-            Search with your reference number or name and get real-time updates—no more repeated
-            trips to the office.
+            {t('search.subtitle')}
           </h2>
 
           {/* Search Form */}
@@ -259,13 +260,13 @@ export function PassportSearchForm({
                   {(field) => (
                     <div className="space-y-2">
                       <Label htmlFor="requestNumber" className="sr-only">
-                        Request Number
+                        {t('search.form.requestNumber')}
                       </Label>
                       <div className="flex gap-2">
                         <Input
                           id="requestNumber"
                           type="text"
-                          placeholder="Enter request number"
+                          placeholder={t('search.form.requestNumberPlaceholder')}
                           value={field.state.value}
                           onChange={(e) => {
                             const v = e.target.value
@@ -277,17 +278,17 @@ export function PassportSearchForm({
                           aria-invalid={field.state.meta.errors.length > 0}
                         />
                         <Button type="submit" className="bg-foreground hover:bg-foreground/90">
-                          Check Passport
+                          {t('search.form.submit')}
                         </Button>
                       </div>
                       {isDebouncing ? (
                         <div className="text-muted-foreground flex items-center gap-2 text-xs">
                           <Loader2 className="h-3 w-3 animate-spin" />
-                          <span>Searching...</span>
+                          <span>{t('search.form.searching')}</span>
                         </div>
                       ) : (
                         <p className="text-muted-foreground text-xs">
-                          Type at least 3 characters to search
+                          {t('search.form.minCharacters')}
                         </p>
                       )}
                     </div>
@@ -306,11 +307,11 @@ export function PassportSearchForm({
                   <nameForm.Field name="firstName">
                     {(field) => (
                       <div className="space-y-2">
-                        <Label htmlFor="firstName">First Name</Label>
+                        <Label htmlFor="firstName">{t('search.form.firstName')}</Label>
                         <Input
                           id="firstName"
                           type="text"
-                          placeholder="Enter first name"
+                          placeholder={t('search.form.firstNamePlaceholder')}
                           value={field.state.value}
                           onChange={(e) => {
                             const v = e.target.value
@@ -328,11 +329,11 @@ export function PassportSearchForm({
                   <nameForm.Field name="middleName">
                     {(field) => (
                       <div className="space-y-2">
-                        <Label htmlFor="middleName">Middle Name (optional)</Label>
+                        <Label htmlFor="middleName">{t('search.form.middleName')}</Label>
                         <Input
                           id="middleName"
                           type="text"
-                          placeholder="Enter middle name"
+                          placeholder={t('search.form.middleNamePlaceholder')}
                           value={field.state.value}
                           onChange={(e) => {
                             const v = e.target.value
@@ -349,11 +350,11 @@ export function PassportSearchForm({
                   <nameForm.Field name="lastName">
                     {(field) => (
                       <div className="space-y-2">
-                        <Label htmlFor="lastName">Last Name</Label>
+                        <Label htmlFor="lastName">{t('search.form.lastName')}</Label>
                         <Input
                           id="lastName"
                           type="text"
-                          placeholder="Enter last name"
+                          placeholder={t('search.form.lastNamePlaceholder')}
                           value={field.state.value}
                           onChange={(e) => {
                             const v = e.target.value
@@ -369,16 +370,16 @@ export function PassportSearchForm({
                 </div>
 
                 <Button type="submit" className="bg-foreground hover:bg-foreground/90 w-full">
-                  Check Passport
+                  {t('search.form.submit')}
                 </Button>
                 {isDebouncing ? (
                   <div className="text-muted-foreground flex items-center justify-center gap-2 text-xs">
                     <Loader2 className="h-3 w-3 animate-spin" />
-                    <span>Searching...</span>
+                    <span>{t('search.form.searching')}</span>
                   </div>
                 ) : (
                   <p className="text-muted-foreground text-xs">
-                    Type at least 3 characters in any name field to search
+                    {t('search.form.minCharactersName')}
                   </p>
                 )}
               </form>
@@ -391,7 +392,7 @@ export function PassportSearchForm({
               className="text-foreground mt-4 text-sm font-semibold underline underline-offset-4 hover:no-underline"
             >
               {' '}
-              {searchMode === 'number' ? 'Use name instead' : 'Use request number instead'}
+              {searchMode === 'number' ? t('search.toggle.useNameInstead') : t('search.toggle.useNumberInstead')}
             </button>
 
             {/* Sample Request Numbers (only shown in number mode) */}

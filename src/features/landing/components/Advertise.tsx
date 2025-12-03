@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { ArrowRight } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import AmharicLetters from '@/assets/landingImages/amharic_letters.svg'
 import AmharicCallander from '@/assets/landingImages/AmharicCallander.svg'
@@ -120,45 +121,55 @@ export function AdvertiseSection() {
         </div>
 
         <div className="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:items-center">
-          <div className="space-y-5 text-center lg:text-left">
-            <h2 className="text-foreground text-2xl font-semibold tracking-tight sm:text-3xl">
-              Advertise with Passport.ET
-            </h2>
-            <p className="text-muted-foreground max-w-sm text-sm sm:text-base">
-              Reach millions of Ethiopian citizens and travelers through the official passport
-              readiness portal. Campaigns include strategic placement, platform-wide promotion, and
-              creative tailored to your brand voice.
-            </p>
-            <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-start">
-              <Button
-                asChild
-                size="md"
-                rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
-              >
-                <Link to="/advertisment">Contact Us Now</Link>
-              </Button>
-              <p className="text-muted-foreground text-xs font-medium tracking-[0.3em] uppercase">
-                Limited slots available
-              </p>
-            </div>
-          </div>
-
-          <div className="text-muted-foreground space-y-6 text-sm sm:text-base">
-            <p>
-              Our advertising package delivers top-of-page visibility across Passport.ET with
-              premium placements on the homepage, insights hub, and passport status results pages.
-            </p>
-            <div className="space-y-2">
-              <p className="text-foreground text-xl font-semibold">Ad Graphics Design Included</p>
-              <p>
-                Collaborate with our in-house designers for static or animated creatives complete
-                with copy, CTA, and localization for Amharic- and English-speaking audiences.
-              </p>
-            </div>
-          </div>
+          <AdvertiseCopy />
+          <AdvertiseDetails />
         </div>
       </Container>
     </section>
+  )
+}
+
+function AdvertiseCopy() {
+  const { t } = useTranslation('landing')
+
+  return (
+    <div className="space-y-5 text-center lg:text-left">
+      <h2 className="text-foreground text-2xl font-semibold tracking-tight sm:text-3xl">
+        {t('advertise.title')}
+      </h2>
+      <p className="text-muted-foreground max-w-sm text-sm sm:text-base">
+        {t('advertise.description')}
+      </p>
+      <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-start">
+        <Button
+          asChild
+          size="md"
+          rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
+        >
+          <Link to="/advertisment">{t('advertise.cta')}</Link>
+        </Button>
+        <p className="text-muted-foreground text-xs font-medium tracking-[0.3em] uppercase">
+          {t('advertise.limitedSlots')}
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function AdvertiseDetails() {
+  const { t } = useTranslation('landing')
+
+  return (
+    <div className="text-muted-foreground space-y-6 text-sm sm:text-base">
+      <p>{t('advertise.packageDescription')}</p>
+      <div className="space-y-2">
+        <p className="text-foreground text-xl font-semibold">Ad Graphics Design Included</p>
+        <p>
+          Collaborate with our in-house designers for static or animated creatives complete
+          with copy, CTA, and localization for Amharic- and English-speaking audiences.
+        </p>
+      </div>
+    </div>
   )
 }
 

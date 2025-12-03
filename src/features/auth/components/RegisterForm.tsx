@@ -1,8 +1,10 @@
 import { useForm } from '@tanstack/react-form'
 import { Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
+import type { AuthTranslationKey } from '@/i18n/types'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
@@ -47,43 +49,49 @@ function mapServerErrors(data?: ApiValidation) {
   return { fieldErrors, message: data?.message }
 }
 
-function validateRequired(schema: z.ZodTypeAny, value: string) {
-  const result = schema.safeParse(value.trim())
-  return result.success ? undefined : (result.error.issues[0]?.message ?? 'This field is required')
-}
-
 function sanitizePhone(value: string) {
   return value.replace(/\D/g, '')
 }
 
-function validateEmail(value: string) {
-  const trimmed = value.trim().toLowerCase()
-  if (!trimmed) {
-    return undefined
-  }
-  const result = RegisterSchema.shape.email.safeParse(trimmed)
-  return result.success ? undefined : (result.error.issues[0]?.message ?? 'Enter a valid email')
-}
-
-function validatePhone(value: string) {
-  const sanitized = sanitizePhone(value)
-  const result = RegisterSchema.shape.phoneNumber.safeParse(sanitized)
-  return result.success
-    ? undefined
-    : (result.error.issues[0]?.message ?? 'Enter a valid phone number')
-}
-
-function validatePassword(value: string) {
-  const result = RegisterSchema.shape.password.safeParse(value)
-  return result.success ? undefined : (result.error.issues[0]?.message ?? 'Password is too short')
-}
-
 export function RegisterForm({ onSuccess }: RegisterFormProps) {
+  const { t } = useTranslation('auth')
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [formError, setFormError] = useState<string | null>(null)
   const [retryAfterSeconds, setRetryAfterSeconds] = useState<number | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false)
+
+  // Validation helpers that need t() access
+  function validateRequired(schema: z.ZodTypeAny, value: string, fallbackKey: AuthTranslationKey) {
+    const result = schema.safeParse(value.trim())
+    return result.success ? undefined : (result.error.issues[0]?.message ?? t(fallbackKey))
+  }
+
+  function validateEmail(value: string) {
+    const trimmed = value.trim().toLowerCase()
+    if (!trimmed) {
+      return undefined
+    }
+    const result = RegisterSchema.shape.email.safeParse(trimmed)
+    return result.success
+      ? undefined
+      : (result.error.issues[0]?.message ?? t('register.validation.emailInvalid'))
+  }
+
+  function validatePhone(value: string) {
+    const sanitized = sanitizePhone(value)
+    const result = RegisterSchema.shape.phoneNumber.safeParse(sanitized)
+    return result.success
+      ? undefined
+      : (result.error.issues[0]?.message ?? t('register.validation.phoneInvalid'))
+  }
+
+  function validatePassword(value: string) {
+    const result = RegisterSchema.shape.password.safeParse(value)
+    return result.success
+      ? undefined
+      : (result.error.issues[0]?.message ?? t('register.validation.passwordMinLength'))
+  }
 
   const registerMutation = useRegister({
     onSuccess: async (user, _variables, _context) => {
@@ -97,14 +105,14 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
     onError: (error) => {
       if (!error.response) {
         setFieldErrors({})
-        setFormError('We could not reach the server. Check your connection and try again.')
+        setFormError(t('register.validation.networkError'))
         return
       }
 
       const status = error.response.status
       if (status === 429) {
         setFieldErrors({})
-        setFormError('Too many registration attempts. Please wait before trying again.')
+        setFormError(t('register.validation.tooManyAttempts'))
         setRetryAfterSeconds(error.retryAfterSeconds ?? null)
         return
       }
@@ -115,7 +123,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       setFieldErrors(apiFieldErrors)
       const fallback =
         message ??
-        (Object.keys(apiFieldErrors).length > 0 ? null : 'Unable to create your account.')
+        (Object.keys(apiFieldErrors).length > 0 ? null : t('register.validation.unableToCreate'))
       setFormError(fallback)
     },
   })
@@ -184,16 +192,24 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
             name="firstName"
             validators={{
               onChange: ({ value }) =>
-                validateRequired(RegisterSchema.shape.firstName, value ?? ''),
+                validateRequired(
+                  RegisterSchema.shape.firstName,
+                  value ?? '',
+                  'register.validation.firstNameRequired',
+                ),
               onSubmit: ({ value }) =>
-                validateRequired(RegisterSchema.shape.firstName, value ?? ''),
+                validateRequired(
+                  RegisterSchema.shape.firstName,
+                  value ?? '',
+                  'register.validation.firstNameRequired',
+                ),
             }}
           >
             {(field) => {
               const error = field.state.meta.errors[0] ?? fieldErrors.firstName
               return (
                 <div className="grid gap-2">
-                  <Label htmlFor="first-name">First name</Label>
+                  <Label htmlFor="first-name">{t('register.form.firstName')}</Label>
                   <Input
                     id="first-name"
                     autoComplete="given-name"
@@ -228,15 +244,25 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
           <form.Field
             name="lastName"
             validators={{
-              onChange: ({ value }) => validateRequired(RegisterSchema.shape.lastName, value ?? ''),
-              onSubmit: ({ value }) => validateRequired(RegisterSchema.shape.lastName, value ?? ''),
+              onChange: ({ value }) =>
+                validateRequired(
+                  RegisterSchema.shape.lastName,
+                  value ?? '',
+                  'register.validation.lastNameRequired',
+                ),
+              onSubmit: ({ value }) =>
+                validateRequired(
+                  RegisterSchema.shape.lastName,
+                  value ?? '',
+                  'register.validation.lastNameRequired',
+                ),
             }}
           >
             {(field) => {
               const error = field.state.meta.errors[0] ?? fieldErrors.lastName
               return (
                 <div className="grid gap-2">
-                  <Label htmlFor="last-name">Last name</Label>
+                  <Label htmlFor="last-name">{t('register.form.lastName')}</Label>
                   <Input
                     id="last-name"
                     autoComplete="family-name"
@@ -279,7 +305,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
               const error = field.state.meta.errors[0] ?? fieldErrors.email
               return (
                 <div className="grid gap-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email">{t('register.form.email')}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -323,7 +349,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
               const error = field.state.meta.errors[0] ?? fieldErrors.phoneNumber
               return (
                 <div className="grid gap-2">
-                  <Label htmlFor="register-phone">Phone number</Label>
+                  <Label htmlFor="register-phone">{t('register.form.phoneNumber')}</Label>
                   <Input
                     id="register-phone"
                     type="tel"
@@ -368,7 +394,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
               const error = field.state.meta.errors[0] ?? fieldErrors.password
               return (
                 <div className="grid gap-2">
-                  <Label htmlFor="register-password">Password</Label>
+                  <Label htmlFor="register-password">{t('register.form.password')}</Label>
                   <div className="relative">
                     <Input
                       id="register-password"
@@ -395,7 +421,11 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
                       type="button"
                       onClick={() => setShowPassword((prev) => !prev)}
                       className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-2 inline-flex items-center"
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      aria-label={
+                        showPassword
+                          ? t('register.aria.hidePassword')
+                          : t('register.aria.showPassword')
+                      }
                     >
                       {showPassword ? (
                         <EyeOff className="h-5 w-5" aria-hidden />
@@ -422,20 +452,20 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
               onChange: ({ value, fieldApi }) => {
                 const password = fieldApi.form.getFieldValue('password') as string
                 if (!value) {
-                  return 'Confirm your password'
+                  return t('register.validation.confirmPasswordRequired')
                 }
                 if (value !== password) {
-                  return 'Passwords must match'
+                  return t('register.validation.passwordMismatch')
                 }
                 return undefined
               },
               onSubmit: ({ value, fieldApi }) => {
                 const password = fieldApi.form.getFieldValue('password') as string
                 if (!value) {
-                  return 'Confirm your password'
+                  return t('register.validation.confirmPasswordRequired')
                 }
                 if (value !== password) {
-                  return 'Passwords must match'
+                  return t('register.validation.passwordMismatch')
                 }
                 return undefined
               },
@@ -445,7 +475,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
               const error = field.state.meta.errors[0] ?? fieldErrors.passwordConfirmation
               return (
                 <div className="grid gap-2">
-                  <Label htmlFor="password-confirmation">Confirm password</Label>
+                  <Label htmlFor="password-confirmation">{t('register.form.confirmPassword')}</Label>
                   <div className="relative">
                     <Input
                       id="password-confirmation"
@@ -474,8 +504,8 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
                       className="text-muted-foreground hover:text-foreground absolute inset-y-0 right-2 inline-flex items-center"
                       aria-label={
                         showPasswordConfirmation
-                          ? 'Hide password confirmation'
-                          : 'Show password confirmation'
+                          ? t('register.aria.hidePasswordConfirmation')
+                          : t('register.aria.showPasswordConfirmation')
                       }
                     >
                       {showPasswordConfirmation ? (
@@ -500,8 +530,9 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
       {formError ? <p className="text-destructive text-sm">{formError}</p> : null}
       {retryAfterSeconds !== null ? (
         <p className="text-muted-foreground text-sm">
-          You can try again in approximately {retryAfterSeconds} second
-          {retryAfterSeconds === 1 ? '' : 's'}.
+          {t(retryAfterSeconds === 1 ? 'register.retry.singular' : 'register.retry.plural', {
+            seconds: retryAfterSeconds,
+          })}
         </p>
       ) : null}
 
@@ -512,7 +543,9 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
             className="w-full"
             disabled={!canSubmit || isSubmitting || registerMutation.isPending}
           >
-            {registerMutation.isPending ? 'Creating account…' : 'Create account'}
+            {registerMutation.isPending
+              ? t('register.form.submitting')
+              : t('register.form.submit')}
           </Button>
         )}
       </form.Subscribe>

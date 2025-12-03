@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
 
 import CalendarImage from '@/assets/landingImages/calander_image.png'
 import { Button } from '@/shared/ui/button'
@@ -33,6 +34,7 @@ function truncate(text: string | null | undefined, maxLength = 120): string {
 }
 
 export function ArticleSection() {
+  const { t } = useTranslation('landing')
   const { data, isLoading, isError, isFetching } = useLandingArticlesQuery()
   const articles: LandingArticleItem[] = data?.data ?? []
   const isPending = isLoading || (isFetching && articles.length === 0)
@@ -43,9 +45,9 @@ export function ArticleSection() {
       <Container>
         <div className="mb-6 flex flex-col items-center justify-center">
           <div>
-            <h2 className="max-w-2xl text-center text-2xl font-bold tracking-tight">Articles</h2>
+            <h2 className="max-w-2xl text-center text-2xl font-bold tracking-tight">{t('articles.title')}</h2>
             <p className="text-muted-foreground mt-1 max-w-sm text-center text-sm">
-              Your reliable source for passport articles, tips, and travel information.
+              {t('articles.subtitle')}
             </p>
           </div>
         </div>
@@ -127,15 +129,13 @@ export function ArticleSection() {
             aria-live="polite"
             className="border-border bg-card text-muted-foreground mt-6 rounded-sm border border-dashed p-6 text-center text-sm"
           >
-            {isError
-              ? 'We’re having trouble loading the latest articles. Please try again shortly.'
-              : 'New articles are on the way. Check back soon for the latest updates.'}
+            {isError ? t('articles.error') : t('articles.empty')}
           </div>
         )}
 
         <div className="my-4 flex justify-center md:my-8">
           <Button size="sm" className="px-4 font-semibold sm:w-auto" asChild>
-            <Link to="/articles">View All</Link>
+            <Link to="/articles">{t('articles.viewAll')}</Link>
           </Button>
         </div>
       </Container>

@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import ethiopic_numbers from '@/assets/landingImages/number.webp'
 import {
@@ -23,6 +24,7 @@ import type { ArticleFilters as ArticleFiltersType, ArticleSummary } from '../sc
 import { ArticlePagination } from './ArticlePagination'
 
 export function ArticlesPage() {
+  const { t } = useTranslation('articles')
   const [searchInput, setSearchInput] = useState('')
   const [filters, setFilters] = useState<ArticleFiltersType>({
     category: 'all',
@@ -111,8 +113,8 @@ export function ArticlesPage() {
   return (
     <div className="min-h-screen">
       <Seo
-        title="Passport Application Guides & News - Ethiopia"
-        description="Expert guides on Ethiopian passport applications, renewal, and requirements. Stay updated on ICS immigration news, policy changes, and procedures."
+        title={t('list.seo.title')}
+        description={t('list.seo.description')}
         path="/articles"
         extraLinks={getFeedLinks()}
       />
@@ -131,13 +133,13 @@ export function ArticlesPage() {
               className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
             />
           </div>
-          <h1 className="mb-4 text-4xl font-bold tracking-tight">Search for Articles</h1>
+          <h1 className="mb-4 text-4xl font-bold tracking-tight">{t('list.title')}</h1>
           <div className="flex flex-col justify-between gap-8 md:flex-row md:gap-20">
             <div className="flex flex-1 flex-row gap-2">
               {/* Search Input */}
               <div className="relative flex-1">
                 <Input
-                  placeholder="Enter blog title"
+                  placeholder={t('list.search.placeholder')}
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
@@ -152,22 +154,22 @@ export function ArticlesPage() {
 
               {/* Search Button */}
               <Button onClick={handleSearch} variant="primary" size="lg" className="md:w-auto">
-                Search
+                {t('list.search.button')}
               </Button>
             </div>
             <div className="flex flex-1 flex-row gap-2">
               {/* Filter By Label */}
               <span className="text-muted-foreground hidden self-center text-sm md:inline-block">
-                Filter by
+                {t('list.filters.filterBy')}
               </span>
 
               {/* Category Filter */}
               <Select value={filters.category} onValueChange={handleCategoryChange}>
                 <SelectTrigger className="h-11 w-full md:w-48">
-                  <SelectValue placeholder="Category" />
+                  <SelectValue placeholder={t('list.filters.category')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="all">{t('list.filters.allCategories')}</SelectItem>
                   {(categories.data?.data ?? []).map((c) => (
                     <SelectItem key={c.slug} value={c.slug}>
                       {c.name}
@@ -179,10 +181,10 @@ export function ArticlesPage() {
               {/* Tags Filter */}
               <Select value={filters.tag} onValueChange={handleTagChange}>
                 <SelectTrigger className="h-11 w-full md:w-48">
-                  <SelectValue placeholder="Tags" />
+                  <SelectValue placeholder={t('list.filters.tags')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Tags</SelectItem>
+                  <SelectItem value="all">{t('list.filters.allTags')}</SelectItem>
                   {(tags.data?.data ?? []).map((t) => (
                     <SelectItem key={t.slug} value={t.slug}>
                       {t.name}
@@ -275,12 +277,12 @@ export function ArticlesPage() {
             </>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="text-muted-foreground mb-4 text-4xl">📄</div>
-              <h3 className="text-foreground mb-2 text-lg font-semibold">No articles found</h3>
+              <div className="text-muted-foreground mb-4 text-4xl">{t('list.empty.icon')}</div>
+              <h3 className="text-foreground mb-2 text-lg font-semibold">{t('list.empty.title')}</h3>
               <p className="text-muted-foreground max-w-md text-sm">
                 {searchInput
-                  ? `No articles match your search for &ldquo;${searchInput}&rdquo;. Try different keywords or clear your search.`
-                  : 'No articles match your current filters. Try adjusting your filters or clearing them.'}
+                  ? t('list.empty.descriptionWithSearch', { search: searchInput })
+                  : t('list.empty.descriptionNoSearch')}
               </p>
               <button
                 type="button"
@@ -291,7 +293,7 @@ export function ArticlesPage() {
                 }}
                 className="text-primary mt-4 text-sm underline hover:opacity-90"
               >
-                Show all articles
+                {t('list.empty.showAll')}
               </button>
             </div>
           )}

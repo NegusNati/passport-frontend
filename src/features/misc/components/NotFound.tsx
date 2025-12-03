@@ -1,17 +1,23 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Compass, Home, RotateCcw } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/button'
 import { Seo } from '@/shared/ui/Seo'
 
 export function NotFound() {
+  const { t } = useTranslation('errors')
   const navigate = useNavigate()
   const reduce = useReducedMotion()
 
   return (
     <main className="relative isolate">
-      <Seo title="Page Not Found" description="This page doesn’t exist." noindex />
+      <Seo
+        title={t('notFound.seo.title')}
+        description={t('notFound.seo.description')}
+        noindex
+      />
 
       {/* Ambient gradient blobs */}
       <div
@@ -32,20 +38,21 @@ export function NotFound() {
         </motion.div>
 
         {/* 404 headline */}
-        <p className="text-muted-foreground mb-2 text-sm tracking-widest">ERROR 404</p>
+        <p className="text-muted-foreground mb-2 text-sm tracking-widest">
+          {t('notFound.errorCode')}
+        </p>
         <h1 className="from-foreground to-muted-foreground bg-gradient-to-r bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl">
-          Lost your way?
+          {t('notFound.title')}
         </h1>
         <p className="text-muted-foreground mx-auto mt-3 max-w-prose text-base text-balance sm:text-lg">
-          The page you’re looking for doesn’t exist, moved, or the URL has a typo. Let’s get you
-          back on track.
+          {t('notFound.description')}
         </p>
 
         {/* Actions */}
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
           <Link to="/">
             <Button size="lg" className="w-full sm:w-auto" leftIcon={<Home size={18} />}>
-              Go Home
+              {t('notFound.goHome')}
             </Button>
           </Link>
           <Button
@@ -61,13 +68,13 @@ export function NotFound() {
             }}
             leftIcon={<RotateCcw size={18} />}
           >
-            Go Back
+            {t('notFound.goBack')}
           </Button>
         </div>
 
         {/* Helpful tips */}
         <div className="text-muted-foreground mx-auto mt-6 max-w-prose text-xs sm:text-sm">
-          <p>Check the URL for typos, or use the navigation.</p>
+          <p>{t('notFound.hint')}</p>
         </div>
       </section>
     </main>

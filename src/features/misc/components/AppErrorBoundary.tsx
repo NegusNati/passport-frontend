@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { Component, type ErrorInfo, type ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { analytics } from '@/shared/lib/analytics'
 import { Button } from '@/shared/ui/button'
@@ -13,7 +14,16 @@ type AppErrorFallbackProps = {
 const FLOATING_ICONS = ['🧭', '🛫', '📘', '🛰️']
 
 export function AppErrorFallback({ error, reset, showDetails }: AppErrorFallbackProps) {
+  const { t, ready } = useTranslation('errors')
   const reducedMotion = useReducedMotion()
+
+  // Fallback text if i18n is not ready
+  const title = ready ? t('errorBoundary.title') : 'Something went off course'
+  const description = ready
+    ? t('errorBoundary.description')
+    : 'Try refreshing, or head back home while we fix the issue.'
+  const goHomeText = ready ? t('errorBoundary.goHome') : 'Go home'
+  const tryAgainText = ready ? t('errorBoundary.tryAgain') : 'Try again'
 
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-6 text-center">
@@ -48,21 +58,16 @@ export function AppErrorFallback({ error, reset, showDetails }: AppErrorFallback
         />
       </div>
 
-      <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-        Something went off course
-      </h1>
-      <p className="text-muted-foreground mt-3 max-w-xl text-sm sm:text-base">
-        Our passport pigeons are on the case. Try refreshing, or head back home while we realign the
-        navigation.
-      </p>
+      <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
+      <p className="text-muted-foreground mt-3 max-w-xl text-sm sm:text-base">{description}</p>
 
       <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
         <Button asChild>
-          <a href="/">Go home</a>
+          <a href="/">{goHomeText}</a>
         </Button>
         {reset ? (
           <Button variant="outline" onClick={reset}>
-            Try again
+            {tryAgainText}
           </Button>
         ) : null}
       </div>

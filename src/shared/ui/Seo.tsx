@@ -1,6 +1,8 @@
 import { Helmet } from 'react-helmet-async'
+import { useTranslation } from 'react-i18next'
 
 import landingOgImage from '@/assets/landingImages/landing_og.webp'
+import { SUPPORTED_LANGUAGES } from '@/i18n/config'
 
 type Props = {
   title?: string
@@ -26,6 +28,9 @@ export function Seo({
   schemaJson,
   extraLinks = [],
 }: Props) {
+  const { i18n } = useTranslation()
+  const currentLang = i18n.language || 'en'
+  
   const base = SITE?.replace(/\/$/, '') || ''
   // Normalize path: root path '/' becomes empty to avoid trailing slash
   const normalizedPath = path === '/' ? '' : path
@@ -38,6 +43,15 @@ export function Seo({
       ? ogImage
       : `${base}${ogImage}`
     : `${base}${landingOgImage}`
+
+  // Map language codes to og:locale format
+  const localeMap: Record<string, string> = {
+    en: 'en_US',
+    am: 'am_ET',
+    om: 'om_ET',
+    ti: 'ti_ET',
+  }
+  const ogLocale = localeMap[currentLang] || 'en_US'
 
   return (
     <>
@@ -87,7 +101,18 @@ export function Seo({
         <meta property="og:image:alt" content={fullTitle} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
-        <meta property="og:locale" content="en_US" />
+        <meta property="og:locale" content={ogLocale} />
+
+        {/* hreflang alternate links for SEO - each language has its own URL with ?lang= param */}
+        {base && SUPPORTED_LANGUAGES.map((lang) => (
+          <link
+            key={lang.code}
+            rel="alternate"
+            hrefLang={lang.code}
+            href={`${base}${normalizedPath || '/'}?lang=${lang.code}`}
+          />
+        ))}
+        {base && <link rel="alternate" hrefLang="x-default" href={`${base}${normalizedPath || '/'}`} />}
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />

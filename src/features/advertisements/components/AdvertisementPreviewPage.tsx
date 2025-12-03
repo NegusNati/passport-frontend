@@ -1,4 +1,5 @@
 import { Calendar, LayoutGrid, Smartphone } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import ad1 from '@/assets/advert/ad_1.png'
 import ad2 from '@/assets/advert/ad_2.png'
@@ -8,14 +9,16 @@ import { Card } from '@/shared/ui/card'
 import { Seo } from '@/shared/ui/Seo'
 
 export function AdvertisementPreviewPage() {
+  const { t } = useTranslation('advertisements')
+
   return (
     <div className="from-primary/5 via-background to-background relative min-h-screen overflow-hidden bg-gradient-to-b">
       <Seo
-        title="Advertisement Placements - Desktop & Mobile Preview"
-        description="Preview advertisement placements on Passport.ET. See how ads appear on desktop and mobile across calendar, content, and listing pages."
+        title={t('preview.seo.title')}
+        description={t('preview.seo.description')}
         path="/advertisment"
       />
-      <h1 className="sr-only">Advertisement Placements Preview - Desktop & Mobile</h1>
+      <h1 className="sr-only">{t('preview.seo.title')}</h1>
 
       {/* Background decoration */}
       <div
@@ -29,11 +32,11 @@ export function AdvertisementPreviewPage() {
           <div className="mx-auto max-w-3xl space-y-4 sm:space-y-6">
             <div className="border-primary/20 bg-primary/5 text-primary inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium">
               <LayoutGrid className="h-4 w-4" />
-              <span>Advertisement Showcase</span>
+              <span>{t('preview.header.badge')}</span>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Advert Preview</h1>
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{t('preview.header.title')}</h1>
             <p className="text-muted-foreground text-lg sm:text-xl">
-              This is where your advertisement will look in Desktop and Mobile devices
+              {t('preview.header.description')}
             </p>
           </div>
         </section>
@@ -48,10 +51,10 @@ export function AdvertisementPreviewPage() {
               </div>
               <div>
                 <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                  Desktop Check Landscape View
+                  {t('preview.placements.desktopCalendar.title')}
                 </h2>
                 <p className="text-muted-foreground mt-1">
-                  Calendar page showing horizontal banner placement below the calendar grid
+                  {t('preview.placements.desktopCalendar.description')}
                 </p>
               </div>
             </div>
@@ -62,7 +65,7 @@ export function AdvertisementPreviewPage() {
               />
               <img
                 src={ad1}
-                alt="Calendar page with advertisement placement"
+                alt={t('preview.placements.desktopCalendar.imageAlt')}
                 className="h-auto w-full"
               />
               <div
@@ -80,10 +83,10 @@ export function AdvertisementPreviewPage() {
               </div>
               <div>
                 <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                  Existing Below Pocket Book
+                  {t('preview.placements.belowPocket.title')}
                 </h2>
                 <p className="text-muted-foreground mt-1">
-                  Multiple ad placements on content pages with both horizontal and vertical formats
+                  {t('preview.placements.belowPocket.description')}
                 </p>
               </div>
             </div>
@@ -94,7 +97,7 @@ export function AdvertisementPreviewPage() {
               />
               <img
                 src={ad2}
-                alt="Content page with multiple advertisement placements"
+                alt={t('preview.placements.belowPocket.imageAlt')}
                 className="h-auto w-full border-0 bg-transparent"
               />
               <div
@@ -113,10 +116,10 @@ export function AdvertisementPreviewPage() {
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold tracking-tight sm:text-2xl">
-                    Mobile Banner View
+                    {t('preview.placements.mobileBanner.title')}
                   </h2>
                   <p className="text-muted-foreground mt-1">
-                    Vertical ad placement optimized for mobile users browsing content
+                    {t('preview.placements.mobileBanner.description')}
                   </p>
                 </div>
               </div>
@@ -127,7 +130,7 @@ export function AdvertisementPreviewPage() {
                 />
                 <img
                   src={ad3}
-                  alt="Mobile view with advertisement placement"
+                  alt={t('preview.placements.mobileBanner.imageAlt')}
                   className="h-auto w-full border-0 bg-transparent"
                 />
                 <div

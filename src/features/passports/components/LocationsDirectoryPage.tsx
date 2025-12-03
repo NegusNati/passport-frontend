@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import HabeshaFace from '@/assets/landingImages/habesha_face.svg'
 import { Container } from '@/shared/ui/container'
@@ -10,6 +11,7 @@ import { toLocationSlug } from '../lib/location-slug'
 import { useLocationsQuery } from '../lib/PassportsQuery'
 
 export function LocationsDirectoryPage() {
+  const { t } = useTranslation('passports')
   const locationsQuery = useLocationsQuery()
 
   const locations = React.useMemo(() => {
@@ -18,26 +20,22 @@ export function LocationsDirectoryPage() {
   }, [locationsQuery.data])
 
   const hasError = locationsQuery.isError && locations.length === 0
-  const error =
-    locationsQuery.error instanceof Error
-      ? locationsQuery.error
-      : new Error('Failed to load locations.')
 
   return (
     <div className="min-h-screen">
       <Seo
-        title="ICS Branch Offices Directory - Ethiopian Passport Locations"
-        description="Directory of ICS branch offices across Ethiopia. Find your nearest location and check passport releases for urgent and regular applications."
+        title={t('locations.seo.title')}
+        description={t('locations.seo.description')}
         path="/locations"
       />
 
       <section className="mx-2 py-12 md:py-16">
         <Container className="border-border/60 rounded-2xl border bg-transparent p-6 text-center shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
-            Official Immigration and Citizenship Services (ICS) branch offices
+            {t('locations.title')}
           </h1>
           <p className="text-muted-foreground mt-4 text-lg">
-            Pick a branch office to see the most recent passports released in that location.
+            {t('locations.subtitle')}
           </p>
         </Container>
       </section>
@@ -58,13 +56,13 @@ export function LocationsDirectoryPage() {
             {locationsQuery.isLoading ? (
               <div className="text-muted-foreground flex items-center justify-center gap-2 text-sm">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Loading branch offices…</span>
+                <span>{t('locations.loading')}</span>
               </div>
             ) : hasError ? (
-              <div className="text-destructive text-center text-sm">{error.message}</div>
+              <div className="text-destructive text-center text-sm">{t('locations.error')}</div>
             ) : locations.length === 0 ? (
               <div className="text-muted-foreground text-center text-sm">
-                No branch offices available right now.
+                {t('locations.empty')}
               </div>
             ) : (
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -81,7 +79,7 @@ export function LocationsDirectoryPage() {
                       >
                         <span className="text-lg leading-tight font-semibold">{location}</span>
                         <span className="text-muted-foreground mt-1 block text-sm">
-                          View latest passports from this branch
+                          {t('locations.viewLatest')}
                         </span>
                       </Link>
                     </li>

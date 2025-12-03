@@ -1,0 +1,20 @@
+{
+  "notFound": {
+    "seo": {
+      "title": "Page Not Found",
+      "description": "This page doesn't exist."
+    },
+    "errorCode": "ERROR 404",
+    "title": "Lost your way?",
+    "description": "The page you're looking for doesn't exist, moved, or the URL has a typo. Let's get you back on track.",
+    "goHome": "Go Home",
+    "goBack": "Go Back",
+    "hint": "Check the URL for typos, or use the navigation."
+  },
+  "errorBoundary": {
+    "title": "Something went off course",
+    "description": "Our passport pigeons are on the case. Try refreshing, or head back home while we realign the navigation.",
+    "goHome": "Go home",
+    "tryAgain": "Try again"
+  }
+}

@@ -1,6 +1,7 @@
 import { Download } from 'lucide-react'
 import { useRef } from 'react'
 import Barcode from 'react-barcode'
+import { useTranslation } from 'react-i18next'
 
 import star from '@/assets/landingImages/star.svg'
 import { ShareButton } from '@/shared/components/ShareButton'
@@ -12,10 +13,10 @@ import { type Passport } from '../schemas/passport'
 
 const CARD_DOWNLOAD_ID = 'passport-detail-card'
 
-function getDayOfWeek(firstName?: string) {
+function getDayOfWeek(firstName?: string, fallbackText?: string) {
   const normalized = firstName?.trim()
   if (!normalized) {
-    return 'Please check the schedule or come Sunday'
+    return fallbackText ?? 'Please check the schedule or come Sunday'
   }
 
   const letter = normalized.charAt(0).toLowerCase()
@@ -30,7 +31,7 @@ function getDayOfWeek(firstName?: string) {
   if (['m', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'].includes(letter)) days.push('Saturday')
 
   if (days.length === 0) {
-    return 'Please check the schedule or come Sunday'
+    return fallbackText ?? 'Please check the schedule or come Sunday'
   }
   return days.join(', ')
 }
@@ -41,12 +42,13 @@ interface PassportDetailCardProps {
 }
 
 export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailCardProps) {
+  const { t } = useTranslation('passports')
   // Extract names from the full name (assuming "FirstName LastName" format)
   const nameParts = passport.name.split(' ')
   const givenName = nameParts.slice(0, -1).join(' ')
   const surname = nameParts[nameParts.length - 1]
   const firstName = passport.firstName ?? nameParts[0] ?? ''
-  const dayOfWeek = getDayOfWeek(firstName)
+  const dayOfWeek = getDayOfWeek(firstName, t('detail.card.checkSchedule'))
   const cardRef = useRef<HTMLDivElement>(null)
 
   const { download, isDownloading } = usePdfDownload({
@@ -82,10 +84,10 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
             {/* Header */}
             <div className="relative z-10 mb-8 text-center text-[#8D2041]">
               <h1 className="mb-1 text-xl font-bold text-red-900 md:text-2xl">
-                የኢትዮጵያ ፌዴራላዊ ዲሞክራሲያዊ ሪፐብሊክ
+                {t('detail.card.ethTitle')}
               </h1>
               <h2 className="font-gotham text-lg font-semibold text-red-800 md:text-xl">
-                FEDERAL DEMOCRATIC REPUBLIC OF ETHIOPIA
+                {t('detail.card.engTitle')}
               </h2>
             </div>
 
@@ -94,17 +96,17 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
               {/* Personal Info */}
               <div className="space-y-4">
                 <div>
-                  <div className="text-xs font-medium text-gray-600">Surname</div>
+                  <div className="text-xs font-medium text-gray-600">{t('detail.card.surname')}</div>
                   <div className="mt-0.5 text-lg font-semibold text-gray-900">{surname}</div>
                 </div>
 
                 <div>
-                  <div className="text-xs font-medium text-gray-600">Given Name</div>
+                  <div className="text-xs font-medium text-gray-600">{t('detail.card.givenName')}</div>
                   <div className="mt-0.5 text-lg font-semibold text-gray-900">{givenName}</div>
                 </div>
 
                 <div>
-                  <div className="text-xs font-medium text-gray-600">Location</div>
+                  <div className="text-xs font-medium text-gray-600">{t('detail.card.location')}</div>
                   <div className="mt-0.5 flex items-center pb-1">
                     <div className="text-lg font-semibold text-gray-900">{passport.city}</div>
                   </div>
@@ -114,20 +116,20 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
               {/* Date and Time Info - Horizontal Layout */}
               <div className="flex flex-wrap items-start gap-x-8 gap-y-4 pt-2">
                 <div>
-                  <div className="text-xs font-medium text-gray-600">You Can Receive After</div>
+                  <div className="text-xs font-medium text-gray-600">{t('detail.card.receiveAfter')}</div>
                   <div className="mt-0.5 text-base font-semibold text-gray-900">
                     {passport.date} G.C
                   </div>
                 </div>
 
                 <div>
-                  <div className="text-xs font-medium text-gray-600">Day of The Week</div>
+                  <div className="text-xs font-medium text-gray-600">{t('detail.card.dayOfWeek')}</div>
                   <div className="mt-0.5 text-base font-semibold text-gray-900">{dayOfWeek}</div>
                 </div>
 
                 <div>
-                  <div className="text-xs font-medium text-gray-600">Exact Time</div>
-                  <div className="mt-0.5 text-base font-semibold text-gray-900">3:00 - 9:00 LT</div>
+                  <div className="text-xs font-medium text-gray-600">{t('detail.card.exactTime')}</div>
+                  <div className="mt-0.5 text-base font-semibold text-gray-900">{t('detail.card.timeRange')}</div>
                 </div>
               </div>
 
@@ -166,7 +168,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
               disabled={isDownloading}
               leftIcon={<Download className="h-5 w-5" aria-hidden="true" />}
             >
-              {isDownloading ? 'Preparing…' : 'Download'}
+              {isDownloading ? t('detail.actions.downloading') : t('detail.actions.download')}
             </Button>
 
             <Button
@@ -174,7 +176,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
               className="w-full bg-emerald-600 hover:bg-emerald-700 sm:w-auto"
               size="lg"
             >
-              Check Another Passport
+              {t('detail.actions.checkAnother')}
             </Button>
           </div>
         </div>

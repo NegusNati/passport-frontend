@@ -1,4 +1,5 @@
 import { Fragment } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/button'
 
@@ -17,6 +18,8 @@ export function ArticlePagination({
   hasPrevPage,
   onPageChange,
 }: ArticlePaginationProps) {
+  const { t } = useTranslation('articles')
+
   // Don't render if there's only one page or no pages
   if (totalPages <= 1) return null
 
@@ -57,7 +60,7 @@ export function ArticlePagination({
     <nav
       className="flex items-center justify-center gap-1 py-8"
       role="navigation"
-      aria-label="Article pagination"
+      aria-label={t('list.pagination.ariaLabel')}
     >
       {/* Previous button */}
       <Button
@@ -66,9 +69,9 @@ export function ArticlePagination({
         onClick={() => onPageChange(currentPage - 1)}
         disabled={!hasPrevPage}
         className="mr-2"
-        aria-label="Go to previous page"
+        aria-label={t('list.pagination.goToPrevious')}
       >
-        Previous
+        {t('list.pagination.previous')}
       </Button>
 
       {/* Page numbers */}
@@ -88,7 +91,7 @@ export function ArticlePagination({
                   'min-w-[2.5rem]',
                   currentPage === page ? '' : 'hover:bg-accent hover:text-accent-foreground',
                 ].join(' ')}
-                aria-label={`Go to page ${page}`}
+                aria-label={t('list.pagination.goToPage', { page })}
                 aria-current={currentPage === page ? 'page' : undefined}
               >
                 {page}
@@ -105,9 +108,9 @@ export function ArticlePagination({
         onClick={() => onPageChange(currentPage + 1)}
         disabled={!hasNextPage}
         className="ml-2"
-        aria-label="Go to next page"
+        aria-label={t('list.pagination.goToNext')}
       >
-        Next
+        {t('list.pagination.next')}
       </Button>
     </nav>
   )

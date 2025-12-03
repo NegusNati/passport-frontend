@@ -1,36 +1,23 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Plus } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { M } from '@/shared/lib/motion'
 import { Container } from '@/shared/ui/container'
 
-const FAQS = [
-  {
-    q: 'How do I check if my passport is ready?',
-    a: 'Use your reference number or full name search to get the latest readiness status pulled from official updates.',
-  },
-  {
-    q: 'What information do I need to use this portal?',
-    a: 'Either your reference number or your full legal name. Optionally, you can filter by city where available.',
-  },
-  {
-    q: 'Is Passport.ET an official service?',
-    a: "Passport.ET is not an official government website. It's a community tool focused on checking readiness and sharing insights.",
-  },
-  {
-    q: 'How accurate is the passport status shown?',
-    a: 'Statuses are based on the latest available sync. For time-sensitive travel, confirm with official channels before visiting in person.',
-  },
-  {
-    q: 'Can I apply for a new passport through this portal?',
-    a: 'No. The portal is built only for checking readiness and accessing insights. To apply, you must follow official application channels.',
-  },
-]
+interface FaqItem {
+  q: string
+  a: string
+}
 
 export function FAQsSection() {
+  const { t } = useTranslation('landing')
   const [activeIndex, setActiveIndex] = useState<number | null>(0)
   const shouldReduceMotion = useReducedMotion()
+
+  // Get FAQ items from translations
+  const faqs = t('faqs.items', { returnObjects: true }) as FaqItem[]
 
   function toggleIndex(index: number) {
     setActiveIndex((current) => (current === index ? null : index))
@@ -41,18 +28,18 @@ export function FAQsSection() {
       <Container className="my-4">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,0.75fr)_minmax(0,1.15fr)] lg:items-start">
           <div className="space-y-3">
-            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">FAQs</h2>
+            <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">{t('faqs.title')}</h2>
             <p className="text-muted-foreground max-w-sm text-sm sm:text-base">
-              Find reliable information about how Passport.ET works and what to expect.
+              {t('faqs.subtitle')}
             </p>
           </div>
 
           <div className="space-y-3">
-            {FAQS.map((faq, index) => {
+            {faqs.map((faq, index) => {
               const isActive = activeIndex === index
               return (
                 <motion.article
-                  key={faq.q}
+                  key={index}
                   layout={!shouldReduceMotion}
                   className={[
                     'bg-card/90 text-card-foreground rounded-none transition-shadow',

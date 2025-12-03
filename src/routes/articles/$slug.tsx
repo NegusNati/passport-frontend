@@ -1,10 +1,12 @@
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Check, Link as LinkIcon, Share2 } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { ListParams } from '@/features/articles/lib/ArticlesApi'
 import { useArticleQuery, useArticlesQuery } from '@/features/articles/lib/ArticlesQuery'
 import type { ArticleApiItem } from '@/features/articles/lib/ArticlesSchema'
+import { loadI18nNamespaces } from '@/i18n'
 import { LexicalViewer } from '@/shared/components/rich-text/LexicalViewer'
 import { AdSlot } from '@/shared/ui/ad-slot'
 import { Card, CardContent, CardHeader } from '@/shared/ui/card'
@@ -13,6 +15,9 @@ import { Seo } from '@/shared/ui/Seo'
 import { ArticleDetailSkeleton, RelatedArticleCardSkeleton } from '@/shared/ui/skeleton'
 
 export const Route = createFileRoute('/articles/$slug')({
+  loader: async () => {
+    await loadI18nNamespaces(['articles'])
+  },
   component: ArticleDetail,
 })
 
@@ -116,16 +121,18 @@ function ArticleBody({
     handleCopyLink()
   }, [article?.title, article?.excerpt, handleCopyLink])
 
+  const { t } = useTranslation('articles')
+
   if (isLoading) return <ArticleDetailSkeleton />
   if (isError || !article)
     return (
       <div className="container mx-auto p-6 text-center">
-        <h1 className="text-2xl font-semibold">Article Not Found</h1>
-        <p className="text-muted-foreground mt-2">Please check the URL and try again.</p>
+        <h1 className="text-2xl font-semibold">{t('detail.notFound.title')}</h1>
+        <p className="text-muted-foreground mt-2">{t('detail.notFound.description')}</p>
       </div>
     )
 
-  const authorName = article.author?.name ?? 'Passport.ET Editorial'
+  const authorName = article.author?.name ?? t('detail.author.defaultName')
   const publishedDate = article.published_at ? formatDisplayDate(article.published_at) : undefined
   const readingTime = estimateReadingTime(article)
   const headlineSummary = article.excerpt ?? 'Search for blog post by blog title'
@@ -151,14 +158,14 @@ function ArticleBody({
                 onClick={onBack}
               >
                 <ArrowLeft className="size-4" aria-hidden="true" />
-                Blogs
+                {t('detail.navigation.back')}
               </button>
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={handleShare}
                   className="text-muted-foreground/80 hover:text-foreground border-border hover:bg-muted flex h-9 w-9 items-center justify-center rounded-full border transition"
-                  aria-label="Share article"
+                  aria-label={t('detail.navigation.share')}
                 >
                   <Share2 className="size-4" aria-hidden="true" />
                 </button>
@@ -166,7 +173,7 @@ function ArticleBody({
                   type="button"
                   onClick={handleCopyLink}
                   className="text-muted-foreground/80 hover:text-foreground border-border hover:bg-muted flex h-9 w-9 items-center justify-center rounded-full border transition"
-                  aria-label="Copy article link"
+                  aria-label={t('detail.navigation.copyLink')}
                 >
                   {copied ? (
                     <Check className="size-4 text-emerald-600" />
@@ -195,7 +202,7 @@ function ArticleBody({
                 <p className="text-muted-foreground text-sm">
                   {publishedDate ?? '—'}
                   {publishedDate && readingTime ? ' · ' : null}
-                  {readingTime ? `${readingTime} Min` : null}
+                  {readingTime ? t('detail.author.readTime', { time: readingTime }) : null}
                 </p>
               </div>
             </div>
@@ -222,7 +229,7 @@ function ArticleBody({
             {/* Related Articles */}
             {relatedIsLoading ? (
               <div className="space-y-6">
-                <h2 className="text-foreground text-xl font-semibold">Others like this</h2>
+                <h2 className="text-foreground text-xl font-semibold">{t('detail.related.title')}</h2>
                 <div className="grid gap-6 sm:grid-cols-2">
                   <RelatedArticleCardSkeleton />
                   <RelatedArticleCardSkeleton />
@@ -230,7 +237,7 @@ function ArticleBody({
               </div>
             ) : relatedArticles.length ? (
               <div className="space-y-6">
-                <h2 className="text-foreground text-xl font-semibold">Others like this</h2>
+                <h2 className="text-foreground text-xl font-semibold">{t('detail.related.title')}</h2>
                 <div className="grid gap-6 sm:grid-cols-2">
                   {relatedArticles.map((related) => (
                     <RelatedArticleCard key={related.id} article={related} />
@@ -268,9 +275,10 @@ function ArticleBody({
 }
 
 function RelatedArticleCard({ article }: { article: ArticleApiItem }) {
+  const { t } = useTranslation('articles')
   const publishedDate = article.published_at ? formatDisplayDate(article.published_at) : '—'
   const summarySource = article.excerpt ?? (article.content ? stripHtml(article.content) : '')
-  const summary = summarySource ? truncate(summarySource, 80) : 'Read the full story.'
+  const summary = summarySource ? truncate(summarySource, 80) : t('detail.related.readMore')
 
   return (
     <Link to="/articles/$slug" params={{ slug: article.slug }} preload="intent" className="block">

@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import HabeshaFace from '@/assets/landingImages/habesha_face.svg'
 import { Seo } from '@/shared/ui/Seo'
@@ -9,8 +10,9 @@ import { PassportsTable } from './PassportsTable'
 type SearchMode = 'number' | 'name'
 
 export function PassportsPage() {
+  const { t } = useTranslation('passports')
   const [searchMode, setSearchMode] = React.useState<SearchMode>('name')
-  const [searchFilters, setSearchFilters] = React.useState<PassportSearchFilters>({})
+const [searchFilters, setSearchFilters] = React.useState<PassportSearchFilters>({})
   const tableRef = React.useRef<HTMLDivElement>(null)
 
   const isSameFilters = React.useCallback((a: PassportSearchFilters, b: PassportSearchFilters) => {
@@ -38,8 +40,8 @@ export function PassportsPage() {
   return (
     <div className="min-h-screen">
       <Seo
-        title="Search Ethiopian Passports - Live Updates"
-        description="Search Ethiopian passports from all ICS offices. Track urgent and regular applications with real-time updates. Get instant status information."
+        title={t('search.seo.title')}
+        description={t('search.seo.description')}
         path="/passports"
       />
       {/* Ad Banner Section */}

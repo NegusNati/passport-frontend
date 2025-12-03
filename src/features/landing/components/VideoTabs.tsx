@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { LiteYouTubeEmbed } from '@/shared/components/LiteYouTubeEmbed'
 import { M } from '@/shared/lib/motion'
@@ -52,6 +53,7 @@ function extractVideoId(url?: string) {
 }
 
 export function VideoTabs() {
+  const { t } = useTranslation('landing')
   const [tab, setTab] = useState<(typeof TABS)[number]['key']>(TABS[0]?.key)
   const activeTab = useMemo(() => TABS.find((t) => t.key === tab) ?? TABS[0], [tab])
   const videoId = useMemo(() => extractVideoId(activeTab?.youtubeLink), [activeTab?.youtubeLink])
@@ -61,14 +63,13 @@ export function VideoTabs() {
       <Container>
         <header className="mx-auto max-w-5xl text-center">
           <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">
-            Video Demonstrations
+            {t('videoTabs.title')}
           </h2>
           <h3 className="text-muted-foreground mx-auto mt-2 max-w-3xl">
-            Here is how you can check if your passport is ready or how you can get services provided
-            by
+            {t('videoTabs.subtitle')}
             <span className="text-foreground block font-semibold tracking-wide sm:inline">
               {' '}
-              IMMIGRATION &amp; NATIONALITY AFFAIRS
+              {t('videoTabs.authority')}
             </span>
             .
           </h3>

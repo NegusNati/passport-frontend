@@ -1,4 +1,6 @@
 import './styles.css'
+// initialize i18n (loads local resources for now)
+import '@/i18n'
 
 import { QueryClientProvider } from '@tanstack/react-query'
 import { createRouter, RouterProvider } from '@tanstack/react-router'

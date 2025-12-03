@@ -3,8 +3,8 @@ import { $insertNodes, COMMAND_PRIORITY_EDITOR, createCommand, type LexicalComma
 import { useEffect } from 'react'
 
 import { $createImageNode, type ImagePayload } from '@/shared/lib/lexical/ImageNode'
-import { $createVideoNode, type VideoPayload } from '@/shared/lib/lexical/VideoNode'
 import { ImageNode } from '@/shared/lib/lexical/ImageNode'
+import { $createVideoNode, type VideoPayload } from '@/shared/lib/lexical/VideoNode'
 import { VideoNode } from '@/shared/lib/lexical/VideoNode'
 
 export const INSERT_IMAGE_COMMAND: LexicalCommand<ImagePayload> =

@@ -1,0 +1,99 @@
+{
+  "request": {
+    "seo": {
+      "title": "Gaaffii Beeksisaa",
+      "description": "Gaaffii beeksisaa keessan galchaa; gareen keenya yeroo gabaabaa keessatti isin qunnama."
+    },
+    "header": {
+      "badge": "Passport Alerts wajjin Beeksisaa",
+      "title": "Gaaffii Beeksisaa",
+      "description": "Gaaffii beeksisaa keessan galchaa; tarkaanfiiwwan itti aanan mari'achuuf guyyoota hojii 1-2 keessatti isin qunnamna.",
+      "features": "Deebii ariifachiisaa · Paakejiiwwan mijatoo · Deeggarsa addaa"
+    },
+    "form": {
+      "fullName": {
+        "label": "Maqaa Guutuu",
+        "placeholder": "Maqaa guutuu"
+      },
+      "phoneNumber": {
+        "label": "Lakkoofsa Bilbilaa",
+        "placeholder": "Lakkoofsa bilbilaa"
+      },
+      "email": {
+        "label": "Iimeelii",
+        "placeholder": "Iimeelii"
+      },
+      "companyName": {
+        "label": "Maqaa Dhaabbataa",
+        "placeholder": "Maqaa dhaabbataa"
+      },
+      "description": {
+        "label": "Bal'ina Beeksisaa",
+        "placeholder": "Bal'ina beeksisaa",
+        "charCount": "Arfiilee {{count}} / 5000"
+      },
+      "file": {
+        "label": "Faayila Qabsiisuuf",
+        "help": "PDF, DOC, DOCX, JPG, yookiin PNG (10MB gadi)",
+        "selectedInfo": "{{name}} · {{size}}MB"
+      },
+      "submit": "Gaaffii Galchi",
+      "submitting": "Ergaa jira...",
+      "processing": "Gaaffii keessan hojjechaa jira..."
+    },
+    "validation": {
+      "fileTooLarge": "Hammi faayilaa 10MB gadi ta'uu qaba",
+      "invalidFileType": "Ayni faayilaa sirrii miti. Maaloo faayiloota PDF, DOC, DOCX, JPG, yookiin PNG fe'aa."
+    },
+    "success": {
+      "title": "Gaaffiin Milkaa'inaan Galuera!",
+      "description": "Nu wajjin beeksisuuf fedhii agarsiistaniif galatoomaa. Gaaffiin keessan nu ga'eera; gareen keenya yeroo dhiyootti ni ilaalata.",
+      "whatNext": {
+        "title": "Itti aansuun maal ta'a?",
+        "step1": "Gareen keenya guyyoota hojii 1-2 keessatti gaaffii keessan ni ilaalata",
+        "step2": "Lakkoofsa bilbilaa yookiin iimeelii isin kennitaniin isin qunnamna",
+        "step3": "Fedhii beeksisaa keessan mari'annee filannoowwan jiran isiniif dhiyeessina"
+      },
+      "submitAnother": "Gaaffii Biraa Galchi",
+      "goHome": "Gara Manaa Deebi'i"
+    }
+  },
+  "preview": {
+    "seo": {
+      "title": "Bakka Beeksisaa - Ilaalcha Deeskitooppii fi Moobaayilii",
+      "description": "Bakka beeksisaa Passport.ET irra jiru ilaalaa. Beeksisonni Deeskitooppii fi Moobaayilii irratti, kalendaara, qabiyyee fi fuula tarree irratti akkamitti akka mul'atan ilaalaa."
+    },
+    "header": {
+      "badge": "Agarsiisa Beeksisaa",
+      "title": "Dur-argii Beeksisaa",
+      "description": "Beeksisni keessan meeshaalee Deeskitooppii fi Moobaayilii irratti bifa kanaan mul'ata"
+    },
+    "placements": {
+      "desktopCalendar": {
+        "title": "Ilaalcha Landscape Deeskitooppii",
+        "description": "Fuula kalendaaraa, bakka banarii dalgee (horizontal) gabatee kalendaaraa jala jiru",
+        "imageAlt": "Fuula kalendaaraa bakka beeksisaa qabu"
+      },
+      "belowPocket": {
+        "title": "Qabiyyee Jala Kan Jiru",
+        "description": "Bakka beeksisaa garaagaraa fuula qabiyyee irratti, bifa dalgee fi dhaabaan",
+        "imageAlt": "Fuula qabiyyee bakka beeksisaa garaagaraa qabu"
+      },
+      "mobileBanner": {
+        "title": "Ilaalcha Banarii Moobaayilii",
+        "description": "Bakka beeksisaa dhaabaa (vertical) fayyadamtoota moobaayiliif mijatu",
+        "imageAlt": "Ilaalcha moobaayilii bakka beeksisaa qabu"
+      }
+    }
+  },
+  "shared": {
+    "sponsoredTag": "Isponserii Ta'e",
+    "ctaTitle": "Passport Alerts wajjin Beeksisaa",
+    "ctaDescription": "Imaltoota kumaan lakkaa'aman kanneen odeeffannoo paaspoortii barbaadan bira ga'aa. Banarii olaanaa kana brandii keessaniif qabadhaa.",
+    "ctaButton": "Dhaabbata Keessan Beeksisaa",
+    "slotLabel": "Bakka Beeksisaa",
+    "badge": "Beeksisa",
+    "ariaLabel": "Beeksisa",
+    "imageAlt": "Beeksisa"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "notFound": {
+    "seo": {
+      "title": "Fuulli Hin Argamne",
+      "description": "Fuulli kun hin jiru."
+    },
+    "errorCode": "DOGOGGORA 404",
+    "title": "Karaa kee dhabdee?",
+    "description": "Fuulli ati barbaaddu hin jiru, socho'ee, ykn URL irratti dogoggorri jira. Gara karaa keetti si deebisna.",
+    "goHome": "Gara Manaatti Deemi",
+    "goBack": "Duubatti Deebi'i",
+    "hint": "URL irratti dogoggora ilaali, ykn qajeelfama fayyadami."
+  },
+  "errorBoundary": {
+    "title": "Wanti tokko sirrii hin deemne",
+    "description": "Gugurroon paaspoortii keenyaa dhimmicha irratti hojjechaa jiru. Haaromsi ykn gara manaatti deebi'i.",
+    "goHome": "Gara manaatti deemi",
+    "tryAgain": "Irra deebi'ii yaali"
+  }
+}

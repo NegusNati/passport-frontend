@@ -1,0 +1,41 @@
+{
+  "siteName": "Passport.ET",
+  "nav": {
+    "passports": "Paaspoortii",
+    "articles": "Barruulee",
+    "advertise": "Beeksisa",
+    "locations": "Waajjiraalee damee ICS ofiisaa",
+    "myProfile": "Eenyummaa koo",
+    "register": "Galmaa'i",
+    "login": "Seeni",
+    "downloadApp": "Appii buufadhu"
+  },
+  "footer": {
+    "tagline": "Imala gatii hin qabne biraa hin jiru. Haala paaspoortii keessanii battalumatti beekaa.",
+    "joinTelegram": "Garee Telegraama makamaa",
+    "services": "Tajaajilawwan",
+    "advertisement": "Beeksisa",
+    "passportCheck": "Paaspoortii mirkaneessuu",
+    "ethiopianCalendar": "Kaalaandara Itoophiyaa",
+    "geezNumbers": "Lakkoofsa Gi'izii",
+    "articles": "Barruulee",
+    "developerSocials": "Miidiyaa hawaasaa hojjetaa",
+    "copyright": "©2025 Passport.ET. Mirgi hundi kan eegame.",
+    "terms": "Haala fi waliigaltee",
+    "privacy": "Imaammata dhuunfaa"
+  },
+  "pwa": {
+    "alreadyInstalled": "Duraan fe'amee jira!",
+    "alreadyInstalledDesc": "Passport.ET meeshaa keessan irratti duraan fe'amee jira.",
+    "appInstalled": "Appiin fe'amee jira!",
+    "appInstalledDesc": "Passport.ET gara fuula jalqabaa keessaniitti dabalamee jira.",
+    "installCancelled": "Fe'uun haqamee jira",
+    "installCancelledDesc": "Appii yeroo barbaaddan menu kana irraa fe'uu dandeessu.",
+    "installNotAvailable": "Fe'uun hin danda'amu",
+    "installNotAvailableDesc": "Appii fe'uuf marsariitii kana Chrome ykn Safari irratti banaa."
+  },
+  "status": {
+    "loading": "Fe'aa jira..."
+  },
+  "underConstruction": "Ijaarsarra jira 🚧"
+}

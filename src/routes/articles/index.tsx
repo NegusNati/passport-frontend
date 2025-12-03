@@ -3,6 +3,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { fetchArticles, type ListParams } from '@/features/articles/lib/ArticlesApi'
 import { articlesKeys } from '@/features/articles/lib/ArticlesQuery'
+import { loadI18nNamespaces } from '@/i18n'
 
 type RouterContext = { queryClient: QueryClient }
 
@@ -17,11 +18,14 @@ export const Route = createFileRoute('/articles/')({
   loader: async ({ context }) => {
     const { queryClient } = context as RouterContext
 
-    await queryClient.prefetchQuery({
-      queryKey: articlesKeys.list(defaultParams),
-      queryFn: () => fetchArticles(defaultParams),
-      staleTime: 30_000,
-    })
+    await Promise.all([
+      loadI18nNamespaces(['articles']),
+      queryClient.prefetchQuery({
+        queryKey: articlesKeys.list(defaultParams),
+        queryFn: () => fetchArticles(defaultParams),
+        staleTime: 30_000,
+      }),
+    ])
   },
   // Component is lazy-loaded in index.lazy.tsx
 })

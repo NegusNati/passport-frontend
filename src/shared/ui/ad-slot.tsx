@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { type HTMLAttributes } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { useAdQuery } from '@/features/advertisements/api/get-ad'
 import { useAdTracking } from '@/features/advertisements/hooks/useAdTracking'
@@ -23,6 +24,7 @@ const orientationClasses = {
 } as const
 
 function SponsoredContent({ orientation }: { orientation: 'horizontal' | 'vertical' }) {
+  const { t } = useTranslation('advertisements')
   const alignClasses =
     orientation === 'vertical' ? 'items-start text-left' : 'items-center text-center'
   const textWidth = orientation === 'vertical' ? 'max-w-xs sm:max-w-sm' : 'max-w-sm sm:max-w-md'
@@ -34,30 +36,30 @@ function SponsoredContent({ orientation }: { orientation: 'horizontal' | 'vertic
       )}
     >
       <span className="text-muted-foreground text-xs font-semibold tracking-[0.35em] uppercase">
-        Sponsored
+        {t('shared.sponsoredTag')}
       </span>
       <h3 className="text-foreground text-lg font-semibold tracking-tight">
-        Advertise with Passport Alerts
+        {t('shared.ctaTitle')}
       </h3>
       <p className={[textWidth, 'text-muted-foreground text-sm'].join(' ')}>
-        Reach thousands of travelers looking for passport updates and related services. Reserve this
-        premium banner for your brand.
+        {t('shared.ctaDescription')}
       </p>
       <Button size="sm" className="mt-1 w-full sm:w-auto" asChild>
-        <Link to="/advertisement-requests">Promote Your Business</Link>
+        <Link to="/advertisement-requests">{t('shared.ctaButton')}</Link>
       </Button>
     </div>
   )
 }
 
 export function AdSlot({
-  label = 'Ad space',
+  label,
   orientation = 'horizontal',
   className = '',
   preset,
   children,
   ...props
 }: AdSlotProps) {
+  const { t } = useTranslation('advertisements')
   const isSponsored = preset === 'sponsored'
 
   const baseClasses = [
@@ -72,7 +74,7 @@ export function AdSlot({
   const content = isSponsored ? (
     <SponsoredContent orientation={orientation} />
   ) : (
-    (children ?? <span>{label}</span>)
+    (children ?? <span>{label ?? t('shared.slotLabel')}</span>)
   )
 
   return (
@@ -90,6 +92,8 @@ export function DynamicAdSlot({
   fallback,
   ...props
 }: DynamicAdSlotProps) {
+  const { t: tCommon } = useTranslation()
+  const { t: tAds } = useTranslation('advertisements')
   const { data: ad, isLoading } = useAdQuery(placement)
   const { handleClick } = useAdTracking(ad?.id, placement)
 
@@ -104,7 +108,7 @@ export function DynamicAdSlot({
         ].join(' ')}
         {...props}
       >
-        <span className="text-muted-foreground text-sm">Loading...</span>
+        <span className="text-muted-foreground text-sm">{tCommon('status.loading')}</span>
       </div>
     )
   }
@@ -141,17 +145,17 @@ export function DynamicAdSlot({
       }}
       role="button"
       tabIndex={0}
-      aria-label="Advertisement"
+      aria-label={tAds('shared.ariaLabel')}
       {...props}
     >
       <img
         src={isMobile ? ad.mobile_asset_url : ad.desktop_asset_url}
-        alt="Advertisement"
+        alt={tAds('shared.imageAlt')}
         className="h-full w-full object-cover"
         loading="lazy"
       />
       <span className="bg-muted/80 text-muted-foreground absolute top-2 right-2 rounded px-2 py-1 text-xs font-medium">
-        Ad
+        {tAds('shared.badge')}
       </span>
     </div>
   )

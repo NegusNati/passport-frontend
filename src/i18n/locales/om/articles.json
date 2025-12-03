@@ -1,0 +1,54 @@
+{
+  "list": {
+    "seo": {
+      "title": "Qajeelfamoota Iyyata Paaspoortii fi Oduu - Itoophiyaa",
+      "description": "Qajeelfamoota ogeessaa iyyata paaspoortii Itoophiyaa, haaromsa, fi ulaagaalee irratti. Oduu godaansaa ICS, jijjiirama imaammata, fi adeemsa irratti odeeffannoo haaraa argadhaa."
+    },
+    "title": "Barreeffamoota Barbaadi",
+    "search": {
+      "placeholder": "Mata duree biloogii galchi",
+      "button": "Barbaadi"
+    },
+    "filters": {
+      "filterBy": "Filteera",
+      "category": "Akaakuu",
+      "allCategories": "Akaakuulee Hunda",
+      "tags": "Mallattoolee",
+      "allTags": "Mallattoolee Hunda"
+    },
+    "empty": {
+      "icon": "📄",
+      "title": "Barreeffamoonni hin argamne",
+      "descriptionWithSearch": "Barbaadni kee \"{{search}}\" waliin walsimu hin argamne. Jechootakalaaqaa adda addaa yaali ykn barbaada kee haqi.",
+      "descriptionNoSearch": "Filteeroota ammaa kee waliin walsimu hin argamne. Filteeroota kee sirreessi ykn haqi.",
+      "showAll": "Barreeffamoota hunda agarsiisi"
+    },
+    "pagination": {
+      "previous": "Duraa",
+      "next": "Itti Aanee",
+      "ariaLabel": "Fuula barreeffamoota naannessuu",
+      "goToPage": "Gara fuula {{page}} deemi",
+      "goToPrevious": "Gara fuula duraatti deebi'i",
+      "goToNext": "Gara fuula itti aanutti deemi"
+    }
+  },
+  "detail": {
+    "notFound": {
+      "title": "Barreeffamni Hin Argamne",
+      "description": "Maaloo URL mirkaneessii irra deebi'ii yaali."
+    },
+    "navigation": {
+      "back": "Biloogota",
+      "share": "Barreeffama qoodi",
+      "copyLink": "Geessituu barreeffamaa kooppii godhi"
+    },
+    "author": {
+      "defaultName": "Passport.ET Gulaallii",
+      "readTime": "Daqiiqaa {{time}}"
+    },
+    "related": {
+      "title": "Kan biroo akka kanaa",
+      "readMore": "Seenaa guutuu dubbisi."
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import { useForm } from '@tanstack/react-form'
 import { Eye, EyeOff } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
@@ -23,39 +24,40 @@ type ApiValidation = {
   errors?: Record<string, string[]>
 }
 
-function mapServerErrors(data?: ApiValidation) {
-  const fieldErrors: FieldErrors = {}
-  if (data?.errors) {
-    if (data.errors.phone_number?.[0]) fieldErrors.phoneNumber = data.errors.phone_number[0]
-    if (data.errors.password?.[0]) fieldErrors.password = data.errors.password[0]
-  }
-  const message =
-    data?.code === 'invalid_credentials'
-      ? (data.message ?? 'We could not find a matching phone number and password.')
-      : data?.message
-  return { fieldErrors, message }
-}
-
-function sanitizePhone(value: string) {
-  return value.replace(/\D/g, '')
-}
-
-function validatePhone(value: string) {
-  const sanitized = sanitizePhone(value)
-  const result = LoginSchema.shape.phoneNumber.safeParse(sanitized)
-  return result.success ? undefined : (result.error.issues[0]?.message ?? 'Invalid phone number')
-}
-
-function validatePassword(value: string) {
-  const result = LoginSchema.shape.password.safeParse(value)
-  return result.success ? undefined : (result.error.issues[0]?.message ?? 'Invalid password')
-}
-
 export function LoginForm({ onSuccess }: LoginFormProps) {
+  const { t } = useTranslation('auth')
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const [formError, setFormError] = useState<string | null>(null)
   const [retryAfterSeconds, setRetryAfterSeconds] = useState<number | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+
+  function mapServerErrors(data?: ApiValidation) {
+    const errors: FieldErrors = {}
+    if (data?.errors) {
+      if (data.errors.phone_number?.[0]) errors.phoneNumber = data.errors.phone_number[0]
+      if (data.errors.password?.[0]) errors.password = data.errors.password[0]
+    }
+    const message =
+      data?.code === 'invalid_credentials'
+        ? t('login.validation.invalidCredentials')
+        : data?.message
+    return { fieldErrors: errors, message }
+  }
+
+  function sanitizePhone(value: string) {
+    return value.replace(/\D/g, '')
+  }
+
+  function validatePhone(value: string) {
+    const sanitized = sanitizePhone(value)
+    const result = LoginSchema.shape.phoneNumber.safeParse(sanitized)
+    return result.success ? undefined : t('login.validation.phoneInvalid')
+  }
+
+  function validatePassword(value: string) {
+    const result = LoginSchema.shape.password.safeParse(value)
+    return result.success ? undefined : t('login.validation.passwordMinLength')
+  }
 
   const loginMutation = useLogin({
     onSuccess: async (user, _variables, _context) => {
@@ -69,13 +71,13 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
     onError: (error) => {
       if (!error.response) {
         setFieldErrors({})
-        setFormError('We could not reach the server. Check your connection and try again.')
+        setFormError(t('login.validation.networkError'))
         return
       }
 
       const status = error.response.status
       if (status === 429) {
-        setFormError('Too many login attempts. Please try again once the cooldown ends.')
+        setFormError(t('login.validation.tooManyAttempts'))
         setRetryAfterSeconds(error.retryAfterSeconds ?? null)
         return
       }
@@ -88,7 +90,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         message ??
         (Object.keys(apiFieldErrors).length > 0
           ? null
-          : 'Unable to sign in with those credentials.')
+          : t('login.validation.invalidCredentials'))
       setFormError(fallback)
     },
   })
@@ -139,12 +141,13 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             const error = field.state.meta.errors[0] ?? fieldErrors.phoneNumber
             return (
               <div className="grid gap-2">
-                <Label htmlFor="phone-number">Phone number</Label>
+                <Label htmlFor="phone-number">{t('login.form.phoneNumber')}</Label>
                 <Input
                   id="phone-number"
                   type="tel"
                   inputMode="tel"
                   autoComplete="tel"
+                  placeholder={t('login.form.phoneNumberPlaceholder')}
                   value={field.state.value ?? ''}
                   onBlur={field.handleBlur}
                   onChange={(event) => {
@@ -182,12 +185,13 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             const error = field.state.meta.errors[0] ?? fieldErrors.password
             return (
               <div className="grid gap-2">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">{t('login.form.password')}</Label>
                 <div className="relative">
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="current-password"
+                    placeholder={t('login.form.passwordPlaceholder')}
                     value={field.state.value ?? ''}
                     onBlur={field.handleBlur}
                     onChange={(event) => {
@@ -244,7 +248,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
             className="w-full"
             disabled={!canSubmit || isSubmitting || loginMutation.isPending}
           >
-            {loginMutation.isPending ? 'Signing in…' : 'Sign in'}
+            {loginMutation.isPending ? t('login.form.submitting') : t('login.form.submit')}
           </Button>
         )}
       </form.Subscribe>

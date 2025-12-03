@@ -1,6 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
 import { AnimatePresence, motion } from 'framer-motion'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import HabeshaFace from '@/assets/landingImages/habesha_face.svg'
 import { usePassportQuery } from '@/features/passports/lib/PassportsQuery'
@@ -21,6 +22,7 @@ interface PassportDetailPageProps {
 }
 
 export function PassportDetailPage({ passportId, requestNumber }: PassportDetailPageProps) {
+  const { t } = useTranslation('passports')
   const router = useRouter()
 
   const idIsNumeric = passportId && /^\d+$/.test(passportId)
@@ -77,12 +79,12 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
                 />
               </svg>
             </div>
-            <h1 className="text-foreground text-2xl font-bold">Passport Lookup</h1>
+            <h1 className="text-foreground text-2xl font-bold">{t('detail.lookup.title')}</h1>
             <p className="text-muted-foreground">
-              Please use the search to look up request number {requestNumber}.
+              {t('detail.lookup.description', { requestNumber })}
             </p>
             <Button onClick={handleCheckAnother} className="w-full sm:w-auto">
-              Back to Search
+              {t('detail.lookup.backToSearch')}
             </Button>
           </CardContent>
         </Card>
@@ -125,12 +127,12 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
                 />
               </svg>
             </div>
-            <h1 className="text-foreground text-2xl font-bold">Passport Not Found</h1>
+            <h1 className="text-foreground text-2xl font-bold">{t('detail.notFound.title')}</h1>
             <p className="text-muted-foreground">
-              The requested passport could not be found. Please check the ID and try again.
+              {t('detail.notFound.description')}
             </p>
             <Button onClick={handleCheckAnother} className="w-full sm:w-auto">
-              Back to Search
+              {t('detail.notFound.backToSearch')}
             </Button>
           </CardContent>
         </Card>
@@ -151,8 +153,7 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
             className="overflow-hidden bg-emerald-600 text-white"
           >
             <div className="container mx-auto px-4 py-4 text-center text-lg font-medium">
-              🎉 Congratulations! Your passport is ready for pick up. 📄✈️ Head to the ICS Branch
-              office ({uiPassport.city}) to collect it.
+              {t('detail.banner.congratulations', { city: uiPassport.city })}
             </div>
           </motion.div>
         )}

@@ -1,0 +1,101 @@
+{
+  "seo": {
+    "title": "Ethiopian Passport Status - Track Urgent & Regular",
+    "description": "Track your Ethiopian passport application status instantly. Check urgent and regular passport releases from all ICS branch offices across Ethiopia."
+  },
+  "hero": {
+    "stats": {
+      "users": "Over 1.5 million users",
+      "passportsConfirmed": "{{count}}+ passports confirmed as issued"
+    },
+    "headline": "Tired of endless uncertainty? Instantly know if your Ethiopian passport is ready.",
+    "subheadline": "Search with your reference number or name and get real-time updates—no more repeated trips to the office.",
+    "cta": "Check My Passport Status",
+    "telegramCta": "Join The Telegram Group",
+    "cards": {
+      "search": {
+        "title": "Passport Search",
+        "description": "Use your reference number or full name with intelligent matching. from 1.2 million passports",
+        "alt": "Illustration showing a person searching on a phone"
+      },
+      "details": {
+        "title": "Get Detailed Answer",
+        "description": "when to pick up the passport, location, time, ...",
+        "alt": "Collage of community members sharing travel tips"
+      },
+      "community": {
+        "title": "Join Our Community",
+        "description": "Join the Telegram group to learn from others' experiences.",
+        "alt": "Collage of community members sharing travel tips"
+      }
+    }
+  },
+  "faqs": {
+    "title": "FAQs",
+    "subtitle": "Find reliable information about how Passport.ET works and what to expect.",
+    "items": [
+      {
+        "q": "How do I check if my passport is ready?",
+        "a": "Use your reference number or full name search to get the latest readiness status pulled from official updates."
+      },
+      {
+        "q": "What information do I need to use this portal?",
+        "a": "Either your reference number or your full legal name. Optionally, you can filter by city where available."
+      },
+      {
+        "q": "Is Passport.ET an official service?",
+        "a": "Passport.ET is not an official government website. It's a community tool focused on checking readiness and sharing insights."
+      },
+      {
+        "q": "How accurate is the passport status shown?",
+        "a": "Statuses are based on the latest available sync. For time-sensitive travel, confirm with official channels before visiting in person."
+      },
+      {
+        "q": "Can I apply for a new passport through this portal?",
+        "a": "No. The portal is built only for checking readiness and accessing insights. To apply, you must follow official application channels."
+      }
+    ]
+  },
+  "testimonials": {
+    "quotes": [
+      { "name": "Abebe Kebede", "quote": "The online status check saved me so much time. I knew exactly when my passport was ready for collection!" },
+      { "name": "Tigist Haile", "quote": "The process was straightforward and the site was very easy to use. I got my passport faster than I expected." },
+      { "name": "Yohannes Gebre", "quote": "The SMS notification feature is fantastic. I didn't have to keep checking the website for updates." },
+      { "name": "Dawit Mengistu", "quote": "As a frequent traveler, I appreciate how efficient the process has become and how easy it is to get informed here." },
+      { "name": "Meron Alemu", "quote": "The customer support team on Telegram was incredibly helpful when I had questions about my application." },
+      { "name": "Freiwhot Tadesse", "quote": "I was impressed by the user-friendly interface. It made checking my passport status a breeze." },
+      { "name": "Natnael Tadesse", "quote": "I loved how easy it was to check my passport status. I appreciate the team's help and support." },
+      { "name": "Bereket Tadesse", "quote": "I appreciate the transparency in the process. The timeline provided was accurate and helpful." }
+    ]
+  },
+  "advertise": {
+    "title": "Advertise with Passport.ET",
+    "description": "Reach millions of Ethiopian citizens and travelers through the official passport readiness portal. Campaigns include strategic placement, platform-wide promotion, and creative tailored to your brand voice.",
+    "cta": "Contact Us Now",
+    "limitedSlots": "Limited slots available",
+    "packageDescription": "Our advertising package delivers top-of-page visibility across Passport.ET with premium placements on the homepage, insights hub, and passport status results pages."
+  },
+  "downloadApp": {
+    "title": "Download the Passport.ET App",
+    "description": "Check your passport status anytime, anywhere—right from your phone."
+  },
+  "articles": {
+    "title": "Articles",
+    "subtitle": "Your reliable source for passport articles, tips, and travel information.",
+    "readMore": "Read More",
+    "viewAll": "View All Articles",
+    "empty": "No articles available yet.",
+    "error": "Failed to load articles."
+  },
+  "adBanner": {
+    "sponsored": "Sponsored",
+    "title": "Advertise with Passport Alerts",
+    "description": "Reach thousands of travelers looking for passport updates and related services. Reserve this premium banner for your brand.",
+    "cta": "Promote Your Business"
+  },
+  "videoTabs": {
+    "title": "Video Demonstrations",
+    "subtitle": "Here is how you can check if your passport is ready or how you can get services provided by",
+    "authority": "IMMIGRATION & NATIONALITY AFFAIRS"
+  }
+}

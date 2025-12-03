@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import HabeshaFace from '@/assets/landingImages/habesha_face.svg'
 import { Seo } from '@/shared/ui/Seo'
@@ -15,6 +16,7 @@ type PassportsByLocationPageProps = {
 }
 
 export function PassportsByLocationPage({ locationName }: PassportsByLocationPageProps) {
+  const { t } = useTranslation('passports')
   const [searchMode, setSearchMode] = React.useState<SearchMode>('number')
   const [searchFilters, setSearchFilters] = React.useState<PassportSearchFilters>({})
   const tableRef = React.useRef<HTMLDivElement>(null)
@@ -46,8 +48,8 @@ export function PassportsByLocationPage({ locationName }: PassportsByLocationPag
   return (
     <div className="min-h-screen">
       <Seo
-        title={`${locationName} - Latest Passport Releases`}
-        description={`Check real-time passport releases at ${locationName} ICS branch office. Track your urgent and regular Ethiopian passport application status for this location.`}
+        title={t('locations.byLocation.seoTitle', { location: locationName })}
+        description={t('locations.byLocation.seoDescription', { location: locationName })}
         path={`/locations/${slug}`}
       />
 

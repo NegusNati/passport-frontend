@@ -1,0 +1,72 @@
+{
+  "seo": {
+    "title": "Kaalaandarii Itoophiyaa - Sagantaa Paaspootii Gadhiisuu",
+    "description": "Guyyaa paaspootii gadhiifamuu fi yeroo dhumaa barbaachisaa hordofuuf kaalaandarii Itoophiyaa ilaali. Iyyannoo paaspootii kee ilaalcha kaalaandarii aadaa keenya waliin karoora baasi."
+  },
+  "header": {
+    "title": "Kaalaandarii Itoophiyaa",
+    "description": "Guyyaa, ayyaanaa fi wangeelaa ilaali"
+  },
+  "digits": {
+    "label": "Sirna Lakkoofsa",
+    "placeholder": "Lakkoofsa Giiʼz Fayyadami",
+    "geez": "Lakkoofsa Giiʼz Fayyadami",
+    "arabic": "Lakkoofsa Arabaa Fayyadami"
+  },
+  "navigation": {
+    "previousMonth": "Ji'a darbee",
+    "nextMonth": "Ji'a itti aanee",
+    "previous": "Duraa",
+    "next": "Itti Aanee"
+  },
+  "viewMode": {
+    "label": "Ilaalcha kaalaandarii jijjiiri",
+    "month": "Ji'a",
+    "week": "Torban"
+  },
+  "actions": {
+    "today": "Har'a"
+  },
+  "selectors": {
+    "monthLabel": "Ji'a",
+    "yearLabel": "Bara"
+  },
+  "weekdays": {
+    "mon": "Wix",
+    "tue": "Kib",
+    "wed": "Rob",
+    "thu": "Kam",
+    "fri": "Jim",
+    "sat": "Sab",
+    "sun": "Dil"
+  },
+  "holidays": {
+    "titleMonth": "Ayyaanota ji'a kanaa",
+    "titleWeek": "Ayyaanota torban kanaa",
+    "noHolidaysMonth": "Ji'a kana ayyaanni hin jiru",
+    "noHolidaysWeek": "Torban kana ayyaanni hin jiru",
+    "ariaLabel": "Ayyaanota: {{names}}"
+  },
+  "selectedDate": {
+    "label": "Guyyaa filatame",
+    "noHighlights": "Guyyaa kanaaf odeeffannoo galmeeffame ammaaf hin qabnu."
+  },
+  "geezNumbers": {
+    "title": "Sirna Lakkoofsa Giiʼz",
+    "description1": "Afaan Oromoo sirna lakkoofsa aadaa ofii kan haala aadaa fi amantaa keessatti ammayyuu fayyadamu qaba. \"Lakkoofsa Arabaa\" (0–9) addunyaa irratti beekamaa ta'e irraa adda.",
+    "description2": "Kunooti lakkoofsa Amaaraa bu'uuraa (፩–፼):",
+    "tapHint": "maqaa Amaaraa tuqi dhageeffachuuf ↘︎",
+    "tableHeaders": {
+      "number": "Lakkoofsa",
+      "symbol": "Mallattoo",
+      "amharicName": "Maqaa Amaaraa"
+    },
+    "pronounceAriaLabel": "{{name}} dubbisi",
+    "examplesTitle": "Fakkeenyaota Lakkoofsa"
+  },
+  "readingTips": {
+    "title": "Yaadannoo Dubbisuu",
+    "tip1": "Lakkoofsa Giiʼz gatii guddaa irraa gara xiqqaatti walitti fidi. ፳፻፲፫ = 2013 BA: ፳ (20) × ፻ (100) kan argamu 2000, achumaan ፲፫ ni ida'a 13.",
+    "tip2": "Paagumeen guyyaa shan qofa qaba—jaarsa irratti jahha—kanaaf bara haaraa Itoophiyaa dura qabiyyee wayitawaa ibsuuf mudaa hin qabu."
+  }
+}

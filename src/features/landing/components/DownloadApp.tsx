@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import appStore from '@/assets/landingImages/app_store.svg'
 import playStore from '@/assets/landingImages/play_store.svg'
@@ -9,6 +10,8 @@ import { InstallInstructionsDialog } from '@/shared/ui/InstallInstructionsDialog
 import { toast } from '@/shared/ui/sonner'
 
 export function DownloadAppSection() {
+  const { t } = useTranslation('landing')
+  const { t: tCommon } = useTranslation()
   const [showIOSDialog, setShowIOSDialog] = useState(false)
   const { canInstall, isStandalone, platform, promptInstall } = usePWAInstall()
   const { capture } = useAnalytics()
@@ -23,8 +26,8 @@ export function DownloadAppSection() {
     })
 
     if (isStandalone) {
-      toast('Already installed!', {
-        description: 'Passport.ET is already installed on your device.',
+      toast(tCommon('pwa.alreadyInstalled'), {
+        description: tCommon('pwa.alreadyInstalledDesc'),
       })
       return
     }
@@ -32,12 +35,12 @@ export function DownloadAppSection() {
     if (canInstall) {
       const result = await promptInstall()
       if (result === 'accepted') {
-        toast('App installed!', {
-          description: 'Passport.ET has been added to your home screen.',
+        toast(tCommon('pwa.appInstalled'), {
+          description: tCommon('pwa.appInstalledDesc'),
         })
       } else if (result === 'dismissed') {
-        toast('Installation cancelled', {
-          description: 'You can install the app anytime by clicking the download button.',
+        toast(tCommon('pwa.installCancelled'), {
+          description: tCommon('pwa.installCancelledDesc'),
         })
       }
       return
@@ -50,14 +53,14 @@ export function DownloadAppSection() {
     }
 
     if (platform === 'ios') {
-      toast('Open in Safari to install', {
-        description: 'Please open this site in Safari browser to install the app.',
+      toast(tCommon('pwa.installNotAvailable'), {
+        description: tCommon('pwa.installNotAvailableDesc'),
       })
       return
     }
 
-    toast('Open in Chrome to install', {
-      description: 'Please open this site in Chrome or Edge browser to install the app.',
+    toast(tCommon('pwa.installNotAvailable'), {
+      description: tCommon('pwa.installNotAvailableDesc'),
     })
   }
 
@@ -66,9 +69,9 @@ export function DownloadAppSection() {
       <Container>
         <div className="bg-muted relative flex flex-row items-center gap-6 overflow-hidden px-6 py-10 text-center shadow-sm sm:px-10 sm:py-12 lg:flex-col lg:text-left">
           <div className="max-w-2xl items-center space-y-3">
-            <h2 className="text-2xl font-semibold tracking-tight">Download the Passport.ET App</h2>
+            <h2 className="text-2xl font-semibold tracking-tight">{t('downloadApp.title')}</h2>
             <p className="text-muted-foreground text-sm">
-              Check your passport status anytime, anywhere—right from your phone.
+              {t('downloadApp.description')}
             </p>
             <div className="my-4 flex items-center gap-6 sm:w-full md:w-auto">
               <button

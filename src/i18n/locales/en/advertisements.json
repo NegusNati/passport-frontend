@@ -1,0 +1,99 @@
+{
+  "request": {
+    "seo": {
+      "title": "Advertisement Request",
+      "description": "Submit your advertisement request and our team will get back to you shortly."
+    },
+    "header": {
+      "badge": "Advertise with Passport Alerts",
+      "title": "Advertisement Request",
+      "description": "Submit your advertisement inquiry and we'll contact you within 1-2 business days to discuss the next steps.",
+      "features": "Fast response · Tailored packages · Dedicated support"
+    },
+    "form": {
+      "fullName": {
+        "label": "Full Name",
+        "placeholder": "Full name"
+      },
+      "phoneNumber": {
+        "label": "Phone Number",
+        "placeholder": "Phone number"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Email"
+      },
+      "companyName": {
+        "label": "Company Name",
+        "placeholder": "Company name"
+      },
+      "description": {
+        "label": "Advertisement Details",
+        "placeholder": "Advertisement details",
+        "charCount": "{{count}} / 5000 characters"
+      },
+      "file": {
+        "label": "Attachment",
+        "help": "PDF, DOC, DOCX, JPG, or PNG (max 10MB)",
+        "selectedInfo": "{{name}} · {{size}}MB"
+      },
+      "submit": "Submit Request",
+      "submitting": "Submitting...",
+      "processing": "Processing your request..."
+    },
+    "validation": {
+      "fileTooLarge": "File size must be less than 10MB",
+      "invalidFileType": "Invalid file type. Please upload PDF, DOC, DOCX, JPG, or PNG files."
+    },
+    "success": {
+      "title": "Request Submitted Successfully!",
+      "description": "Thank you for your interest in advertising with us. We have received your request and our team will review it shortly.",
+      "whatNext": {
+        "title": "What happens next?",
+        "step1": "Our team will review your request within 1-2 business days",
+        "step2": "We will contact you via the phone number or email you provided",
+        "step3": "We will discuss your advertising needs and provide you with available options"
+      },
+      "submitAnother": "Submit Another Request",
+      "goHome": "Go Home"
+    }
+  },
+  "preview": {
+    "seo": {
+      "title": "Advertisement Placements - Desktop & Mobile Preview",
+      "description": "Preview advertisement placements on Passport.ET. See how ads appear on desktop and mobile across calendar, content, and listing pages."
+    },
+    "header": {
+      "badge": "Advertisement Showcase",
+      "title": "Advert Preview",
+      "description": "This is where your advertisement will look in Desktop and Mobile devices"
+    },
+    "placements": {
+      "desktopCalendar": {
+        "title": "Desktop Check Landscape View",
+        "description": "Calendar page showing horizontal banner placement below the calendar grid",
+        "imageAlt": "Calendar page with advertisement placement"
+      },
+      "belowPocket": {
+        "title": "Existing Below Pocket Book",
+        "description": "Multiple ad placements on content pages with both horizontal and vertical formats",
+        "imageAlt": "Content page with multiple advertisement placements"
+      },
+      "mobileBanner": {
+        "title": "Mobile Banner View",
+        "description": "Vertical ad placement optimized for mobile users browsing content",
+        "imageAlt": "Mobile view with advertisement placement"
+      }
+    }
+  },
+  "shared": {
+    "sponsoredTag": "Sponsored",
+    "ctaTitle": "Advertise with Passport Alerts",
+    "ctaDescription": "Reach thousands of travelers looking for passport updates and related services. Reserve this premium banner for your brand.",
+    "ctaButton": "Promote Your Business",
+    "slotLabel": "Ad space",
+    "badge": "Ad",
+    "ariaLabel": "Advertisement",
+    "imageAlt": "Advertisement"
+  }
+}

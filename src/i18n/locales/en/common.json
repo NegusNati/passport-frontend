@@ -1,0 +1,41 @@
+{
+  "siteName": "Passport.ET",
+  "nav": {
+    "passports": "Passports",
+    "articles": "Articles",
+    "advertise": "Advertise",
+    "locations": "Official ICS branch offices",
+    "myProfile": "My profile",
+    "register": "Register",
+    "login": "Login",
+    "downloadApp": "Download App"
+  },
+  "footer": {
+    "tagline": "No more wasted trips. Know your passport status instantly.",
+    "joinTelegram": "Join Telegram Group",
+    "services": "Services",
+    "advertisement": "Advertisement",
+    "passportCheck": "Passport Check",
+    "ethiopianCalendar": "Ethiopian Calendar",
+    "geezNumbers": "Gee'z Numbers",
+    "articles": "Articles",
+    "developerSocials": "Developer Socials",
+    "copyright": "©2025 Passport.ET. All rights reserved.",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy"
+  },
+  "pwa": {
+    "alreadyInstalled": "Already installed!",
+    "alreadyInstalledDesc": "Passport.ET is already installed on your device.",
+    "appInstalled": "App installed!",
+    "appInstalledDesc": "Passport.ET has been added to your home screen.",
+    "installCancelled": "Installation cancelled",
+    "installCancelledDesc": "You can install the app anytime from this menu.",
+    "installNotAvailable": "Installation not available",
+    "installNotAvailableDesc": "Please open this site in Chrome or Safari to install the app."
+  },
+  "status": {
+    "loading": "Loading..."
+  },
+  "underConstruction": "Under construction 🚧"
+}

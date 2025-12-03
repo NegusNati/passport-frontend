@@ -3,9 +3,11 @@ import { createFileRoute, isRedirect, redirect } from '@tanstack/react-router'
 import { queryClient } from '@/api/queryClient'
 import { type ApiError, authKeys, fetchMe } from '@/features/auth/api'
 import { ProfilePage } from '@/features/auth/components/ProfilePage'
+import { loadI18nNamespaces } from '@/i18n/loader'
 
 export const Route = createFileRoute('/profile')({
   loader: async ({ location }) => {
+    await loadI18nNamespaces(['auth'])
     try {
       return await queryClient.ensureQueryData({
         queryKey: authKeys.user(),

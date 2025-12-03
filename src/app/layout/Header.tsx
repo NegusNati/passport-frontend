@@ -2,11 +2,13 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowUpRight } from 'lucide-react'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { getAuthToken } from '@/api/client'
 import { authKeys } from '@/features/auth/api'
 import { useAuthUser } from '@/features/auth/hooks'
 import type { User } from '@/features/auth/schemas/user'
+import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { ThemeToggle } from '@/shared/components/theme-toggle'
 import { usePWAInstall } from '@/shared/hooks/usePWAInstall'
 import { useAnalytics } from '@/shared/lib/analytics'
@@ -27,15 +29,19 @@ type NavItem = {
 // Supported internal paths used in header navigation
 type AppPath = '/passports' | '/articles' | '/calendar' | '/locations'
 
-const nav: ReadonlyArray<NavItem> = [
-  { label: 'Passports', href: '/passports' },
-  { label: 'Articles', href: '/articles' },
-  { label: 'Advertise', href: '/advertisment' },
-  { label: 'Official ICS branch offices', href: '/locations' },
- 
-]
+// Nav items defined as keys; labels resolved via useTranslation in component
+const navKeys = [
+  { labelKey: 'nav.passports', href: '/passports' },
+  { labelKey: 'nav.articles', href: '/articles' },
+  { labelKey: 'nav.advertise', href: '/advertisment' },
+  { labelKey: 'nav.locations', href: '/locations' },
+] as const
 
-function renderNavItem(item: NavItem, customOnClick?: () => void) {
+function renderNavItem(
+  item: NavItem,
+  customOnClick?: () => void,
+  underConstructionLabel?: string,
+) {
   const className =
     'text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm font-semibold transition-colors'
 
@@ -43,8 +49,8 @@ function renderNavItem(item: NavItem, customOnClick?: () => void) {
     if (customOnClick) {
       e.preventDefault()
       customOnClick()
-    } else if (item.comingSoonMessage) {
-      toast('Under construction 🚧', {
+    } else if (item.comingSoonMessage && underConstructionLabel) {
+      toast(underConstructionLabel, {
         description: item.comingSoonMessage,
       })
     }
@@ -79,6 +85,14 @@ export function Header() {
   const queryClient = useQueryClient()
   const { canInstall, isStandalone, platform, promptInstall } = usePWAInstall()
   const { capture } = useAnalytics()
+  const { t } = useTranslation()
+
+  // Build nav with translated labels
+  const nav: ReadonlyArray<NavItem> = navKeys.map((item) => ({
+    label: t(item.labelKey),
+    href: item.href,
+  }))
+  const underConstructionLabel = t('underConstruction')
 
   const cachedUser = queryClient.getQueryData(authKeys.user()) as User | undefined
   const token = getAuthToken()
@@ -102,8 +116,8 @@ export function Header() {
     })
 
     if (isStandalone) {
-      toast('Already installed!', {
-        description: 'Passport.ET is already installed on your device.',
+      toast(t('pwa.alreadyInstalled'), {
+        description: t('pwa.alreadyInstalledDesc'),
       })
       return
     }
@@ -111,12 +125,12 @@ export function Header() {
     if (canInstall) {
       const result = await promptInstall()
       if (result === 'accepted') {
-        toast('App installed!', {
-          description: 'Passport.ET has been added to your home screen.',
+        toast(t('pwa.appInstalled'), {
+          description: t('pwa.appInstalledDesc'),
         })
       } else if (result === 'dismissed') {
-        toast('Installation cancelled', {
-          description: 'You can install the app anytime from this menu.',
+        toast(t('pwa.installCancelled'), {
+          description: t('pwa.installCancelledDesc'),
         })
       }
       return
@@ -128,8 +142,8 @@ export function Header() {
       return
     }
 
-    toast('Installation not available', {
-      description: 'Please open this site in Chrome or Safari to install the app.',
+    toast(t('pwa.installNotAvailable'), {
+      description: t('pwa.installNotAvailableDesc'),
     })
   }
 
@@ -146,12 +160,13 @@ export function Header() {
         <nav className="hidden items-center gap-6 md:flex">
           {nav.map((item) =>
             item.label === 'Download App'
-              ? renderNavItem(item, handleDownloadAppClick)
-              : renderNavItem(item),
+              ? renderNavItem(item, handleDownloadAppClick, underConstructionLabel)
+              : renderNavItem(item, undefined, underConstructionLabel),
           )}
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
+          <LanguageSwitcher className="text-sm" />
           <ThemeToggle />
           {isAuthenticated ? (
             <Button
@@ -159,7 +174,7 @@ export function Header() {
               className="px-4 py-0 font-bold"
               onClick={() => navigate({ to: '/profile' })}
             >
-              My profile
+              {t('nav.myProfile')}
             </Button>
           ) : (
             <>
@@ -168,9 +183,9 @@ export function Header() {
                 className="px-4 py-0 font-bold"
                 onClick={() => navigate({ to: '/register' })}
               >
-                Register
+                {t('nav.register')}
               </Button>
-              <Button onClick={() => navigate({ to: '/login' })}>Login</Button>
+              <Button onClick={() => navigate({ to: '/login' })}>{t('nav.login')}</Button>
             </>
           )}
         </div>

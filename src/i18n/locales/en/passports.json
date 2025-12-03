@@ -1,0 +1,114 @@
+{
+  "search": {
+    "seo": {
+      "title": "Search Ethiopian Passports - Live Updates",
+      "description": "Search Ethiopian passports from all ICS offices. Track urgent and regular applications with real-time updates. Get instant status information."
+    },
+    "title": "Check Ethiopian Passport Status",
+    "subtitle": "Search with your reference number or name and get real-time updates—no more repeated trips to the office.",
+    "form": {
+      "requestNumber": "Request Number",
+      "requestNumberPlaceholder": "Enter request number",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter first name",
+      "middleName": "Middle Name (optional)",
+      "middleNamePlaceholder": "Enter middle name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter last name",
+      "submit": "Check Passport",
+      "searching": "Searching...",
+      "minCharacters": "Type at least 3 characters to search",
+      "minCharactersName": "Type at least 3 characters in any name field to search"
+    },
+    "toggle": {
+      "useNameInstead": "Use name instead",
+      "useNumberInstead": "Use request number instead"
+    }
+  },
+  "table": {
+    "title": "Latest Passports",
+    "subtitle": "Track passport processing updates with quick filters and smart search.",
+    "columns": {
+      "name": "Name",
+      "location": "Location",
+      "published": "Published",
+      "requestNumber": "Request number"
+    },
+    "actions": {
+      "detail": "Detail"
+    },
+    "filters": {
+      "filterBy": "Filter by",
+      "date": "Date",
+      "location": "Location",
+      "allDates": "All dates",
+      "last7Days": "Last 7 days",
+      "last30Days": "Last 30 days",
+      "thisYear": "This year",
+      "allLocations": "All locations",
+      "loadingLocations": "Loading locations..."
+    },
+    "pagination": {
+      "loadingSummary": "Loading summary...",
+      "showing": "Showing {{from}} to {{to}} of {{total}} entries"
+    },
+    "empty": {
+      "toastTitle": "😔 Your passport is not ready yet",
+      "toastDescription": "We could not find a matching record right now. Please check back tomorrow for the latest update."
+    }
+  },
+  "detail": {
+    "seo": {
+      "title": "{{name}} - Passport Status",
+      "description": "View passport status details for {{name}}. Check pickup date, location, and schedule information."
+    },
+    "lookup": {
+      "title": "Passport Lookup",
+      "description": "Please use the search to look up request number {{requestNumber}}.",
+      "backToSearch": "Back to Search"
+    },
+    "notFound": {
+      "title": "Passport Not Found",
+      "description": "The requested passport could not be found. Please check the ID and try again.",
+      "backToSearch": "Back to Search"
+    },
+    "banner": {
+      "title": "🎉 Good news!",
+      "description": "We found a matching passport. Please review the details below.",
+      "congratulations": "🎉 Congratulations! Your passport is ready for pick up. 📄✈️ Head to the ICS Branch office ({{city}}) to collect it."
+    },
+    "card": {
+      "ethTitle": "የኢትዮጵያ ፌዴራላዊ ዲሞክራሲያዊ ሪፐብሊክ",
+      "engTitle": "FEDERAL DEMOCRATIC REPUBLIC OF ETHIOPIA",
+      "surname": "Surname",
+      "givenName": "Given Name",
+      "location": "Location",
+      "receiveAfter": "You Can Receive After",
+      "dayOfWeek": "Day of The Week",
+      "exactTime": "Exact Time",
+      "timeRange": "3:00 - 9:00 LT",
+      "checkSchedule": "Please check the schedule or come Sunday"
+    },
+    "actions": {
+      "download": "Download",
+      "downloading": "Downloading...",
+      "checkAnother": "Check Another"
+    }
+  },
+  "locations": {
+    "seo": {
+      "title": "ICS Branch Offices Directory - Ethiopian Passport Locations",
+      "description": "Directory of ICS branch offices across Ethiopia. Find your nearest location and check passport releases for urgent and regular applications."
+    },
+    "title": "Official Immigration and Citizenship Services (ICS) branch offices",
+    "subtitle": "Pick a branch office to see the most recent passports released in that location.",
+    "loading": "Loading branch offices...",
+    "error": "Failed to load locations.",
+    "empty": "No branch offices available right now.",
+    "viewLatest": "View latest passports from this branch",
+    "byLocation": {
+      "seoTitle": "{{location}} - Latest Passport Releases",
+      "seoDescription": "Check real-time passport releases at {{location}} ICS branch office. Track your urgent and regular Ethiopian passport application status for this location."
+    }
+  }
+}

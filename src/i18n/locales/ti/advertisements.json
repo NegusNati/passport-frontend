@@ -1,0 +1,99 @@
+{
+  "request": {
+    "seo": {
+      "title": "ናይ ምልክታ ጠለብ",
+      "description": "ናይ ምልክታ ጠለብኩም ኣቅሪቡ፣ ጉጅለና ድማ ብቀልጢፉ ክምልሰልኩም እዩ።"
+    },
+    "header": {
+      "badge": "ምስ Passport Alerts ምልክታ የውጽኡ",
+      "title": "ናይ ምልክታ ጠለብ",
+      "description": "ናይ ምልክታ ጠለብኩም ኣቅሪቡ፣ ንዝቅጽሉ ስጉምትታት ንምዝርራብ ኣብ 1-2 ናይ ስራሕ መዓልታት ክንረኽበኩም ኢና።",
+      "features": "ቅልጡፍ ምላሽ · ዝተዳለዉ ጥቅልታት · ፍሉይ ደገፍ"
+    },
+    "form": {
+      "fullName": {
+        "label": "ሙሉእ ስም",
+        "placeholder": "ሙሉእ ስም"
+      },
+      "phoneNumber": {
+        "label": "ቁጽሪ ስልኪ",
+        "placeholder": "ቁጽሪ ስልኪ"
+      },
+      "email": {
+        "label": "ኢሜይል",
+        "placeholder": "ኢሜይል"
+      },
+      "companyName": {
+        "label": "ስም ትካል",
+        "placeholder": "ስም ትካል"
+      },
+      "description": {
+        "label": "ዝርዝር ምልክታ",
+        "placeholder": "ዝርዝር ሓበሬታ ምልክታ",
+        "charCount": "{{count}} / 5000 ፊደላት"
+      },
+      "file": {
+        "label": "ተተሓሓዚ ፋይል",
+        "help": "PDF, DOC, DOCX, JPG, ወይ PNG (ካብ 10MB ዘይበልጽ)",
+        "selectedInfo": "{{name}} · {{size}}MB"
+      },
+      "submit": "ጠለብ ስደድ",
+      "submitting": "ይለኣኽ ኣሎ...",
+      "processing": "ጠለብኩም የሰላስል ኣሎ..."
+    },
+    "validation": {
+      "fileTooLarge": "ዓቀን ፋይል ካብ 10MB ክንእስ ኣለዎ",
+      "invalidFileType": "ዘይድገፍ ዓይነት ፋይል። በይዘኦም PDF, DOC, DOCX, JPG, ወይ PNG ፋይላት ይምረጹ።"
+    },
+    "success": {
+      "title": "ጠለብኩም ብዓወት ተላኢኹ ኣሎ!",
+      "description": "ምሳና ንምስራሕ ስለ ዝተወቀስኩም ነመስግን። ጠለብኩም በጺሑና ኣሎ፣ ጉጅለና ድማ ብቀልጢፉ ክርእዮ እዩ።",
+      "whatNext": {
+        "title": "ቀጺሉ እንታይ ይኸውን?",
+        "step1": "ጉጅለና ኣብ 1-2 ናይ ስራሕ መዓልታት ጠለብኩም ክርእዮ እዩ",
+        "step2": "በቲ ዝሃብኩምና ቁጽሪ ስልኪ ወይ ኢሜይል ክንረኽበኩም ኢና",
+        "step3": "ብዛዕባ ጠለብኩም ተዘራሪብና ዘለዉና ኣማራጺታት ክነቅርበልኩም ኢና"
+      },
+      "submitAnother": "ካልእ ጠለብ ኣእትው",
+      "goHome": "ናብ ዋና ገጽ ተመለስ"
+    }
+  },
+  "preview": {
+    "seo": {
+      "title": "ቦታታት ምልክታ - ቅድመ-ርእይቶ ዴስክቶፕን ሞባይልን",
+      "description": "ኣብ Passport.ET ዘለዉ ቦታታት ምልክታ ርኣዩ። ምልክታታት ኣብ ዴስክቶፕን ሞባይልን፣ ኣብ ካላንደርን ካልኦት ገጻትን ከመይ ከም ዝመስሉ ተመልከቱ።"
+    },
+    "header": {
+      "badge": "መረኢት ምልክታ",
+      "title": "ቅድመ-ርእይቶ ምልክታ",
+      "description": "ምልክታኹም ኣብ ዴስክቶፕን ሞባይልን ከምዚ ይመስል"
+    },
+    "placements": {
+      "desktopCalendar": {
+        "title": "ናይ ዴስክቶፕ Check Landscape ርእይቶ",
+        "description": "ገጽ ካላንደር፣ ኣብ ትሕቲ ሰሌዳ ካላንደር ዝርከብ ናይ ጎኒ ባነር",
+        "imageAlt": "ቦታ ምልክታ ዘለዎ ገጽ ካላንደር"
+      },
+      "belowPocket": {
+        "title": "ኣብ ትሕቲ ትሕዝቶ ዝርከብ",
+        "description": "ኣብ ገጻት ትሕዝቶ ዝርከቡ ዝተፈላለዩ ናይ ጎኒን ቁሙን ቦታታት ምልክታ",
+        "imageAlt": "ዝተፈላለዩ ቦታታት ምልክታ ዘለዎ ገጽ ትሕዝቶ"
+      },
+      "mobileBanner": {
+        "title": "ናይ ሞባይል ባነር ርእይቶ",
+        "description": "ንተጠቀምቲ ሞባይል ዝተዳለወ ቁሙ ቦታ ምልክታ",
+        "imageAlt": "ቦታ ምልክታ ዘለዎ ናይ ሞባይል ርእይቶ"
+      }
+    }
+  },
+  "shared": {
+    "sponsoredTag": "ስፖንሰር ዝተገብረ",
+    "ctaTitle": "ምስ Passport Alerts ምልክታ የውጽኡ",
+    "ctaDescription": "ሓበሬታ ፓስፖርት ንዝደልዩ ኣሽሓት ገያሾ ተበጽሑ። ነዚ ፍሉይ ባነር ንብራንድኩም ሓዙዎ።",
+    "ctaButton": "ቢዝነስኩም ኣፋልጡ",
+    "slotLabel": "ቦታ ምልክታ",
+    "badge": "ምልክታ",
+    "ariaLabel": "ምልክታ",
+    "imageAlt": "ምልክታ"
+  }
+}

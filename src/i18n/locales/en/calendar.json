@@ -1,0 +1,72 @@
+{
+  "seo": {
+    "title": "Ethiopian Calendar - Passport Release Schedule",
+    "description": "View the Ethiopian calendar to track passport release dates and important deadlines. Plan your passport application with our traditional calendar view."
+  },
+  "header": {
+    "title": "Ethiopian Calendar",
+    "description": "Check out the date, holidays and wengalat"
+  },
+  "digits": {
+    "label": "Number System",
+    "placeholder": "Use Geeʼz Numbers",
+    "geez": "Use Geeʼz Numbers",
+    "arabic": "Use Arabic Numbers"
+  },
+  "navigation": {
+    "previousMonth": "Previous month",
+    "nextMonth": "Next month",
+    "previous": "Previous",
+    "next": "Next"
+  },
+  "viewMode": {
+    "label": "Toggle calendar view",
+    "month": "Month",
+    "week": "Week"
+  },
+  "actions": {
+    "today": "Today"
+  },
+  "selectors": {
+    "monthLabel": "Month",
+    "yearLabel": "Year"
+  },
+  "weekdays": {
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat",
+    "sun": "Sun"
+  },
+  "holidays": {
+    "titleMonth": "Holidays this month",
+    "titleWeek": "Holidays this week",
+    "noHolidaysMonth": "No holidays this month",
+    "noHolidaysWeek": "No holidays this week",
+    "ariaLabel": "Holidays: {{names}}"
+  },
+  "selectedDate": {
+    "label": "Selected date",
+    "noHighlights": "We don't have any recorded highlights for this date yet."
+  },
+  "geezNumbers": {
+    "title": "Geeʼz Numbering System",
+    "description1": "Amharic has its own traditional number system that is still used in some cultural and liturgical contexts. It's different from the \"Arabic numerals\" (0–9) that are common worldwide.",
+    "description2": "Here are the basic Amharic numerals (፩–፼):",
+    "tapHint": "tap the Amharic name to hear pronunciation ↘︎",
+    "tableHeaders": {
+      "number": "Number",
+      "symbol": "Symbol",
+      "amharicName": "Amharic Name"
+    },
+    "pronounceAriaLabel": "Pronounce {{name}}",
+    "examplesTitle": "Example Numbers"
+  },
+  "readingTips": {
+    "title": "Reading tips",
+    "tip1": "Combine Geeʼz numerals from largest value to smallest. ፳፻፲፫ = 2013 EC: ፳ (20) × ፻ (100) gives 2000, then ፲፫ adds 13.",
+    "tip2": "Pagume includes only five days—six on leap years—so it is perfect for highlighting seasonal content before the Ethiopian New Year."
+  }
+}

@@ -4,6 +4,7 @@ import { z } from 'zod'
 import { queryClient } from '@/api/queryClient'
 import { type ApiError, authKeys, fetchMe } from '@/features/auth/api'
 import { LoginPage } from '@/features/auth/components/LoginPage'
+import { loadI18nNamespaces } from '@/i18n/loader'
 
 const SearchSchema = z.object({
   redirect: z
@@ -16,6 +17,7 @@ const SearchSchema = z.object({
 export const Route = createFileRoute('/login')({
   validateSearch: SearchSchema.parse,
   loader: async ({ location }) => {
+    await loadI18nNamespaces(['auth'])
     const parsed = SearchSchema.safeParse(location.search)
     const redirectTo = parsed.success ? parsed.data.redirect : undefined
     try {

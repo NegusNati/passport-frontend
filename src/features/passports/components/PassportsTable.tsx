@@ -1,12 +1,14 @@
 import { useRouter } from '@tanstack/react-router'
 import { type ColumnDef, type PaginationState, type Table } from '@tanstack/react-table'
 import * as React from 'react'
+import { useTranslation } from 'react-i18next'
 
 import type { ListParams } from '@/features/passports/lib/PassportsApi'
 import { useLocationsQuery, usePassportsQuery } from '@/features/passports/lib/PassportsQuery'
 import type { PassportApiItem } from '@/features/passports/lib/PassportsSchema'
 import { DataTable } from '@/features/table/DataTable'
 import { DataTableColumnHeader } from '@/features/table/DataTableColumnHeader'
+import type { PassportsTranslationKey } from '@/i18n/types'
 import { useAnalytics } from '@/shared/lib/analytics'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
@@ -25,14 +27,20 @@ type PassportsTableProps = {
 
 type FilterOption = { value: string; label: string }
 
+type DatePreset = { value: string; labelKey: PassportsTranslationKey }
+
 type PassportsTableToolbarProps<TData> = {
   title: string
+  subtitle: string
   filters: PassportFilters
   onFilterChange: (key: keyof PassportFilters, value: string) => void
   dateOptions: FilterOption[]
   locationOptions: FilterOption[]
   isLoadingLocations: boolean
   isCitySelectDisabled?: boolean
+  filterByLabel: string
+  allLocationsLabel: string
+  loadingLocationsLabel: string
 } & Pick<
   PassportsTableToolbarBaseProps<TData>,
   'table' | 'filterableColumns' | 'searchKey' | 'onAction' | 'actionTitle' | 'onExport'
@@ -51,11 +59,11 @@ type PassportsTableToolbarBaseProps<TData> = {
   onExport?: () => void
 }
 
-const DATE_PRESETS: FilterOption[] = [
-  { value: 'all', label: 'All dates' },
-  { value: 'last_7', label: 'Last 7 days' },
-  { value: 'last_30', label: 'Last 30 days' },
-  { value: 'this_year', label: 'This year' },
+const DATE_PRESETS: DatePreset[] = [
+  { value: 'all', labelKey: 'table.filters.allDates' },
+  { value: 'last_7', labelKey: 'table.filters.last7Days' },
+  { value: 'last_30', labelKey: 'table.filters.last30Days' },
+  { value: 'this_year', labelKey: 'table.filters.thisYear' },
 ]
 
 const DEFAULT_PAGINATION: PaginationState = {
@@ -65,6 +73,7 @@ const DEFAULT_PAGINATION: PaginationState = {
 
 export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTableProps>(
   ({ searchFilters = {}, searchMode, defaultCity, tableTitle, lockCity = false }, ref) => {
+    const { t } = useTranslation('passports')
     const router = useRouter()
     const { capture } = useAnalytics()
     const [filters, setFilters] = React.useState<PassportFilters>(() => ({
@@ -172,9 +181,8 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       if (resultCount === 0) {
         const toastKey = `${passportsQuery.dataUpdatedAt}-${listParamsKey}`
         if (lastToastKeyRef.current !== toastKey) {
-          toast('😔 Your passport is not ready yet', {
-            description:
-              'We could not find a matching record right now. Please check back tomorrow for the latest update.',
+          toast(t('table.empty.toastTitle'), {
+            description: t('table.empty.toastDescription'),
           })
           lastToastKeyRef.current = toastKey
         }
@@ -188,6 +196,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       isLoading,
       listParamsKey,
       passportsQuery.dataUpdatedAt,
+      t,
     ])
 
     const meta = data?.meta
@@ -220,43 +229,43 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       return [
         {
           accessorKey: 'full_name',
-          header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+          header: ({ column }) => <DataTableColumnHeader column={column} title={t('table.columns.name')} />,
           cell: ({ row }) => (
             <span className="text-foreground font-medium">{row.original.full_name}</span>
           ),
           enableSorting: false,
-          meta: { label: 'Name' },
+          meta: { label: t('table.columns.name') },
         },
         {
           accessorKey: 'location',
-          header: ({ column }) => <DataTableColumnHeader column={column} title="Location" />,
+          header: ({ column }) => <DataTableColumnHeader column={column} title={t('table.columns.location')} />,
           cell: ({ row }) => (
             <span className="text-muted-foreground text-sm">{row.original.location}</span>
           ),
           enableSorting: false,
-          meta: { label: 'Location' },
+          meta: { label: t('table.columns.location') },
         },
         {
           accessorKey: 'date_of_publish',
-          header: ({ column }) => <DataTableColumnHeader column={column} title="Published" />,
+          header: ({ column }) => <DataTableColumnHeader column={column} title={t('table.columns.published')} />,
           cell: ({ row }) => (
             <span className="text-muted-foreground text-sm">
               {formatDisplayDate(row.original.date_of_publish)}
             </span>
           ),
           enableSorting: false,
-          meta: { label: 'Published date' },
+          meta: { label: t('table.columns.published') },
         },
         {
           accessorKey: 'request_number',
-          header: ({ column }) => <DataTableColumnHeader column={column} title="Request number" />,
+          header: ({ column }) => <DataTableColumnHeader column={column} title={t('table.columns.requestNumber')} />,
           cell: ({ row }) => (
             <span className="font-mono text-xs tracking-tight uppercase">
               {row.original.request_number}
             </span>
           ),
           enableSorting: false,
-          meta: { label: 'Request number' },
+          meta: { label: t('table.columns.requestNumber') },
         },
         {
           id: 'actions',
@@ -274,25 +283,33 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
                 })
               }
             >
-              Detail
+              {t('table.actions.detail')}
             </Button>
           ),
         },
       ]
-    }, [router])
+    }, [router, t])
 
     const toolbarComponent = React.useMemo(() => {
+      const localizedDateOptions = DATE_PRESETS.map((opt) => ({
+        value: opt.value,
+        label: t(opt.labelKey) as string,
+      }))
       return function Toolbar<TData>(props: PassportsTableToolbarProps<TData>) {
         return (
           <PassportsTableToolbar
             {...props}
-            title={tableTitle ?? 'Latest Passports'}
+            title={tableTitle ?? t('table.title')}
+            subtitle={t('table.subtitle')}
             filters={filters}
             onFilterChange={handleFilterChange}
-            dateOptions={DATE_PRESETS}
+            dateOptions={localizedDateOptions}
             locationOptions={locationOptions}
             isLoadingLocations={locationsQuery.isLoading}
             isCitySelectDisabled={lockCity}
+            filterByLabel={t('table.filters.filterBy')}
+            allLocationsLabel={t('table.filters.allLocations')}
+            loadingLocationsLabel={t('table.filters.loadingLocations')}
           />
         )
       }
@@ -303,6 +320,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       locationsQuery.isLoading,
       lockCity,
       tableTitle,
+      t,
     ])
 
     const derivedError = isError
@@ -332,7 +350,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
             <div className="rounded-lg border bg-transparent/80 p-6 shadow-sm backdrop-blur">
               <DataTable
                 key={tableKey}
-                tableTitle={tableTitle ?? 'Latest Passports'}
+                tableTitle={tableTitle ?? t('table.title')}
                 columns={columns}
                 data={rows}
                 isLoading={isLoading}
@@ -356,10 +374,10 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
             </div>
             <div className="text-muted-foreground flex items-center justify-between text-sm">
               {isLoading ? (
-                <span>Loading summary…</span>
+                <span>{t('table.pagination.loadingSummary')}</span>
               ) : total > 0 ? (
                 <span>
-                  Showing {from} to {to} of {total} entries
+                  {t('table.pagination.showing', { from, to, total })}
                 </span>
               ) : (
                 <></>
@@ -377,12 +395,16 @@ PassportsTable.displayName = 'PassportsTable'
 function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) {
   const {
     title,
+    subtitle,
     filters,
     onFilterChange,
     dateOptions,
     locationOptions,
     isLoadingLocations,
     isCitySelectDisabled,
+    filterByLabel,
+    allLocationsLabel,
+    loadingLocationsLabel,
   } = props
 
   return (
@@ -390,16 +412,16 @@ function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) 
       <div>
         <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
         <h3 className="text-muted-foreground mt-1 text-sm">
-          Track passport processing updates with quick filters and smart search.
+          {subtitle}
         </h3>
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <span className="text-muted-foreground text-xs tracking-wide uppercase">Filter by</span>
+        <span className="text-muted-foreground text-xs tracking-wide uppercase">{filterByLabel}</span>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Select value={filters.date} onValueChange={(value) => onFilterChange('date', value)}>
             <SelectTrigger className="w-44">
-              <SelectValue placeholder="Date" />
+              <SelectValue placeholder={dateOptions[0]?.label} />
             </SelectTrigger>
             <SelectContent>
               {dateOptions.map((option) => (
@@ -416,13 +438,13 @@ function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) 
             disabled={isCitySelectDisabled}
           >
             <SelectTrigger className="w-48" disabled={isCitySelectDisabled}>
-              <SelectValue placeholder="Location" />
+              <SelectValue placeholder={allLocationsLabel} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All locations</SelectItem>
+              <SelectItem value="all">{allLocationsLabel}</SelectItem>
               {isLoadingLocations ? (
                 <SelectItem value="__loading" disabled>
-                  Loading locations…
+                  {loadingLocationsLabel}
                 </SelectItem>
               ) : (
                 locationOptions.map((option) => (
