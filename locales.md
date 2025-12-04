@@ -3,6 +3,7 @@
 This file documents the phased plan to add localization to the application and includes a TODO checklist that I will update as tasks complete.
 
 Supported languages
+
 - `en` — English
 - `am` — Amharic (አማርኛ)
 - `om` — Oromo / Afaan Oromoo
@@ -10,34 +11,39 @@ Supported languages
 
 Phases
 
-1) Foundation
+1. Foundation
+
 - Add i18next configuration and language constants
 - Add initial English translation files (namespaces: `common`, `landing`)
 - Add a simple `LanguageSwitcher` component (select) that persists choice to `localStorage`
 - Wire i18n initialization into app entry
 
-2) Layout & Navigation
+2. Layout & Navigation
+
 - Add `LanguageSwitcher` to header and mobile menu
 - Replace hard-coded nav/labels in `Header`, `Footer`, `MobileMenu` with `t()` lookups
 - Ensure to use `siteName` and canonical linking from translations
 
-3) Routing & SEO
+3. Routing & SEO
+
 - Implement URL-based language prefixes (e.g. `/en/passports`, `/am/passports`) using route groups
 - Update `Seo` component to emit `rel="alternate" hreflang` tags and `og:locale`
 - Add `x-default` link
 
-4) Landing pages
+4. Landing pages
+
 - Translate all landing components (Hero, Cards, FAQs, Testimonials, CTAs) into 4 languages
 - Ensure fonts and layout work for Ge'ez script (Noto Sans Ethiopic)
 
-5) Features & Polishing
+5. Features & Polishing
+
 - Translate passports, articles, advertisement flows and admin pages
 - Enable lazy-loading translation files and i18next-http-backend
 - Add i18next-parser to extract keys and maintain translation files
 
 Checklist
 
-- [x] Phase 1 — Add i18n foundation (config, init, english resources, import in `src/main.tsx`)  
+- [x] Phase 1 — Add i18n foundation (config, init, english resources, import in `src/main.tsx`)
   - Files added: `src/i18n/config.ts`, `src/i18n/index.ts`, `src/i18n/locales/en/common.json`, `src/i18n/locales/en/landing.json`
   - `src/main.tsx` now imports `@/i18n`
 
@@ -83,6 +89,7 @@ Notes / Next steps
 - I'll also add guidance for adding the `Noto Sans Ethiopic` font in `index.html` and `tailwind.config.ts` in the next step.
 
 If you'd like, I can now:
+
 - continue and complete the `LanguageSwitcher` + Header integration (desktop + mobile), or
 - stop and present an exact routing change proposal for URL-language prefixes before making route edits.
 

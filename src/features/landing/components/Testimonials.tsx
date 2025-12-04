@@ -68,7 +68,7 @@ function HorizontalMarqueeDual({
 
 export function Testimonials() {
   const { t } = useTranslation('landing')
-  
+
   // Get quotes from translations
   const quotes = t('testimonials.quotes', { returnObjects: true }) as Quote[]
 

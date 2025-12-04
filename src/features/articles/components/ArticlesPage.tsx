@@ -278,7 +278,9 @@ export function ArticlesPage() {
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <div className="text-muted-foreground mb-4 text-4xl">{t('list.empty.icon')}</div>
-              <h3 className="text-foreground mb-2 text-lg font-semibold">{t('list.empty.title')}</h3>
+              <h3 className="text-foreground mb-2 text-lg font-semibold">
+                {t('list.empty.title')}
+              </h3>
               <p className="text-muted-foreground max-w-md text-sm">
                 {searchInput
                   ? t('list.empty.descriptionWithSearch', { search: searchInput })

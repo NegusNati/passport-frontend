@@ -1,22 +1,40 @@
+/* ==========================================================================
+   Self-hosted fonts (variable fonts for optimal performance)
+   ========================================================================== */
+
+/* Figtree - Primary UI font (variable, supports 300-900 weights) */
 @font-face {
   font-family: 'Figtree';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 300 900;
   font-display: swap;
-  src: url('/fonts/figtree-latin-400.woff2') format('woff2');
+  src: url('/fonts/figtree-latin.woff2') format('woff2');
   unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC,
-    U+2122;
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+
+/* Playfair Display - Decorative/cursive font (variable, supports 400-900 weights) */
 @font-face {
-  font-family: 'Figtree';
+  font-family: 'Playfair Display';
   font-style: normal;
-  font-weight: 600;
+  font-weight: 400 900;
   font-display: swap;
-  src: url('/fonts/figtree-latin-600.woff2') format('woff2');
+  src: url('/fonts/playfair-display-latin.woff2') format('woff2');
   unicode-range:
-    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC,
-    U+2122;
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Noto Sans Ethiopic - For Amharic/Tigrinya (loaded on-demand via JS)
+   This @font-face is defined but the font file is lazy-loaded only when needed */
+@font-face {
+  font-family: 'Noto Sans Ethiopic';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('/fonts/noto-sans-ethiopic.woff2') format('woff2');
+  unicode-range: U+1200-1399, U+2D80-2DDF, U+AB00-AB2F, U+1E7E0-1E7FF;
 }
 
 @import 'tailwindcss';
@@ -138,9 +156,9 @@
 
 @theme {
   --font-sans:
-    'Figtree', 'Playfair Display', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  --font-cursive: 'Playfair Display', 'Brush Script MT', 'Lucida Handwriting', cursive;
+    'Figtree', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-cursive: 'Playfair Display', Georgia, 'Times New Roman', serif;
 
   /* Map CSS variables to Tailwind v4 color tokens */
   --color-background: hsl(var(--background));
@@ -535,4 +553,29 @@ code {
 
 .animate-star-movement-top {
   animation: star-movement-top linear infinite alternate;
+}
+
+/* Hero fade-in animation (replaces Framer Motion for better performance)
+   Uses same timing as the original: 180ms with cubic-bezier(0.2, 0.8, 0.2, 1) */
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-hero-fade-in {
+  animation: hero-fade-in 180ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-fade-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }

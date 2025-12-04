@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 
 import { type AdminPassportCreateInput, AdminPassportCreateSchema } from '../schemas/create'
 
@@ -81,19 +82,24 @@ export function PassportCreateForm({
           {(field) => (
             <div className="grid gap-2">
               <Label htmlFor="location">Location</Label>
-              <select
-                id="location"
-                className="border-input bg-background h-10 rounded-md border px-3 text-sm"
+              <Select
                 value={field.state.value}
-                onChange={(event) => field.handleChange(event.target.value)}
-                required
+                onValueChange={(value) => field.handleChange(value)}
               >
-                {locations.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger
+                  id="location"
+                  className="border-input bg-background h-10 w-full rounded-md border px-3 text-sm"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {locations.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           )}
         </form.Field>

@@ -1,7 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { ArrowUpRight } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getAuthToken } from '@/api/client'
@@ -37,11 +37,7 @@ const navKeys = [
   { labelKey: 'nav.locations', href: '/locations' },
 ] as const
 
-function renderNavItem(
-  item: NavItem,
-  customOnClick?: () => void,
-  underConstructionLabel?: string,
-) {
+function renderNavItem(item: NavItem, customOnClick?: () => void, underConstructionLabel?: string) {
   const className =
     'text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm font-semibold transition-colors'
 
@@ -107,12 +103,36 @@ export function Header() {
   const user = fetchedUser ?? cachedUser ?? null
   const isAuthenticated = Boolean(user)
 
-  const handleDownloadAppClick = async () => {
-    capture('pwa_install_attempt', {
-      source: 'header-nav',
-      platform,
-      'can-install': canInstall,
-      'is-standalone': isStandalone,
+  // Memoized navigation handlers to prevent re-renders
+  const handleNavigateToProfile = useCallback(() => {
+    navigate({ to: '/profile' })
+  }, [navigate])
+
+  // const handleNavigateToRegister = useCallback(() => {
+  //   navigate({ to: '/register' })
+  // }, [navigate])
+
+  const handleNavigateToLogin = useCallback(() => {
+    navigate({ to: '/login' })
+  }, [navigate])
+
+  const handleOpenMobileMenu = useCallback(() => {
+    setOpen(true)
+  }, [])
+
+  const handleCloseMobileMenu = useCallback(() => {
+    setOpen(false)
+  }, [])
+
+  const handleDownloadAppClick = useCallback(async () => {
+    // Defer analytics to not block the interaction
+    queueMicrotask(() => {
+      capture('pwa_install_attempt', {
+        source: 'header-nav',
+        platform,
+        'can-install': canInstall,
+        'is-standalone': isStandalone,
+      })
     })
 
     if (isStandalone) {
@@ -137,7 +157,9 @@ export function Header() {
     }
 
     if (platform === 'ios') {
-      capture('pwa_install_ios_instructions_shown', { source: 'header-nav' })
+      queueMicrotask(() => {
+        capture('pwa_install_ios_instructions_shown', { source: 'header-nav' })
+      })
       setShowIOSDialog(true)
       return
     }
@@ -145,7 +167,7 @@ export function Header() {
     toast(t('pwa.installNotAvailable'), {
       description: t('pwa.installNotAvailableDesc'),
     })
-  }
+  }, [capture, platform, canInstall, isStandalone, promptInstall, t])
 
   return (
     <header className="border-border bg-background/95 sm:bg-background/80 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full border-b sm:backdrop-blur">
@@ -166,53 +188,50 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
-          <LanguageSwitcher className="text-sm" />
+          <div>
+            <LanguageSwitcher className="text-sm" />
+          </div>
           <ThemeToggle />
           {isAuthenticated ? (
             <Button
               variant="outline"
               className="px-4 py-0 font-bold"
-              onClick={() => navigate({ to: '/profile' })}
+              onClick={handleNavigateToProfile}
             >
               {t('nav.myProfile')}
             </Button>
           ) : (
-            <>
-              <Button
-                variant="outline"
-                className="px-4 py-0 font-bold"
-                onClick={() => navigate({ to: '/register' })}
-              >
-                {t('nav.register')}
-              </Button>
-              <Button onClick={() => navigate({ to: '/login' })}>{t('nav.login')}</Button>
-            </>
+            <Button onClick={handleNavigateToLogin}>{t('nav.login')}</Button>
           )}
         </div>
 
-        <button
-          aria-label="Open menu"
-          className="border-input bg-background text-foreground inline-flex h-10 w-10 items-center justify-center rounded-md border md:hidden"
-          onClick={() => setOpen(true)}
-        >
-          <div className="i-[menu] size-5">
-            <span className="sr-only">Open menu</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              className="size-5"
-            >
-              <path d="M3 6h18M3 12h18M3 18h18" />
-            </svg>
-          </div>
-        </button>
+        {/* Mobile: Language switcher + hamburger menu */}
+        <div className="flex items-center gap-2 md:hidden">
+          <LanguageSwitcher compact />
+          <button
+            aria-label="Open menu"
+            className="border-input bg-background text-foreground inline-flex h-10 w-10 items-center justify-center rounded-md border"
+            onClick={handleOpenMobileMenu}
+          >
+            <div className="i-[menu] size-5">
+              <span className="sr-only">Open menu</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="size-5"
+              >
+                <path d="M3 6h18M3 12h18M3 18h18" />
+              </svg>
+            </div>
+          </button>
+        </div>
       </Container>
       <MobileMenu
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleCloseMobileMenu}
         nav={nav}
         isAuthenticated={isAuthenticated}
       />

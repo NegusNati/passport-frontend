@@ -54,7 +54,8 @@
     },
     "empty": {
       "toastTitle": "😔 Your passport is not ready yet",
-      "toastDescription": "We could not find a matching record right now. Please check back tomorrow for the latest update."
+      "toastDescription": "We could not find a matching record right now. Please check back tomorrow for the latest update.",
+      "inlineMessage": "Your passport is not ready yet. Our team is still processing it\u2014please check back tomorrow for an update."
     }
   },
   "detail": {

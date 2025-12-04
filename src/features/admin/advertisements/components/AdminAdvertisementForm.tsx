@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 import { Textarea } from '@/shared/ui/textarea'
 
 import type { AdStatus, Advertisement, PackageType, PaymentStatus } from '../schemas/advertisement'
@@ -288,17 +289,22 @@ export function AdminAdvertisementForm({
                 <Label htmlFor="package_type">
                   Package Type <span className="text-destructive">*</span>
                 </Label>
-                <select
-                  id="package_type"
-                  className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
+                <Select
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value as PackageType)}
-                  required
+                  onValueChange={(value) => field.handleChange(value as PackageType)}
                 >
-                  <option value="weekly">Weekly</option>
-                  <option value="monthly">Monthly</option>
-                  <option value="yearly">Yearly</option>
-                </select>
+                  <SelectTrigger
+                    id="package_type"
+                    className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="weekly">Weekly</SelectItem>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                    <SelectItem value="yearly">Yearly</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             )}
           </form.Field>
@@ -310,18 +316,23 @@ export function AdminAdvertisementForm({
                 <Label htmlFor="payment_status">
                   Payment Status <span className="text-destructive">*</span>
                 </Label>
-                <select
-                  id="payment_status"
-                  className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
+                <Select
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value as PaymentStatus)}
-                  required
+                  onValueChange={(value) => field.handleChange(value as PaymentStatus)}
                 >
-                  <option value="pending">Pending</option>
-                  <option value="paid">Paid</option>
-                  <option value="failed">Failed</option>
-                  <option value="refunded">Refunded</option>
-                </select>
+                  <SelectTrigger
+                    id="payment_status"
+                    className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="paid">Paid</SelectItem>
+                    <SelectItem value="failed">Failed</SelectItem>
+                    <SelectItem value="refunded">Refunded</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             )}
           </form.Field>
@@ -394,18 +405,23 @@ export function AdminAdvertisementForm({
                 <Label htmlFor="status">
                   Status <span className="text-destructive">*</span>
                 </Label>
-                <select
-                  id="status"
-                  className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
+                <Select
                   value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value as AdStatus)}
-                  required
+                  onValueChange={(value) => field.handleChange(value as AdStatus)}
                 >
-                  <option value="active">Active</option>
-                  <option value="paused">Paused</option>
-                  <option value="scheduled">Scheduled</option>
-                  <option value="expired">Expired</option>
-                </select>
+                  <SelectTrigger
+                    id="status"
+                    className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="paused">Paused</SelectItem>
+                    <SelectItem value="scheduled">Scheduled</SelectItem>
+                    <SelectItem value="expired">Expired</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             )}
           </form.Field>

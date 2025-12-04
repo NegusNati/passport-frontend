@@ -58,14 +58,38 @@
   },
   "testimonials": {
     "quotes": [
-      { "name": "Abebe Kebede", "quote": "The online status check saved me so much time. I knew exactly when my passport was ready for collection!" },
-      { "name": "Tigist Haile", "quote": "The process was straightforward and the site was very easy to use. I got my passport faster than I expected." },
-      { "name": "Yohannes Gebre", "quote": "The SMS notification feature is fantastic. I didn't have to keep checking the website for updates." },
-      { "name": "Dawit Mengistu", "quote": "As a frequent traveler, I appreciate how efficient the process has become and how easy it is to get informed here." },
-      { "name": "Meron Alemu", "quote": "The customer support team on Telegram was incredibly helpful when I had questions about my application." },
-      { "name": "Freiwhot Tadesse", "quote": "I was impressed by the user-friendly interface. It made checking my passport status a breeze." },
-      { "name": "Natnael Tadesse", "quote": "I loved how easy it was to check my passport status. I appreciate the team's help and support." },
-      { "name": "Bereket Tadesse", "quote": "I appreciate the transparency in the process. The timeline provided was accurate and helpful." }
+      {
+        "name": "Abebe Kebede",
+        "quote": "The online status check saved me so much time. I knew exactly when my passport was ready for collection!"
+      },
+      {
+        "name": "Tigist Haile",
+        "quote": "The process was straightforward and the site was very easy to use. I got my passport faster than I expected."
+      },
+      {
+        "name": "Yohannes Gebre",
+        "quote": "The SMS notification feature is fantastic. I didn't have to keep checking the website for updates."
+      },
+      {
+        "name": "Dawit Mengistu",
+        "quote": "As a frequent traveler, I appreciate how efficient the process has become and how easy it is to get informed here."
+      },
+      {
+        "name": "Meron Alemu",
+        "quote": "The customer support team on Telegram was incredibly helpful when I had questions about my application."
+      },
+      {
+        "name": "Freiwhot Tadesse",
+        "quote": "I was impressed by the user-friendly interface. It made checking my passport status a breeze."
+      },
+      {
+        "name": "Natnael Tadesse",
+        "quote": "I loved how easy it was to check my passport status. I appreciate the team's help and support."
+      },
+      {
+        "name": "Bereket Tadesse",
+        "quote": "I appreciate the transparency in the process. The timeline provided was accurate and helpful."
+      }
     ]
   },
   "advertise": {

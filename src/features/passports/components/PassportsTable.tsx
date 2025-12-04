@@ -229,7 +229,9 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       return [
         {
           accessorKey: 'full_name',
-          header: ({ column }) => <DataTableColumnHeader column={column} title={t('table.columns.name')} />,
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title={t('table.columns.name')} />
+          ),
           cell: ({ row }) => (
             <span className="text-foreground font-medium">{row.original.full_name}</span>
           ),
@@ -238,7 +240,9 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
         },
         {
           accessorKey: 'location',
-          header: ({ column }) => <DataTableColumnHeader column={column} title={t('table.columns.location')} />,
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title={t('table.columns.location')} />
+          ),
           cell: ({ row }) => (
             <span className="text-muted-foreground text-sm">{row.original.location}</span>
           ),
@@ -247,7 +251,9 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
         },
         {
           accessorKey: 'date_of_publish',
-          header: ({ column }) => <DataTableColumnHeader column={column} title={t('table.columns.published')} />,
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title={t('table.columns.published')} />
+          ),
           cell: ({ row }) => (
             <span className="text-muted-foreground text-sm">
               {formatDisplayDate(row.original.date_of_publish)}
@@ -258,7 +264,9 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
         },
         {
           accessorKey: 'request_number',
-          header: ({ column }) => <DataTableColumnHeader column={column} title={t('table.columns.requestNumber')} />,
+          header: ({ column }) => (
+            <DataTableColumnHeader column={column} title={t('table.columns.requestNumber')} />
+          ),
           cell: ({ row }) => (
             <span className="font-mono text-xs tracking-tight uppercase">
               {row.original.request_number}
@@ -343,6 +351,11 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       ],
     )
 
+    const emptyInlineMessage = t(
+      'table.empty.inlineMessage',
+      'Your passport is not ready yet. Our team is still processing it—please check back tomorrow for an update.',
+    )
+
     return (
       <section ref={ref} className="py-12">
         <Container>
@@ -364,6 +377,14 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
                   onPageSizeChange: handlePageSizeChange,
                 }}
                 toolbar={toolbarComponent}
+                emptyState={
+                  <span className="inline-flex items-center justify-center text-center leading-relaxed font-semibold">
+                    <span role="img" aria-label="sad" className="mr-2">
+                      😔
+                    </span>
+                    {emptyInlineMessage}
+                  </span>
+                }
                 onRowClick={(passport) =>
                   router.navigate({
                     to: '/passports/$passportId',
@@ -376,9 +397,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
               {isLoading ? (
                 <span>{t('table.pagination.loadingSummary')}</span>
               ) : total > 0 ? (
-                <span>
-                  {t('table.pagination.showing', { from, to, total })}
-                </span>
+                <span>{t('table.pagination.showing', { from, to, total })}</span>
               ) : (
                 <></>
               )}
@@ -411,13 +430,13 @@ function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) 
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
-        <h3 className="text-muted-foreground mt-1 text-sm">
-          {subtitle}
-        </h3>
+        <h3 className="text-muted-foreground mt-1 text-sm">{subtitle}</h3>
       </div>
 
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <span className="text-muted-foreground text-xs tracking-wide uppercase">{filterByLabel}</span>
+        <span className="text-muted-foreground text-xs tracking-wide uppercase">
+          {filterByLabel}
+        </span>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Select value={filters.date} onValueChange={(value) => onFilterChange('date', value)}>
             <SelectTrigger className="w-44">

@@ -88,9 +88,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       setFieldErrors(apiFieldErrors)
       const fallback =
         message ??
-        (Object.keys(apiFieldErrors).length > 0
-          ? null
-          : t('login.validation.invalidCredentials'))
+        (Object.keys(apiFieldErrors).length > 0 ? null : t('login.validation.invalidCredentials'))
       setFormError(fallback)
     },
   })

@@ -141,11 +141,7 @@ function AdvertiseCopy() {
         {t('advertise.description')}
       </p>
       <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-start">
-        <Button
-          asChild
-          size="md"
-          rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
-        >
+        <Button asChild size="md" rightIcon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}>
           <Link to="/advertisment">{t('advertise.cta')}</Link>
         </Button>
         <p className="text-muted-foreground text-xs font-medium tracking-[0.3em] uppercase">
@@ -165,8 +161,8 @@ function AdvertiseDetails() {
       <div className="space-y-2">
         <p className="text-foreground text-xl font-semibold">Ad Graphics Design Included</p>
         <p>
-          Collaborate with our in-house designers for static or animated creatives complete
-          with copy, CTA, and localization for Amharic- and English-speaking audiences.
+          Collaborate with our in-house designers for static or animated creatives complete with
+          copy, CTA, and localization for Amharic- and English-speaking audiences.
         </p>
       </div>
     </div>

@@ -20,12 +20,12 @@ function updateUrlLangParam(lang: string) {
  * Hook that syncs the URL `?lang=` search param with i18next.
  * - On mount: reads `?lang=` from URL and sets i18n language
  * - On language change: updates URL search param
- * 
+ *
  * Call this hook once in the root layout or AppShell.
  */
 export function useLanguageSync() {
   const { i18n } = useTranslation()
-  
+
   // Get lang from URL search params (safe access)
   let urlLang: string | undefined
   try {
@@ -50,10 +50,9 @@ export function useLanguageSync() {
     } else if (!urlLang) {
       // No lang in URL - check localStorage or use default
       const stored = localStorage.getItem('i18nextLng')
-      const langToUse = stored && supportedCodes.includes(stored as SupportedLanguage)
-        ? stored
-        : DEFAULT_LANGUAGE
-      
+      const langToUse =
+        stored && supportedCodes.includes(stored as SupportedLanguage) ? stored : DEFAULT_LANGUAGE
+
       // Update URL with detected language (without full page reload)
       if (langToUse !== DEFAULT_LANGUAGE || stored) {
         updateUrlLangParam(langToUse)

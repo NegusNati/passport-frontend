@@ -42,9 +42,7 @@ export function LoginPage({ onSuccess, redirectPath }: LoginPageProps) {
             <h1 className="text-foreground/90 text-3xl font-bold tracking-tight text-white sm:text-4xl">
               {t('login.branding.title')}
             </h1>
-            <p className="text-sm text-emerald-100 sm:text-base">
-              {t('login.branding.tagline')}
-            </p>
+            <p className="text-sm text-emerald-100 sm:text-base">{t('login.branding.tagline')}</p>
           </div>
         </div>
       </section>
@@ -54,9 +52,7 @@ export function LoginPage({ onSuccess, redirectPath }: LoginPageProps) {
           <h2 className="text-foreground text-2xl font-semibold tracking-tight sm:text-3xl">
             {t('login.title')}
           </h2>
-          <p className="text-muted-foreground text-sm sm:text-base">
-            {t('login.subtitle')}
-          </p>
+          <p className="text-muted-foreground text-sm sm:text-base">{t('login.subtitle')}</p>
         </header>
 
         <div className="mt-8 space-y-6">
@@ -82,9 +78,7 @@ export function LoginPage({ onSuccess, redirectPath }: LoginPageProps) {
               <h2 className="text-foreground text-2xl font-semibold tracking-tight sm:text-3xl">
                 {t('login.title')}
               </h2>
-              <p className="text-muted-foreground text-sm sm:text-base">
-                {t('login.subtitle')}
-              </p>
+              <p className="text-muted-foreground text-sm sm:text-base">{t('login.subtitle')}</p>
             </header>
 
             <div className="mt-8 space-y-6">

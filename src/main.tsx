@@ -61,19 +61,30 @@ if (!isPostHogEnabled && import.meta.env.PROD) {
   console.warn('[PostHog] Analytics disabled: VITE_PUBLIC_POSTHOG_KEY not configured')
 }
 
-// Register service worker for PWA
+// Register service worker for PWA (deferred to not compete with LCP)
 if ('serviceWorker' in navigator) {
+  // Wait for page load, then defer another 3 seconds to ensure
+  // critical resources are fully loaded before SW registration
   window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/sw.js')
-      .then((registration) => {
-        if (import.meta.env.DEV) {
-          console.log('[SW] Registered successfully:', registration.scope)
-        }
-      })
-      .catch((error) => {
-        console.warn('[SW] Registration failed:', error)
-      })
+    const registerSW = () => {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .then((registration) => {
+          if (import.meta.env.DEV) {
+            console.log('[SW] Registered successfully:', registration.scope)
+          }
+        })
+        .catch((error) => {
+          console.warn('[SW] Registration failed:', error)
+        })
+    }
+
+    // Use requestIdleCallback if available, otherwise setTimeout
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(registerSW, { timeout: 5000 })
+    } else {
+      setTimeout(registerSW, 3000)
+    }
   })
 }
 

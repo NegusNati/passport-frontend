@@ -52,6 +52,7 @@ interface DataTableProps<TData, TValue> {
   onAction?: () => void
   actionTitle?: string
   onRowClick?: (row: TData) => void
+  emptyState?: React.ReactNode
 }
 
 export function DataTable<TData, TValue>({
@@ -69,6 +70,7 @@ export function DataTable<TData, TValue>({
   onAction,
   actionTitle,
   onRowClick,
+  emptyState,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -245,11 +247,7 @@ export function DataTable<TData, TValue>({
                     colSpan={columns.length}
                     className="h-24 text-center leading-relaxed font-semibold"
                   >
-                    <span role="img" aria-label="sad" className="mr-2">
-                      😔
-                    </span>
-                    Your passport is not ready yet. Our team is still processing it—please check
-                    back tomorrow for an update.
+                    {emptyState ?? <span className="text-muted-foreground">No results found.</span>}
                   </TableCell>
                 </TableRow>
               )}

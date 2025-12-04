@@ -6,6 +6,7 @@ import { DataTable } from '@/features/table/DataTable'
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 
 import type { AdminPassport, AdminPassportsMeta } from '../schemas/passport'
 
@@ -212,29 +213,35 @@ function PassportsFilters({ filters, onFilterChange }: FilterProps) {
 
         <div className="grid gap-2">
           <Label htmlFor="passport-location">Location</Label>
-          <select
-            id="passport-location"
+          <Select
             value={filters.location ?? ''}
-            onChange={(event) => onFilterChange({ location: event.target.value || undefined })}
-            className="border-input bg-background h-10 rounded-md border px-3 text-sm"
+            onValueChange={(value) => onFilterChange({ location: value || undefined })}
           >
-            <option value="">All locations</option>
-            {locationsQuery.isLoading ? (
-              <option value="__loading" disabled>
-                Loading locations…
-              </option>
-            ) : locationOptions.length === 0 ? (
-              <option value="__empty" disabled>
-                No locations available
-              </option>
-            ) : (
-              locationOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))
-            )}
-          </select>
+            <SelectTrigger
+              id="passport-location"
+              className="border-input bg-background h-10 w-full rounded-md border px-3 text-sm"
+            >
+              <SelectValue placeholder="All locations" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All locations</SelectItem>
+              {locationsQuery.isLoading ? (
+                <SelectItem value="__loading" disabled>
+                  Loading locations…
+                </SelectItem>
+              ) : locationOptions.length === 0 ? (
+                <SelectItem value="__empty" disabled>
+                  No locations available
+                </SelectItem>
+              ) : (
+                locationOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))
+              )}
+            </SelectContent>
+          </Select>
         </div>
       </div>
 

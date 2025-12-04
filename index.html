@@ -4,31 +4,24 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Noto Sans Ethiopic for Amharic and Tigrinya -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Preconnect to critical origins (early in head for max benefit) -->
+    <link rel="preconnect" href="https://api.passport.et" />
+    <link rel="dns-prefetch" href="https://api.passport.et" />
+    <link rel="dns-prefetch" href="https://analytics.passport.et" />
+    <link rel="dns-prefetch" href="https://eu.i.posthog.com" />
 
+    <!-- Self-hosted fonts: Preload critical Figtree font only -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/figtree-latin.woff2" crossorigin />
+
+    <!-- LCP Image Preload: Hero card image for faster Largest Contentful Paint -->
     <link
       rel="preload"
-      as="font"
-      type="font/woff2"
-      href="/fonts/figtree-latin-400.woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      as="font"
-      type="font/woff2"
-      href="/fonts/figtree-latin-600.woff2"
-      crossorigin
+      as="image"
+      fetchpriority="high"
+      href="/media/landing/hero-card-1-768w.avif"
+      imagesrcset="/media/landing/hero-card-1-320w.avif 320w, /media/landing/hero-card-1-480w.avif 480w, /media/landing/hero-card-1-768w.avif 768w, /media/landing/hero-card-1-1080w.avif 1080w"
+      imagesizes="(min-width: 1024px) 538px, (min-width: 768px) 480px, 90vw"
+      type="image/avif"
     />
 
     <!-- Analytics -->

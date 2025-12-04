@@ -34,7 +34,9 @@ export function AdvertisementPreviewPage() {
               <LayoutGrid className="h-4 w-4" />
               <span>{t('preview.header.badge')}</span>
             </div>
-            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{t('preview.header.title')}</h1>
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              {t('preview.header.title')}
+            </h1>
             <p className="text-muted-foreground text-lg sm:text-xl">
               {t('preview.header.description')}
             </p>

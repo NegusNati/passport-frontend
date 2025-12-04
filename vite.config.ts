@@ -1,3 +1,6 @@
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { resolve } from 'node:path'
+
 import tailwindcss from '@tailwindcss/vite'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import viteReact from '@vitejs/plugin-react'
@@ -17,14 +20,13 @@ type CriticalCssConstructor = new (options: CriticalCssOptions) => {
 }
 
 async function loadCriticalCssPlugin(): Promise<PluginOption | null> {
+  // Allow explicit disable via env var
   if (process.env.VITE_DISABLE_CRITICAL_CSS === 'true') {
     return null
   }
 
-  if (process.env.VITE_ENABLE_CRITICAL_CSS !== 'true') {
-    return null
-  }
-
+  // Enable by default in production builds (no env var needed)
+  // This improves FCP by inlining above-the-fold CSS
   try {
     const BeastiesClass = await resolveCriticalCssConstructor()
     if (!BeastiesClass) {
@@ -35,36 +37,34 @@ async function loadCriticalCssPlugin(): Promise<PluginOption | null> {
       name: 'passport-critical-css',
       enforce: 'post',
       apply: 'build',
-      async generateBundle(_, bundle) {
+      // Use writeBundle (runs after files are written to disk)
+      // instead of generateBundle (runs before files exist on disk)
+      async writeBundle(options) {
+        const outDir = options.dir || 'dist'
+        const htmlPath = resolve(outDir, 'index.html')
+
+        if (!existsSync(htmlPath)) {
+          console.warn('[critical-css] index.html not found in', outDir)
+          return
+        }
+
         const beasties = new BeastiesClass({
           preload: 'swap',
           pruneSource: false,
           reduceInlineStyles: false,
           logLevel: 'info',
-          path: 'dist',
+          path: outDir,
           publicPath: '/',
         })
 
-        await Promise.all(
-          Object.values(bundle).map(async (asset) => {
-            if (asset.type !== 'asset') return
-            if (typeof asset.source !== 'string') return
-            if (!asset.fileName.endsWith('.html')) return
-
-            try {
-              const inlined = await beasties.process(asset.source)
-              asset.source = inlined
-            } catch (error) {
-              if (process.env.NODE_ENV !== 'production') {
-                console.warn(
-                  `[perf] Critical CSS inline failed for ${asset.fileName}: ${
-                    (error as Error).message
-                  }`,
-                )
-              }
-            }
-          }),
-        )
+        try {
+          const html = readFileSync(htmlPath, 'utf-8')
+          const inlined = await beasties.process(html)
+          writeFileSync(htmlPath, inlined)
+          console.log('[critical-css] Inlined above-the-fold CSS into index.html')
+        } catch (error) {
+          console.warn(`[critical-css] Failed to inline: ${(error as Error).message}`)
+        }
       },
     }
   } catch (error) {

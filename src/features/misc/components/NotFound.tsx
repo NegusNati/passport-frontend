@@ -13,11 +13,7 @@ export function NotFound() {
 
   return (
     <main className="relative isolate">
-      <Seo
-        title={t('notFound.seo.title')}
-        description={t('notFound.seo.description')}
-        noindex
-      />
+      <Seo title={t('notFound.seo.title')} description={t('notFound.seo.description')} noindex />
 
       {/* Ambient gradient blobs */}
       <div

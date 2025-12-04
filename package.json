@@ -7,7 +7,7 @@
     "start": "vite --port 3000",
     "optimize:images": "tsx scripts/optimize-images.ts",
     "build": "pnpm optimize:images && vite build && tsc",
-    "postbuild": "node --import tsx scripts/generate-sitemap.ts",
+    "postbuild": "node --import tsx scripts/generate-sitemap.ts && node --import tsx scripts/prerender.ts",
     "serve": "vite preview",
     "test": "vitest run",
     "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
@@ -15,7 +15,8 @@
     "format": "prettier --cache --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "generate:sitemap": "tsx scripts/generate-sitemap.ts"
+    "generate:sitemap": "tsx scripts/generate-sitemap.ts",
+    "prerender": "tsx scripts/prerender.ts"
   },
   "dependencies": {
     "@lexical/code": "^0.36.2",
@@ -67,11 +68,14 @@
     "zod": "^4.1.11"
   },
   "devDependencies": {
+    "@prerenderer/renderer-puppeteer": "^1.2.4",
+    "@prerenderer/rollup-plugin": "^0.3.12",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.2.0",
     "@types/node": "^24.9.2",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.2.2",
+    "@types/serve-handler": "^6.1.4",
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
     "@vitejs/plugin-react": "^4.3.4",
@@ -88,6 +92,8 @@
     "jsdom": "^26.0.0",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
+    "puppeteer": "^24.32.0",
+    "serve-handler": "^6.1.6",
     "sharp": "^0.34.4",
     "tsx": "^4.20.6",
     "typescript": "^5.7.2",

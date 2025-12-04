@@ -13,6 +13,7 @@ import {
 } from '@/shared/ui/dialog'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 import { Textarea } from '@/shared/ui/textarea'
 
 import type {
@@ -145,21 +146,25 @@ export function AdminRequestDetailDialog({
               {(field) => (
                 <div className="grid gap-2">
                   <Label htmlFor="status">Status</Label>
-                  <select
-                    id="status"
-                    className="border-input bg-background h-10 rounded-md border px-3 text-sm"
+                  <Select
                     value={field.state.value}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                      field.handleChange(
-                        e.target.value as 'pending' | 'contacted' | 'approved' | 'rejected',
-                      )
+                    onValueChange={(value) =>
+                      field.handleChange(value as 'pending' | 'contacted' | 'approved' | 'rejected')
                     }
                   >
-                    <option value="pending">Pending</option>
-                    <option value="contacted">Contacted</option>
-                    <option value="approved">Approved</option>
-                    <option value="rejected">Rejected</option>
-                  </select>
+                    <SelectTrigger
+                      id="status"
+                      className="border-input bg-background h-10 w-full rounded-md border px-3 text-sm"
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="contacted">Contacted</SelectItem>
+                      <SelectItem value="approved">Approved</SelectItem>
+                      <SelectItem value="rejected">Rejected</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               )}
             </form.Field>

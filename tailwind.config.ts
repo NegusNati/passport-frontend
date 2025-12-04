@@ -6,6 +6,7 @@ export default {
     extend: {
       fontFamily: {
         ethiopic: ['"Noto Sans Ethiopic"', 'sans-serif'],
+        cursive: ['"Playfair Display"', 'Georgia', 'serif'],
       },
     },
   },

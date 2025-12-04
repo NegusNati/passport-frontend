@@ -218,7 +218,10 @@ export function AdvertisementRequestForm({
               <p id="file-help">{t('request.form.file.help')}</p>
               {file ? (
                 <p>
-                  {t('request.form.file.selectedInfo', { name: file.name, size: (file.size / 1024 / 1024).toFixed(2) })}
+                  {t('request.form.file.selectedInfo', {
+                    name: file.name,
+                    size: (file.size / 1024 / 1024).toFixed(2),
+                  })}
                 </p>
               ) : null}
             </div>
@@ -242,7 +245,9 @@ export function AdvertisementRequestForm({
               disabled={!canSubmit || isSubmitting || formIsSubmitting || !!fileError}
               className="w-full rounded-full py-2 text-base font-semibold"
             >
-              {isSubmitting || formIsSubmitting ? t('request.form.submitting') : t('request.form.submit')}
+              {isSubmitting || formIsSubmitting
+                ? t('request.form.submitting')
+                : t('request.form.submit')}
             </Button>
             {errorMessage ? (
               <p className="text-destructive text-sm">{errorMessage}</p>

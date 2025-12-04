@@ -45,7 +45,9 @@ export function ArticleSection() {
       <Container>
         <div className="mb-6 flex flex-col items-center justify-center">
           <div>
-            <h2 className="max-w-2xl text-center text-2xl font-bold tracking-tight">{t('articles.title')}</h2>
+            <h2 className="max-w-2xl text-center text-2xl font-bold tracking-tight">
+              {t('articles.title')}
+            </h2>
             <p className="text-muted-foreground mt-1 max-w-sm text-center text-sm">
               {t('articles.subtitle')}
             </p>

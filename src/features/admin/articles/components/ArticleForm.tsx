@@ -9,6 +9,8 @@ import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
+import { Textarea } from '@/shared/ui/textarea'
 
 import type { AdminArticle } from '../schemas/article'
 import {
@@ -172,20 +174,24 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
           {(field) => (
             <div className="grid gap-2">
               <Label htmlFor="status">Status</Label>
-              <select
-                id="status"
-                className="border-input bg-background h-10 rounded-md border px-3 text-sm"
+              <Select
                 value={field.state.value}
-                onChange={(event) =>
-                  field.handleChange(event.target.value as ArticleFormValues['status'])
-                }
+                onValueChange={(value) => field.handleChange(value as ArticleFormValues['status'])}
               >
-                {statusOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger
+                  id="status"
+                  className="border-input bg-background h-10 w-full rounded-md border px-3 text-sm"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {statusOptions.map((option) => (
+                    <SelectItem key={option} value={option}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           )}
         </form.Field>
@@ -209,9 +215,9 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
         {(field) => (
           <div className="grid gap-2">
             <Label htmlFor="excerpt">Excerpt</Label>
-            <textarea
+            <Textarea
               id="excerpt"
-              className="border-input bg-background min-h-[120px] rounded-md border px-3 py-2 text-sm"
+              className="min-h-[120px]"
               value={field.state.value}
               onChange={(event) => field.handleChange(event.target.value)}
             />
@@ -354,29 +360,41 @@ export function ArticleForm({ article, onSubmit, isSubmitting, errorMessage }: A
               onChange={(e) => setAuthorSearch(e.target.value)}
               placeholder="Search users by name or email"
             />
-            <select
+            <Select
               aria-label="Select author"
-              className="border-input bg-background h-10 rounded-md border px-3 text-sm"
-              value={field.state.value ?? ''}
-              onChange={(e) =>
-                field.handleChange(e.currentTarget.value ? Number(e.currentTarget.value) : null)
-              }
+              value={field.state.value != null ? String(field.state.value) : ''}
+              onValueChange={(value) => field.handleChange(value ? Number(value) : null)}
             >
-              <option value="">
-                {article?.author ? `${article.author.name} (current)` : 'Select author (optional)'}
-              </option>
-              {field.state.value &&
-              !(usersQuery.data?.data ?? []).some((u) => u.id === field.state.value) ? (
-                <option value={field.state.value}>
-                  {article?.author?.name ? `${article.author.name}` : `User #${field.state.value}`}
-                </option>
-              ) : null}
-              {(usersQuery.data?.data ?? []).map((u) => (
-                <option key={u.id} value={u.id}>
-                  {`${u.first_name} ${u.last_name}`}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="border-input bg-background h-10 w-full rounded-md border px-3 text-sm">
+                <SelectValue
+                  placeholder={
+                    article?.author
+                      ? `${article.author.name} (current)`
+                      : 'Select author (optional)'
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">
+                  {article?.author
+                    ? `${article.author.name} (current)`
+                    : 'Select author (optional)'}
+                </SelectItem>
+                {field.state.value &&
+                !(usersQuery.data?.data ?? []).some((u) => u.id === field.state.value) ? (
+                  <SelectItem value={String(field.state.value)}>
+                    {article?.author?.name
+                      ? `${article.author.name}`
+                      : `User #${field.state.value}`}
+                  </SelectItem>
+                ) : null}
+                {(usersQuery.data?.data ?? []).map((u) => (
+                  <SelectItem key={u.id} value={String(u.id)}>
+                    {`${u.first_name} ${u.last_name}`}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <p className="text-muted-foreground text-xs">
               {usersQuery.isFetching
                 ? 'Searching…'

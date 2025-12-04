@@ -25,7 +25,9 @@ export function AdvertisementRequestSuccess({ onSubmitAnother }: AdvertisementRe
       </div>
 
       <div className="bg-muted/60 max-w-lg rounded-lg p-6 text-left">
-        <h3 className="text-foreground mb-2 text-sm font-semibold">{t('request.success.whatNext.title')}</h3>
+        <h3 className="text-foreground mb-2 text-sm font-semibold">
+          {t('request.success.whatNext.title')}
+        </h3>
         <ul className="text-muted-foreground space-y-2 text-sm">
           <li className="flex items-start gap-2">
             <span className="text-primary mt-0.5">•</span>

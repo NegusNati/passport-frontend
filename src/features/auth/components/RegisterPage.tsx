@@ -53,10 +53,10 @@ export function RegisterPage({ onSuccess, redirectPath }: RegisterPageProps) {
 
       <div className="border-border bg-card translate-y-[-20px] rounded-t-3xl border-t px-6 py-8 sm:px-8 sm:py-10 md:hidden">
         <header className="space-y-2">
-          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">{t('register.title')}</h2>
-          <p className="text-muted-foreground text-sm md:text-base">
-            {t('register.subtitle')}
-          </p>
+          <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
+            {t('register.title')}
+          </h2>
+          <p className="text-muted-foreground text-sm md:text-base">{t('register.subtitle')}</p>
         </header>
 
         <div className="space-y-6">
@@ -81,9 +81,7 @@ export function RegisterPage({ onSuccess, redirectPath }: RegisterPageProps) {
             <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
               {t('register.title')}
             </h2>
-            <p className="text-muted-foreground text-sm md:text-base">
-              {t('register.subtitle')}
-            </p>
+            <p className="text-muted-foreground text-sm md:text-base">{t('register.subtitle')}</p>
           </header>
 
           <div className="space-y-6">

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { GithubIcon, InstagramIcon, LinkedinIcon, MegaphoneIcon, TwitterIcon } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import telegramIcon from '@/assets/logos/telegram-logo.svg'
@@ -9,6 +9,11 @@ import { ComingSoonDialog } from '@/shared/ui/coming-soon-dialog'
 const Footer = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const { t } = useTranslation()
+
+  // Memoized dialog handler
+  const handleOpenDialog = useCallback(() => {
+    setIsDialogOpen(true)
+  }, [])
 
   const services = [
     { name: t('footer.advertisement'), href: '/advertisement-requests' },
@@ -96,9 +101,7 @@ const Footer = () => {
               >
                 Passport.ET
               </motion.h2>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                {t('footer.tagline')}
-              </p>
+              <p className="text-muted-foreground text-sm leading-relaxed">{t('footer.tagline')}</p>
             </div>
 
             <motion.a
@@ -144,7 +147,9 @@ const Footer = () => {
 
           {/* Developer Socials */}
           <motion.div className="space-y-6" variants={itemVariants}>
-            <h3 className="text-foreground text-lg font-semibold">{t('footer.developerSocials')}</h3>
+            <h3 className="text-foreground text-lg font-semibold">
+              {t('footer.developerSocials')}
+            </h3>
             <ul className="space-y-3">
               {socials.map((social) => (
                 <motion.li key={social.name}>
@@ -175,7 +180,7 @@ const Footer = () => {
             <div className="flex space-x-6">
               <motion.button
                 type="button"
-                onClick={() => setIsDialogOpen(true)}
+                onClick={handleOpenDialog}
                 className="text-muted-foreground hover:text-foreground hover:border-foreground border-b border-transparent text-sm transition-colors duration-300"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}
@@ -184,7 +189,7 @@ const Footer = () => {
               </motion.button>
               <motion.button
                 type="button"
-                onClick={() => setIsDialogOpen(true)}
+                onClick={handleOpenDialog}
                 className="text-muted-foreground hover:text-foreground hover:border-foreground border-b border-transparent text-sm transition-colors duration-300"
                 whileHover={{ y: -2 }}
                 whileTap={{ scale: 0.95 }}

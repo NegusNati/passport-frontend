@@ -475,7 +475,9 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
               const error = field.state.meta.errors[0] ?? fieldErrors.passwordConfirmation
               return (
                 <div className="grid gap-2">
-                  <Label htmlFor="password-confirmation">{t('register.form.confirmPassword')}</Label>
+                  <Label htmlFor="password-confirmation">
+                    {t('register.form.confirmPassword')}
+                  </Label>
                   <div className="relative">
                     <Input
                       id="password-confirmation"
@@ -543,9 +545,7 @@ export function RegisterForm({ onSuccess }: RegisterFormProps) {
             className="w-full"
             disabled={!canSubmit || isSubmitting || registerMutation.isPending}
           >
-            {registerMutation.isPending
-              ? t('register.form.submitting')
-              : t('register.form.submit')}
+            {registerMutation.isPending ? t('register.form.submitting') : t('register.form.submit')}
           </Button>
         )}
       </form.Subscribe>

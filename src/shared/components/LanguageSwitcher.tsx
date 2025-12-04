@@ -1,23 +1,55 @@
 import { Globe } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { SUPPORTED_LANGUAGES, type SupportedLanguage } from '@/i18n/config'
 import { cn } from '@/lib/utils'
+import { loadEthiopicFont, preloadEthiopicFont, requiresEthiopicFont } from '@/shared/lib/fonts'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 
-export function LanguageSwitcher({ className }: { className?: string }) {
+// Short codes for compact display
+const LANGUAGE_SHORT_CODES: Record<SupportedLanguage, string> = {
+  en: 'EN',
+  am: 'AM',
+  om: 'OM',
+  ti: 'TI',
+}
+
+interface LanguageSwitcherProps {
+  className?: string
+  /** Compact mode shows short codes (EN, AM, etc.) in a smaller trigger */
+  compact?: boolean
+}
+
+function renderLanguageItems(useShortLabels: boolean) {
+  return SUPPORTED_LANGUAGES.map((l) => (
+    <SelectItem
+      key={l.code}
+      value={l.code}
+      className={!useShortLabels && (l.code === 'am' || l.code === 'ti') ? 'font-ethiopic' : ''}
+    >
+      {useShortLabels ? LANGUAGE_SHORT_CODES[l.code] : l.nativeName}
+    </SelectItem>
+  ))
+}
+
+export function LanguageSwitcher({ className, compact = false }: LanguageSwitcherProps) {
   const { i18n } = useTranslation()
   const [currentLang, setCurrentLang] = useState<SupportedLanguage>(
-    (i18n.language as SupportedLanguage) || 'en'
+    (i18n.language as SupportedLanguage) || 'en',
   )
 
   // Sync state when i18n language changes externally
   useEffect(() => {
     const handleLanguageChange = (lng: string) => {
       setCurrentLang(lng as SupportedLanguage)
-      // Apply font-ethiopic class to document for Ge'ez script languages
-      if (lng === 'am' || lng === 'ti') {
+      // Apply font-ethiopic class immediately for visual feedback
+      if (requiresEthiopicFont(lng)) {
         document.documentElement.classList.add('font-ethiopic')
+        // Load the Ethiopic font in background (non-blocking)
+        loadEthiopicFont().catch(() => {
+          // Font load failed silently - class is already applied
+        })
       } else {
         document.documentElement.classList.remove('font-ethiopic')
       }
@@ -30,49 +62,62 @@ export function LanguageSwitcher({ className }: { className?: string }) {
     }
   }, [i18n])
 
-  const change = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const lng = e.target.value as SupportedLanguage
-    i18n.changeLanguage(lng)
-    try {
-      localStorage.setItem('i18nextLng', lng)
-    } catch {
-      // ignore localStorage errors
-    }
+  const handleChange = useCallback(
+    (lng: string) => {
+      const lang = lng as SupportedLanguage
+      i18n.changeLanguage(lang)
+      try {
+        localStorage.setItem('i18nextLng', lang)
+      } catch {
+        // ignore localStorage errors
+      }
+    },
+    [i18n],
+  )
+
+  // Preload Ethiopic font when user hovers over the language switcher
+  // This improves perceived performance when switching to Amharic/Tigrinya
+  const handleMouseEnter = () => {
+    preloadEthiopicFont()
+  }
+
+  const isEthiopicLang = currentLang === 'am' || currentLang === 'ti'
+
+  if (compact) {
+    return (
+      <Select aria-label="Select language" value={currentLang} onValueChange={handleChange}>
+        <SelectTrigger
+          className={cn(
+            'h-8 w-auto min-w-[2.5rem] px-1 text-xs font-bold',
+            'justify-center',
+            isEthiopicLang && 'font-ethiopic',
+            className,
+          )}
+          onMouseEnter={handleMouseEnter}
+          onFocus={handleMouseEnter}
+        >
+          <SelectValue />
+        </SelectTrigger>
+        <SelectContent>{renderLanguageItems(true)}</SelectContent>
+      </Select>
+    )
   }
 
   return (
-    <div className={cn('relative inline-flex items-center', className)}>
-      <Globe className="text-muted-foreground pointer-events-none absolute left-2 h-4 w-4" />
-      <select
-        aria-label="Select language"
+    <Select aria-label="Select language" value={currentLang} onValueChange={handleChange}>
+      <SelectTrigger
         className={cn(
-          'bg-background text-foreground border-input hover:bg-accent focus:ring-ring',
-          'h-9 appearance-none rounded-md border py-1 pr-8 pl-8 text-sm font-medium',
-          'cursor-pointer transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none',
-          // Apply ethiopic font for Ge'ez script languages
-          (currentLang === 'am' || currentLang === 'ti') && 'font-ethiopic'
+          'relative h-9 w-auto pr-2 pl-8 text-sm font-medium',
+          isEthiopicLang && 'font-ethiopic',
+          className,
         )}
-        value={currentLang}
-        onChange={change}
+        onMouseEnter={handleMouseEnter}
+        onFocus={handleMouseEnter}
       >
-        {SUPPORTED_LANGUAGES.map((l) => (
-          <option
-            key={l.code}
-            value={l.code}
-            className={l.code === 'am' || l.code === 'ti' ? 'font-ethiopic' : ''}
-          >
-            {l.nativeName}
-          </option>
-        ))}
-      </select>
-      <svg
-        className="text-muted-foreground pointer-events-none absolute right-2 h-4 w-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-      </svg>
-    </div>
+        <Globe className="text-muted-foreground pointer-events-none absolute left-2 h-4 w-4" />
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>{renderLanguageItems(false)}</SelectContent>
+    </Select>
   )
 }

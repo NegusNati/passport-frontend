@@ -1,10 +1,9 @@
 import { Link, useNavigate } from '@tanstack/react-router'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight, X } from 'lucide-react'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { LanguageSwitcher } from '@/shared/components/LanguageSwitcher'
 import { ThemeToggle } from '@/shared/components/theme-toggle'
 import { Button } from '@/shared/ui/button'
 import { toast } from '@/shared/ui/sonner'
@@ -32,39 +31,39 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
     return () => document.removeEventListener('keydown', handleEsc)
   }, [onClose])
 
-  const authButtonGroup = isAuthenticated ? (
-    <Button
-      variant="outline"
-      className="flex-1 text-sm"
-      onClick={() => {
-        onClose()
-        navigate({ to: '/profile' })
-      }}
-    >
-      {t('nav.myProfile')}
-    </Button>
-  ) : (
-    <>
-      <Button
-        variant="outline"
-        className="flex-1 text-sm"
-        onClick={() => {
-          onClose()
-          navigate({ to: '/register' })
-        }}
-      >
-        {t('nav.register')}
-      </Button>
-      <Button
-        className="flex-1 text-sm"
-        onClick={() => {
-          onClose()
-          navigate({ to: '/login' })
-        }}
-      >
-        {t('nav.login')}
-      </Button>
-    </>
+  // Memoized navigation handlers
+  const handleProfileClick = useCallback(() => {
+    onClose()
+    navigate({ to: '/profile' })
+  }, [onClose, navigate])
+
+  const handleRegisterClick = useCallback(() => {
+    onClose()
+    navigate({ to: '/register' })
+  }, [onClose, navigate])
+
+  const handleLoginClick = useCallback(() => {
+    onClose()
+    navigate({ to: '/login' })
+  }, [onClose, navigate])
+
+  const authButtonGroup = useMemo(
+    () =>
+      isAuthenticated ? (
+        <Button variant="outline" className="flex-1 text-sm" onClick={handleProfileClick}>
+          {t('nav.myProfile')}
+        </Button>
+      ) : (
+        <>
+          <Button variant="outline" className="flex-1 text-sm" onClick={handleRegisterClick}>
+            {t('nav.register')}
+          </Button>
+          <Button className="flex-1 text-sm" onClick={handleLoginClick}>
+            {t('nav.login')}
+          </Button>
+        </>
+      ),
+    [isAuthenticated, handleProfileClick, handleRegisterClick, handleLoginClick, t],
   )
 
   return (
@@ -156,9 +155,9 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
                   </Link>
                 )
               })}
-              <div className="flex items-center gap-3">
-                <LanguageSwitcher className="h-10 flex-1 text-sm" />
-                <ThemeToggle className="h-10 w-20" />
+              {/* Theme toggle - language switcher is now in navbar */}
+              <div className="mt-2 flex items-center justify-between rounded-lg px-3 py-2">
+                <ThemeToggle />
               </div>
             </nav>
 

@@ -36,6 +36,7 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
       name: p.full_name,
       firstName: p.first_name,
       date: formatDisplayDate(p.date_of_publish),
+      dateRaw: p.date_of_publish,
       requestNumber: p.request_number,
       status: 'pending',
       city: p.location,
@@ -128,9 +129,7 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
               </svg>
             </div>
             <h1 className="text-foreground text-2xl font-bold">{t('detail.notFound.title')}</h1>
-            <p className="text-muted-foreground">
-              {t('detail.notFound.description')}
-            </p>
+            <p className="text-muted-foreground">{t('detail.notFound.description')}</p>
             <Button onClick={handleCheckAnother} className="w-full sm:w-auto">
               {t('detail.notFound.backToSearch')}
             </Button>

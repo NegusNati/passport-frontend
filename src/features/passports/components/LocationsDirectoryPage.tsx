@@ -34,9 +34,7 @@ export function LocationsDirectoryPage() {
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
             {t('locations.title')}
           </h1>
-          <p className="text-muted-foreground mt-4 text-lg">
-            {t('locations.subtitle')}
-          </p>
+          <p className="text-muted-foreground mt-4 text-lg">{t('locations.subtitle')}</p>
         </Container>
       </section>
 

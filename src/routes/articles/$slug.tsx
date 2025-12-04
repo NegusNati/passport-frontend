@@ -229,7 +229,9 @@ function ArticleBody({
             {/* Related Articles */}
             {relatedIsLoading ? (
               <div className="space-y-6">
-                <h2 className="text-foreground text-xl font-semibold">{t('detail.related.title')}</h2>
+                <h2 className="text-foreground text-xl font-semibold">
+                  {t('detail.related.title')}
+                </h2>
                 <div className="grid gap-6 sm:grid-cols-2">
                   <RelatedArticleCardSkeleton />
                   <RelatedArticleCardSkeleton />
@@ -237,7 +239,9 @@ function ArticleBody({
               </div>
             ) : relatedArticles.length ? (
               <div className="space-y-6">
-                <h2 className="text-foreground text-xl font-semibold">{t('detail.related.title')}</h2>
+                <h2 className="text-foreground text-xl font-semibold">
+                  {t('detail.related.title')}
+                </h2>
                 <div className="grid gap-6 sm:grid-cols-2">
                   {relatedArticles.map((related) => (
                     <RelatedArticleCard key={related.id} article={related} />

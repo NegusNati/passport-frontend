@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import appStore from '@/assets/landingImages/app_store.svg'
@@ -16,53 +16,61 @@ export function DownloadAppSection() {
   const { canInstall, isStandalone, platform, promptInstall } = usePWAInstall()
   const { capture } = useAnalytics()
 
-  const handleInstallClick = async (buttonType: 'android' | 'ios') => {
-    capture('pwa_install_attempt', {
-      source: 'download-section',
-      button: buttonType,
-      platform,
-      'can-install': canInstall,
-      'is-standalone': isStandalone,
-    })
-
-    if (isStandalone) {
-      toast(tCommon('pwa.alreadyInstalled'), {
-        description: tCommon('pwa.alreadyInstalledDesc'),
+  const handleInstallClick = useCallback(
+    async (buttonType: 'android' | 'ios') => {
+      // Defer analytics to not block the interaction
+      queueMicrotask(() => {
+        capture('pwa_install_attempt', {
+          source: 'download-section',
+          button: buttonType,
+          platform,
+          'can-install': canInstall,
+          'is-standalone': isStandalone,
+        })
       })
-      return
-    }
 
-    if (canInstall) {
-      const result = await promptInstall()
-      if (result === 'accepted') {
-        toast(tCommon('pwa.appInstalled'), {
-          description: tCommon('pwa.appInstalledDesc'),
+      if (isStandalone) {
+        toast(tCommon('pwa.alreadyInstalled'), {
+          description: tCommon('pwa.alreadyInstalledDesc'),
         })
-      } else if (result === 'dismissed') {
-        toast(tCommon('pwa.installCancelled'), {
-          description: tCommon('pwa.installCancelledDesc'),
-        })
+        return
       }
-      return
-    }
 
-    if (platform === 'ios' && buttonType === 'ios') {
-      capture('pwa_install_ios_instructions_shown', { source: 'download-section' })
-      setShowIOSDialog(true)
-      return
-    }
+      if (canInstall) {
+        const result = await promptInstall()
+        if (result === 'accepted') {
+          toast(tCommon('pwa.appInstalled'), {
+            description: tCommon('pwa.appInstalledDesc'),
+          })
+        } else if (result === 'dismissed') {
+          toast(tCommon('pwa.installCancelled'), {
+            description: tCommon('pwa.installCancelledDesc'),
+          })
+        }
+        return
+      }
 
-    if (platform === 'ios') {
+      if (platform === 'ios' && buttonType === 'ios') {
+        queueMicrotask(() => {
+          capture('pwa_install_ios_instructions_shown', { source: 'download-section' })
+        })
+        setShowIOSDialog(true)
+        return
+      }
+
+      if (platform === 'ios') {
+        toast(tCommon('pwa.installNotAvailable'), {
+          description: tCommon('pwa.installNotAvailableDesc'),
+        })
+        return
+      }
+
       toast(tCommon('pwa.installNotAvailable'), {
         description: tCommon('pwa.installNotAvailableDesc'),
       })
-      return
-    }
-
-    toast(tCommon('pwa.installNotAvailable'), {
-      description: tCommon('pwa.installNotAvailableDesc'),
-    })
-  }
+    },
+    [capture, platform, canInstall, isStandalone, promptInstall, tCommon],
+  )
 
   return (
     <section id="download" className="py-10 sm:py-12" aria-label="Sponsored advertisement">
@@ -70,9 +78,7 @@ export function DownloadAppSection() {
         <div className="bg-muted relative flex flex-row items-center gap-6 overflow-hidden px-6 py-10 text-center shadow-sm sm:px-10 sm:py-12 lg:flex-col lg:text-left">
           <div className="max-w-2xl items-center space-y-3">
             <h2 className="text-2xl font-semibold tracking-tight">{t('downloadApp.title')}</h2>
-            <p className="text-muted-foreground text-sm">
-              {t('downloadApp.description')}
-            </p>
+            <p className="text-muted-foreground text-sm">{t('downloadApp.description')}</p>
             <div className="my-4 flex items-center gap-6 sm:w-full md:w-auto">
               <button
                 type="button"

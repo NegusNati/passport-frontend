@@ -5,6 +5,7 @@
 ## Overview
 
 This plan refactors the localization system to:
+
 1. Organize translations by feature/route (maintainable folder structure)
 2. Add dynamic language support to all public-facing components
 3. Support 4 languages: English (en), Amharic (am), Oromo (om), Tigrinya (ti)
@@ -15,6 +16,7 @@ This plan refactors the localization system to:
 ## Current State
 
 ### Existing Locales Structure
+
 ```
 src/i18n/locales/
 ├── en/
@@ -31,23 +33,24 @@ src/i18n/locales/
     └── landing.json    ✅
 ```
 
-### Routes to Localize (excluding /admin/*)
-| Route | Feature | Components | Status |
-|-------|---------|------------|--------|
-| `/` | landing | LandingPage, Hero, FAQs, etc. | ✅ Done |
-| `/login` | auth | LoginPage, LoginForm | ✅ Done |
-| `/register` | auth | RegisterPage, RegisterForm | ✅ Done |
-| `/profile` | auth | ProfilePage | ✅ Done |
-| `/passports` | passports | PassportsPage, PassportSearchForm, PassportsTable | ⬜ Todo |
-| `/passports/$passportId` | passports | PassportDetailPage, PassportDetailCard | ⬜ Todo |
-| `/locations` | passports | LocationsDirectoryPage | ⬜ Todo |
-| `/locations/$locationSlug` | passports | PassportsByLocationPage | ⬜ Todo |
-| `/articles` | articles | ArticlesPage, ArticleCard, ArticleFilters | ⬜ Todo |
-| `/articles/$slug` | articles | ArticleDetail (in route file) | ⬜ Todo |
-| `/calendar` | calendar | CalendarPage | ⬜ Todo |
-| `/advertisement-requests` | advertisement-requests | AdvertisementRequestForm, AdvertisementRequestSuccess | ⬜ Todo |
-| `/advertisment` | advertisements | AdvertisementPreviewPage | ⬜ Todo |
-| (global) | misc | NotFound, AppErrorBoundary | ✅ Done |
+### Routes to Localize (excluding /admin/\*)
+
+| Route                      | Feature                | Components                                            | Status  |
+| -------------------------- | ---------------------- | ----------------------------------------------------- | ------- |
+| `/`                        | landing                | LandingPage, Hero, FAQs, etc.                         | ✅ Done |
+| `/login`                   | auth                   | LoginPage, LoginForm                                  | ✅ Done |
+| `/register`                | auth                   | RegisterPage, RegisterForm                            | ✅ Done |
+| `/profile`                 | auth                   | ProfilePage                                           | ✅ Done |
+| `/passports`               | passports              | PassportsPage, PassportSearchForm, PassportsTable     | ⬜ Todo |
+| `/passports/$passportId`   | passports              | PassportDetailPage, PassportDetailCard                | ⬜ Todo |
+| `/locations`               | passports              | LocationsDirectoryPage                                | ⬜ Todo |
+| `/locations/$locationSlug` | passports              | PassportsByLocationPage                               | ⬜ Todo |
+| `/articles`                | articles               | ArticlesPage, ArticleCard, ArticleFilters             | ⬜ Todo |
+| `/articles/$slug`          | articles               | ArticleDetail (in route file)                         | ⬜ Todo |
+| `/calendar`                | calendar               | CalendarPage                                          | ⬜ Todo |
+| `/advertisement-requests`  | advertisement-requests | AdvertisementRequestForm, AdvertisementRequestSuccess | ⬜ Todo |
+| `/advertisment`            | advertisements         | AdvertisementPreviewPage                              | ⬜ Todo |
+| (global)                   | misc                   | NotFound, AppErrorBoundary                            | ✅ Done |
 
 ---
 
@@ -75,6 +78,7 @@ src/i18n/locales/
 ---
 
 ## Phase 1: Foundation & Auth Feature
+
 **Goal**: Set up new namespace structure and localize authentication flows.
 
 ### Tasks
@@ -129,6 +133,7 @@ src/i18n/locales/
 ---
 
 ## Phase 2: Passports Feature
+
 **Goal**: Full localization of passport search, detail, and location pages.
 
 ### Tasks
@@ -175,6 +180,7 @@ src/i18n/locales/
 ---
 
 ## Phase 3: Articles Feature
+
 **Goal**: Localize articles listing and detail pages.
 
 ### Tasks
@@ -214,6 +220,7 @@ src/i18n/locales/
 ---
 
 ## Phase 4: Calendar Feature
+
 **Goal**: Localize Ethiopian calendar page.
 
 ### Tasks
@@ -239,6 +246,7 @@ src/i18n/locales/
 ---
 
 ## Phase 5: Advertisements Feature
+
 **Goal**: Localize advertisement request and preview pages.
 
 ### Tasks
@@ -273,6 +281,7 @@ src/i18n/locales/
 ---
 
 ## Phase 6: Final Polish & Testing
+
 **Goal**: Ensure consistency, fix edge cases, and validate all translations.
 
 ### Tasks
@@ -309,11 +318,13 @@ src/i18n/locales/
 ## Implementation Notes
 
 ### Naming Conventions
+
 - Namespace files: `feature-name.json` (lowercase, hyphenated if multi-word)
 - Translation keys: `section.subsection.key` (dot notation, camelCase)
 - Array items: Use `returnObjects: true` for FAQ-style arrays
 
 ### Route Loader Pattern
+
 ```tsx
 // Example: /passports route
 import { loadI18nNamespaces } from '@/i18n/loader'
@@ -329,12 +340,13 @@ export const Route = createFileRoute('/passports/')({
 ```
 
 ### Component Pattern
+
 ```tsx
 import { useTranslation } from 'react-i18next'
 
 export function MyComponent() {
   const { t } = useTranslation('namespace')
-  
+
   return (
     <div>
       <h1>{t('section.title')}</h1>
@@ -345,6 +357,7 @@ export function MyComponent() {
 ```
 
 ### Interpolation Pattern
+
 ```tsx
 // For dynamic values
 t('passports.count', { count: 1300173 })
@@ -359,15 +372,15 @@ t('items', { count: 5 })
 
 ## Progress Summary
 
-| Phase | Description | Status |
-|-------|-------------|--------|
-| 0 | Landing page (existing) | ✅ Complete |
-| 1 | Foundation & Auth | ✅ Complete |
-| 2 | Passports | ✅ Complete |
-| 3 | Articles | ✅ Complete |
-| 4 | Calendar | ✅ Complete |
-| 5 | Advertisements | ✅ Complete |
-| 6 | Final Polish | ✅ Complete |
+| Phase | Description             | Status      |
+| ----- | ----------------------- | ----------- |
+| 0     | Landing page (existing) | ✅ Complete |
+| 1     | Foundation & Auth       | ✅ Complete |
+| 2     | Passports               | ✅ Complete |
+| 3     | Articles                | ✅ Complete |
+| 4     | Calendar                | ✅ Complete |
+| 5     | Advertisements          | ✅ Complete |
+| 6     | Final Polish            | ✅ Complete |
 
 **Total Tasks**: 52  
 **Completed**: 52  
@@ -384,4 +397,4 @@ t('items', { count: 5 })
 
 ---
 
-*Last updated: December 1, 2025*
+_Last updated: December 1, 2025_

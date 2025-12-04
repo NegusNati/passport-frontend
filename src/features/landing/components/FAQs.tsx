@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Plus } from 'lucide-react'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { M } from '@/shared/lib/motion'
@@ -19,9 +19,10 @@ export function FAQsSection() {
   // Get FAQ items from translations
   const faqs = t('faqs.items', { returnObjects: true }) as FaqItem[]
 
-  function toggleIndex(index: number) {
+  // Memoized toggle handler
+  const toggleIndex = useCallback((index: number) => {
     setActiveIndex((current) => (current === index ? null : index))
-  }
+  }, [])
 
   return (
     <section id="faqs" className="py-16 sm:py-20">

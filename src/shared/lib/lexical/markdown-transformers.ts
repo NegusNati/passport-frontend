@@ -83,8 +83,4 @@ const BASE_TRANSFORMERS: Array<Transformer> = [
   ...TEXT_MATCH_TRANSFORMERS,
 ]
 
-export const PASSPORT_TRANSFORMERS: Array<Transformer> = [
-  ...BASE_TRANSFORMERS,
-  IMAGE,
-  VIDEO,
-]
+export const PASSPORT_TRANSFORMERS: Array<Transformer> = [...BASE_TRANSFORMERS, IMAGE, VIDEO]

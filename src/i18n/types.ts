@@ -30,7 +30,16 @@ export interface I18nResources {
 export type I18nNamespace = keyof I18nResources
 
 // All available namespaces
-export const i18nNamespaces: I18nNamespace[] = ['common', 'landing', 'auth', 'errors', 'passports', 'articles', 'calendar', 'advertisements']
+export const i18nNamespaces: I18nNamespace[] = [
+  'common',
+  'landing',
+  'auth',
+  'errors',
+  'passports',
+  'articles',
+  'calendar',
+  'advertisements',
+]
 
 // Augment react-i18next types for type-safe translations
 declare module 'i18next' {

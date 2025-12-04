@@ -30,7 +30,7 @@ export function Seo({
 }: Props) {
   const { i18n } = useTranslation()
   const currentLang = i18n.language || 'en'
-  
+
   const base = SITE?.replace(/\/$/, '') || ''
   // Normalize path: root path '/' becomes empty to avoid trailing slash
   const normalizedPath = path === '/' ? '' : path
@@ -104,15 +104,18 @@ export function Seo({
         <meta property="og:locale" content={ogLocale} />
 
         {/* hreflang alternate links for SEO - each language has its own URL with ?lang= param */}
-        {base && SUPPORTED_LANGUAGES.map((lang) => (
-          <link
-            key={lang.code}
-            rel="alternate"
-            hrefLang={lang.code}
-            href={`${base}${normalizedPath || '/'}?lang=${lang.code}`}
-          />
-        ))}
-        {base && <link rel="alternate" hrefLang="x-default" href={`${base}${normalizedPath || '/'}`} />}
+        {base &&
+          SUPPORTED_LANGUAGES.map((lang) => (
+            <link
+              key={lang.code}
+              rel="alternate"
+              hrefLang={lang.code}
+              href={`${base}${normalizedPath || '/'}?lang=${lang.code}`}
+            />
+          ))}
+        {base && (
+          <link rel="alternate" hrefLang="x-default" href={`${base}${normalizedPath || '/'}`} />
+        )}
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />

@@ -21,9 +21,7 @@ export function ProfilePage({ initialUser, onSignedOut }: ProfilePageProps) {
 
   function formatDate(value: string) {
     try {
-      return new Intl.DateTimeFormat(i18n.language, { dateStyle: 'medium' }).format(
-        new Date(value),
-      )
+      return new Intl.DateTimeFormat(i18n.language, { dateStyle: 'medium' }).format(new Date(value))
     } catch {
       return value
     }

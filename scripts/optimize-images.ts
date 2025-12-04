@@ -17,6 +17,10 @@ const sourceDir = join(process.cwd(), 'src/assets/landingImages/cardImages')
 const targetDir = join(process.cwd(), 'public/media/landing')
 
 const variants: Variant[] = [
+  // Mobile-first: 320w for small screens
+  { format: 'avif', width: 320, quality: 60 },
+  { format: 'webp', width: 320, quality: 75 },
+  // Existing variants
   { format: 'avif', width: 480, quality: 60 },
   { format: 'avif', width: 768, quality: 60 },
   { format: 'avif', width: 1080, quality: 60 },

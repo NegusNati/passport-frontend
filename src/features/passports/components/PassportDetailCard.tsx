@@ -4,6 +4,8 @@ import Barcode from 'react-barcode'
 import { useTranslation } from 'react-i18next'
 
 import star from '@/assets/landingImages/star.svg'
+import { ETHIOPIAN_MONTHS, toEthiopian } from '@/features/calendar/lib/calendar-utils'
+import type { SupportedLanguage } from '@/i18n/config'
 import { ShareButton } from '@/shared/components/ShareButton'
 import { usePdfDownload } from '@/shared/hooks/usePdfDownload'
 import { Button } from '@/shared/ui/button'
@@ -13,27 +15,85 @@ import { type Passport } from '../schemas/passport'
 
 const CARD_DOWNLOAD_ID = 'passport-detail-card'
 
-function getDayOfWeek(firstName?: string, fallbackText?: string) {
+type WeekdayId = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday'
+
+const WEEKDAY_LABELS: Record<WeekdayId, Record<SupportedLanguage, string>> = {
+  monday: {
+    en: 'Monday',
+    am: 'ሰኞ',
+    om: 'Wiixata',
+    ti: 'ሰኑይ',
+  },
+  tuesday: {
+    en: 'Tuesday',
+    am: 'ማክሰኞ',
+    om: 'Kibxata',
+    ti: 'ሰሉስ',
+  },
+  wednesday: {
+    en: 'Wednesday',
+    am: 'ረቡዕ',
+    om: 'Roobii',
+    ti: 'ረቡዕ',
+  },
+  thursday: {
+    en: 'Thursday',
+    am: 'ሐሙስ',
+    om: 'Kamisa',
+    ti: 'ሓሙስ',
+  },
+  friday: {
+    en: 'Friday',
+    am: 'አርብ',
+    om: 'Jimaata',
+    ti: 'ዓርቢ',
+  },
+  saturday: {
+    en: 'Saturday',
+    am: 'ቅዳሜ',
+    om: 'Sanbata',
+    ti: 'ቀዳም',
+  },
+  sunday: {
+    en: 'Sunday',
+    am: 'እሑድ',
+    om: 'Dilbata',
+    ti: 'ሰንበት',
+  },
+}
+
+function localizeWeekdays(
+  weekdays: WeekdayId[],
+  lang: string | undefined,
+  fallbackText: string,
+): string {
+  if (weekdays.length === 0) return fallbackText
+
+  const baseLang = (lang?.split('-')[0] ?? 'en') as SupportedLanguage
+  const supported: SupportedLanguage[] = ['en', 'am', 'om', 'ti']
+  const effectiveLang = supported.includes(baseLang) ? baseLang : 'en'
+
+  return weekdays.map((day) => WEEKDAY_LABELS[day][effectiveLang]).join(', ')
+}
+
+function getDayOfWeek(firstName: string | undefined, fallbackText: string, lang?: string) {
   const normalized = firstName?.trim()
   if (!normalized) {
-    return fallbackText ?? 'Please check the schedule or come Sunday'
+    return fallbackText
   }
 
   const letter = normalized.charAt(0).toLowerCase()
-  const days: string[] = []
+  const days: WeekdayId[] = []
 
-  if (['a', 'b', 'c', 'd', 'e', 'f', 'g'].includes(letter)) days.push('Monday')
-  if (['m', 'n', 'o', 'p', 'q', 'r', 'h', 'i', 'j', 'k', 'l'].includes(letter)) days.push('Tuesday')
-  if (['a', 'b', 'c', 'd', 'e', 't'].includes(letter)) days.push('Wednesday')
+  if (['a', 'b', 'c', 'd', 'e', 'f', 'g'].includes(letter)) days.push('monday')
+  if (['m', 'n', 'o', 'p', 'q', 'r', 'h', 'i', 'j', 'k', 'l'].includes(letter)) days.push('tuesday')
+  if (['a', 'b', 'c', 'd', 'e', 't'].includes(letter)) days.push('wednesday')
   if (['m', 'i', 'j', 'k', 'l', 's', 'u', 'v', 'w', 'x', 'y', 'z'].includes(letter))
-    days.push('Thursday')
-  if (['a', 'f', 'g', 'h', 'n', 'o', 'p', 'q', 'r'].includes(letter)) days.push('Friday')
-  if (['m', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'].includes(letter)) days.push('Saturday')
+    days.push('thursday')
+  if (['a', 'f', 'g', 'h', 'n', 'o', 'p', 'q', 'r'].includes(letter)) days.push('friday')
+  if (['m', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'].includes(letter)) days.push('saturday')
 
-  if (days.length === 0) {
-    return fallbackText ?? 'Please check the schedule or come Sunday'
-  }
-  return days.join(', ')
+  return localizeWeekdays(days, lang, fallbackText)
 }
 
 interface PassportDetailCardProps {
@@ -42,14 +102,57 @@ interface PassportDetailCardProps {
 }
 
 export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailCardProps) {
-  const { t } = useTranslation('passports')
+  const { t, i18n } = useTranslation('passports')
   // Extract names from the full name (assuming "FirstName LastName" format)
   const nameParts = passport.name.split(' ')
   const givenName = nameParts.slice(0, -1).join(' ')
   const surname = nameParts[nameParts.length - 1]
   const firstName = passport.firstName ?? nameParts[0] ?? ''
-  const dayOfWeek = getDayOfWeek(firstName, t('detail.card.checkSchedule'))
+  const dayOfWeek = getDayOfWeek(firstName, t('detail.card.checkSchedule'), i18n.language)
   const cardRef = useRef<HTMLDivElement>(null)
+
+  const isEnglish = (i18n.language?.split('-')[0] ?? 'en') === 'en'
+
+  const receiveAfterLabel = (() => {
+    if (!passport.dateRaw || isEnglish) {
+      // Default: show formatted Gregorian date when language is English
+      return `${passport.date} G.C`
+    }
+
+    const raw = passport.dateRaw
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(raw)
+    if (!match) {
+      return `${passport.date} G.C`
+    }
+
+    const [, yStr, mStr, dStr] = match
+    const year = Number(yStr)
+    const month = Number(mStr)
+    const day = Number(dStr)
+    if (
+      !Number.isFinite(year) ||
+      !Number.isFinite(month) ||
+      !Number.isFinite(day) ||
+      month < 1 ||
+      month > 12 ||
+      day < 1 ||
+      day > 31
+    ) {
+      return `${passport.date} G.C`
+    }
+
+    const gregDate = new Date(Date.UTC(year, month - 1, day))
+    const et = toEthiopian(gregDate)
+    const monthData = ETHIOPIAN_MONTHS.find((m) => m.number === et.month)
+    if (!monthData) {
+      return `${passport.date} G.C`
+    }
+
+    const baseLang = (i18n.language?.split('-')[0] ?? 'en') as SupportedLanguage
+    const monthLabel = baseLang === 'am' ? monthData.amharic : monthData.english
+
+    return `${monthLabel} ${et.day}, ${et.year} E.C`
+  })()
 
   const { download, isDownloading } = usePdfDownload({
     elementRef: cardRef,
@@ -96,17 +199,23 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
               {/* Personal Info */}
               <div className="space-y-4">
                 <div>
-                  <div className="text-xs font-medium text-gray-600">{t('detail.card.surname')}</div>
+                  <div className="text-xs font-medium text-gray-600">
+                    {t('detail.card.surname')}
+                  </div>
                   <div className="mt-0.5 text-lg font-semibold text-gray-900">{surname}</div>
                 </div>
 
                 <div>
-                  <div className="text-xs font-medium text-gray-600">{t('detail.card.givenName')}</div>
+                  <div className="text-xs font-medium text-gray-600">
+                    {t('detail.card.givenName')}
+                  </div>
                   <div className="mt-0.5 text-lg font-semibold text-gray-900">{givenName}</div>
                 </div>
 
                 <div>
-                  <div className="text-xs font-medium text-gray-600">{t('detail.card.location')}</div>
+                  <div className="text-xs font-medium text-gray-600">
+                    {t('detail.card.location')}
+                  </div>
                   <div className="mt-0.5 flex items-center pb-1">
                     <div className="text-lg font-semibold text-gray-900">{passport.city}</div>
                   </div>
@@ -116,20 +225,28 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
               {/* Date and Time Info - Horizontal Layout */}
               <div className="flex flex-wrap items-start gap-x-8 gap-y-4 pt-2">
                 <div>
-                  <div className="text-xs font-medium text-gray-600">{t('detail.card.receiveAfter')}</div>
+                  <div className="text-xs font-medium text-gray-600">
+                    {t('detail.card.receiveAfter')}
+                  </div>
                   <div className="mt-0.5 text-base font-semibold text-gray-900">
-                    {passport.date} G.C
+                    {receiveAfterLabel}
                   </div>
                 </div>
 
                 <div>
-                  <div className="text-xs font-medium text-gray-600">{t('detail.card.dayOfWeek')}</div>
+                  <div className="text-xs font-medium text-gray-600">
+                    {t('detail.card.dayOfWeek')}
+                  </div>
                   <div className="mt-0.5 text-base font-semibold text-gray-900">{dayOfWeek}</div>
                 </div>
 
                 <div>
-                  <div className="text-xs font-medium text-gray-600">{t('detail.card.exactTime')}</div>
-                  <div className="mt-0.5 text-base font-semibold text-gray-900">{t('detail.card.timeRange')}</div>
+                  <div className="text-xs font-medium text-gray-600">
+                    {t('detail.card.exactTime')}
+                  </div>
+                  <div className="mt-0.5 text-base font-semibold text-gray-900">
+                    {t('detail.card.timeRange')}
+                  </div>
                 </div>
               </div>
 

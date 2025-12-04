@@ -12,7 +12,7 @@ type SearchMode = 'number' | 'name'
 export function PassportsPage() {
   const { t } = useTranslation('passports')
   const [searchMode, setSearchMode] = React.useState<SearchMode>('name')
-const [searchFilters, setSearchFilters] = React.useState<PassportSearchFilters>({})
+  const [searchFilters, setSearchFilters] = React.useState<PassportSearchFilters>({})
   const tableRef = React.useRef<HTMLDivElement>(null)
 
   const isSameFilters = React.useCallback((a: PassportSearchFilters, b: PassportSearchFilters) => {

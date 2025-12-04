@@ -58,14 +58,38 @@
   },
   "testimonials": {
     "quotes": [
-      { "name": "Abebe Kebede", "quote": "Haala onlaayiniin hordofuun yeroo koo baay'ee naaf qusateera. Paaspoortiin koo yoom akka qophaa'e sirriittan beeke!" },
-      { "name": "Tigist Haile", "quote": "Adeemsi isaa ifaa fi weebsaayitichi fayyadamuuf baay'ee salphaadha. Paaspoortii koo yeroon eeguree dafee argadhe." },
-      { "name": "Yohannes Gebre", "quote": "Tajaajilli ergaa gabaabaa (SMS) baay'ee gaariidha. Jijjiirama ilaaluuf weebsaayiticha deddeebi'ee ilaaluun natti hin barbaachisne." },
-      { "name": "Dawit Mengistu", "quote": "Nama yeroo baay'ee imalu waanan ta'eef, hojmaanni isaa hammam si'ataa akka ta'ee fi odeeffannoo argachuun hammam salphaa akka ta'e nan dinqisiifadha." },
-      { "name": "Meron Alemu", "quote": "Yeroon iyyannoo koo ilaalchisee gaaffii qabaadhu gareen deeggarsa maamilaa Telegraama irratti argaman baay'ee na gargaaraniiru." },
-      { "name": "Freiwhot Tadesse", "quote": "Salphaatti fayyadamuun kan danda'amu ta'uun isaa na gammachiiseera. Haala paaspoortii koo mirkaneeffachuun baay'ee salphaa akka ta'u taasiseera." },
-      { "name": "Natnael Tadesse", "quote": "Haala paaspoortii koo mirkaneeffachuun hammam salphaa akka ta'e jaalladheera. Gargaarsa fi deeggarsa garee kanaa nan dinqisiifadha." },
-      { "name": "Bereket Tadesse", "quote": "Iftoomina adeemsa kanaatiin baay'een gammade. Yeroon kenname sirrii fi bu'a qabeessa ture." }
+      {
+        "name": "Abebe Kebede",
+        "quote": "Haala onlaayiniin hordofuun yeroo koo baay'ee naaf qusateera. Paaspoortiin koo yoom akka qophaa'e sirriittan beeke!"
+      },
+      {
+        "name": "Tigist Haile",
+        "quote": "Adeemsi isaa ifaa fi weebsaayitichi fayyadamuuf baay'ee salphaadha. Paaspoortii koo yeroon eeguree dafee argadhe."
+      },
+      {
+        "name": "Yohannes Gebre",
+        "quote": "Tajaajilli ergaa gabaabaa (SMS) baay'ee gaariidha. Jijjiirama ilaaluuf weebsaayiticha deddeebi'ee ilaaluun natti hin barbaachisne."
+      },
+      {
+        "name": "Dawit Mengistu",
+        "quote": "Nama yeroo baay'ee imalu waanan ta'eef, hojmaanni isaa hammam si'ataa akka ta'ee fi odeeffannoo argachuun hammam salphaa akka ta'e nan dinqisiifadha."
+      },
+      {
+        "name": "Meron Alemu",
+        "quote": "Yeroon iyyannoo koo ilaalchisee gaaffii qabaadhu gareen deeggarsa maamilaa Telegraama irratti argaman baay'ee na gargaaraniiru."
+      },
+      {
+        "name": "Freiwhot Tadesse",
+        "quote": "Salphaatti fayyadamuun kan danda'amu ta'uun isaa na gammachiiseera. Haala paaspoortii koo mirkaneeffachuun baay'ee salphaa akka ta'u taasiseera."
+      },
+      {
+        "name": "Natnael Tadesse",
+        "quote": "Haala paaspoortii koo mirkaneeffachuun hammam salphaa akka ta'e jaalladheera. Gargaarsa fi deeggarsa garee kanaa nan dinqisiifadha."
+      },
+      {
+        "name": "Bereket Tadesse",
+        "quote": "Iftoomina adeemsa kanaatiin baay'een gammade. Yeroon kenname sirrii fi bu'a qabeessa ture."
+      }
     ]
   },
   "advertise": {

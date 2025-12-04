@@ -58,9 +58,7 @@ function AdvertisementRequestPage() {
               <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
                 {t('request.header.title')}
               </h1>
-              <p className="text-muted-foreground text-lg">
-                {t('request.header.description')}
-              </p>
+              <p className="text-muted-foreground text-lg">{t('request.header.description')}</p>
             </div>
 
             <div className="text-muted-foreground flex items-center gap-6 text-sm">

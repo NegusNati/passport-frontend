@@ -54,7 +54,8 @@
     },
     "empty": {
       "toastTitle": "😔 Paaspoortiin keessan ammatti qophii miti",
-      "toastDescription": "Odeeffannoo kana wajjin kan wal gitu ammatti hin argine. Maaloo odeeffannoo haaraa argachuuf boru deebi'aa ilaalaa."
+      "toastDescription": "Odeeffannoo kana wajjin kan wal gitu ammatti hin argine. Maaloo odeeffannoo haaraa argachuuf boru deebi'aa ilaalaa.",
+      "inlineMessage": "Paaspoortiin keessan ammallee hin qophoofne. Gareen keenya ammayyuu hojjechaa waan jiruuf, maaloo odeeffannoo dabalataatiif boru marsariitii kana irratti deebitanii ilaalaa."
     }
   },
   "detail": {
@@ -86,7 +87,7 @@
       "receiveAfter": "Guyyaa itti fudhachuu dandeessan",
       "dayOfWeek": "Guyyaa Torbanii",
       "exactTime": "Sa'aatii Sirrii",
-      "timeRange": "3:00 - 9:00 (Sa'aatii Biyya Keessaa)",
+      "timeRange": "3:00 - 9:00",
       "checkSchedule": "Maaloo sagantaa ilaalaa yookiin Dilbata ganama koottaa"
     },
     "actions": {

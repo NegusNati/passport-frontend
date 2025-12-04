@@ -242,9 +242,7 @@ export function PassportSearchForm({
           <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
             {t('search.title')}
           </h1>
-          <h2 className="text-muted-foreground mt-4 text-lg">
-            {t('search.subtitle')}
-          </h2>
+          <h2 className="text-muted-foreground mt-4 text-lg">{t('search.subtitle')}</h2>
 
           {/* Search Form */}
           <div className="mt-8">
@@ -392,7 +390,9 @@ export function PassportSearchForm({
               className="text-foreground mt-4 text-sm font-semibold underline underline-offset-4 hover:no-underline"
             >
               {' '}
-              {searchMode === 'number' ? t('search.toggle.useNameInstead') : t('search.toggle.useNumberInstead')}
+              {searchMode === 'number'
+                ? t('search.toggle.useNameInstead')
+                : t('search.toggle.useNumberInstead')}
             </button>
 
             {/* Sample Request Numbers (only shown in number mode) */}

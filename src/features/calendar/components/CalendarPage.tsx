@@ -331,11 +331,7 @@ export function CalendarPage() {
 
   return (
     <section className="relative py-14 sm:py-20">
-      <Seo
-        title={t('seo.title')}
-        description={t('seo.description')}
-        path="/calendar"
-      />
+      <Seo title={t('seo.title')} description={t('seo.description')} path="/calendar" />
       <div className="absolute bottom-[240rem] left-0 z-0 ml-2 translate-y-1/4 transform opacity-60 md:hidden md:opacity-90">
         <img
           src={ethiopic_numbers_pattern}
@@ -478,47 +474,53 @@ export function CalendarPage() {
 
               {viewMode === 'month' ? (
                 <div className="hidden items-center gap-3 sm:flex">
-                  <label
-                    htmlFor="month-select"
-                    className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase"
-                  >
+                  <span className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase">
                     {t('selectors.monthLabel')}
-                  </label>
-                  <select
-                    id="month-select"
-                    value={viewMonth}
-                    onChange={(event) => setViewMonth(Number(event.target.value))}
-                    className="border-input bg-background focus:ring-ring rounded-md border px-4 py-2 text-sm shadow-sm focus:ring-2 focus:outline-none"
+                  </span>
+                  <Select
+                    value={String(viewMonth)}
+                    onValueChange={(value) => setViewMonth(Number(value))}
                   >
-                    {ETHIOPIAN_MONTHS.map((month) => (
-                      <option key={month.number} value={month.number}>
-                        {month.english} · {month.amharic}
-                      </option>
-                    ))}
-                  </select>
-                  <label
-                    htmlFor="year-select"
-                    className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase"
-                  >
+                    <SelectTrigger
+                      id="month-select"
+                      className="border-input bg-background focus:ring-ring h-9 w-[11rem] rounded-md border px-4 text-sm shadow-sm focus:ring-2 focus:outline-none"
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {ETHIOPIAN_MONTHS.map((month) => (
+                        <SelectItem key={month.number} value={String(month.number)}>
+                          {month.english} · {month.amharic}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <span className="text-muted-foreground text-xs font-medium tracking-[0.25em] uppercase">
                     {t('selectors.yearLabel')}
-                  </label>
-                  <select
-                    id="year-select"
-                    value={viewYear}
-                    onChange={(event) => setViewYear(Number(event.target.value))}
-                    className="border-input bg-background focus:ring-ring rounded-md border px-4 py-2 text-sm shadow-sm focus:ring-2 focus:outline-none"
+                  </span>
+                  <Select
+                    value={String(viewYear)}
+                    onValueChange={(value) => setViewYear(Number(value))}
                   >
-                    {years.map((year) => {
-                      const label = useGeezDigits
-                        ? `${toGeezNumeral(year)} · ${year}`
-                        : `${year} · ${toGeezNumeral(year)}`
-                      return (
-                        <option key={year} value={year}>
-                          {label}
-                        </option>
-                      )
-                    })}
-                  </select>
+                    <SelectTrigger
+                      id="year-select"
+                      className="border-input bg-background focus:ring-ring h-9 w-[8rem] rounded-md border px-4 text-sm shadow-sm focus:ring-2 focus:outline-none"
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {years.map((year) => {
+                        const label = useGeezDigits
+                          ? `${toGeezNumeral(year)} · ${year}`
+                          : `${year} · ${toGeezNumeral(year)}`
+                        return (
+                          <SelectItem key={year} value={String(year)}>
+                            {label}
+                          </SelectItem>
+                        )
+                      })}
+                    </SelectContent>
+                  </Select>
                 </div>
               ) : null}
 
@@ -745,15 +747,9 @@ export function CalendarPage() {
           >
             <div className="flex flex-col gap-6 p-6 sm:p-8">
               <header className="space-y-2">
-                <h2 className="text-2xl font-semibold tracking-tight">
-                  {t('geezNumbers.title')}
-                </h2>
-                <p className="text-muted-foreground text-sm">
-                  {t('geezNumbers.description1')}
-                </p>
-                <p className="text-muted-foreground text-sm">
-                  {t('geezNumbers.description2')}
-                </p>
+                <h2 className="text-2xl font-semibold tracking-tight">{t('geezNumbers.title')}</h2>
+                <p className="text-muted-foreground text-sm">{t('geezNumbers.description1')}</p>
+                <p className="text-muted-foreground text-sm">{t('geezNumbers.description2')}</p>
               </header>
 
               {/* small hint line */}
@@ -769,7 +765,9 @@ export function CalendarPage() {
                       <th className="bg-secondary/60 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">
                         {t('geezNumbers.tableHeaders.number')}
                       </th>
-                      <th className="bg-secondary/60 px-4 py-3">{t('geezNumbers.tableHeaders.symbol')}</th>
+                      <th className="bg-secondary/60 px-4 py-3">
+                        {t('geezNumbers.tableHeaders.symbol')}
+                      </th>
                       <th className="bg-secondary/60 px-4 py-3 first:rounded-l-lg last:rounded-r-lg">
                         {t('geezNumbers.tableHeaders.amharicName')}
                       </th>
@@ -811,7 +809,9 @@ export function CalendarPage() {
 
               {/* examples */}
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold tracking-tight">{t('geezNumbers.examplesTitle')}</h3>
+                <h3 className="text-lg font-semibold tracking-tight">
+                  {t('geezNumbers.examplesTitle')}
+                </h3>
                 <ul className="text-foreground/80 list-disc pl-6 text-sm">
                   {[2025, 187, 50000].map((value) => (
                     <li key={value} className="">
@@ -829,12 +829,8 @@ export function CalendarPage() {
               <h3 className="text-foreground text-base font-semibold tracking-tight">
                 {t('readingTips.title')}
               </h3>
-              <p className="mt-2">
-                {t('readingTips.tip1')}
-              </p>
-              <p className="mt-2">
-                {t('readingTips.tip2')}
-              </p>
+              <p className="mt-2">{t('readingTips.tip1')}</p>
+              <p className="mt-2">{t('readingTips.tip2')}</p>
             </div>
             <AdSlot
               orientation="vertical"

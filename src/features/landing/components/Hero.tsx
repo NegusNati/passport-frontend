@@ -1,5 +1,4 @@
 import { Link } from '@tanstack/react-router'
-import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRightIcon, IdCardIcon, Users2Icon } from 'lucide-react'
 import { forwardRef, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -10,7 +9,6 @@ import LandingImageThree from '@/assets/landingImages/cardImages/Landing_img_3.w
 import { AnimatedBorderCard, Card } from '@/shared/components/common'
 import { CardSwapLazy } from '@/shared/components/common/CardSwapLazy'
 import { useAnalytics } from '@/shared/lib/analytics'
-import { M } from '@/shared/lib/motion'
 import { Button } from '@/shared/ui/button'
 
 // Card keys for i18n
@@ -43,16 +41,16 @@ const CARD_SOURCES: Record<
   }
 > = {
   'hero-card-1': {
-    avif: '/media/landing/hero-card-1-480w.avif 480w, /media/landing/hero-card-1-768w.avif 768w, /media/landing/hero-card-1-1080w.avif 1080w',
-    webp: '/media/landing/hero-card-1-480w.webp 480w, /media/landing/hero-card-1-768w.webp 768w, /media/landing/hero-card-1-1080w.webp 1080w',
+    avif: '/media/landing/hero-card-1-320w.avif 320w, /media/landing/hero-card-1-480w.avif 480w, /media/landing/hero-card-1-768w.avif 768w, /media/landing/hero-card-1-1080w.avif 1080w',
+    webp: '/media/landing/hero-card-1-320w.webp 320w, /media/landing/hero-card-1-480w.webp 480w, /media/landing/hero-card-1-768w.webp 768w, /media/landing/hero-card-1-1080w.webp 1080w',
   },
   'hero-card-2': {
-    avif: '/media/landing/hero-card-2-480w.avif 480w, /media/landing/hero-card-2-768w.avif 768w, /media/landing/hero-card-2-1080w.avif 1080w',
-    webp: '/media/landing/hero-card-2-480w.webp 480w, /media/landing/hero-card-2-768w.webp 768w, /media/landing/hero-card-2-1080w.webp 1080w',
+    avif: '/media/landing/hero-card-2-320w.avif 320w, /media/landing/hero-card-2-480w.avif 480w, /media/landing/hero-card-2-768w.avif 768w, /media/landing/hero-card-2-1080w.avif 1080w',
+    webp: '/media/landing/hero-card-2-320w.webp 320w, /media/landing/hero-card-2-480w.webp 480w, /media/landing/hero-card-2-768w.webp 768w, /media/landing/hero-card-2-1080w.webp 1080w',
   },
   'hero-card-3': {
-    avif: '/media/landing/hero-card-3-480w.avif 480w, /media/landing/hero-card-3-768w.avif 768w, /media/landing/hero-card-3-1080w.avif 1080w',
-    webp: '/media/landing/hero-card-3-480w.webp 480w, /media/landing/hero-card-3-768w.webp 768w, /media/landing/hero-card-3-1080w.webp 1080w',
+    avif: '/media/landing/hero-card-3-320w.avif 320w, /media/landing/hero-card-3-480w.avif 480w, /media/landing/hero-card-3-768w.avif 768w, /media/landing/hero-card-3-1080w.avif 1080w',
+    webp: '/media/landing/hero-card-3-320w.webp 320w, /media/landing/hero-card-3-480w.webp 480w, /media/landing/hero-card-3-768w.webp 768w, /media/landing/hero-card-3-1080w.webp 1080w',
   },
 }
 
@@ -129,10 +127,20 @@ HeroCard.displayName = 'HeroCard'
 
 export function Hero() {
   const { t } = useTranslation('landing')
-  const reduce = useReducedMotion()
   const { capture } = useAnalytics()
   const [enableCardSwap, setEnableCardSwap] = useState(false)
-  const pulseEnabled = !reduce
+
+  // Check reduced motion preference via CSS media query
+  const [reduceMotion, setReduceMotion] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReduceMotion(mq.matches)
+    const handler = (e: MediaQueryListEvent) => setReduceMotion(e.matches)
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
+
+  const pulseEnabled = !reduceMotion
 
   // Build translated hero cards
   const heroCards: HeroCardData[] = HERO_CARD_KEYS.map((key) => ({
@@ -151,29 +159,11 @@ export function Hero() {
     })
   }
 
-  useEffect(() => {
-    if (typeof document === 'undefined') return
-    const heroImageUrl = heroCards[0]?.image
-    if (!heroImageUrl) return
-
-    const existing = document.head.querySelector(
-      `link[rel="preload"][href="${heroImageUrl}"]`,
-    ) as HTMLLinkElement | null
-    if (existing) {
-      existing.setAttribute('fetchpriority', 'high')
-      return
-    }
-
-    const link = document.createElement('link')
-    link.rel = 'preload'
-    link.as = 'image'
-    link.href = heroImageUrl
-    link.setAttribute('fetchpriority', 'high')
-    document.head.appendChild(link)
-  }, [heroCards])
+  // Note: LCP image preload is now handled statically in index.html
+  // for better performance (no JS execution needed)
 
   useEffect(() => {
-    if (reduce || enableCardSwap) return
+    if (reduceMotion || enableCardSwap) return
     if (typeof window === 'undefined') return
 
     const mediaQuery = window.matchMedia('(min-width: 768px)')
@@ -212,20 +202,17 @@ export function Hero() {
         window.clearTimeout(timeoutId)
       }
     }
-  }, [reduce, enableCardSwap])
+  }, [reduceMotion, enableCardSwap])
 
   return (
-    <section className="relative isolate min-h-[80svh] overflow-hidden overscroll-none pb-0 md:min-h-[90svh] md:overflow-hidden md:pb-[120px] lg:pb-[80px]">
+    <section className="relative isolate min-h-[80svh] pb-0 md:min-h-[90svh] md:pb-[120px] lg:pb-[80px]">
       {/* Container to constrain width and center content */}
       <div className="container mx-auto max-w-7xl px-4 md:px-6">
         {/* Two-column layout on md+; single column on mobile */}
         <div className="grid items-center gap-8 pt-10 md:mt-10 md:grid-cols-2 md:pt-24">
-          {/* Left: copy / CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: reduce ? 0 : 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: M.duration, ease: M.ease }}
-            className="space-y-6 md:mt-18 md:ml-6"
+          {/* Left: copy / CTA - CSS animation instead of Framer Motion */}
+          <div
+            className={`space-y-6 md:mt-18 md:ml-6 ${reduceMotion ? '' : 'animate-hero-fade-in'}`}
           >
             {/* Stats row */}
             <div className="flex flex-wrap items-center gap-3">
@@ -235,7 +222,7 @@ export function Hero() {
               </AnimatedBorderCard>
               <AnimatedBorderCard variant="secondary" size="sm" className="border-amber-100/50">
                 <IdCardIcon className="text-primary h-4 w-4" />
-                {t('hero.stats.passportsConfirmed', { count: 1300173 })}
+                {t('hero.stats.passportsConfirmed', { count: 1499143 })}
               </AnimatedBorderCard>
             </div>
 
@@ -302,7 +289,7 @@ export function Hero() {
                 </a>
               </div>
             </div>
-          </motion.div>
+          </div>
 
           {/* Right: CardSwap (visible on md+) */}
           <div className="hidden translate-x-[-45px] translate-y-[-65px] md:block">

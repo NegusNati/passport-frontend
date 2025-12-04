@@ -6,12 +6,12 @@ This document describes how internationalization (i18n) is implemented and provi
 
 ## 1. Supported Languages
 
-| Code | Language | Native Name | Script |
-|------|----------|-------------|--------|
-| `en` | English | English | Latin |
-| `am` | Amharic | አማርኛ | Ge'ez |
-| `om` | Oromo | Afaan Oromoo | Latin |
-| `ti` | Tigrinya | ትግርኛ | Ge'ez |
+| Code | Language | Native Name  | Script |
+| ---- | -------- | ------------ | ------ |
+| `en` | English  | English      | Latin  |
+| `am` | Amharic  | አማርኛ         | Ge'ez  |
+| `om` | Oromo    | Afaan Oromoo | Latin  |
+| `ti` | Tigrinya | ትግርኛ         | Ge'ez  |
 
 All languages are **left-to-right (LTR)**. No RTL support is needed.
 
@@ -99,6 +99,7 @@ To avoid bundling all languages upfront:
    ...
    ```
 3. Update `src/i18n/index.ts`:
+
    ```ts
    import Backend from 'i18next-http-backend'
 
@@ -307,4 +308,4 @@ pnpm i18next-parser
 
 ---
 
-*Last updated: 1 December 2025*
+_Last updated: 1 December 2025_

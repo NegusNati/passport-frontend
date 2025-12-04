@@ -46,6 +46,8 @@ export const Passport = z.object({
   name: z.string(),
   firstName: z.string().optional(),
   date: z.string(),
+  // Raw Gregorian date string (YYYY-MM-DD) from API, used for calendar conversions
+  dateRaw: z.string().optional(),
   requestNumber: z.string(),
   status: z.enum(['pending', 'processing', 'ready', 'completed']).default('pending'),
   city: z.string().optional(),

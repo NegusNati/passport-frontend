@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { LiteYouTubeEmbed } from '@/shared/components/LiteYouTubeEmbed'
@@ -58,6 +58,11 @@ export function VideoTabs() {
   const activeTab = useMemo(() => TABS.find((t) => t.key === tab) ?? TABS[0], [tab])
   const videoId = useMemo(() => extractVideoId(activeTab?.youtubeLink), [activeTab?.youtubeLink])
 
+  // Memoized tab change handler
+  const handleTabChange = useCallback((key: (typeof TABS)[number]['key']) => {
+    setTab(key)
+  }, [])
+
   return (
     <section className="py-12 sm:py-16" id="videos">
       <Container>
@@ -80,7 +85,7 @@ export function VideoTabs() {
                 return (
                   <button
                     key={t.key}
-                    onClick={() => setTab(t.key)}
+                    onClick={() => handleTabChange(t.key)}
                     className={[
                       'focus-visible:ring-ring rounded-lg border px-4 py-1.5 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                       'shadow-sm',

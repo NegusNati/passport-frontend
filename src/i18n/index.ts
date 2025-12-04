@@ -42,9 +42,10 @@ import passports_ti from './locales/ti/passports.json'
 
 // Restore language from localStorage if available
 const storedLang = typeof window !== 'undefined' ? localStorage.getItem('i18nextLng') : null
-const initialLang = storedLang && SUPPORTED_LANGUAGES.some((l) => l.code === storedLang)
-  ? storedLang
-  : DEFAULT_LANGUAGE
+const initialLang =
+  storedLang && SUPPORTED_LANGUAGES.some((l) => l.code === storedLang)
+    ? storedLang
+    : DEFAULT_LANGUAGE
 
 // eslint-disable-next-line import/no-named-as-default-member
 i18n.use(initReactI18next).init({
@@ -93,7 +94,16 @@ i18n.use(initReactI18next).init({
   lng: initialLang,
   fallbackLng: DEFAULT_LANGUAGE,
   supportedLngs: SUPPORTED_LANGUAGES.map((l) => l.code),
-  ns: ['common', 'landing', 'auth', 'errors', 'passports', 'articles', 'calendar', 'advertisements'],
+  ns: [
+    'common',
+    'landing',
+    'auth',
+    'errors',
+    'passports',
+    'articles',
+    'calendar',
+    'advertisements',
+  ],
   defaultNS: 'common',
   interpolation: { escapeValue: false },
   react: { useSuspense: false },
