@@ -6,7 +6,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import type { PostHog } from 'posthog-js'
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import { HelmetProvider } from 'react-helmet-async'
 
 import { restoreAuthTokenFromStorage } from '@/api/client'
@@ -90,9 +90,10 @@ if ('serviceWorker' in navigator) {
 
 // Render the app
 const rootElement = document.getElementById('app')
-if (rootElement && !rootElement.innerHTML) {
-  const root = createRoot(rootElement)
-
+if (rootElement) {
+  // Check if the page was prerendered (has content already)
+  const isPrerendered = document.documentElement.hasAttribute('data-prerendered')
+  
   const AppContent = (
     <PWAInstallProvider>
       <ThemeProvider>
@@ -130,7 +131,7 @@ if (rootElement && !rootElement.innerHTML) {
     },
   }
 
-  root.render(
+  const FullApp = (
     <StrictMode>
       <PostHogBoundary
         enabled={Boolean(isPostHogEnabled)}
@@ -139,8 +140,16 @@ if (rootElement && !rootElement.innerHTML) {
       >
         {AppContent}
       </PostHogBoundary>
-    </StrictMode>,
+    </StrictMode>
   )
+
+  if (isPrerendered) {
+    // Hydrate prerendered content - React will attach to existing DOM
+    hydrateRoot(rootElement, FullApp)
+  } else {
+    // Fresh render for non-prerendered pages (dev mode, etc.)
+    createRoot(rootElement).render(FullApp)
+  }
 }
 
 // Start measuring Web Vitals and sending to PostHog
