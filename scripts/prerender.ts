@@ -22,6 +22,11 @@ const DIST_DIR = resolve(process.cwd(), 'dist')
 const ROUTES_TO_PRERENDER = ['/']
 const PORT = 4567
 
+// Timeouts (in ms)
+const PAGE_TIMEOUT = 30000 // 30s for page load
+const RENDER_WAIT = 3000 // 3s for React to render
+const OVERALL_TIMEOUT = 60000 // 60s total timeout for prerendering
+
 // Check if we should skip prerendering (CI without puppeteer, etc.)
 const SKIP_PRERENDER = process.env.SKIP_PRERENDER === 'true'
 
@@ -45,7 +50,16 @@ async function prerenderRoute(
   browser: import('puppeteer').Browser,
   route: string,
 ): Promise<string> {
+  console.log(`[prerender] Creating new page for ${route}...`)
   const page = await browser.newPage()
+
+  // Log console messages from the page for debugging
+  page.on('console', (msg) => {
+    const type = msg.type()
+    if (type === 'error' || type === 'warn') {
+      console.log(`[prerender] Page ${type}: ${msg.text()}`)
+    }
+  })
 
   // Log errors for debugging
   page.on('pageerror', (err) => {
@@ -53,18 +67,24 @@ async function prerenderRoute(
   })
 
   // Set viewport for consistent rendering
+  console.log(`[prerender] Setting viewport...`)
   await page.setViewport({ width: 1280, height: 800 })
 
-  // Block only analytics to speed up rendering
+  // Block analytics and external resources to speed up rendering
+  console.log(`[prerender] Setting up request interception...`)
   await page.setRequestInterception(true)
   page.on('request', (req) => {
     const url = req.url()
-    // Block analytics, tracking only
+    const resourceType = req.resourceType()
+
+    // Block analytics, tracking, and external API calls
     if (
       url.includes('posthog') ||
       url.includes('analytics.passport.et') ||
       url.includes('gtm') ||
-      url.includes('googletagmanager')
+      url.includes('googletagmanager') ||
+      url.includes('api.passport.et') || // Block API calls - we want static shell
+      (resourceType === 'image' && !url.includes('localhost')) // Block external images
     ) {
       void req.abort()
     } else {
@@ -73,36 +93,38 @@ async function prerenderRoute(
   })
 
   const url = `http://localhost:${PORT}${route}`
-  console.log(`[prerender] Rendering ${route}...`)
+  console.log(`[prerender] Navigating to ${url}...`)
 
-  await page.goto(url, {
-    waitUntil: 'load',
-    timeout: 60000,
+  try {
+    await page.goto(url, {
+      waitUntil: 'domcontentloaded', // Don't wait for all resources, just DOM
+      timeout: PAGE_TIMEOUT,
+    })
+    console.log(`[prerender] Page loaded, waiting for React to render...`)
+  } catch (navError) {
+    console.error(`[prerender] Navigation error:`, navError)
+    throw navError
+  }
+
+  // Give React time to render
+  await new Promise((r) => setTimeout(r, RENDER_WAIT))
+
+  // Check if app has content
+  const hasContent = await page.evaluate(() => {
+    const app = document.getElementById('app')
+    return app && app.innerHTML.trim().length > 0
   })
 
-  // Give JS time to execute and React to render
-  await new Promise((r) => setTimeout(r, 2000))
-
-  // Wait for React to hydrate - wait for any element that indicates app mounted
-  const selectors = ['#app > *', 'header', 'main', 'section']
-  let foundSelector = null
-  for (const sel of selectors) {
-    const found = await page.waitForSelector(sel, { timeout: 5000 }).catch(() => null)
-    if (found) {
-      foundSelector = sel
-      break
-    }
+  if (!hasContent) {
+    console.warn(`[prerender] Warning: App div appears empty for ${route}`)
+  } else {
+    console.log(`[prerender] App content detected`)
   }
-
-  if (!foundSelector) {
-    console.warn(`[prerender] Warning: Could not find any content selector for ${route}`)
-  }
-
-  // Additional wait to ensure all content is rendered
-  await new Promise((r) => setTimeout(r, 1000))
 
   // Get the rendered HTML
+  console.log(`[prerender] Extracting HTML...`)
   const html = await page.content()
+  console.log(`[prerender] Got ${html.length} bytes of HTML`)
 
   await page.close()
   return html
@@ -176,11 +198,21 @@ async function main() {
 
   console.log('[prerender] Starting prerender process...')
 
+  // Set overall timeout
+  const timeoutId = setTimeout(() => {
+    console.error(`[prerender] Overall timeout (${OVERALL_TIMEOUT}ms) exceeded, exiting...`)
+    console.warn('[prerender] Prerendering skipped due to timeout - build will continue without it')
+    process.exit(0) // Exit cleanly so build doesn't fail
+  }, OVERALL_TIMEOUT)
+
   // Dynamically import puppeteer (might not be available in all environments)
   let puppeteer: typeof import('puppeteer')
   try {
+    console.log('[prerender] Importing puppeteer...')
     puppeteer = await import('puppeteer')
+    console.log('[prerender] Puppeteer imported successfully')
   } catch {
+    clearTimeout(timeoutId)
     console.warn('[prerender] Puppeteer not available, skipping prerender')
     console.warn('[prerender] Install with: pnpm add -D puppeteer')
     return
@@ -192,18 +224,41 @@ async function main() {
   // Launch browser - wrap in try/catch to handle missing Chrome gracefully
   let browser: import('puppeteer').Browser
   try {
+    // Use system Chromium if PUPPETEER_EXECUTABLE_PATH is set (Docker), otherwise let Puppeteer find Chrome
+    const executablePath = process.env.PUPPETEER_EXECUTABLE_PATH
+    console.log(
+      `[prerender] Launching browser${executablePath ? ` with executable: ${executablePath}` : ''}...`,
+    )
     browser = await puppeteer.default.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+      executablePath: executablePath || undefined,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--disable-software-rasterizer',
+        '--disable-extensions',
+        '--no-first-run',
+        '--no-zygote', // Important for Docker
+        '--single-process', // Required for some Docker environments
+      ],
     })
+    console.log('[prerender] Browser launched successfully')
   } catch (launchError) {
+    clearTimeout(timeoutId)
     server.close()
     const errorMessage = launchError instanceof Error ? launchError.message : String(launchError)
     // Check if it's a "Chrome not found" error - skip gracefully instead of failing build
-    if (errorMessage.includes('Could not find Chrome') || errorMessage.includes('No usable sandbox')) {
+    if (
+      errorMessage.includes('Could not find Chrome') ||
+      errorMessage.includes('No usable sandbox')
+    ) {
       console.warn('[prerender] Chrome/Chromium not available, skipping prerender')
       console.warn('[prerender] This is normal in Docker/CI environments without a browser')
-      console.warn('[prerender] To enable prerendering, install Chrome or set SKIP_PRERENDER=true to silence this warning')
+      console.warn(
+        '[prerender] To enable prerendering, install Chrome or set SKIP_PRERENDER=true to silence this warning',
+      )
       return
     }
     // For other errors, log and exit
@@ -229,8 +284,10 @@ async function main() {
     console.log('[prerender] ✅ Prerendering complete!')
   } catch (error) {
     console.error('[prerender] Error during prerendering:', error)
-    process.exit(1)
+    // Don't fail the build - just skip prerendering
+    console.warn('[prerender] Prerendering failed - build will continue without it')
   } finally {
+    clearTimeout(timeoutId)
     await browser.close()
     server.close()
   }

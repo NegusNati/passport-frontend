@@ -1,7 +1,32 @@
 # ============================================
 # Stage 1: Build the application
 # ============================================
-FROM node:20-alpine AS builder
+# Using Debian-based image instead of Alpine for Chromium/Puppeteer compatibility
+FROM node:20-slim AS builder
+
+# Install Chromium and dependencies for Puppeteer prerendering
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    chromium \
+    fonts-liberation \
+    libnss3 \
+    libatk-bridge2.0-0 \
+    libdrm2 \
+    libxkbcommon0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxrandr2 \
+    libgbm1 \
+    libasound2 \
+    libpangocairo-1.0-0 \
+    libgtk-3-0 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Tell Puppeteer to use system Chromium instead of downloading its own
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
+
+# Increase shared memory for Chromium (default 64MB is too small)
+# This is handled by --disable-dev-shm-usage flag in puppeteer args instead
 
 # Enable pnpm via corepack
 RUN corepack enable && corepack prepare pnpm@latest --activate
@@ -33,10 +58,7 @@ ENV VITE_HORIZON_URL=$VITE_HORIZON_URL
 ENV VITE_PUBLIC_POSTHOG_KEY=$VITE_PUBLIC_POSTHOG_KEY
 ENV VITE_PUBLIC_POSTHOG_HOST=$VITE_PUBLIC_POSTHOG_HOST
 
-# Skip prerendering in Docker (requires Chrome/Puppeteer which isn't available in Alpine)
-ENV SKIP_PRERENDER=true
-
-# Build the application
+# Build the application (includes prerendering with Chromium)
 RUN pnpm build
 
 # ============================================
