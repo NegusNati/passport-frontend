@@ -33,6 +33,8 @@ ENV VITE_HORIZON_URL=$VITE_HORIZON_URL
 ENV VITE_PUBLIC_POSTHOG_KEY=$VITE_PUBLIC_POSTHOG_KEY
 ENV VITE_PUBLIC_POSTHOG_HOST=$VITE_PUBLIC_POSTHOG_HOST
 
+# Skip prerendering in Docker (requires Chrome/Puppeteer which isn't available in Alpine)
+ENV SKIP_PRERENDER=true
 
 # Build the application
 RUN pnpm build

@@ -189,11 +189,27 @@ async function main() {
   // Start preview server
   const server = await startServer()
 
-  // Launch browser
-  const browser = await puppeteer.default.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  })
+  // Launch browser - wrap in try/catch to handle missing Chrome gracefully
+  let browser: import('puppeteer').Browser
+  try {
+    browser = await puppeteer.default.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+    })
+  } catch (launchError) {
+    server.close()
+    const errorMessage = launchError instanceof Error ? launchError.message : String(launchError)
+    // Check if it's a "Chrome not found" error - skip gracefully instead of failing build
+    if (errorMessage.includes('Could not find Chrome') || errorMessage.includes('No usable sandbox')) {
+      console.warn('[prerender] Chrome/Chromium not available, skipping prerender')
+      console.warn('[prerender] This is normal in Docker/CI environments without a browser')
+      console.warn('[prerender] To enable prerendering, install Chrome or set SKIP_PRERENDER=true to silence this warning')
+      return
+    }
+    // For other errors, log and exit
+    console.error('[prerender] Failed to launch browser:', errorMessage)
+    process.exit(1)
+  }
 
   try {
     for (const route of ROUTES_TO_PRERENDER) {
