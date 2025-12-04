@@ -7,7 +7,7 @@
     "start": "vite --port 3000",
     "optimize:images": "tsx scripts/optimize-images.ts",
     "build": "pnpm optimize:images && vite build && tsc",
-    "postbuild": "node --import tsx scripts/generate-sitemap.ts && node --import tsx scripts/prerender.ts",
+    "postbuild": "node --import tsx scripts/generate-sitemap.ts && node --import tsx scripts/prerender.ts && node --import tsx scripts/critical-css.ts",
     "serve": "vite preview",
     "test": "vitest run",
     "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
@@ -16,7 +16,8 @@
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
     "generate:sitemap": "tsx scripts/generate-sitemap.ts",
-    "prerender": "tsx scripts/prerender.ts"
+    "prerender": "tsx scripts/prerender.ts",
+    "critical-css": "tsx scripts/critical-css.ts"
   },
   "dependencies": {
     "@lexical/code": "^0.36.2",

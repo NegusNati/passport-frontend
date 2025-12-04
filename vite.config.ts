@@ -1,100 +1,7 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
-import { resolve } from 'node:path'
-
 import tailwindcss from '@tailwindcss/vite'
 import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import { defineConfig, type PluginOption } from 'vite'
-
-type CriticalCssOptions = {
-  preload?: 'none' | 'js' | 'css' | 'media' | 'swap' | string
-  pruneSource?: boolean
-  reduceInlineStyles?: boolean
-  logLevel?: 'info' | 'warn' | 'error' | 'silent'
-  path?: string
-  publicPath?: string
-}
-
-type CriticalCssConstructor = new (options: CriticalCssOptions) => {
-  process(html: string): Promise<string>
-}
-
-async function loadCriticalCssPlugin(): Promise<PluginOption | null> {
-  // Allow explicit disable via env var
-  if (process.env.VITE_DISABLE_CRITICAL_CSS === 'true') {
-    return null
-  }
-
-  // Enable by default in production builds (no env var needed)
-  // This improves FCP by inlining above-the-fold CSS
-  try {
-    const BeastiesClass = await resolveCriticalCssConstructor()
-    if (!BeastiesClass) {
-      throw new Error('No critical CSS inliner (beasties) is installed')
-    }
-
-    return {
-      name: 'passport-critical-css',
-      enforce: 'post',
-      apply: 'build',
-      // Use writeBundle (runs after files are written to disk)
-      // instead of generateBundle (runs before files exist on disk)
-      async writeBundle(options) {
-        const outDir = options.dir || 'dist'
-        const htmlPath = resolve(outDir, 'index.html')
-
-        if (!existsSync(htmlPath)) {
-          console.warn('[critical-css] index.html not found in', outDir)
-          return
-        }
-
-        const beasties = new BeastiesClass({
-          preload: 'swap',
-          pruneSource: false,
-          reduceInlineStyles: false,
-          logLevel: 'info',
-          path: outDir,
-          publicPath: '/',
-        })
-
-        try {
-          const html = readFileSync(htmlPath, 'utf-8')
-          const inlined = await beasties.process(html)
-          writeFileSync(htmlPath, inlined)
-          console.log('[critical-css] Inlined above-the-fold CSS into index.html')
-        } catch (error) {
-          console.warn(`[critical-css] Failed to inline: ${(error as Error).message}`)
-        }
-      },
-    }
-  } catch (error) {
-    if (process.env.NODE_ENV !== 'production') {
-      const reason = (error as Error)?.message ?? 'unknown error'
-      console.warn(
-        `[perf] Critical CSS inlining skipped (${reason}). Install "beasties" to enable.`,
-      )
-    }
-    return null
-  }
-}
-
-async function resolveCriticalCssConstructor(): Promise<CriticalCssConstructor | null> {
-  try {
-    const mod = (await import('beasties')) as
-      | CriticalCssConstructor
-      | { default?: CriticalCssConstructor }
-    const ctor = typeof mod === 'function' ? mod : mod.default
-    if (typeof ctor === 'function') {
-      return ctor
-    }
-  } catch (error) {
-    if (process.env.NODE_ENV !== 'production' && process.env.PERF_DEBUG === 'true') {
-      console.info(`[perf] Critical CSS inliner missing: ${(error as Error).message}`)
-    }
-  }
-
-  return null
-}
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
@@ -104,10 +11,8 @@ export default defineConfig(async () => {
     tailwindcss(),
   ]
 
-  const criticalCssPlugin = await loadCriticalCssPlugin()
-  if (criticalCssPlugin) {
-    plugins.push(criticalCssPlugin)
-  }
+  // Note: Critical CSS inlining (beasties) is now handled in postbuild
+  // after prerendering, so the CSS is extracted from the prerendered HTML
 
   return {
     plugins,
