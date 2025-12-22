@@ -88,7 +88,9 @@
       "dayOfWeek": "Day of The Week",
       "exactTime": "Exact Time",
       "timeRange": "3:00 - 9:00 LT",
-      "checkSchedule": "Please check the schedule or come Sunday"
+      "checkSchedule": "Please check the schedule or come Sunday",
+      "readyHeadline": "Your Passport is READY!",
+      "pickupNotice": "You can pick up your passport at {{city}}, starting from {{receiveAfterLabel}}, on {{dayOfWeek}} days of the week."
     },
     "actions": {
       "download": "Download",

@@ -88,7 +88,9 @@
       "dayOfWeek": "መዓልቲ ናይ ሰሙን",
       "exactTime": "ትኽክለኛ ሰዓት",
       "timeRange": "3:00 - 9:00 (ሰዓት)",
-      "checkSchedule": "በጃኹም እቲ መደብ ኣረጋግጹ ወይ ሰንበት ንጉሆ ምጹ"
+      "checkSchedule": "በጃኹም እቲ መደብ ኣረጋግጹ ወይ ሰንበት ንጉሆ ምጹ",
+      "readyHeadline": "ፓስፖርትኩም ድሉው እዩ!",
+      "pickupNotice": "ፓስፖርትኩም ኣብ {{city}} ክትወስዱ ትኽእሉ፣ ካብ {{receiveAfterLabel}} ጀሚሩ፣ ኣብ መዓልታት ሰሙን {{dayOfWeek}}።"
     },
     "actions": {
       "download": "ኣውርድ (Download)",

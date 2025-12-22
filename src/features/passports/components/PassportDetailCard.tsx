@@ -4,6 +4,7 @@ import Barcode from 'react-barcode'
 import { useTranslation } from 'react-i18next'
 
 import star from '@/assets/landingImages/star.svg'
+import { BorderTrail } from '@/components/motion-primitives/border-trail'
 import { ETHIOPIAN_MONTHS, toEthiopian } from '@/features/calendar/lib/calendar-utils'
 import type { SupportedLanguage } from '@/i18n/config'
 import { ShareButton } from '@/shared/components/ShareButton'
@@ -185,13 +186,31 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
             </div>
 
             {/* Header */}
-            <div className="relative z-10 mb-8 text-center text-[#8D2041]">
+            <div className="relative z-10 mb-4 text-center text-[#8D2041]">
               <h1 className="mb-1 text-xl font-bold text-red-900 md:text-2xl">
                 {t('detail.card.ethTitle')}
               </h1>
               <h2 className="font-gotham text-lg font-semibold text-red-800 md:text-xl">
                 {t('detail.card.engTitle')}
               </h2>
+            </div>
+
+            {/* Pickup Notice */}
+            <div className="border-primary/25 bg-primary/5 text-foreground relative z-10 mb-8 overflow-hidden rounded-2xl border px-4 py-3 text-sm font-medium shadow-sm md:px-6 md:py-4 md:text-base">
+              <BorderTrail className="bg-primary/80" size={72} />
+              <div className="bg-primary/80 absolute inset-y-0 left-0 w-1" aria-hidden="true" />
+              <div className="pl-3">
+                <p className="text-primary text-xs font-semibold tracking-[0.2em] uppercase md:text-sm">
+                  {t('detail.card.readyHeadline')}
+                </p>
+                <p className="mt-1">
+                  {t('detail.card.pickupNotice', {
+                    city: passport.city,
+                    receiveAfterLabel,
+                    dayOfWeek,
+                  })}
+                </p>
+              </div>
             </div>
 
             {/* Passport Content */}

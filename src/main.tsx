@@ -93,7 +93,7 @@ const rootElement = document.getElementById('app')
 if (rootElement) {
   // Check if the page was prerendered (has content already)
   const isPrerendered = document.documentElement.hasAttribute('data-prerendered')
-  
+
   const AppContent = (
     <PWAInstallProvider>
       <ThemeProvider>

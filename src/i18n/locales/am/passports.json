@@ -88,7 +88,9 @@
       "dayOfWeek": "የሳምንቱ ቀን",
       "exactTime": "ትክክለኛ ሰዓት",
       "timeRange": "3:00 - 9:00 ሰዓት",
-      "checkSchedule": "እባክዎ ፕሮግራሙን ያረጋግጡ ወይም እሁድ ጠዋት ይምጡ"
+      "checkSchedule": "እባክዎ ፕሮግራሙን ያረጋግጡ ወይም እሁድ ጠዋት ይምጡ",
+      "readyHeadline": "ፓስፖርትዎ ዝግጁ ነው!",
+      "pickupNotice": "ፓስፖርትዎን በ{{city}} መውሰድ ይችላሉ፣ ከ{{receiveAfterLabel}} ጀምሮ፣ በሳምንቱ {{dayOfWeek}} ቀናት።"
     },
     "actions": {
       "download": "አውርድ (Download)",
