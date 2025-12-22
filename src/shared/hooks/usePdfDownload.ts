@@ -61,12 +61,15 @@ export function usePdfDownload({
         scrollY: -window.scrollY,
         scrollX: -window.scrollX,
         useCORS: true,
-        allowTaint: true,
+        allowTaint: false,
         logging: false,
         backgroundColor: '#ffffff',
         foreignObjectRendering: false,
         windowWidth: element.scrollWidth,
         windowHeight: element.scrollHeight,
+        ignoreElements: (el) =>
+          el instanceof Element &&
+          (el.hasAttribute('data-pdf-ignore') || el.closest('[data-pdf-ignore]') !== null),
         onclone: (clonedDoc) => {
           // Add fallback styles to cloned document
           addColorFallbackStyles(clonedDoc)

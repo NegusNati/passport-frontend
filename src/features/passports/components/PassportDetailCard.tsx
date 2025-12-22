@@ -197,7 +197,9 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
 
             {/* Pickup Notice */}
             <div className="border-primary/25 bg-primary/5 text-foreground relative z-10 mb-8 overflow-hidden rounded-2xl border px-4 py-3 text-sm font-medium shadow-sm md:px-6 md:py-4 md:text-base">
-              <BorderTrail className="bg-primary/80" size={72} />
+              <div data-pdf-ignore aria-hidden="true">
+                <BorderTrail className="bg-primary/80" size={72} />
+              </div>
               <div className="bg-primary/80 absolute inset-y-0 left-0 w-1" aria-hidden="true" />
               <div className="pl-3">
                 <p className="text-primary text-xs font-semibold tracking-[0.2em] uppercase md:text-sm">

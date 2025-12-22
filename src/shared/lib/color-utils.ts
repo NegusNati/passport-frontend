@@ -3,7 +3,7 @@
  * Converts modern OKLCH color functions to browser-compatible RGB values
  */
 
-const OKLCH_FUNCTION_REGEX = /oklch\([^)]*\)/gi
+const MODERN_COLOR_FUNCTIONS = ['color-mix', 'oklch', 'oklab', 'lch', 'lab', 'color'] as const
 
 const COLOR_PROPERTIES = [
   'color',
@@ -28,7 +28,7 @@ interface StyleSnapshot {
 }
 
 /**
- * Converts OKLCH color values to RGB by using browser's computed styles
+ * Converts modern color functions (OKLCH/OKLAB/Color Mix/etc.) to RGB
  * This allows html2canvas to parse colors correctly
  */
 export function normalizeOklchColors(root: HTMLElement): () => void {
@@ -38,40 +38,101 @@ export function normalizeOklchColors(root: HTMLElement): () => void {
 
   const snapshots: StyleSnapshot[] = []
   const conversionCache = new Map<string, string>()
+  const canvas = doc.createElement('canvas')
+  canvas.width = 1
+  canvas.height = 1
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })
 
-  // Create temporary element for color conversion
-  const tempEl = doc.createElement('div')
-  tempEl.style.cssText =
-    'position:fixed;top:-9999px;left:-9999px;visibility:hidden;pointer-events:none'
-  doc.body.appendChild(tempEl)
+  const canParseColor = (value: string) =>
+    typeof CSS !== 'undefined' && typeof CSS.supports === 'function'
+      ? CSS.supports('color', value)
+      : true
 
-  const convertOklchToRgb = (oklchValue: string): string => {
-    // Check cache first
-    const cached = conversionCache.get(oklchValue)
+  const convertColorToRgb = (colorValue: string): string | null => {
+    const cached = conversionCache.get(colorValue)
     if (cached) return cached
+    if (!ctx || !canParseColor(colorValue)) return null
 
-    // Use browser to compute RGB equivalent
-    tempEl.style.color = oklchValue
-    const computedColor = win.getComputedStyle(tempEl).color
+    ctx.clearRect(0, 0, 1, 1)
+    ctx.fillStyle = '#000000'
+    ctx.fillStyle = colorValue
+    ctx.fillRect(0, 0, 1, 1)
 
-    // Validate and cache result
+    const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data
+    const alpha = a / 255
     const result =
-      computedColor && computedColor !== oklchValue && !computedColor.includes('oklch')
-        ? computedColor
-        : 'rgb(0, 0, 0)'
+      alpha >= 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${Number(alpha.toFixed(3))})`
 
-    conversionCache.set(oklchValue, result)
+    conversionCache.set(colorValue, result)
+    return result
+  }
+
+  const findNextFunction = (value: string, startIndex: number) => {
+    const lower = value.toLowerCase()
+    let nextIndex = -1
+    let nextFunction = ''
+
+    for (const fn of MODERN_COLOR_FUNCTIONS) {
+      const idx = lower.indexOf(`${fn}(`, startIndex)
+      if (idx !== -1 && (nextIndex === -1 || idx < nextIndex)) {
+        nextIndex = idx
+        nextFunction = fn
+      }
+    }
+
+    return { index: nextIndex, fn: nextFunction }
+  }
+
+  const replaceColorFunctions = (value: string): string => {
+    const hasModernColor = MODERN_COLOR_FUNCTIONS.some((fn) =>
+      value.toLowerCase().includes(`${fn}(`),
+    )
+    if (!hasModernColor) return value
+
+    let result = ''
+    let cursor = 0
+
+    while (cursor < value.length) {
+      const { index, fn } = findNextFunction(value, cursor)
+      if (index === -1) {
+        result += value.slice(cursor)
+        break
+      }
+
+      result += value.slice(cursor, index)
+      const openIndex = index + fn.length
+      let depth = 0
+      let endIndex = -1
+
+      for (let i = openIndex; i < value.length; i++) {
+        const char = value[i]
+        if (char === '(') depth++
+        if (char === ')') {
+          depth--
+          if (depth === 0) {
+            endIndex = i
+            break
+          }
+        }
+      }
+
+      if (endIndex === -1) {
+        result += value.slice(index)
+        break
+      }
+
+      const fullExpression = value.slice(index, endIndex + 1)
+      const converted = convertColorToRgb(fullExpression)
+      result += converted ?? fullExpression
+      cursor = endIndex + 1
+    }
+
     return result
   }
 
   const convertValue = (value: string | null): string | null => {
     if (!value) return value
-
-    OKLCH_FUNCTION_REGEX.lastIndex = 0
-    if (!OKLCH_FUNCTION_REGEX.test(value)) return value
-
-    OKLCH_FUNCTION_REGEX.lastIndex = 0
-    return value.replace(OKLCH_FUNCTION_REGEX, (match) => convertOklchToRgb(match))
+    return replaceColorFunctions(value)
   }
 
   // Process all elements
@@ -90,9 +151,7 @@ export function normalizeOklchColors(root: HTMLElement): () => void {
       if (converted && converted !== current) {
         // Store original inline style (if any)
         const inlineValue = element.style.getPropertyValue(property)
-        if (inlineValue) {
-          originalStyles.set(property, inlineValue)
-        }
+        originalStyles.set(property, inlineValue)
 
         // Apply converted color
         element.style.setProperty(property, converted, 'important')
@@ -104,14 +163,15 @@ export function normalizeOklchColors(root: HTMLElement): () => void {
     }
   }
 
-  // Cleanup temp element
-  tempEl.remove()
-
   // Return cleanup function to restore original styles
   return () => {
     for (const { element, originalStyles } of snapshots) {
       for (const [property, value] of originalStyles) {
-        element.style.setProperty(property, value)
+        if (value) {
+          element.style.setProperty(property, value)
+        } else {
+          element.style.removeProperty(property)
+        }
       }
     }
   }
