@@ -30,7 +30,7 @@ async function main() {
   }
 
   const beasties = new Beasties({
-    preload: 'swap',
+    preload: 'media',
     pruneSource: false,
     reduceInlineStyles: false,
     logLevel: 'info',
