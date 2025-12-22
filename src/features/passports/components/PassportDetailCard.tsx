@@ -202,10 +202,10 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
               </div>
               <div className="bg-primary/80 absolute inset-y-0 left-0 w-1" aria-hidden="true" />
               <div className="pl-3">
-                <p className="text-primary text-xs font-semibold tracking-[0.2em] uppercase md:text-sm">
+                <p className="text-primary text-sm font-bold tracking-[0.2em] uppercase md:text-lg">
                   {t('detail.card.readyHeadline')}
                 </p>
-                <p className="mt-1">
+                <p className="mt-1 font-semibold">
                   {t('detail.card.pickupNotice', {
                     city: passport.city,
                     receiveAfterLabel,
