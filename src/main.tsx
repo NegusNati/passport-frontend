@@ -93,6 +93,7 @@ const rootElement = document.getElementById('app')
 if (rootElement) {
   // Check if the page was prerendered (has content already)
   const isPrerendered = document.documentElement.hasAttribute('data-prerendered')
+  const isHomeRoute = window.location.pathname === '/' || window.location.pathname === ''
 
   const AppContent = (
     <PWAInstallProvider>
@@ -143,8 +144,13 @@ if (rootElement) {
     </StrictMode>
   )
 
-  if (isPrerendered) {
-    // Hydrate prerendered content - React will attach to existing DOM
+  if (isPrerendered && !isHomeRoute) {
+    // Clear prerendered home markup for non-home routes to avoid stale UI
+    rootElement.innerHTML = ''
+  }
+
+  if (isPrerendered && isHomeRoute) {
+    // Hydrate prerendered home content - React will attach to existing DOM
     hydrateRoot(rootElement, FullApp)
   } else {
     // Fresh render for non-prerendered pages (dev mode, etc.)
