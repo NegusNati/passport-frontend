@@ -1,5 +1,4 @@
-'use client'
-import { motion, Transition } from 'motion/react'
+import { motion, type Transition } from 'motion/react'
 
 import { cn } from '@/lib/utils'
 
