@@ -181,8 +181,11 @@ function processHtml(html: string, route: string): string {
     `<div id="app">${renderedContent}</div>`,
   )
 
-  // Add a marker so we know this page was prerendered
-  return prerenderedHtml.replace('<html', '<html data-prerendered="true"')
+  // Add a marker so we know which route was prerendered
+  return prerenderedHtml.replace(
+    '<html',
+    `<html data-prerendered="true" data-prerendered-route="${route}"`,
+  )
 }
 
 async function main() {
