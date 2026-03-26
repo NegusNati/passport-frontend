@@ -1,32 +1,40 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 
 import { api } from '@/api/client'
-import { adminKeys } from '@/features/admin/lib/keys'
 
-import { type PdfUploadInput, PdfUploadSchema } from '../schemas/upload'
+import {
+  type PdfUploadInput,
+  type PdfUploadResponse,
+  PdfUploadResponseSchema,
+  PdfUploadSchema,
+} from '../schemas/upload'
 
-export async function uploadPdfToSqlite(input: PdfUploadInput) {
+export function buildPdfUploadFormData(input: PdfUploadInput) {
   const payload = PdfUploadSchema.parse(input)
   const formData = new FormData()
+
   formData.append('pdf_file', payload.pdf_file)
   formData.append('date', payload.date)
   formData.append('location', payload.location)
-  formData.append('linesToSkip', payload.linesToSkip)
+  formData.append('start_after_text', payload.start_after_text)
+  formData.append('format', payload.format)
+  formData.append('linesToSkip', payload.linesToSkip ?? payload.start_after_text)
+
+  return formData
+}
+
+export async function uploadPdfToSqlite(input: PdfUploadInput): Promise<PdfUploadResponse> {
+  const formData = buildPdfUploadFormData(input)
 
   const response = await api.post('/api/v1/admin/pdf-to-sqlite', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
 
-  return response.data as { status: string; message: string; data?: unknown }
+  return PdfUploadResponseSchema.parse(response.data)
 }
 
 export function usePdfUploadMutation() {
-  const queryClient = useQueryClient()
-
   return useMutation({
     mutationFn: uploadPdfToSqlite,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: adminKeys.passports.all() })
-    },
   })
 }

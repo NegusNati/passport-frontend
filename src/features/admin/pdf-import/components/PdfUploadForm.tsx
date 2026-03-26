@@ -3,13 +3,22 @@ import { useState } from 'react'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 
-import { type PdfUploadInput, PdfUploadSchema } from '../schemas/upload'
+import { PdfImportFormatSchema, type PdfUploadInput, PdfUploadSchema } from '../schemas/upload'
 
-const defaultState = {
+type PdfUploadFormState = {
+  date: string
+  location: string
+  start_after_text: string
+  format: PdfUploadInput['format']
+}
+
+const defaultState: PdfUploadFormState = {
   date: '',
   location: '',
-  linesToSkip: '',
+  start_after_text: '',
+  format: PdfImportFormatSchema.enum.auto,
 }
 
 type PdfUploadFormProps = {
@@ -21,7 +30,7 @@ type PdfUploadFormProps = {
 export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploadFormProps) {
   const [file, setFile] = useState<File | null>(null)
   const [fileKey, setFileKey] = useState(0)
-  const [formValues, setFormValues] = useState(defaultState)
+  const [formValues, setFormValues] = useState<PdfUploadFormState>(defaultState)
   const [formError, setFormError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
@@ -47,7 +56,8 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
           pdf_file: file,
           date: formValues.date,
           location: formValues.location.trim(),
-          linesToSkip: formValues.linesToSkip.trim(),
+          start_after_text: formValues.start_after_text.trim(),
+          format: formValues.format,
         })
 
         if (!parsed.success) {
@@ -57,7 +67,7 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
 
         try {
           await onSubmit(parsed.data)
-          setSuccessMessage('PDF uploaded successfully. Processing has started.')
+          setSuccessMessage('Upload accepted. Import batch queued; progress is shown below.')
           setFormValues(defaultState)
           setFile(null)
           setFileKey((key) => key + 1)
@@ -73,6 +83,7 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
           <Label htmlFor="pdf_file">PDF file</Label>
           <input
             id="pdf_file"
+            name="pdf_file"
             type="file"
             accept="application/pdf"
             onChange={handleFileChange}
@@ -85,39 +96,95 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
         </div>
         <div className="grid gap-2">
           <Label htmlFor="date">Date (YYYY-MM-DD)</Label>
-          <Input id="date" type="date" value={formValues.date} onChange={handleChange} required />
+          <Input
+            id="date"
+            name="date"
+            type="date"
+            value={formValues.date}
+            onChange={handleChange}
+            autoComplete="off"
+            required
+          />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="location">Location</Label>
           <Input
             id="location"
+            name="location"
             value={formValues.location}
             onChange={handleChange}
-            placeholder="ICS branch office, Jimma"
+            placeholder="Addis Ababa…"
+            autoComplete="off"
             required
           />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="linesToSkip">Lines to skip</Label>
+          <Label htmlFor="start_after_text">Start after text</Label>
           <Input
-            id="linesToSkip"
-            value={formValues.linesToSkip}
+            id="start_after_text"
+            name="start_after_text"
+            value={formValues.start_after_text}
             onChange={handleChange}
-            placeholder="HEADER"
+            placeholder="Application Number…"
+            autoComplete="off"
+            aria-describedby="start_after_text_hint"
             required
           />
-          <p className="text-muted-foreground text-xs">
-            Ingestion starts after the first line that matches this value.
+          <p id="start_after_text_hint" className="text-muted-foreground text-xs leading-relaxed">
+            The importer starts after the first line that contains this text. Use{' '}
+            <span className="font-mono">REQUEST_No.</span> for legacy 5-column PDFs or{' '}
+            <span className="font-mono">Application Number</span> for application 4-column PDFs.
+          </p>
+        </div>
+        <div className="grid gap-2">
+          <Label htmlFor="format">Format</Label>
+          <Select
+            value={formValues.format}
+            onValueChange={(value) =>
+              setFormValues((prev) => ({
+                ...prev,
+                format: value as PdfUploadInput['format'],
+              }))
+            }
+          >
+            <SelectTrigger id="format" aria-describedby="format_hint" className="w-full">
+              <SelectValue placeholder="Select import format" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={PdfImportFormatSchema.enum.auto}>Auto detect</SelectItem>
+              <SelectItem value={PdfImportFormatSchema.enum.legacy_5col}>
+                Legacy 5-column
+              </SelectItem>
+              <SelectItem value={PdfImportFormatSchema.enum.application_4col}>
+                Application 4-column
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <p id="format_hint" className="text-muted-foreground text-xs leading-relaxed">
+            Auto detect is the safest default unless you already know which PDF layout you are
+            importing.
           </p>
         </div>
       </div>
 
-      {formError ? <p className="text-destructive text-sm">{formError}</p> : null}
-      {errorMessage ? <p className="text-destructive text-sm">{errorMessage}</p> : null}
-      {successMessage ? <p className="text-primary text-sm">{successMessage}</p> : null}
+      {formError ? (
+        <p role="alert" className="text-destructive text-sm">
+          {formError}
+        </p>
+      ) : null}
+      {errorMessage ? (
+        <p role="alert" className="text-destructive text-sm">
+          {errorMessage}
+        </p>
+      ) : null}
+      {successMessage ? (
+        <p aria-live="polite" className="text-primary text-sm">
+          {successMessage}
+        </p>
+      ) : null}
 
       <Button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Uploading…' : 'Upload and process'}
+        {isSubmitting ? 'Uploading…' : 'Upload & Queue Batch'}
       </Button>
     </form>
   )
