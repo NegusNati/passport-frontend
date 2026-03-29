@@ -14,11 +14,61 @@ type PdfUploadFormState = {
   format: PdfUploadInput['format']
 }
 
+const LOCATION_HISTORY_STORAGE_KEY = 'admin:pdf-import:location-history'
+const START_AFTER_TEXT_HISTORY_STORAGE_KEY = 'admin:pdf-import:start-after-text-history'
+const MAX_AUTOCOMPLETE_ITEMS = 6
+
 const defaultState: PdfUploadFormState = {
   date: '',
   location: '',
   start_after_text: '',
   format: PdfImportFormatSchema.enum.auto,
+}
+
+function readAutocompleteHistory(storageKey: string) {
+  if (typeof window === 'undefined') {
+    return []
+  }
+
+  try {
+    const rawValue = window.localStorage.getItem(storageKey)
+    if (!rawValue) {
+      return []
+    }
+
+    const parsed = JSON.parse(rawValue) as unknown
+    if (!Array.isArray(parsed)) {
+      return []
+    }
+
+    return parsed.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+  } catch {
+    return []
+  }
+}
+
+function buildNextAutocompleteHistory(history: string[], value: string) {
+  const normalizedValue = value.trim()
+  if (!normalizedValue) {
+    return history
+  }
+
+  return [
+    normalizedValue,
+    ...history.filter((item) => item.toLowerCase() !== normalizedValue.toLowerCase()),
+  ].slice(0, MAX_AUTOCOMPLETE_ITEMS)
+}
+
+function persistAutocompleteHistory(storageKey: string, history: string[]) {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  try {
+    window.localStorage.setItem(storageKey, JSON.stringify(history))
+  } catch {
+    // Ignore storage failures so uploads still work in restricted browsers.
+  }
 }
 
 type PdfUploadFormProps = {
@@ -33,6 +83,12 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
   const [formValues, setFormValues] = useState<PdfUploadFormState>(defaultState)
   const [formError, setFormError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [locationHistory, setLocationHistory] = useState<string[]>(() =>
+    readAutocompleteHistory(LOCATION_HISTORY_STORAGE_KEY),
+  )
+  const [startAfterTextHistory, setStartAfterTextHistory] = useState<string[]>(() =>
+    readAutocompleteHistory(START_AFTER_TEXT_HISTORY_STORAGE_KEY),
+  )
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = event.target
@@ -67,6 +123,22 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
 
         try {
           await onSubmit(parsed.data)
+          const nextLocationHistory = buildNextAutocompleteHistory(
+            locationHistory,
+            parsed.data.location,
+          )
+          const nextStartAfterTextHistory = buildNextAutocompleteHistory(
+            startAfterTextHistory,
+            parsed.data.start_after_text,
+          )
+
+          setLocationHistory(nextLocationHistory)
+          setStartAfterTextHistory(nextStartAfterTextHistory)
+          persistAutocompleteHistory(LOCATION_HISTORY_STORAGE_KEY, nextLocationHistory)
+          persistAutocompleteHistory(
+            START_AFTER_TEXT_HISTORY_STORAGE_KEY,
+            nextStartAfterTextHistory,
+          )
           setSuccessMessage('Upload accepted. Import batch queued; progress is shown below.')
           setFormValues(defaultState)
           setFile(null)
@@ -114,9 +186,15 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
             value={formValues.location}
             onChange={handleChange}
             placeholder="Addis Ababa…"
-            autoComplete="off"
+            autoComplete="on"
+            list="pdf-import-location-history"
             required
           />
+          <datalist id="pdf-import-location-history">
+            {locationHistory.map((value) => (
+              <option key={value} value={value} />
+            ))}
+          </datalist>
         </div>
         <div className="grid gap-2">
           <Label htmlFor="start_after_text">Start after text</Label>
@@ -126,10 +204,16 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
             value={formValues.start_after_text}
             onChange={handleChange}
             placeholder="Application Number…"
-            autoComplete="off"
+            autoComplete="on"
+            list="pdf-import-start-after-text-history"
             aria-describedby="start_after_text_hint"
             required
           />
+          <datalist id="pdf-import-start-after-text-history">
+            {startAfterTextHistory.map((value) => (
+              <option key={value} value={value} />
+            ))}
+          </datalist>
           <p id="start_after_text_hint" className="text-muted-foreground text-xs leading-relaxed">
             The importer starts after the first line that contains this text. Use{' '}
             <span className="font-mono">REQUEST_No.</span> for legacy 5-column PDFs or{' '}
