@@ -33,7 +33,7 @@ const router = createRouter({
   defaultPreload: 'intent',
   scrollRestoration: true,
   defaultStructuralSharing: true,
-  defaultPreloadStaleTime: 0,
+  defaultPreloadStaleTime: 60_000,
 })
 
 // Register the router instance for type safety
@@ -61,31 +61,34 @@ if (!isPostHogEnabled && import.meta.env.PROD) {
   console.warn('[PostHog] Analytics disabled: VITE_PUBLIC_POSTHOG_KEY not configured')
 }
 
-// Register service worker for PWA (deferred to not compete with LCP)
+// Register service worker early enough to improve repeat-visit resilience
 if ('serviceWorker' in navigator) {
-  // Wait for page load, then defer another 3 seconds to ensure
-  // critical resources are fully loaded before SW registration
-  window.addEventListener('load', () => {
-    const registerSW = () => {
-      navigator.serviceWorker
-        .register('/sw.js')
-        .then((registration) => {
-          if (import.meta.env.DEV) {
-            console.log('[SW] Registered successfully:', registration.scope)
-          }
-        })
-        .catch((error) => {
-          console.warn('[SW] Registration failed:', error)
-        })
-    }
+  const registerSW = () => {
+    navigator.serviceWorker
+      .register('/sw.js')
+      .then((registration) => {
+        if (import.meta.env.DEV) {
+          console.log('[SW] Registered successfully:', registration.scope)
+        }
+      })
+      .catch((error) => {
+        console.warn('[SW] Registration failed:', error)
+      })
+  }
 
-    // Use requestIdleCallback if available, otherwise setTimeout
+  const scheduleRegistration = () => {
     if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(registerSW, { timeout: 5000 })
+      window.requestIdleCallback(registerSW, { timeout: 2000 })
     } else {
-      setTimeout(registerSW, 3000)
+      setTimeout(registerSW, 600)
     }
-  })
+  }
+
+  if (document.readyState === 'complete') {
+    scheduleRegistration()
+  } else {
+    window.addEventListener('load', scheduleRegistration, { once: true })
+  }
 }
 
 // Render the app

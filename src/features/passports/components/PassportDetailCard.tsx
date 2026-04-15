@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next'
 
 import star from '@/assets/landingImages/star.svg'
 import { BorderTrail } from '@/components/motion-primitives/border-trail'
-import { ETHIOPIAN_MONTHS, toEthiopian } from '@/features/calendar/lib/calendar-utils'
 import type { SupportedLanguage } from '@/i18n/config'
 import { ShareButton } from '@/shared/components/ShareButton'
 import { usePdfDownload } from '@/shared/hooks/usePdfDownload'
+import { formatGregorianApiDateAsEthiopian } from '@/shared/lib/ethiopian-date'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
 
@@ -112,48 +112,12 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
   const dayOfWeek = getDayOfWeek(firstName, t('detail.card.checkSchedule'), i18n.language)
   const cardRef = useRef<HTMLDivElement>(null)
 
-  const isEnglish = (i18n.language?.split('-')[0] ?? 'en') === 'en'
-
-  const receiveAfterLabel = (() => {
-    if (!passport.dateRaw || isEnglish) {
-      // Default: show formatted Gregorian date when language is English
-      return `${passport.date} G.C`
-    }
-
-    const raw = passport.dateRaw
-    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(raw)
-    if (!match) {
-      return `${passport.date} G.C`
-    }
-
-    const [, yStr, mStr, dStr] = match
-    const year = Number(yStr)
-    const month = Number(mStr)
-    const day = Number(dStr)
-    if (
-      !Number.isFinite(year) ||
-      !Number.isFinite(month) ||
-      !Number.isFinite(day) ||
-      month < 1 ||
-      month > 12 ||
-      day < 1 ||
-      day > 31
-    ) {
-      return `${passport.date} G.C`
-    }
-
-    const gregDate = new Date(Date.UTC(year, month - 1, day))
-    const et = toEthiopian(gregDate)
-    const monthData = ETHIOPIAN_MONTHS.find((m) => m.number === et.month)
-    if (!monthData) {
-      return `${passport.date} G.C`
-    }
-
-    const baseLang = (i18n.language?.split('-')[0] ?? 'en') as SupportedLanguage
-    const monthLabel = baseLang === 'am' ? monthData.amharic : monthData.english
-
-    return `${monthLabel} ${et.day}, ${et.year} E.C`
-  })()
+  const receiveAfterLabel = passport.dateRaw
+    ? formatGregorianApiDateAsEthiopian(passport.dateRaw, {
+        fallback: passport.date,
+        showGregorianInParentheses: true,
+      })
+    : passport.date
 
   const { download, isDownloading } = usePdfDownload({
     elementRef: cardRef,
@@ -172,7 +136,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
           <div
             ref={cardRef}
             id={CARD_DOWNLOAD_ID}
-            className="border-primary relative overflow-hidden rounded-lg border-2 p-8 shadow-2xl backdrop-blur-md md:p-12"
+            className="border-border/70 bg-card/95 relative overflow-hidden rounded-2xl border p-6 shadow-2xl backdrop-blur-md sm:p-8 md:p-10"
           >
             {/* Ethiopian Seal Background - Prominent Yellow Star */}
             <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-20">
@@ -187,10 +151,10 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
 
             {/* Header */}
             <div className="relative z-10 mb-4 text-center text-[#8D2041]">
-              <h1 className="mb-1 text-xl font-bold text-red-900 md:text-2xl">
+              <h1 className="mb-1 text-xl font-bold tracking-tight text-red-900 md:text-2xl">
                 {t('detail.card.ethTitle')}
               </h1>
-              <h2 className="font-gotham text-lg font-semibold text-red-800 md:text-xl">
+              <h2 className="font-gotham text-base font-semibold tracking-wide text-red-800 md:text-lg">
                 {t('detail.card.engTitle')}
               </h2>
             </div>
@@ -202,10 +166,10 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
               </div>
               <div className="bg-primary/80 absolute inset-y-0 left-0 w-1" aria-hidden="true" />
               <div className="pl-3">
-                <p className="text-primary text-sm font-bold tracking-[0.2em] uppercase md:text-lg">
+                <p className="text-primary text-xs font-bold tracking-[0.16em] uppercase md:text-sm">
                   {t('detail.card.readyHeadline')}
                 </p>
-                <p className="mt-1 font-semibold">
+                <p className="mt-1 text-sm leading-relaxed font-semibold md:text-base">
                   {t('detail.card.pickupNotice', {
                     city: passport.city,
                     receiveAfterLabel,
@@ -216,29 +180,31 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
             </div>
 
             {/* Passport Content */}
-            <div className="relative z-10 space-y-6">
+            <div className="relative z-10 flex flex-col gap-6">
               {/* Personal Info */}
-              <div className="space-y-4">
+              <div className="flex flex-col gap-4">
                 <div>
-                  <div className="text-xs font-medium text-gray-600">
+                  <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                     {t('detail.card.surname')}
                   </div>
-                  <div className="mt-0.5 text-lg font-semibold text-gray-900">{surname}</div>
+                  <div className="text-foreground mt-1 text-lg font-semibold">{surname}</div>
                 </div>
 
                 <div>
-                  <div className="text-xs font-medium text-gray-600">
+                  <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                     {t('detail.card.givenName')}
                   </div>
-                  <div className="mt-0.5 text-lg font-semibold text-gray-900">{givenName}</div>
+                  <div className="text-foreground mt-1 text-lg font-semibold">{givenName}</div>
                 </div>
 
                 <div>
-                  <div className="text-xs font-medium text-gray-600">
+                  <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                     {t('detail.card.location')}
                   </div>
                   <div className="mt-0.5 flex items-center pb-1">
-                    <div className="text-lg font-semibold text-gray-900">{passport.city}</div>
+                    <div className="text-foreground mt-1 text-lg font-semibold">
+                      {passport.city}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -246,26 +212,26 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
               {/* Date and Time Info - Horizontal Layout */}
               <div className="flex flex-wrap items-start gap-x-8 gap-y-4 pt-2">
                 <div>
-                  <div className="text-xs font-medium text-gray-600">
+                  <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                     {t('detail.card.receiveAfter')}
                   </div>
-                  <div className="mt-0.5 text-base font-semibold text-gray-900">
+                  <div className="text-foreground mt-1 text-base font-semibold tabular-nums">
                     {receiveAfterLabel}
                   </div>
                 </div>
 
                 <div>
-                  <div className="text-xs font-medium text-gray-600">
+                  <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                     {t('detail.card.dayOfWeek')}
                   </div>
-                  <div className="mt-0.5 text-base font-semibold text-gray-900">{dayOfWeek}</div>
+                  <div className="text-foreground mt-1 text-base font-semibold">{dayOfWeek}</div>
                 </div>
 
                 <div>
-                  <div className="text-xs font-medium text-gray-600">
+                  <div className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
                     {t('detail.card.exactTime')}
                   </div>
-                  <div className="mt-0.5 text-base font-semibold text-gray-900">
+                  <div className="text-foreground mt-1 text-base font-semibold">
                     {t('detail.card.timeRange')}
                   </div>
                 </div>
@@ -301,7 +267,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
             <Button
               onClick={download}
               variant="outline"
-              className="w-full sm:w-auto"
+              className="w-full transition-transform duration-150 active:scale-[0.98] sm:w-auto"
               size="lg"
               disabled={isDownloading}
               leftIcon={<Download className="h-5 w-5" aria-hidden="true" />}
@@ -311,7 +277,7 @@ export function PassportDetailCard({ passport, onCheckAnother }: PassportDetailC
 
             <Button
               onClick={onCheckAnother}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 sm:w-auto"
+              className="w-full bg-emerald-600 transition-transform duration-150 hover:bg-emerald-700 active:scale-[0.98] sm:w-auto"
               size="lg"
             >
               {t('detail.actions.checkAnother')}

@@ -52,6 +52,14 @@
       "loadingSummary": "Loading summary...",
       "showing": "Showing {{from}} to {{to}} of {{total}} entries"
     },
+    "successPopup": {
+      "eyebrow": "Passport Search",
+      "title": "{{count}} passport matches found",
+      "description": "Your latest query returned results. Open one now or continue refining the list.",
+      "action": "Open first result",
+      "dismissText": "Keep browsing",
+      "dismissAriaLabel": "Dismiss passport search success message"
+    },
     "empty": {
       "toastTitle": "😔 Your passport is not ready yet",
       "toastDescription": "We could not find a matching record right now. Please check back tomorrow for the latest update.",
@@ -77,6 +85,12 @@
       "title": "🎉 Good news!",
       "description": "We found a matching passport. Please review the details below.",
       "congratulations": "🎉 Congratulations! Your passport is ready for pick up. 📄✈️ Head to the ICS Branch office ({{city}}) to collect it."
+    },
+    "successPopup": {
+      "eyebrow": "Passport Ready",
+      "title": "Collection details confirmed",
+      "description": "Your passport is ready for pickup at {{city}}. Review the card details before heading to the branch.",
+      "dismissAriaLabel": "Dismiss passport ready message"
     },
     "card": {
       "ethTitle": "የኢትዮጵያ ፌዴራላዊ ዲሞክራሲያዊ ሪፐብሊክ",

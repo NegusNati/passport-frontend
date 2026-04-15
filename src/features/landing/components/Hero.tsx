@@ -8,6 +8,7 @@ import LandingImageTwo from '@/assets/landingImages/cardImages/Landing_img_2.web
 import LandingImageThree from '@/assets/landingImages/cardImages/Landing_img_3.webp'
 import { AnimatedBorderCard, Card } from '@/shared/components/common'
 import { CardSwapLazy } from '@/shared/components/common/CardSwapLazy'
+import { CardSwapShell } from '@/shared/components/common/CardSwapShell'
 import { useAnalytics } from '@/shared/lib/analytics'
 import { Button } from '@/shared/ui/button'
 
@@ -128,7 +129,6 @@ HeroCard.displayName = 'HeroCard'
 export function Hero() {
   const { t } = useTranslation('landing')
   const { capture } = useAnalytics()
-  const [enableCardSwap, setEnableCardSwap] = useState(false)
 
   // Check reduced motion preference via CSS media query
   const [reduceMotion, setReduceMotion] = useState(false)
@@ -162,48 +162,6 @@ export function Hero() {
   // Note: LCP image preload is now handled statically in index.html
   // for better performance (no JS execution needed)
 
-  useEffect(() => {
-    if (reduceMotion || enableCardSwap) return
-    if (typeof window === 'undefined') return
-
-    const mediaQuery = window.matchMedia('(min-width: 768px)')
-    let timeoutId: number | undefined
-
-    const scheduleEnable = () => {
-      if (timeoutId) {
-        window.clearTimeout(timeoutId)
-      }
-      timeoutId = window.setTimeout(() => setEnableCardSwap(true), 800)
-    }
-
-    if (mediaQuery.matches) {
-      scheduleEnable()
-    }
-
-    const handleChange = (event: MediaQueryListEvent) => {
-      if (event.matches) {
-        scheduleEnable()
-      }
-    }
-
-    if (typeof mediaQuery.addEventListener === 'function') {
-      mediaQuery.addEventListener('change', handleChange)
-    } else if (typeof mediaQuery.addListener === 'function') {
-      mediaQuery.addListener(handleChange)
-    }
-
-    return () => {
-      if (typeof mediaQuery.removeEventListener === 'function') {
-        mediaQuery.removeEventListener('change', handleChange)
-      } else if (typeof mediaQuery.removeListener === 'function') {
-        mediaQuery.removeListener(handleChange)
-      }
-      if (timeoutId) {
-        window.clearTimeout(timeoutId)
-      }
-    }
-  }, [reduceMotion, enableCardSwap])
-
   return (
     <section className="relative isolate min-h-[80svh] pb-0 md:min-h-[90svh] md:pb-[120px] lg:pb-[80px]">
       {/* Container to constrain width and center content */}
@@ -226,7 +184,7 @@ export function Hero() {
               </AnimatedBorderCard>
             </div>
 
-            <h1 className="text-foreground max-w-[30ch] text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl">
+            <h1 className="text-foreground max-w-[30ch] text-balance text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl">
               {t('hero.headline')}
             </h1>
             <h2 className="text-muted-foreground max-w-[52ch] text-base leading-relaxed dark:text-white/70">
@@ -263,14 +221,12 @@ export function Hero() {
                 {/* CTA (kept centered by the grid wrapper) */}
 
                 <Button
+                  asChild
                   size="lg"
                   className="relative z-[1] rounded-full bg-transparent py-5 text-sm md:text-base"
                   onClick={() => handleCTAClick('hero', 'primary-glowing')}
                 >
-                  <Link
-                    to="/passports"
-                    className="inline-flex items-center bg-transparent font-semibold text-white"
-                  >
+                  <Link to="/passports" className="bg-transparent font-semibold text-white">
                     {t('hero.cta')}
                     <ArrowRightIcon className="ml-2 h-4 w-4" aria-hidden />
                   </Link>
@@ -294,29 +250,31 @@ export function Hero() {
           {/* Right: CardSwap (visible on md+) */}
           <div className="hidden translate-x-[-45px] translate-y-[-65px] md:block">
             <div className="relative justify-self-end md:h-[580px] md:w-[538px]">
-              {enableCardSwap ? (
+              {reduceMotion ? (
+                <CardSwapShell
+                  width={CARD_DIMENSIONS.desktop.width}
+                  height={CARD_DIMENSIONS.desktop.height}
+                  cardDistance={50}
+                  verticalDistance={60}
+                >
+                  {heroCards.map((card, index) => (
+                    <HeroCard key={card.key} variant="desktop" card={card} index={index} />
+                  ))}
+                </CardSwapShell>
+              ) : (
                 <CardSwapLazy
                   width={CARD_DIMENSIONS.desktop.width}
                   height={CARD_DIMENSIONS.desktop.height}
                   cardDistance={50}
                   verticalDistance={60}
                   delay={5000}
+                  easing="linear"
                   pauseOnHover={false}
                 >
                   {heroCards.map((card, index) => (
                     <HeroCard key={card.key} variant="desktop" card={card} index={index} />
                   ))}
                 </CardSwapLazy>
-              ) : (
-                <div
-                  className="absolute top-1/2 left-1/2 origin-center -translate-x-1/2 -translate-y-1/2 scale-[0.7] overflow-visible perspective-[900px] sm:scale-[0.85] md:top-auto md:right-0 md:bottom-0 md:left-auto md:origin-bottom-right md:translate-x-[5%] md:translate-y-[20%] md:scale-100 lg:translate-x-[2%] lg:translate-y-[10%]"
-                  style={{
-                    width: CARD_DIMENSIONS.desktop.width,
-                    height: CARD_DIMENSIONS.desktop.height,
-                  }}
-                >
-                  <HeroCard variant="desktop" card={heroCards[0]} index={0} />
-                </div>
               )}
             </div>
           </div>

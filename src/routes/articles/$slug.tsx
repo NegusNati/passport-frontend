@@ -1,10 +1,15 @@
+import type { QueryClient } from '@tanstack/react-query'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { ArrowLeft, Check, Link as LinkIcon, Share2 } from 'lucide-react'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { ListParams } from '@/features/articles/lib/ArticlesApi'
-import { useArticleQuery, useArticlesQuery } from '@/features/articles/lib/ArticlesQuery'
+import {
+  getArticleQueryOptions,
+  useArticleQuery,
+  useArticlesQuery,
+} from '@/features/articles/lib/ArticlesQuery'
 import type { ArticleApiItem } from '@/features/articles/lib/ArticlesSchema'
 import { loadI18nNamespaces } from '@/i18n'
 import { LexicalViewer } from '@/shared/components/rich-text/LexicalViewer'
@@ -15,8 +20,11 @@ import { Seo } from '@/shared/ui/Seo'
 import { ArticleDetailSkeleton, RelatedArticleCardSkeleton } from '@/shared/ui/skeleton'
 
 export const Route = createFileRoute('/articles/$slug')({
-  loader: async () => {
-    await loadI18nNamespaces(['articles'])
+  loader: ({ context, params }) => {
+    const { queryClient } = context as { queryClient: QueryClient }
+
+    loadI18nNamespaces(['articles'])
+    void queryClient.prefetchQuery(getArticleQueryOptions(params.slug))
   },
   component: ArticleDetail,
 })
@@ -164,7 +172,7 @@ function ArticleBody({
                 <button
                   type="button"
                   onClick={handleShare}
-                  className="text-muted-foreground/80 hover:text-foreground border-border hover:bg-muted flex h-9 w-9 items-center justify-center rounded-full border transition"
+                  className="text-muted-foreground/80 hover:text-foreground border-border hover:bg-muted flex h-11 w-11 items-center justify-center rounded-full border transition"
                   aria-label={t('detail.navigation.share')}
                 >
                   <Share2 className="size-4" aria-hidden="true" />
@@ -172,7 +180,7 @@ function ArticleBody({
                 <button
                   type="button"
                   onClick={handleCopyLink}
-                  className="text-muted-foreground/80 hover:text-foreground border-border hover:bg-muted flex h-9 w-9 items-center justify-center rounded-full border transition"
+                  className="text-muted-foreground/80 hover:text-foreground border-border hover:bg-muted flex h-11 w-11 items-center justify-center rounded-full border transition"
                   aria-label={t('detail.navigation.copyLink')}
                 >
                   {copied ? (

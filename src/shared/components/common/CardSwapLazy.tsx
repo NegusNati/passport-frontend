@@ -1,26 +1,30 @@
 import { lazy, Suspense, useEffect, useState } from 'react'
 
 import type { CardSwapProps } from './CardSwap'
+import { CardSwapShell } from './CardSwapShell'
 
 // Lazy load the heavy GSAP-based CardSwap component
 const CardSwap = lazy(() => import('./CardSwap'))
 
-// Static placeholder that shows the first card without animation
-function CardSwapPlaceholder({ children, width, height }: CardSwapProps) {
-  const firstChild = Array.isArray(children) ? children[0] : children
-
+// Static placeholder that preserves the final stack geometry without animation
+function CardSwapPlaceholder({
+  children,
+  width,
+  height,
+  cardDistance,
+  verticalDistance,
+  skewAmount,
+}: CardSwapProps) {
   return (
-    <div
-      className="relative"
-      style={{
-        width: typeof width === 'number' ? `${width}px` : width,
-        height: typeof height === 'number' ? `${height}px` : height,
-      }}
+    <CardSwapShell
+      width={width}
+      height={height}
+      cardDistance={cardDistance}
+      verticalDistance={verticalDistance}
+      skewAmount={skewAmount}
     >
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        {firstChild}
-      </div>
-    </div>
+      {children}
+    </CardSwapShell>
   )
 }
 
@@ -39,17 +43,17 @@ export function CardSwapLazy(props: CardSwapProps) {
         () => {
           setShouldLoad(true)
         },
-        { timeout: 2000 },
+        { timeout: 1200 },
       )
       return () => cancelIdleCallback(handle)
     } else {
       // Fallback for browsers without requestIdleCallback (Safari)
-      const timer = setTimeout(() => setShouldLoad(true), 1500)
+      const timer = setTimeout(() => setShouldLoad(true), 900)
       return () => clearTimeout(timer)
     }
   }, [])
 
-  // Show static placeholder until we're ready to hydrate
+  // Keep the prerendered shell stable until the animated version is ready.
   if (!shouldLoad) {
     return <CardSwapPlaceholder {...props} />
   }

@@ -1,10 +1,11 @@
 import { useForm } from '@tanstack/react-form'
 import { useRouter } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { startTransition, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
+import { useNetworkConditions } from '@/shared/hooks/useNetworkConditions'
 import { useAnalytics } from '@/shared/lib/analytics'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
@@ -35,6 +36,7 @@ export function PassportSearchForm({
 }: PassportSearchFormProps) {
   const { t } = useTranslation('passports')
   const router = useRouter()
+  const network = useNetworkConditions()
   const { capture } = useAnalytics()
   const [searchMode, setSearchMode] = useState<SearchMode>('name')
   // Local inputs for debounced interactive search
@@ -44,32 +46,43 @@ export function PassportSearchForm({
   const [lastInput, setLastInput] = useState('')
   const [isDebouncing, setIsDebouncing] = useState(false)
 
-  const debouncedNumber = useDebouncedValue(numberInput, 300)
-  const nameQueryRaw = useMemo(
-    () => [firstInput, middleInput, lastInput].filter(Boolean).join(' ').trim(),
-    [firstInput, middleInput, lastInput],
-  )
-  const debouncedName = useDebouncedValue(nameQueryRaw, 300)
+  const debouncedNumber = useDebouncedValue(numberInput, network.searchDebounceMs)
+  const debouncedFirstInput = useDebouncedValue(firstInput, network.searchDebounceMs)
+  const debouncedMiddleInput = useDebouncedValue(middleInput, network.searchDebounceMs)
+  const debouncedLastInput = useDebouncedValue(lastInput, network.searchDebounceMs)
 
   // Track debouncing state for number search
   useEffect(() => {
-    if (searchMode === 'number' && numberInput.length >= 3) {
+    if (searchMode === 'number' && !network.preferManualSearch && numberInput.length >= 3) {
       setIsDebouncing(true)
-      const timer = setTimeout(() => setIsDebouncing(false), 300)
+      const timer = setTimeout(() => setIsDebouncing(false), network.searchDebounceMs)
       return () => clearTimeout(timer)
     }
     setIsDebouncing(false)
-  }, [numberInput, searchMode])
+  }, [network.preferManualSearch, network.searchDebounceMs, numberInput, searchMode])
 
   // Track debouncing state for name search
   useEffect(() => {
-    if (searchMode === 'name' && nameQueryRaw.length >= 3) {
+    const nameQueryRaw = [firstInput, middleInput, lastInput].filter(Boolean).join(' ').trim()
+    if (
+      searchMode === 'name' &&
+      !network.preferManualSearch &&
+      nameQueryRaw.length >= network.searchMinCharacters
+    ) {
       setIsDebouncing(true)
-      const timer = setTimeout(() => setIsDebouncing(false), 300)
+      const timer = setTimeout(() => setIsDebouncing(false), network.searchDebounceMs)
       return () => clearTimeout(timer)
     }
     setIsDebouncing(false)
-  }, [nameQueryRaw, searchMode])
+  }, [
+    firstInput,
+    lastInput,
+    middleInput,
+    network.preferManualSearch,
+    network.searchDebounceMs,
+    network.searchMinCharacters,
+    searchMode,
+  ])
 
   const sanitizeRequestNumber = (value: string) =>
     value
@@ -198,8 +211,10 @@ export function PassportSearchForm({
 
   const handleToggleMode = () => {
     const next = searchMode === 'number' ? 'name' : 'number'
-    setSearchMode(next)
-    onQueryChange?.({}, next)
+    startTransition(() => {
+      setSearchMode(next)
+      onQueryChange?.({}, next)
+    })
   }
 
   // Debounced interactive search: trigger after >=3 characters
@@ -207,28 +222,42 @@ export function PassportSearchForm({
     if (searchMode !== 'number') return
     const q = debouncedNumber.trim()
     if (!onQueryChange) return
+    if (network.preferManualSearch || !network.isOnline) return
     const sanitized = sanitizeRequestNumber(q)
-    if (sanitized.length >= 3) {
-      onQueryChange({ request_number: sanitized }, 'number')
-    } else {
-      onQueryChange({}, 'number')
-    }
-  }, [debouncedNumber, searchMode, onQueryChange])
+    startTransition(() => {
+      if (sanitized.length >= network.searchMinCharacters) {
+        onQueryChange({ request_number: sanitized }, 'number')
+      } else {
+        onQueryChange({}, 'number')
+      }
+    })
+  }, [
+    debouncedNumber,
+    network.isOnline,
+    network.preferManualSearch,
+    network.searchMinCharacters,
+    onQueryChange,
+    searchMode,
+  ])
 
   useEffect(() => {
     if (searchMode !== 'name') return
     if (!onQueryChange) return
-    const filters = buildNameFilters(firstInput, middleInput, lastInput)
-    if (Object.keys(filters).length > 0) {
-      onQueryChange(filters, 'name')
-    } else {
-      onQueryChange({}, 'name')
-    }
+    if (network.preferManualSearch || !network.isOnline) return
+    const filters = buildNameFilters(debouncedFirstInput, debouncedMiddleInput, debouncedLastInput)
+    startTransition(() => {
+      if (Object.keys(filters).length > 0) {
+        onQueryChange(filters, 'name')
+      } else {
+        onQueryChange({}, 'name')
+      }
+    })
   }, [
-    debouncedName,
-    firstInput,
-    middleInput,
-    lastInput,
+    debouncedFirstInput,
+    debouncedMiddleInput,
+    debouncedLastInput,
+    network.isOnline,
+    network.preferManualSearch,
     searchMode,
     onQueryChange,
     buildNameFilters,
@@ -406,7 +435,9 @@ export function PassportSearchForm({
                       numberForm.setFieldValue('requestNumber', number)
                       // ensure debounced live search is triggered
                       setNumberInput(number)
-                      onQueryChange?.({ request_number: sanitizeRequestNumber(number) }, 'number')
+                      startTransition(() => {
+                        onQueryChange?.({ request_number: sanitizeRequestNumber(number) }, 'number')
+                      })
                     }}
                     className="border-border bg-muted/50 hover:bg-muted rounded-md border px-3 py-1 text-xs"
                   >

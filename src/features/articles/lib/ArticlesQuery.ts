@@ -1,4 +1,4 @@
-import { keepPreviousData, type QueryKey, useQuery } from '@tanstack/react-query'
+import { keepPreviousData, type QueryClient, type QueryKey, useQuery } from '@tanstack/react-query'
 
 import {
   fetchArticleBySlug,
@@ -16,39 +16,79 @@ export const articlesKeys = {
   tags: () => [...articlesKeys.all, 'tags'] as const,
 }
 
-export function useArticlesQuery(params: ListParams, options?: { enabled?: boolean }) {
-  return useQuery({
+const LIST_STALE_TIME = 60_000
+const DETAIL_STALE_TIME = 5 * 60_000
+const CACHE_TIME = 30 * 60_000
+
+export function getArticlesListQueryOptions(params: ListParams) {
+  return {
     queryKey: articlesKeys.list(params) as QueryKey,
     queryFn: () => fetchArticles(params),
     placeholderData: keepPreviousData,
-    staleTime: 30_000,
+    staleTime: LIST_STALE_TIME,
+    gcTime: CACHE_TIME,
+    networkMode: 'offlineFirst' as const,
+  }
+}
+
+export function getArticleQueryOptions(slug: string) {
+  return {
+    queryKey: articlesKeys.detail(slug) as QueryKey,
+    queryFn: () => fetchArticleBySlug(slug),
+    staleTime: DETAIL_STALE_TIME,
+    gcTime: CACHE_TIME,
+    networkMode: 'offlineFirst' as const,
+  }
+}
+
+export function getCategoriesQueryOptions() {
+  return {
+    queryKey: articlesKeys.categories() as QueryKey,
+    queryFn: () => fetchCategories(),
+    staleTime: 10 * 60_000,
+    gcTime: CACHE_TIME,
+    networkMode: 'offlineFirst' as const,
+  }
+}
+
+export function getTagsQueryOptions() {
+  return {
+    queryKey: articlesKeys.tags() as QueryKey,
+    queryFn: () => fetchTags(),
+    staleTime: 10 * 60_000,
+    gcTime: CACHE_TIME,
+    networkMode: 'offlineFirst' as const,
+  }
+}
+
+export function useArticlesQuery(params: ListParams, options?: { enabled?: boolean }) {
+  return useQuery({
+    ...getArticlesListQueryOptions(params),
     enabled: options?.enabled ?? true,
   })
 }
 
 export function useArticleQuery(slug: string, options?: { enabled?: boolean }) {
   return useQuery({
-    queryKey: articlesKeys.detail(slug) as QueryKey,
-    queryFn: () => fetchArticleBySlug(slug),
-    staleTime: 60_000,
+    ...getArticleQueryOptions(slug),
     enabled: (options?.enabled ?? true) && !!slug,
   })
 }
 
 export function useCategoriesQuery(options?: { enabled?: boolean }) {
   return useQuery({
-    queryKey: articlesKeys.categories() as QueryKey,
-    queryFn: () => fetchCategories(),
-    staleTime: 10 * 60_000,
+    ...getCategoriesQueryOptions(),
     enabled: options?.enabled ?? true,
   })
 }
 
 export function useTagsQuery(options?: { enabled?: boolean }) {
   return useQuery({
-    queryKey: articlesKeys.tags() as QueryKey,
-    queryFn: () => fetchTags(),
-    staleTime: 10 * 60_000,
+    ...getTagsQueryOptions(),
     enabled: options?.enabled ?? true,
   })
+}
+
+export function prefetchArticleDetail(queryClient: QueryClient, slug: string) {
+  return queryClient.prefetchQuery(getArticleQueryOptions(slug))
 }

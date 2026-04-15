@@ -1,3 +1,4 @@
+import { formatGregorianApiDateAsEthiopian } from '@/shared/lib/ethiopian-date'
 import { cn } from '@/shared/lib/utils'
 
 import type { PassportImportBatch } from '../schemas/upload'
@@ -172,10 +173,7 @@ function formatBatchSource(value: PassportImportBatch['source_format']) {
 }
 
 function formatDate(value: string) {
-  const dt = new Date(value)
-  if (Number.isNaN(dt.getTime())) return value
-
-  return new Intl.DateTimeFormat(undefined, { dateStyle: 'medium' }).format(dt)
+  return formatGregorianApiDateAsEthiopian(value, { showGregorianInParentheses: true })
 }
 
 function formatTimestamp(value: string) {

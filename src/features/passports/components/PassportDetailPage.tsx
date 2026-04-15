@@ -1,12 +1,14 @@
 import { useRouter } from '@tanstack/react-router'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import * as React from 'react'
+import { lazy, Suspense } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import HabeshaFace from '@/assets/landingImages/habesha_face.svg'
 import { usePassportQuery } from '@/features/passports/lib/PassportsQuery'
 import type { PassportApiItem } from '@/features/passports/lib/PassportsSchema'
 import type { Passport } from '@/features/passports/schemas/passport'
+import { useNetworkConditions } from '@/shared/hooks/useNetworkConditions'
 import { AdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
@@ -14,7 +16,10 @@ import { Confetti } from '@/shared/ui/confetti'
 import { PassportDetailSkeleton } from '@/shared/ui/skeleton'
 
 import { PassportDetailCard } from './PassportDetailCard'
-import { PassportsTable } from './PassportsTable'
+
+const LazyPassportsTable = lazy(() =>
+  import('./PassportsTable').then((module) => ({ default: module.PassportsTable })),
+)
 
 interface PassportDetailPageProps {
   passportId?: string
@@ -24,6 +29,8 @@ interface PassportDetailPageProps {
 export function PassportDetailPage({ passportId, requestNumber }: PassportDetailPageProps) {
   const { t } = useTranslation('passports')
   const router = useRouter()
+  const prefersReducedMotion = useReducedMotion()
+  const network = useNetworkConditions()
 
   const idIsNumeric = passportId && /^\d+$/.test(passportId)
   const { data, isLoading, isError } = usePassportQuery(passportId ?? '', {
@@ -46,13 +53,53 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
   const uiPassport = data?.data ? mapToUi(data.data) : null
 
   const [showBanner, setShowBanner] = React.useState(true)
+  const [showCelebration, setShowCelebration] = React.useState(false)
+  const [showRelatedPassports, setShowRelatedPassports] = React.useState(false)
 
   React.useEffect(() => {
-    const timer = setTimeout(() => {
+    if (!uiPassport) return
+    setShowBanner(true)
+    setShowCelebration(false)
+    setShowRelatedPassports(false)
+    const timer = window.setTimeout(() => {
       setShowBanner(false)
     }, 7000)
-    return () => clearTimeout(timer)
-  }, [])
+    return () => window.clearTimeout(timer)
+  }, [uiPassport])
+
+  React.useEffect(() => {
+    if (!uiPassport) return
+
+    const idleWindow = window as Window & {
+      requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number
+      cancelIdleCallback?: (id: number) => void
+    }
+
+    let timeoutId: number | null = null
+    let idleId: number | null = null
+
+    const revealDeferredSections = () => {
+      React.startTransition(() => {
+        setShowCelebration(true)
+        setShowRelatedPassports(true)
+      })
+    }
+
+    if (typeof idleWindow.requestIdleCallback === 'function') {
+      idleId = idleWindow.requestIdleCallback(revealDeferredSections, { timeout: 1500 })
+    } else {
+      timeoutId = window.setTimeout(revealDeferredSections, 900)
+    }
+
+    return () => {
+      if (idleId !== null && typeof idleWindow.cancelIdleCallback === 'function') {
+        idleWindow.cancelIdleCallback(idleId)
+      }
+      if (timeoutId !== null) {
+        window.clearTimeout(timeoutId)
+      }
+    }
+  }, [uiPassport])
 
   const handleCheckAnother = React.useCallback(() => {
     router.navigate({ to: '/passports' })
@@ -102,7 +149,6 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
             <AdSlot preset="sponsored" orientation="horizontal" className="rounded-lg" />
           </div>
         </section>
-        <PassportsTable />
       </div>
     )
   }
@@ -141,41 +187,54 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
 
   return (
     <div className="min-h-screen">
-      {showBanner && <Confetti />}
+      {showBanner && showCelebration && !prefersReducedMotion && !network.isConstrained ? (
+        <Confetti />
+      ) : null}
       <AnimatePresence>
         {showBanner && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 1.3, ease: 'easeInOut' }}
+            role="status"
+            aria-live="polite"
+            initial={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+            animate={prefersReducedMotion ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
+            exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+            transition={{
+              duration: prefersReducedMotion ? 0.14 : 0.28,
+              ease: [0.23, 1, 0.32, 1],
+            }}
             className="overflow-hidden bg-emerald-600 text-white"
           >
-            <div className="container mx-auto px-4 py-4 text-center text-lg font-medium">
+            <div className="container mx-auto px-4 py-3 text-center text-base font-medium sm:text-lg">
               {t('detail.banner.congratulations', { city: uiPassport.city })}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-      <motion.div layout transition={{ duration: 1.3, ease: 'easeInOut' }}>
-        <PassportDetailCard passport={uiPassport} onCheckAnother={handleCheckAnother} />
-      </motion.div>
-      <div className="absolute top-[15rem] left-[-10rem] z-[-110] ml-2 opacity-90">
-        <img
-          src={HabeshaFace}
-          alt="Habesha Face"
-          className="h-150 w-150"
-          width="600"
-          height="600"
-        />
-      </div>
+      <PassportDetailCard passport={uiPassport} onCheckAnother={handleCheckAnother} />
+      {!network.isConstrained ? (
+        <div className="absolute top-[15rem] left-[-10rem] z-[-110] ml-2 opacity-90">
+          <img
+            src={HabeshaFace}
+            alt=""
+            aria-hidden="true"
+            className="hidden h-150 w-150 lg:block"
+            width="600"
+            height="600"
+            loading="lazy"
+          />
+        </div>
+      ) : null}
       <section className="py-8">
         <div className="container mx-auto max-w-6xl px-4">
           <AdSlot preset="sponsored" orientation="horizontal" className="rounded-lg" />
         </div>
       </section>
 
-      <PassportsTable />
+      {showRelatedPassports ? (
+        <Suspense fallback={<div className="h-24" />}>
+          <LazyPassportsTable />
+        </Suspense>
+      ) : null}
     </div>
   )
 }

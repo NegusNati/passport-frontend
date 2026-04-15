@@ -1,7 +1,10 @@
+import { useReducedMotion } from 'framer-motion'
 import * as React from 'react'
+import { startTransition } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import HabeshaFace from '@/assets/landingImages/habesha_face.svg'
+import { useNetworkConditions } from '@/shared/hooks/useNetworkConditions'
 import { Seo } from '@/shared/ui/Seo'
 
 import type { PassportSearchFilters } from '../schemas/passport'
@@ -11,6 +14,8 @@ type SearchMode = 'number' | 'name'
 
 export function PassportsPage() {
   const { t } = useTranslation('passports')
+  const prefersReducedMotion = useReducedMotion()
+  const network = useNetworkConditions()
   const [searchMode, setSearchMode] = React.useState<SearchMode>('name')
   const [searchFilters, setSearchFilters] = React.useState<PassportSearchFilters>({})
   const tableRef = React.useRef<HTMLDivElement>(null)
@@ -26,13 +31,18 @@ export function PassportsPage() {
   }, [])
 
   const scrollToResults = React.useCallback(() => {
-    tableRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }, [])
+    tableRef.current?.scrollIntoView({
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      block: 'start',
+    })
+  }, [prefersReducedMotion])
 
   const updateFilters = React.useCallback(
     (filters: PassportSearchFilters, mode: SearchMode) => {
-      setSearchMode(mode)
-      setSearchFilters((prev) => (isSameFilters(prev, filters) ? prev : filters))
+      startTransition(() => {
+        setSearchMode(mode)
+        setSearchFilters((prev) => (isSameFilters(prev, filters) ? prev : filters))
+      })
     },
     [isSameFilters],
   )
@@ -57,15 +67,19 @@ export function PassportsPage() {
         onScrollToResults={scrollToResults}
       />
 
-      <div className="absolute top-[15rem] left-[-10rem] z-[-110] ml-2 opacity-90">
-        <img
-          src={HabeshaFace}
-          alt="Habesha Face"
-          className="h-150 w-150"
-          width="600"
-          height="600"
-        />
-      </div>
+      {!network.isConstrained ? (
+        <div className="absolute top-[15rem] left-[-10rem] z-[-110] ml-2 opacity-90">
+          <img
+            src={HabeshaFace}
+            alt=""
+            aria-hidden="true"
+            className="hidden h-150 w-150 lg:block"
+            width="600"
+            height="600"
+            loading="lazy"
+          />
+        </div>
+      ) : null}
 
       {/* Passports Table Section */}
       <PassportsTable ref={tableRef} searchFilters={searchFilters} searchMode={searchMode} />

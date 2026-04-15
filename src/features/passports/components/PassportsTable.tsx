@@ -1,19 +1,26 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { type ColumnDef, type PaginationState, type Table } from '@tanstack/react-table'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import type { ListParams } from '@/features/passports/lib/PassportsApi'
-import { useLocationsQuery, usePassportsQuery } from '@/features/passports/lib/PassportsQuery'
+import {
+  prefetchPassportDetail,
+  useLocationsQuery,
+  usePassportsQuery,
+} from '@/features/passports/lib/PassportsQuery'
 import type { PassportApiItem } from '@/features/passports/lib/PassportsSchema'
 import { DataTable } from '@/features/table/DataTable'
 import { DataTableColumnHeader } from '@/features/table/DataTableColumnHeader'
 import type { PassportsTranslationKey } from '@/i18n/types'
+import { useNetworkConditions } from '@/shared/hooks/useNetworkConditions'
 import { useAnalytics } from '@/shared/lib/analytics'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 import { toast } from '@/shared/ui/sonner'
+import { SuccessPopup } from '@/shared/ui/success-popup'
 
 import { type PassportFilters, type PassportSearchFilters } from '../schemas/passport'
 
@@ -70,17 +77,22 @@ const DEFAULT_PAGINATION: PaginationState = {
   pageIndex: 0,
   pageSize: 10,
 }
+const SUCCESS_POPUP_DURATION_MS = 7000
 
 export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTableProps>(
   ({ searchFilters = {}, searchMode, defaultCity, tableTitle, lockCity = false }, ref) => {
     const { t } = useTranslation('passports')
     const router = useRouter()
+    const queryClient = useQueryClient()
+    const network = useNetworkConditions()
     const { capture } = useAnalytics()
     const [filters, setFilters] = React.useState<PassportFilters>(() => ({
       date: 'all',
       city: defaultCity ?? 'all',
     }))
     const [pagination, setPagination] = React.useState<PaginationState>(DEFAULT_PAGINATION)
+    const [hasSearchInteraction, setHasSearchInteraction] = React.useState(false)
+    const [hasTableFilterInteraction, setHasTableFilterInteraction] = React.useState(false)
     const searchStartTimeRef = React.useRef<number>(Date.now())
 
     const locationsQuery = useLocationsQuery()
@@ -108,6 +120,16 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       setPagination((prev) => (prev.pageIndex === 0 ? prev : { ...prev, pageIndex: 0 }))
     }, [searchFilters, searchMode])
 
+    const searchFiltersKey = React.useMemo(() => JSON.stringify(searchFilters), [searchFilters])
+    const previousSearchFiltersKeyRef = React.useRef(searchFiltersKey)
+
+    React.useEffect(() => {
+      if (previousSearchFiltersKeyRef.current !== searchFiltersKey) {
+        setHasSearchInteraction(true)
+        previousSearchFiltersKeyRef.current = searchFiltersKey
+      }
+    }, [searchFiltersKey])
+
     const listParams = React.useMemo<Partial<ListParams>>(
       () =>
         buildListParams({
@@ -120,6 +142,8 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
 
     const passportsQuery = usePassportsQuery(listParams)
     const { data, isLoading, isError, error } = passportsQuery
+    const isQueryTransitioning = passportsQuery.fetchStatus === 'fetching'
+    const hasPlaceholderRows = passportsQuery.isPlaceholderData
 
     const rows = React.useMemo<PassportApiItem[]>(() => {
       if (!data?.data) return []
@@ -128,19 +152,44 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
 
     const listParamsKey = React.useMemo(() => JSON.stringify(listParams), [listParams])
     const lastToastKeyRef = React.useRef<string | null>(null)
+    const lastSuccessKeyRef = React.useRef<string | null>(null)
+    const [successPopup, setSuccessPopup] = React.useState<{ key: string; count: number } | null>(
+      null,
+    )
+    const successPopupTimerRef = React.useRef<number | null>(null)
     const hasUserIntent = React.useMemo(() => {
       const hasSearchFilters = Object.keys(searchFilters ?? {}).length > 0
       const hasTableFilters = filters.city !== 'all' || filters.date !== 'all'
-      return hasSearchFilters || hasTableFilters
-    }, [filters.city, filters.date, searchFilters])
+      return (
+        (hasSearchFilters && hasSearchInteraction) ||
+        (hasTableFilters && hasTableFilterInteraction)
+      )
+    }, [filters.city, filters.date, hasSearchInteraction, hasTableFilterInteraction, searchFilters])
+
+    const dismissSuccessPopup = React.useCallback(() => {
+      setSuccessPopup(null)
+    }, [])
+
+    const handleOpenFirstResult = React.useCallback(() => {
+      const first = rows[0]
+      if (!first) return
+      dismissSuccessPopup()
+      void prefetchPassportDetail(queryClient, String(first.id))
+      router.navigate({
+        to: '/passports/$passportId',
+        params: { passportId: String(first.id) },
+      })
+    }, [dismissSuccessPopup, queryClient, router, rows])
 
     // Track search results
     React.useEffect(() => {
-      if (isLoading) {
-        searchStartTimeRef.current = Date.now()
+      searchStartTimeRef.current = Date.now()
+    }, [listParamsKey])
+
+    React.useEffect(() => {
+      if (isLoading || isQueryTransitioning || hasPlaceholderRows) {
         return
       }
-
       const hasSearchFilters = Object.keys(searchFilters).length > 0
       if (!hasSearchFilters) return
 
@@ -168,17 +217,37 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
           'total-available': data.meta?.total || 0,
         })
       }
-    }, [isLoading, isError, error, data, searchFilters, searchMode, capture])
+    }, [
+      capture,
+      data,
+      error,
+      hasPlaceholderRows,
+      isError,
+      isLoading,
+      isQueryTransitioning,
+      searchFilters,
+      searchMode,
+    ])
 
     React.useEffect(() => {
-      if (isLoading || isError) return
+      if (isLoading || isQueryTransitioning || hasPlaceholderRows) {
+        dismissSuccessPopup()
+        return
+      }
+      if (isError) {
+        dismissSuccessPopup()
+        return
+      }
       if (!hasUserIntent) {
         lastToastKeyRef.current = null
+        lastSuccessKeyRef.current = null
+        dismissSuccessPopup()
         return
       }
 
       const resultCount = data?.data?.length ?? 0
       if (resultCount === 0) {
+        setSuccessPopup(null)
         const toastKey = `${passportsQuery.dataUpdatedAt}-${listParamsKey}`
         if (lastToastKeyRef.current !== toastKey) {
           toast(t('table.empty.toastTitle'), {
@@ -186,18 +255,57 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
           })
           lastToastKeyRef.current = toastKey
         }
+        lastSuccessKeyRef.current = null
       } else {
         lastToastKeyRef.current = null
+        const successKey = `${passportsQuery.dataUpdatedAt}-${listParamsKey}-${resultCount}`
+        if (lastSuccessKeyRef.current !== successKey) {
+          setSuccessPopup({ key: successKey, count: resultCount })
+          lastSuccessKeyRef.current = successKey
+        }
       }
     }, [
       data?.data?.length,
+      dismissSuccessPopup,
       hasUserIntent,
+      hasPlaceholderRows,
       isError,
       isLoading,
+      isQueryTransitioning,
       listParamsKey,
       passportsQuery.dataUpdatedAt,
       t,
     ])
+
+    React.useEffect(() => {
+      if (!network.allowsPrefetch || network.prefetchBudget === 0) return
+
+      rows.slice(0, network.prefetchBudget).forEach((passport) => {
+        void prefetchPassportDetail(queryClient, String(passport.id))
+      })
+    }, [network.allowsPrefetch, network.prefetchBudget, queryClient, rows])
+
+    React.useEffect(() => {
+      if (successPopupTimerRef.current !== null) {
+        window.clearTimeout(successPopupTimerRef.current)
+        successPopupTimerRef.current = null
+      }
+
+      if (!successPopup) {
+        return
+      }
+
+      successPopupTimerRef.current = window.setTimeout(() => {
+        setSuccessPopup(null)
+      }, SUCCESS_POPUP_DURATION_MS)
+
+      return () => {
+        if (successPopupTimerRef.current !== null) {
+          window.clearTimeout(successPopupTimerRef.current)
+          successPopupTimerRef.current = null
+        }
+      }
+    }, [successPopup])
 
     const meta = data?.meta
     const total = meta?.total ?? 0
@@ -209,18 +317,25 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
     const to = Math.min(currentPage * effectivePageSize, total)
 
     const handlePageChange = React.useCallback((pageNumber: number) => {
-      setPagination((prev) => ({ ...prev, pageIndex: Math.max(0, pageNumber - 1) }))
+      React.startTransition(() => {
+        setPagination((prev) => ({ ...prev, pageIndex: Math.max(0, pageNumber - 1) }))
+      })
     }, [])
 
     const handlePageSizeChange = React.useCallback((size: number) => {
-      setPagination({ pageIndex: 0, pageSize: size })
+      React.startTransition(() => {
+        setPagination({ pageIndex: 0, pageSize: size })
+      })
     }, [])
 
     const handleFilterChange = React.useCallback(
       (key: keyof PassportFilters, value: string) => {
         if (lockCity && key === 'city') return
-        setFilters((prev) => ({ ...prev, [key]: value }))
-        setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+        setHasTableFilterInteraction(true)
+        React.startTransition(() => {
+          setFilters((prev) => ({ ...prev, [key]: value }))
+          setPagination((prev) => ({ ...prev, pageIndex: 0 }))
+        })
       },
       [lockCity],
     )
@@ -233,7 +348,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
             <DataTableColumnHeader column={column} title={t('table.columns.name')} />
           ),
           cell: ({ row }) => (
-            <span className="text-foreground font-medium">{row.original.full_name}</span>
+            <span className="text-foreground text-sm font-semibold">{row.original.full_name}</span>
           ),
           enableSorting: false,
           meta: { label: t('table.columns.name') },
@@ -244,7 +359,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
             <DataTableColumnHeader column={column} title={t('table.columns.location')} />
           ),
           cell: ({ row }) => (
-            <span className="text-muted-foreground text-sm">{row.original.location}</span>
+            <span className="text-muted-foreground text-sm leading-6">{row.original.location}</span>
           ),
           enableSorting: false,
           meta: { label: t('table.columns.location') },
@@ -284,19 +399,20 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
               variant="outline"
               size="sm"
               className="hidden md:inline-flex"
-              onClick={() =>
+              onClick={() => {
+                void prefetchPassportDetail(queryClient, String(row.original.id))
                 router.navigate({
                   to: '/passports/$passportId',
                   params: { passportId: String(row.original.id) },
                 })
-              }
+              }}
             >
               {t('table.actions.detail')}
             </Button>
           ),
         },
       ]
-    }, [router, t])
+    }, [queryClient, router, t])
 
     const toolbarComponent = React.useMemo(() => {
       const localizedDateOptions = DATE_PRESETS.map((opt) => ({
@@ -337,20 +453,6 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
         : new Error('Failed to load passports.')
       : null
 
-    const tableKey = React.useMemo(
-      () =>
-        `${pagination.pageIndex}-${pagination.pageSize}-${rows.length}-${passportsQuery.dataUpdatedAt ?? 0}-${JSON.stringify(
-          searchFilters,
-        )}`,
-      [
-        pagination.pageIndex,
-        pagination.pageSize,
-        rows.length,
-        passportsQuery.dataUpdatedAt,
-        searchFilters,
-      ],
-    )
-
     const emptyInlineMessage = t(
       'table.empty.inlineMessage',
       'Your passport is not ready yet. Our team is still processing it—please check back tomorrow for an update.',
@@ -358,11 +460,22 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
 
     return (
       <section ref={ref} className="py-12">
+        <SuccessPopup
+          open={successPopup !== null}
+          contextLabel={t('table.successPopup.eyebrow')}
+          title={t('table.successPopup.title', { count: successPopup?.count ?? 0 })}
+          description={t('table.successPopup.description')}
+          actionLabel={rows.length > 0 ? t('table.successPopup.action') : undefined}
+          dismissText={t('table.successPopup.dismissText')}
+          onAction={rows.length > 0 ? handleOpenFirstResult : undefined}
+          dismissLabel={t('table.successPopup.dismissAriaLabel')}
+          durationMs={SUCCESS_POPUP_DURATION_MS}
+          onDismiss={dismissSuccessPopup}
+        />
         <Container>
-          <div className="space-y-6">
-            <div className="rounded-lg border bg-transparent/80 p-6 shadow-sm backdrop-blur">
+          <div className="flex flex-col gap-6">
+            <div className="border-border/70 rounded-xl border bg-transparent/80 p-6 shadow-sm backdrop-blur">
               <DataTable
-                key={tableKey}
                 tableTitle={tableTitle ?? t('table.title')}
                 columns={columns}
                 data={rows}
@@ -385,15 +498,16 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
                     {emptyInlineMessage}
                   </span>
                 }
-                onRowClick={(passport) =>
+                onRowClick={(passport) => {
+                  void prefetchPassportDetail(queryClient, String(passport.id))
                   router.navigate({
                     to: '/passports/$passportId',
                     params: { passportId: String(passport.id) },
                   })
-                }
+                }}
               />
             </div>
-            <div className="text-muted-foreground flex items-center justify-between text-sm">
+            <div className="text-muted-foreground flex items-center justify-between text-sm leading-6">
               {isLoading ? (
                 <span>{t('table.pagination.loadingSummary')}</span>
               ) : total > 0 ? (
@@ -427,19 +541,21 @@ function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) 
   } = props
 
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div>
-        <h2 className="text-2xl font-semibold tracking-tight">{title}</h2>
-        <h3 className="text-muted-foreground mt-1 text-sm">{subtitle}</h3>
+        <h2 className="text-foreground text-xl font-semibold tracking-tight sm:text-2xl">
+          {title}
+        </h2>
+        <p className="text-muted-foreground mt-1 text-sm leading-relaxed">{subtitle}</p>
       </div>
 
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <span className="text-muted-foreground text-xs tracking-wide uppercase">
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+        <span className="text-muted-foreground text-[11px] font-medium tracking-[0.08em] uppercase">
           {filterByLabel}
         </span>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Select value={filters.date} onValueChange={(value) => onFilterChange('date', value)}>
-            <SelectTrigger className="w-44">
+            <SelectTrigger className="w-full sm:w-44">
               <SelectValue placeholder={dateOptions[0]?.label} />
             </SelectTrigger>
             <SelectContent>
@@ -456,7 +572,7 @@ function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) 
             onValueChange={(value) => onFilterChange('city', value)}
             disabled={isCitySelectDisabled}
           >
-            <SelectTrigger className="w-48" disabled={isCitySelectDisabled}>
+            <SelectTrigger className="w-full sm:w-48" disabled={isCitySelectDisabled}>
               <SelectValue placeholder={allLocationsLabel} />
             </SelectTrigger>
             <SelectContent>
@@ -537,6 +653,13 @@ function buildListParams({ searchFilters = {}, filters, pagination }: BuildParam
   return params
 }
 
+function toYmd(date: Date) {
+  const yyyy = date.getFullYear()
+  const mm = String(date.getMonth() + 1).padStart(2, '0')
+  const dd = String(date.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
+}
+
 function formatDisplayDate(value: string) {
   const dt = new Date(value)
   if (Number.isNaN(dt.getTime())) return value
@@ -545,11 +668,4 @@ function formatDisplayDate(value: string) {
     day: 'numeric',
     year: 'numeric',
   }).format(dt)
-}
-
-function toYmd(date: Date) {
-  const yyyy = date.getFullYear()
-  const mm = String(date.getMonth() + 1).padStart(2, '0')
-  const dd = String(date.getDate()).padStart(2, '0')
-  return `${yyyy}-${mm}-${dd}`
 }

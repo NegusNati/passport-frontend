@@ -1,7 +1,9 @@
+import type { QueryClient } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 import { z } from 'zod'
 
 import { PassportDetailPage } from '@/features/passports/components/PassportDetailPage'
+import { getPassportQueryOptions } from '@/features/passports/lib/PassportsQuery'
 import { loadI18nNamespaces } from '@/i18n/loader'
 
 const searchSchema = z.object({
@@ -25,8 +27,14 @@ function PassportDetailRouteComponent() {
 
 export const Route = createFileRoute('/passports/$passportId')({
   validateSearch: searchSchema,
-  loader: async () => {
-    await loadI18nNamespaces(['passports'])
+  loader: ({ context, params }) => {
+    const { queryClient } = context as { queryClient: QueryClient }
+
+    loadI18nNamespaces(['passports'])
+
+    if (/^\d+$/.test(params.passportId)) {
+      void queryClient.prefetchQuery(getPassportQueryOptions(params.passportId))
+    }
   },
   component: PassportDetailRouteComponent,
 })

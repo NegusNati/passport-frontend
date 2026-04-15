@@ -22,7 +22,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 function baseClasses(variant: ButtonVariant, disabled?: boolean) {
   const common =
-    'inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60 disabled:pointer-events-none'
+    'inline-flex items-center justify-center gap-2 rounded-md font-medium transition-[transform,background-color,color,border-color,box-shadow] duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 active:scale-[0.97] disabled:pointer-events-none disabled:opacity-60 disabled:active:scale-100'
   const ring = ' focus-visible:ring-ring ring-offset-background'
   const v = {
     primary: 'bg-primary text-primary-foreground hover:opacity-90',

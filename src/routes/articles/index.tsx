@@ -2,7 +2,11 @@ import type { QueryClient } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 
 import { fetchArticles, type ListParams } from '@/features/articles/lib/ArticlesApi'
-import { articlesKeys } from '@/features/articles/lib/ArticlesQuery'
+import {
+  articlesKeys,
+  getCategoriesQueryOptions,
+  getTagsQueryOptions,
+} from '@/features/articles/lib/ArticlesQuery'
 import { loadI18nNamespaces } from '@/i18n'
 
 type RouterContext = { queryClient: QueryClient }
@@ -15,17 +19,19 @@ const defaultParams: ListParams = {
 }
 
 export const Route = createFileRoute('/articles/')({
-  loader: async ({ context }) => {
+  loader: ({ context }) => {
     const { queryClient } = context as RouterContext
 
-    await Promise.all([
-      loadI18nNamespaces(['articles']),
-      queryClient.prefetchQuery({
-        queryKey: articlesKeys.list(defaultParams),
-        queryFn: () => fetchArticles(defaultParams),
-        staleTime: 30_000,
-      }),
-    ])
+    loadI18nNamespaces(['articles'])
+    void queryClient.prefetchQuery({
+      queryKey: articlesKeys.list(defaultParams),
+      queryFn: () => fetchArticles(defaultParams),
+      staleTime: 60_000,
+      gcTime: 30 * 60_000,
+      networkMode: 'offlineFirst',
+    })
+    void queryClient.prefetchQuery(getCategoriesQueryOptions())
+    void queryClient.prefetchQuery(getTagsQueryOptions())
   },
   // Component is lazy-loaded in index.lazy.tsx
 })

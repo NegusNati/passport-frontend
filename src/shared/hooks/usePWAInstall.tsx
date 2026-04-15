@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 import { analytics } from '@/shared/lib/analytics'
 
@@ -16,6 +16,7 @@ interface PWAInstallContextValue {
   isStandalone: boolean
   platform: Platform
   promptInstall: () => Promise<InstallResult>
+  registerInterest: () => () => void
 }
 
 const PWAInstallContext = createContext<PWAInstallContextValue | null>(null)
@@ -35,7 +36,6 @@ function detectPlatform(): Platform {
 }
 
 function isRunningStandalone(): boolean {
-  // Check if running as installed PWA
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches
   const isIosStandalone =
     'standalone' in navigator && (navigator as { standalone?: boolean }).standalone === true
@@ -47,19 +47,23 @@ export function PWAInstallProvider({ children }: { children: ReactNode }) {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [isStandalone, setIsStandalone] = useState(isRunningStandalone())
   const [platform] = useState<Platform>(detectPlatform())
+  const [interestedConsumers, setInterestedConsumers] = useState(0)
 
   useEffect(() => {
-    // Listen for beforeinstallprompt event
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault()
-      setDeferredPrompt(e as BeforeInstallPromptEvent)
+    if (interestedConsumers === 0) {
+      setDeferredPrompt(null)
+      return
+    }
+
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault()
+      setDeferredPrompt(event as BeforeInstallPromptEvent)
 
       if (import.meta.env.DEV) {
         console.log('[PWA] Install prompt available')
       }
     }
 
-    // Listen for successful installation
     const handleAppInstalled = () => {
       setIsStandalone(true)
       setDeferredPrompt(null)
@@ -74,7 +78,6 @@ export function PWAInstallProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    // Check standalone status on display mode change
     const displayModeQuery = window.matchMedia('(display-mode: standalone)')
     const handleDisplayModeChange = () => {
       setIsStandalone(isRunningStandalone())
@@ -89,9 +92,9 @@ export function PWAInstallProvider({ children }: { children: ReactNode }) {
       window.removeEventListener('appinstalled', handleAppInstalled)
       displayModeQuery.removeEventListener('change', handleDisplayModeChange)
     }
-  }, [platform])
+  }, [interestedConsumers, platform])
 
-  const promptInstall = async (): Promise<InstallResult> => {
+  const promptInstall = useCallback(async (): Promise<InstallResult> => {
     if (!deferredPrompt) {
       if (import.meta.env.DEV) {
         console.warn('[PWA] Install prompt not available')
@@ -114,33 +117,51 @@ export function PWAInstallProvider({ children }: { children: ReactNode }) {
         timestamp: new Date().toISOString(),
       })
 
-      if (choiceResult.outcome === 'accepted') {
-        setDeferredPrompt(null)
-      }
-
+      setDeferredPrompt(null)
       return choiceResult.outcome
     } catch (error) {
       console.error('[PWA] Install prompt error:', error)
       return 'unavailable'
     }
-  }
+  }, [deferredPrompt, platform])
 
-  const value: PWAInstallContextValue = {
-    canInstall: !!deferredPrompt && !isStandalone,
-    isStandalone,
-    platform,
-    promptInstall,
-  }
+  const registerInterest = useCallback(() => {
+    setInterestedConsumers((current) => current + 1)
+
+    return () => {
+      setInterestedConsumers((current) => Math.max(0, current - 1))
+    }
+  }, [])
+
+  const value = useMemo<PWAInstallContextValue>(
+    () => ({
+      canInstall: !!deferredPrompt && !isStandalone,
+      isStandalone,
+      platform,
+      promptInstall,
+      registerInterest,
+    }),
+    [deferredPrompt, isStandalone, platform, promptInstall, registerInterest],
+  )
 
   return <PWAInstallContext.Provider value={value}>{children}</PWAInstallContext.Provider>
 }
 
-export function usePWAInstall(): PWAInstallContextValue {
+export function usePWAInstall(): Omit<PWAInstallContextValue, 'registerInterest'> {
   const context = useContext(PWAInstallContext)
 
   if (!context) {
     throw new Error('usePWAInstall must be used within PWAInstallProvider')
   }
 
-  return context
+  const registerInterest = context.registerInterest
+
+  useEffect(() => registerInterest(), [registerInterest])
+
+  return {
+    canInstall: context.canInstall,
+    isStandalone: context.isStandalone,
+    platform: context.platform,
+    promptInstall: context.promptInstall,
+  }
 }

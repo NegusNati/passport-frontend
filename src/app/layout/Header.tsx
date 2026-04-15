@@ -210,7 +210,7 @@ export function Header() {
           <LanguageSwitcher compact />
           <button
             aria-label="Open menu"
-            className="border-input bg-background text-foreground inline-flex h-10 w-10 items-center justify-center rounded-md border"
+            className="border-input bg-background text-foreground inline-flex h-11 w-11 items-center justify-center rounded-md border"
             onClick={handleOpenMobileMenu}
           >
             <div className="i-[menu] size-5">

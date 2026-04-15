@@ -20,3 +20,6 @@ node_modules/
 pnpm-debug.log
 coverage/
 /.DS_Store
+
+output/
+playwright-report/

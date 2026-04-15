@@ -13,6 +13,8 @@ import {
   useRef,
 } from 'react'
 
+import { CardSwapShell, getCardSwapItemStyle, makeCardSwapSlot } from './CardSwapShell'
+
 export interface CardSwapProps {
   width?: number | string
   height?: number | string
@@ -40,21 +42,12 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(({ customClass, ...res
 Card.displayName = 'Card'
 
 type CardRef = RefObject<HTMLDivElement | null>
-interface Slot {
-  x: number
-  y: number
-  z: number
-  zIndex: number
-}
 
-const makeSlot = (i: number, distX: number, distY: number, total: number): Slot => ({
-  x: i * distX,
-  y: -i * distY,
-  z: -i * distX * 1.5,
-  zIndex: total - i,
-})
-
-const placeNow = (el: HTMLElement, slot: Slot, skew: number) =>
+const placeNow = (
+  el: HTMLElement,
+  slot: ReturnType<typeof makeCardSwapSlot>,
+  skew: number,
+) =>
   gsap.set(el, {
     x: slot.x,
     y: slot.y,
@@ -66,36 +59,6 @@ const placeNow = (el: HTMLElement, slot: Slot, skew: number) =>
     zIndex: slot.zIndex,
     force3D: true,
   })
-
-// Static card stack for users who prefer reduced motion
-const StaticCardStack: React.FC<CardSwapProps> = ({ width, height, children }) => {
-  const childArr = useMemo(
-    () => Children.toArray(children) as ReactElement<CardProps>[],
-    [children],
-  )
-
-  return (
-    <div
-      className="absolute top-1/2 left-1/2 origin-center -translate-x-1/2 -translate-y-1/2 scale-[0.7] overflow-visible sm:scale-[0.85] md:top-auto md:right-0 md:bottom-0 md:left-auto md:origin-bottom-right md:translate-x-[5%] md:translate-y-[20%] md:scale-100 lg:translate-x-[2%] lg:translate-y-[10%]"
-      style={{ width, height }}
-    >
-      {childArr.map((child, i) =>
-        isValidElement<CardProps>(child)
-          ? cloneElement(child, {
-              key: i,
-              style: {
-                width,
-                height,
-                transform: `translate(-50%, -50%) translateY(${-i * 20}px)`,
-                zIndex: childArr.length - i,
-                ...(child.props.style ?? {}),
-              },
-            } as CardProps)
-          : child,
-      )}
-    </div>
-  )
-}
 
 const CardSwap: React.FC<CardSwapProps> = ({
   width = 500,
@@ -150,7 +113,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
     if (prefersReducedMotion) return
     const total = refs.length
     refs.forEach((r, i) =>
-      placeNow(r.current!, makeSlot(i, cardDistance, verticalDistance, total), skewAmount),
+      placeNow(r.current!, makeCardSwapSlot(i, cardDistance, verticalDistance, total), skewAmount),
     )
 
     const swap = () => {
@@ -170,7 +133,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
       tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`)
       rest.forEach((idx, i) => {
         const el = refs[idx].current!
-        const slot = makeSlot(i, cardDistance, verticalDistance, refs.length)
+        const slot = makeCardSwapSlot(i, cardDistance, verticalDistance, refs.length)
         tl.set(el, { zIndex: slot.zIndex }, 'promote')
         tl.to(
           el,
@@ -185,7 +148,12 @@ const CardSwap: React.FC<CardSwapProps> = ({
         )
       })
 
-      const backSlot = makeSlot(refs.length - 1, cardDistance, verticalDistance, refs.length)
+      const backSlot = makeCardSwapSlot(
+        refs.length - 1,
+        cardDistance,
+        verticalDistance,
+        refs.length,
+      )
       tl.addLabel('return', `promote+=${config.durMove * config.returnDelay}`)
       tl.call(
         () => {
@@ -211,7 +179,6 @@ const CardSwap: React.FC<CardSwapProps> = ({
       })
     }
 
-    swap()
     intervalRef.current = window.setInterval(swap, delay)
 
     if (pauseOnHover) {
@@ -229,10 +196,14 @@ const CardSwap: React.FC<CardSwapProps> = ({
       return () => {
         node.removeEventListener('mouseenter', pause)
         node.removeEventListener('mouseleave', resume)
+        tlRef.current?.kill()
         clearInterval(intervalRef.current)
       }
     }
-    return () => clearInterval(intervalRef.current)
+    return () => {
+      tlRef.current?.kill()
+      clearInterval(intervalRef.current)
+    }
   }, [
     prefersReducedMotion,
     cardDistance,
@@ -250,7 +221,15 @@ const CardSwap: React.FC<CardSwapProps> = ({
       ? cloneElement(child, {
           key: i,
           ref: refs[i],
-          style: { width, height, ...(child.props.style ?? {}) },
+          style: {
+            ...(child.props.style ?? {}),
+            ...getCardSwapItemStyle({
+              width,
+              height,
+              slot: makeCardSwapSlot(i, cardDistance, verticalDistance, childArr.length),
+              skewAmount,
+            }),
+          },
           onClick: (e) => {
             child.props.onClick?.(e as React.MouseEvent<HTMLDivElement>)
             onCardClick?.(i)
@@ -261,16 +240,22 @@ const CardSwap: React.FC<CardSwapProps> = ({
 
   if (prefersReducedMotion) {
     return (
-      <StaticCardStack width={width} height={height}>
+      <CardSwapShell
+        width={width}
+        height={height}
+        cardDistance={cardDistance}
+        verticalDistance={verticalDistance}
+        skewAmount={skewAmount}
+      >
         {children}
-      </StaticCardStack>
+      </CardSwapShell>
     )
   }
 
   return (
     <div
       ref={container}
-      className="absolute top-1/2 left-1/2 origin-center -translate-x-1/2 -translate-y-1/2 scale-[0.7] overflow-visible perspective-[900px] sm:scale-[0.85] md:top-auto md:right-0 md:bottom-0 md:left-auto md:origin-bottom-right md:translate-x-[5%] md:translate-y-[20%] md:scale-100 lg:translate-x-[2%] lg:translate-y-[10%]"
+      className="absolute top-1/2 left-1/2 overflow-visible perspective-[900px] origin-center -translate-x-1/2 -translate-y-1/2 scale-[0.7] sm:scale-[0.85] md:top-auto md:right-0 md:bottom-0 md:left-auto md:origin-bottom-right md:translate-x-[5%] md:translate-y-[20%] md:scale-100 lg:translate-x-[2%] lg:translate-y-[10%]"
       style={{ width, height }}
     >
       {rendered}

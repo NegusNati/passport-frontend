@@ -1,3 +1,4 @@
+import { useQueryClient } from '@tanstack/react-query'
 import { Link } from '@tanstack/react-router'
 import { Loader2 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
@@ -5,12 +6,14 @@ import { useTranslation } from 'react-i18next'
 
 import ethiopic_numbers from '@/assets/landingImages/number.webp'
 import {
+  prefetchArticleDetail,
   useArticlesQuery,
   useCategoriesQuery,
   useTagsQuery,
 } from '@/features/articles/lib/ArticlesQuery'
 import type { ArticleApiItem } from '@/features/articles/lib/ArticlesSchema'
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
+import { useNetworkConditions } from '@/shared/hooks/useNetworkConditions'
 import { AdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardHeader } from '@/shared/ui/card'
@@ -25,7 +28,10 @@ import { ArticlePagination } from './ArticlePagination'
 
 export function ArticlesPage() {
   const { t } = useTranslation('articles')
+  const queryClient = useQueryClient()
+  const network = useNetworkConditions()
   const [searchInput, setSearchInput] = useState('')
+  const [committedSearchInput, setCommittedSearchInput] = useState('')
   const [filters, setFilters] = useState<ArticleFiltersType>({
     category: 'all',
     tag: 'all',
@@ -35,17 +41,32 @@ export function ArticlesPage() {
   const [isSearching, setIsSearching] = useState(false)
   const perPage = 12
 
-  const debouncedSearchInput = useDebouncedValue(searchInput, 350)
+  const debouncedSearchInput = useDebouncedValue(searchInput, network.searchDebounceMs)
+  const effectiveSearchInput = network.preferManualSearch
+    ? committedSearchInput
+    : debouncedSearchInput
 
   // Track searching state during debounce
   useEffect(() => {
-    if (searchInput.length >= 3) {
+    if (!network.preferManualSearch && searchInput.length >= network.searchMinCharacters) {
       setIsSearching(true)
-      const timer = setTimeout(() => setIsSearching(false), 350)
+      const timer = setTimeout(() => setIsSearching(false), network.searchDebounceMs)
       return () => clearTimeout(timer)
     }
     setIsSearching(false)
-  }, [searchInput])
+  }, [
+    network.preferManualSearch,
+    network.searchDebounceMs,
+    network.searchMinCharacters,
+    searchInput,
+  ])
+
+  useEffect(() => {
+    if (!network.preferManualSearch) return
+    if (searchInput.trim().length === 0 && committedSearchInput) {
+      setCommittedSearchInput('')
+    }
+  }, [committedSearchInput, network.preferManualSearch, searchInput])
 
   const params = useMemo(
     () => ({
@@ -53,28 +74,37 @@ export function ArticlesPage() {
       page: currentPage,
       sort: 'published_at' as const,
       sort_dir: 'desc' as const,
-      // Prefer fast title prefix search; only send when >= 3 chars for performance
-      ...(debouncedSearchInput.trim().length >= 3 && { title: debouncedSearchInput.trim() }),
+      ...(effectiveSearchInput.trim().length >= network.searchMinCharacters && {
+        title: effectiveSearchInput.trim(),
+      }),
       ...(filters.category !== 'all' && { category: filters.category }),
       ...(filters.tag !== 'all' && { tag: filters.tag }),
     }),
-    [debouncedSearchInput, filters, currentPage, perPage],
+    [effectiveSearchInput, filters, currentPage, network.searchMinCharacters, perPage],
   )
 
   const { data, isLoading } = useArticlesQuery(params)
   const categories = useCategoriesQuery()
   const tags = useTagsQuery()
 
-  const rows: ArticleApiItem[] = data?.data ?? []
+  const rows = useMemo<ArticleApiItem[]>(() => data?.data ?? [], [data?.data])
   const meta = data?.meta
 
   const handleSearch = () => {
     // Reset to page 1 when explicitly searching
     setCurrentPage(1)
+    if (network.preferManualSearch) {
+      setCommittedSearchInput(searchInput.trim())
+    }
     // Scroll to results
-    document
-      .querySelector('[data-articles-grid]')
-      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    document.querySelector('[data-articles-grid]')?.scrollIntoView({
+      behavior:
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          ? 'auto'
+          : 'smooth',
+      block: 'start',
+    })
   }
 
   const handleCategoryChange = (value: string) => {
@@ -89,10 +119,23 @@ export function ArticlesPage() {
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
-    document
-      .querySelector('[data-articles-grid]')
-      ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    document.querySelector('[data-articles-grid]')?.scrollIntoView({
+      behavior:
+        typeof window !== 'undefined' &&
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          ? 'auto'
+          : 'smooth',
+      block: 'start',
+    })
   }
+
+  useEffect(() => {
+    if (!network.allowsPrefetch || network.prefetchBudget === 0) return
+
+    rows.slice(0, network.prefetchBudget).forEach((article) => {
+      void prefetchArticleDetail(queryClient, article.slug)
+    })
+  }, [network.allowsPrefetch, network.prefetchBudget, queryClient, rows])
 
   const mapToUi = (a: ArticleApiItem): ArticleSummary => ({
     id: String(a.id),
@@ -119,9 +162,19 @@ export function ArticlesPage() {
         extraLinks={getFeedLinks()}
       />
 
-      <div className="absolute bottom-[40rem] left-0 z-[-100] ml-2 translate-y-1/4 transform opacity-70 md:opacity-90">
-        <img src={ethiopic_numbers} alt="logo" className="h-150 w-150" width="600" height="600" />
-      </div>
+      {!network.isConstrained ? (
+        <div className="absolute bottom-[40rem] left-0 z-[-100] ml-2 translate-y-1/4 transform opacity-70 md:opacity-90">
+          <img
+            src={ethiopic_numbers}
+            alt=""
+            aria-hidden="true"
+            className="hidden h-150 w-150 lg:block"
+            width="600"
+            height="600"
+            loading="lazy"
+          />
+        </div>
+      ) : null}
 
       {/* Search Section */}
       <section className="py-2">
@@ -134,8 +187,8 @@ export function ArticlesPage() {
             />
           </div>
           <h1 className="mb-4 text-4xl font-bold tracking-tight">{t('list.title')}</h1>
-          <div className="flex flex-col justify-between gap-8 md:flex-row md:gap-20">
-            <div className="flex flex-1 flex-row gap-2">
+          <div className="flex flex-col justify-between gap-6 md:flex-row md:gap-12">
+            <div className="flex flex-1 flex-col gap-2 sm:flex-row">
               {/* Search Input */}
               <div className="relative flex-1">
                 <Input
@@ -153,11 +206,16 @@ export function ArticlesPage() {
               </div>
 
               {/* Search Button */}
-              <Button onClick={handleSearch} variant="primary" size="lg" className="md:w-auto">
+              <Button
+                onClick={handleSearch}
+                variant="primary"
+                size="lg"
+                className="w-full sm:w-auto"
+              >
                 {t('list.search.button')}
               </Button>
             </div>
-            <div className="flex flex-1 flex-row gap-2">
+            <div className="flex flex-1 flex-col gap-2 sm:flex-row">
               {/* Filter By Label */}
               <span className="text-muted-foreground hidden self-center text-sm md:inline-block">
                 {t('list.filters.filterBy')}
@@ -213,6 +271,18 @@ export function ArticlesPage() {
                       params={{ slug: a.slug }}
                       search={(s: Record<string, unknown>) => s}
                       preload="intent"
+                      onMouseEnter={() => {
+                        if (!network.allowsPrefetch) return
+                        void prefetchArticleDetail(queryClient, a.slug)
+                      }}
+                      onFocus={() => {
+                        if (!network.allowsPrefetch) return
+                        void prefetchArticleDetail(queryClient, a.slug)
+                      }}
+                      onTouchStart={() => {
+                        if (!network.allowsPrefetch) return
+                        void prefetchArticleDetail(queryClient, a.slug)
+                      }}
                       className="flex h-full"
                     >
                       <Card className="flex h-full w-full flex-col overflow-hidden transition-shadow hover:shadow-lg">

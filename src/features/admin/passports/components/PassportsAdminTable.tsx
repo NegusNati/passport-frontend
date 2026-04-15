@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useLocationsQuery } from '@/features/passports/lib/PassportsQuery'
 import { DataTable } from '@/features/table/DataTable'
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
+import { formatGregorianApiDateAsEthiopian } from '@/shared/lib/ethiopian-date'
 import { Input } from '@/shared/ui/input'
 import { Label } from '@/shared/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
@@ -68,8 +69,10 @@ export function PassportsAdminTable({
         accessorKey: 'date_of_publish',
         header: 'Published',
         cell: ({ row }) => (
-          <span className="text-muted-foreground text-sm">
-            {formatDate(row.original.date_of_publish)}
+          <span className="text-foreground text-sm font-medium tabular-nums">
+            {formatGregorianApiDateAsEthiopian(row.original.date_of_publish, {
+              showGregorianInParentheses: true,
+            })}
           </span>
         ),
       },
@@ -277,14 +280,4 @@ function PassportsFilters({ filters, onFilterChange }: FilterProps) {
       </div>
     </div>
   )
-}
-
-function formatDate(value: string) {
-  const dt = new Date(value)
-  if (Number.isNaN(dt.getTime())) return value
-  return new Intl.DateTimeFormat(undefined, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  }).format(dt)
 }
