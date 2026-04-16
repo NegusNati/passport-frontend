@@ -34,14 +34,50 @@ const PASSPORT_DETAIL_RESPONSE_SCHEMA = z.object({
 
 const SEARCH_INPUT_SCHEMA = z
   .object({
-    query: z.string().trim().optional(),
-    requestNumber: z.string().trim().optional(),
-    firstName: z.string().trim().optional(),
-    middleName: z.string().trim().optional(),
-    lastName: z.string().trim().optional(),
-    location: z.string().trim().optional(),
-    page: z.number().int().min(1).max(10).default(1),
-    pageSize: z.number().int().min(1).max(10).default(5),
+    query: z
+      .string()
+      .trim()
+      .optional()
+      .describe('Free-text passport lookup query, such as a full name or request number fragment.'),
+    requestNumber: z
+      .string()
+      .trim()
+      .optional()
+      .describe('Passport request number from Passport.ET, for example ACPP52603012A4P.'),
+    firstName: z
+      .string()
+      .trim()
+      .optional()
+      .describe('Passport holder first name as shown on the request.'),
+    middleName: z
+      .string()
+      .trim()
+      .optional()
+      .describe('Passport holder middle name as shown on the request, if available.'),
+    lastName: z
+      .string()
+      .trim()
+      .optional()
+      .describe('Passport holder last name or surname as shown on the request.'),
+    location: z
+      .string()
+      .trim()
+      .optional()
+      .describe('Passport branch or city to narrow results, for example Saris, Addis Ababa.'),
+    page: z
+      .number()
+      .int()
+      .min(1)
+      .max(10)
+      .default(1)
+      .describe('Results page number. Keep this at 1 for normal ChatGPT lookups.'),
+    pageSize: z
+      .number()
+      .int()
+      .min(1)
+      .max(10)
+      .default(5)
+      .describe('How many Passport.ET matches to return, up to 10.'),
   })
   .superRefine((value, ctx) => {
     const hasName =

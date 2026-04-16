@@ -171,7 +171,7 @@ function DetailCard({
               void onOpenExternal(passport.detailUrl)
             }}
           >
-            View this record on passport.et
+            View verified record on passport.et
           </a>
         </div>
 

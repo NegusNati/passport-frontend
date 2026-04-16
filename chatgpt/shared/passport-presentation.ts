@@ -80,7 +80,7 @@ export function presentPassport(record: PassportPresentationInput): PassportPres
     pickupTimeLabel: PICKUP_TIME_LABEL,
     readyHeadline: READY_HEADLINE,
     pickupNotice,
-    sourceLabel: 'Source: passport.et',
+    sourceLabel: 'Verified using www.passport.et',
   }
 }
 

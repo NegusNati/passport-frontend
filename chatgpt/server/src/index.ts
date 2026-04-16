@@ -74,7 +74,8 @@ function formatPassportResultText(result: PassportSummary) {
     `Collection days: ${result.pickupDaysLabel}`,
     `Exact time: ${result.pickupTimeLabel}`,
     `Branch: ${result.location}`,
-    `Source: ${result.detailUrl}`,
+    `Verified using www.passport.et`,
+    `Record: ${result.detailUrl}`,
   ].join('\n')
 }
 
@@ -95,11 +96,11 @@ function createPassportServer() {
 
   registerAppResource(
     server,
-    'Passport Results Widget',
+    'Passport.ET Status Card',
     TEMPLATE_URI,
     {
-      title: 'Passport Results Widget',
-      description: 'Interactive Ethiopian passport lookup results.',
+      title: 'Passport.ET Status Card',
+      description: 'Interactive Ethiopian passport pickup and publication status card.',
     },
     async () => {
       const { script, css } = loadWidgetAssets()
@@ -122,7 +123,7 @@ function createPassportServer() {
                 },
               },
               'openai/widgetDescription':
-                'Shows passport search results and a drill-down detail card for a selected passport.',
+                'Shows Passport.ET status results and a branded pickup detail card for the selected passport.',
             },
           },
         ],
@@ -134,14 +135,14 @@ function createPassportServer() {
     server,
     'search_passports',
     {
-      title: 'Search passports',
+      title: 'Check Passport.ET status',
       description:
-        'Use this when the user wants to look up Ethiopian passport publication results by request number, name, free-text query, or location.',
+        'Use this when the user wants to check Ethiopian passport publication or pickup status on Passport.ET by request number, passport holder name, free-text query, or branch location.',
       inputSchema: CHATGPT_SEARCH_INPUT_SCHEMA,
       annotations: TOOL_ANNOTATIONS,
       _meta: {
-        'openai/toolInvocation/invoking': 'Searching passports…',
-        'openai/toolInvocation/invoked': 'Passport results ready.',
+        'openai/toolInvocation/invoking': 'Checking Passport.ET…',
+        'openai/toolInvocation/invoked': 'Passport.ET result ready.',
       },
     },
     async (input) => {
@@ -172,11 +173,14 @@ function createPassportServer() {
     server,
     'get_passport_details',
     {
-      title: 'Get passport details',
+      title: 'Load Passport.ET details',
       description:
-        'Use this when the user or widget needs the full details for one passport result by id.',
+        'Use this when the user or widget needs the detailed Passport.ET pickup card for one passport result.',
       inputSchema: z.object({
-        passportId: z.string().min(1),
+        passportId: z
+          .string()
+          .min(1)
+          .describe('Passport.ET result id for the record that should be opened.'),
       }),
       annotations: TOOL_ANNOTATIONS,
       _meta: {
@@ -184,8 +188,8 @@ function createPassportServer() {
           resourceUri: TEMPLATE_URI,
           visibility: ['model', 'app'],
         },
-        'openai/toolInvocation/invoking': 'Loading passport…',
-        'openai/toolInvocation/invoked': 'Passport detail ready.',
+        'openai/toolInvocation/invoking': 'Loading Passport.ET detail…',
+        'openai/toolInvocation/invoked': 'Passport.ET detail ready.',
       },
     },
     async ({ passportId }) => {
@@ -210,16 +214,23 @@ function createPassportServer() {
     server,
     'render_passport_results',
     {
-      title: 'Render passport results',
+      title: 'Show Passport.ET result card',
       description:
-        'Use this when you want to show an interactive passport results widget. Call search_passports first and pass its results array unchanged.',
+        'Use this when you want to show the branded Passport.ET status card inside ChatGPT. Call check Passport.ET status first and pass its results array unchanged.',
       inputSchema: z.object({
-        searchSummary: z.string().min(1),
+        searchSummary: z
+          .string()
+          .min(1)
+          .describe('Human-readable summary of the search, such as a request number or passenger name.'),
         results: z
           .array(CHATGPT_PASSPORT_RECORD_SCHEMA)
           .min(1)
-          .max(10),
-        selectedPassportId: z.string().optional(),
+          .max(10)
+          .describe('Passport.ET search results to display in the widget.'),
+        selectedPassportId: z
+          .string()
+          .optional()
+          .describe('Optional Passport.ET result id to preselect in the widget.'),
       }),
       annotations: TOOL_ANNOTATIONS,
       _meta: {
@@ -228,8 +239,8 @@ function createPassportServer() {
           visibility: ['model', 'app'],
         },
         'openai/outputTemplate': TEMPLATE_URI,
-        'openai/toolInvocation/invoking': 'Rendering widget…',
-        'openai/toolInvocation/invoked': 'Widget ready.',
+        'openai/toolInvocation/invoking': 'Opening Passport.ET card…',
+        'openai/toolInvocation/invoked': 'Passport.ET card ready.',
       },
     },
     async ({ searchSummary, results, selectedPassportId }) => {
