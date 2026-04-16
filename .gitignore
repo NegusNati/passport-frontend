@@ -23,3 +23,4 @@ coverage/
 
 output/
 playwright-report/
+chatgpt/dist/

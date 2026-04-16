@@ -1,4 +1,4 @@
-name: Zero Downtime Deployment to VPS
+name: Production Deployment to VPS
 
 on:
   push:
@@ -7,10 +7,46 @@ on:
       - master
   workflow_dispatch:
 
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
 jobs:
-  deploy:
-    name: Deploy Frontend to Server
+  validate:
+    name: Validate Deploy Artifacts
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck application
+        run: pnpm typecheck
+
+      - name: Build ChatGPT app
+        run: pnpm chatgpt:build
+
+      - name: Validate Docker Compose config
+        run: docker compose config
+
+  deploy:
+    name: Deploy Frontend and ChatGPT App to Server
+    runs-on: ubuntu-latest
+    needs: validate
 
     steps:
       - name: Checkout code
@@ -28,48 +64,71 @@ jobs:
 
             cd /opt/passport/passport-frontend
 
+            wait_for_healthy() {
+              service="$1"
+              timeout="${2:-90}"
+              elapsed=0
+
+              while [ "$elapsed" -lt "$timeout" ]; do
+                healthy_count="$(docker ps \
+                  --filter "label=com.docker.compose.service=${service}" \
+                  --filter "health=healthy" \
+                  --format '{{.ID}}' | wc -l | tr -d ' ')"
+
+                if [ "${healthy_count}" -ge 1 ]; then
+                  echo "✅ ${service} has a healthy container."
+                  return 0
+                fi
+
+                sleep 5
+                elapsed=$((elapsed + 5))
+              done
+
+              echo "❌ ${service} did not become healthy within ${timeout}s."
+              docker compose ps "${service}"
+              docker compose logs --tail 100 "${service}"
+              return 1
+            }
+
+            rollout_service() {
+              service="$1"
+
+              echo "🔨 Building ${service} image..."
+              docker compose build --no-cache "${service}"
+
+              echo "⚡ Starting new ${service} instance alongside old one..."
+              docker compose up -d --scale "${service}=2" --no-recreate "${service}"
+
+              echo "⏳ Waiting for ${service} to become healthy..."
+              wait_for_healthy "${service}"
+
+              echo "♻️  Removing old ${service} container, keeping new one..."
+              docker compose up -d --scale "${service}=1" --remove-orphans "${service}"
+              wait_for_healthy "${service}"
+            }
+
             # Step 1: Pull the latest code
             echo "📥 Pulling latest code..."
-            git fetch --all
+            git fetch --all --prune
             git reset --hard origin/${{ github.ref_name }}
 
-            # Step 2: Build new frontend image without removing old container yet
-            echo "🔨 Building new frontend image..."
-            docker compose build --no-cache passport-frontend
-
-            # Step 3: Pull latest images for other services (no rebuild needed)
+            # Step 2: Pull latest images for supporting services (no rebuild needed)
             echo "📦 Pulling latest images for supporting services..."
             docker compose pull umami nginx-proxy-manager
 
-            # Step 4: Scale frontend to 2 instances for zero downtime
-            echo "⚡ Starting new frontend instance alongside old one..."
-            docker compose up -d --scale passport-frontend=2 --no-recreate
+            # Step 3: Roll app services with the same zero-downtime flow
+            rollout_service passport-frontend
+            rollout_service passport-chatgpt-app
 
-            # Wait for new container to be healthy
-            echo "⏳ Waiting for new container to become healthy..."
-            sleep 15
-
-            # Step 5: Check if new container is healthy
-            if docker ps --filter "name=passport-frontend" --filter "health=healthy" | grep -q passport-frontend; then
-              echo "✅ New container is healthy, proceeding..."
-            else
-              echo "⚠️  New container health check not available, waiting additional time..."
-              sleep 10
-            fi
-
-            # Step 6: Scale back to 1 (removes old container, keeps new one)
-            echo "♻️  Removing old container, keeping new one..."
-            docker compose up -d --scale passport-frontend=1 --remove-orphans
-
-            # Step 7: Ensure all services are up (NPM, Umami)
+            # Step 4: Ensure all services are up (NPM, Umami, app services)
             echo "🔄 Ensuring all services are running..."
             docker compose up -d
 
-            # Step 8: Clean up unused images and containers
+            # Step 5: Clean up unused images and containers
             echo "🧹 Cleaning up old images..."
             docker image prune -f
 
-            # Step 9: Show final status
+            # Step 6: Show final status
             echo "✅ Deployment complete!"
             echo ""
             echo "📊 Service Status:"
@@ -84,6 +143,7 @@ jobs:
           if [ "${{ job.status }}" == "success" ]; then
             echo "✅ Deployment successful!"
             echo "🌐 Frontend: https://passport.et"
+            echo "🤖 ChatGPT MCP: https://<your-chatgpt-domain>/mcp"
             echo "📊 Analytics: https://analytics.passport.et"
           else
             echo "❌ Deployment failed!"

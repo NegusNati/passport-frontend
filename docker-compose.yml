@@ -49,6 +49,37 @@ services:
       - nginx-proxy-manager
 
   # ============================================
+  # Passport ChatGPT App (MCP server)
+  # ============================================
+  passport-chatgpt-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.chatgpt
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: ${CHATGPT_APP_PORT:-8787}
+      MCP_PATH: ${CHATGPT_MCP_PATH:-/mcp}
+      PASSPORT_API_BASE_URL: ${PASSPORT_API_BASE_URL:-https://api.passport.et}
+      PASSPORT_SITE_URL: ${PASSPORT_SITE_URL:-https://passport.et}
+      CHATGPT_WIDGET_DOMAIN: ${CHATGPT_WIDGET_DOMAIN:-}
+    networks:
+      - web
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:' + (process.env.PORT || '8787') + '/healthz').then((res) => { if (!res.ok) process.exit(1) }).catch(() => process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      - nginx-proxy-manager
+
+  # ============================================
   # Umami Analytics - PostgreSQL Database
   # ============================================
   umami-db:
