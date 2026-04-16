@@ -43,11 +43,7 @@ Card.displayName = 'Card'
 
 type CardRef = RefObject<HTMLDivElement | null>
 
-const placeNow = (
-  el: HTMLElement,
-  slot: ReturnType<typeof makeCardSwapSlot>,
-  skew: number,
-) =>
+const placeNow = (el: HTMLElement, slot: ReturnType<typeof makeCardSwapSlot>, skew: number) =>
   gsap.set(el, {
     x: slot.x,
     y: slot.y,
@@ -255,7 +251,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
   return (
     <div
       ref={container}
-      className="absolute top-1/2 left-1/2 overflow-visible perspective-[900px] origin-center -translate-x-1/2 -translate-y-1/2 scale-[0.7] sm:scale-[0.85] md:top-auto md:right-0 md:bottom-0 md:left-auto md:origin-bottom-right md:translate-x-[5%] md:translate-y-[20%] md:scale-100 lg:translate-x-[2%] lg:translate-y-[10%]"
+      className="absolute top-1/2 left-1/2 origin-center -translate-x-1/2 -translate-y-1/2 scale-[0.7] overflow-visible perspective-[900px] sm:scale-[0.85] md:top-auto md:right-0 md:bottom-0 md:left-auto md:origin-bottom-right md:translate-x-[5%] md:translate-y-[20%] md:scale-100 lg:translate-x-[2%] lg:translate-y-[10%]"
       style={{ width, height }}
     >
       {rendered}

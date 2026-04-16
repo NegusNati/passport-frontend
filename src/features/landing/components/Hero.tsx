@@ -184,7 +184,7 @@ export function Hero() {
               </AnimatedBorderCard>
             </div>
 
-            <h1 className="text-foreground max-w-[30ch] text-balance text-4xl leading-tight font-extrabold tracking-tight sm:text-5xl">
+            <h1 className="text-foreground max-w-[30ch] text-4xl leading-tight font-extrabold tracking-tight text-balance sm:text-5xl">
               {t('hero.headline')}
             </h1>
             <h2 className="text-muted-foreground max-w-[52ch] text-base leading-relaxed dark:text-white/70">
@@ -224,7 +224,7 @@ export function Hero() {
                   asChild
                   size="lg"
                   rightIcon={<ArrowRightIcon className="h-4 w-4 shrink-0" aria-hidden />}
-                  className="relative z-[1] whitespace-nowrap rounded-full bg-transparent py-5 text-sm md:text-base "
+                  className="relative z-[1] rounded-full bg-transparent py-5 text-sm whitespace-nowrap md:text-base"
                   onClick={() => handleCTAClick('hero', 'primary-glowing')}
                 >
                   <Link to="/passports" className="bg-transparent font-semibold text-white">

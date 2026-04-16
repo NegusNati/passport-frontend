@@ -161,8 +161,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       const hasSearchFilters = Object.keys(searchFilters ?? {}).length > 0
       const hasTableFilters = filters.city !== 'all' || filters.date !== 'all'
       return (
-        (hasSearchFilters && hasSearchInteraction) ||
-        (hasTableFilters && hasTableFilterInteraction)
+        (hasSearchFilters && hasSearchInteraction) || (hasTableFilters && hasTableFilterInteraction)
       )
     }, [filters.city, filters.date, hasSearchInteraction, hasTableFilterInteraction, searchFilters])
 

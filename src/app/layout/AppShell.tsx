@@ -6,7 +6,6 @@ import mobileFooterPattern from '@/assets/landingImages/mobile_footer_pattern.pn
 import shaderUrl from '@/assets/landingImages/shader_bg.svg?url'
 import { useLanguageSync } from '@/shared/hooks/useLanguageSync'
 import { usePageTracking } from '@/shared/hooks/usePageTracking'
-import { BuyMeCoffee } from '@/shared/ui/BuyMeCoffee'
 import { Toaster } from '@/shared/ui/sonner'
 
 import Footer from './Footer'
@@ -103,7 +102,6 @@ export function AppShell({ children }: { children: ReactNode }) {
         />
       </div>
       <Footer />
-      <BuyMeCoffee href="https://ye-buna.com/PassportET" />
       <Toaster />
     </div>
   )

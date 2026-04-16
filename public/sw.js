@@ -41,7 +41,9 @@ async function withTimeout(promise, timeoutMs) {
 
 async function networkFirst(request, cacheName, options = {}) {
   const { timeoutMs = 4000, fallbackUrl } = options
-  const networkPromise = fetch(request).then((response) => cacheResponse(cacheName, request, response))
+  const networkPromise = fetch(request).then((response) =>
+    cacheResponse(cacheName, request, response),
+  )
 
   try {
     return timeoutMs ? await withTimeout(networkPromise, timeoutMs) : await networkPromise

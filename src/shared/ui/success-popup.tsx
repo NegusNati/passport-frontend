@@ -44,9 +44,7 @@ export function SuccessPopup({
             aria-live="polite"
             aria-atomic="true"
             initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -18, scale: 0.985 }}
-            animate={
-              prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }
-            }
+            animate={prefersReducedMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
             exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -22, scale: 0.985 }}
             transition={{
               duration: prefersReducedMotion ? 0.12 : 0.3,
@@ -161,7 +159,7 @@ export function SuccessPopup({
 
             {durationMs && !prefersReducedMotion ? (
               <div
-                className="bg-emerald-100/80 absolute inset-x-0 bottom-0 h-[2.5px] overflow-hidden"
+                className="absolute inset-x-0 bottom-0 h-[2.5px] overflow-hidden bg-emerald-100/80"
                 aria-hidden="true"
               >
                 <motion.div

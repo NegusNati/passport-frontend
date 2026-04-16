@@ -41,7 +41,9 @@ function readAutocompleteHistory(storageKey: string) {
       return []
     }
 
-    return parsed.filter((item): item is string => typeof item === 'string' && item.trim().length > 0)
+    return parsed.filter(
+      (item): item is string => typeof item === 'string' && item.trim().length > 0,
+    )
   } catch {
     return []
   }
