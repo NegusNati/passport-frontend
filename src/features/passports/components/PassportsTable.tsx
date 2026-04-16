@@ -1,6 +1,7 @@
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from '@tanstack/react-router'
 import { type ColumnDef, type PaginationState, type Table } from '@tanstack/react-table'
+import { useReducedMotion } from 'framer-motion'
 import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -23,6 +24,7 @@ import { toast } from '@/shared/ui/sonner'
 import { SuccessPopup } from '@/shared/ui/success-popup'
 
 import { type PassportFilters, type PassportSearchFilters } from '../schemas/passport'
+import { PassportPendingToast } from './PassportPendingToast'
 
 type PassportsTableProps = {
   searchFilters?: PassportSearchFilters
@@ -82,10 +84,12 @@ const SUCCESS_POPUP_DURATION_MS = 7000
 export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTableProps>(
   ({ searchFilters = {}, searchMode, defaultCity, tableTitle, lockCity = false }, ref) => {
     const { t } = useTranslation('passports')
+    const prefersReducedMotion = useReducedMotion()
     const router = useRouter()
     const queryClient = useQueryClient()
     const network = useNetworkConditions()
     const { capture } = useAnalytics()
+    const sectionRef = React.useRef<HTMLDivElement | null>(null)
     const [filters, setFilters] = React.useState<PassportFilters>(() => ({
       date: 'all',
       city: defaultCity ?? 'all',
@@ -169,6 +173,20 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       setSuccessPopup(null)
     }, [])
 
+    const setSectionNode = React.useCallback(
+      (node: HTMLDivElement | null) => {
+        sectionRef.current = node
+        if (typeof ref === 'function') {
+          ref(node)
+          return
+        }
+        if (ref) {
+          ref.current = node
+        }
+      },
+      [ref],
+    )
+
     const handleOpenFirstResult = React.useCallback(() => {
       const first = rows[0]
       if (!first) return
@@ -179,6 +197,16 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
         params: { passportId: String(first.id) },
       })
     }, [dismissSuccessPopup, queryClient, router, rows])
+
+    const handleReviewMatches = React.useCallback(() => {
+      dismissSuccessPopup()
+      window.requestAnimationFrame(() => {
+        sectionRef.current?.scrollIntoView({
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+          block: 'start',
+        })
+      })
+    }, [dismissSuccessPopup, prefersReducedMotion])
 
     // Track search results
     React.useEffect(() => {
@@ -249,9 +277,27 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
         setSuccessPopup(null)
         const toastKey = `${passportsQuery.dataUpdatedAt}-${listParamsKey}`
         if (lastToastKeyRef.current !== toastKey) {
-          toast(t('table.empty.toastTitle'), {
-            description: t('table.empty.toastDescription'),
-          })
+          toast.custom(
+            (id) => (
+              <PassportPendingToast
+                eyebrow={t('table.empty.toastEyebrow')}
+                title={t('table.empty.toastTitle')}
+                description={t('table.empty.toastDescription')}
+                dismissText={t('table.empty.toastDismissText')}
+                dismissLabel={t('table.empty.toastDismissAriaLabel')}
+                onDismiss={() => toast.dismiss(id)}
+              />
+            ),
+            {
+              id: toastKey,
+              duration: 5200,
+              unstyled: true,
+              classNames: {
+                toast: 'border-0 bg-transparent p-0 shadow-none',
+                content: 'p-0',
+              },
+            },
+          )
           lastToastKeyRef.current = toastKey
         }
         lastSuccessKeyRef.current = null
@@ -456,17 +502,30 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
       'table.empty.inlineMessage',
       'Your passport is not ready yet. Our team is still processing it—please check back tomorrow for an update.',
     )
+    const successMatchCount = successPopup?.count ?? 0
+    const successPopupActionLabel =
+      successMatchCount === 1
+        ? t('table.successPopup.actionSingle')
+        : successMatchCount > 1
+          ? t('table.successPopup.actionMultiple')
+          : undefined
+    const successPopupActionHandler =
+      successMatchCount === 1
+        ? handleOpenFirstResult
+        : successMatchCount > 1
+          ? handleReviewMatches
+          : undefined
 
     return (
-      <section ref={ref} className="py-12">
+      <section ref={setSectionNode} className="scroll-mt-28 py-12 sm:scroll-mt-32">
         <SuccessPopup
           open={successPopup !== null}
           contextLabel={t('table.successPopup.eyebrow')}
           title={t('table.successPopup.title', { count: successPopup?.count ?? 0 })}
           description={t('table.successPopup.description')}
-          actionLabel={rows.length > 0 ? t('table.successPopup.action') : undefined}
+          actionLabel={successPopupActionLabel}
           dismissText={t('table.successPopup.dismissText')}
-          onAction={rows.length > 0 ? handleOpenFirstResult : undefined}
+          onAction={successPopupActionHandler}
           dismissLabel={t('table.successPopup.dismissAriaLabel')}
           durationMs={SUCCESS_POPUP_DURATION_MS}
           onDismiss={dismissSuccessPopup}

@@ -56,13 +56,17 @@
       "eyebrow": "Barbaacha Paaspoortii",
       "title": "Paaspoortii wal fakkaatan {{count}} argaman",
       "description": "Gaaffiin keessan isa dhumaa bu'aa fideera. Amma tokko banuu dandeessu yookiin tarree sana daran xiinxaluu dandeessu.",
-      "action": "Bu'aa jalqabaa bani",
+      "actionSingle": "Bu'aa jalqabaa bani",
+      "actionMultiple": "Paaspoortiiwwan wal fakkaatan ilaali",
       "dismissText": "Daawwannaa itti fufi",
       "dismissAriaLabel": "Ergaa milkaa'ina barbaacha paaspoortii cufi"
     },
     "empty": {
-      "toastTitle": "😔 Paaspoortiin keessan ammatti qophii miti",
+      "toastEyebrow": "Haala haaromsaa",
+      "toastTitle": "Paaspoortiin keessan ammatti qophii miti",
       "toastDescription": "Odeeffannoo kana wajjin kan wal gitu ammatti hin argine. Maaloo odeeffannoo haaraa argachuuf boru deebi'aa ilaalaa.",
+      "toastDismissText": "Daawwannaa itti fufi",
+      "toastDismissAriaLabel": "Haaromsa haala paaspoortii cufi",
       "inlineMessage": "Paaspoortiin keessan ammallee hin qophoofne. Gareen keenya ammayyuu hojjechaa waan jiruuf, maaloo odeeffannoo dabalataatiif boru marsariitii kana irratti deebitanii ilaalaa."
     }
   },

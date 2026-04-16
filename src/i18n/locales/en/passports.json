@@ -56,13 +56,17 @@
       "eyebrow": "Passport Search",
       "title": "{{count}} passport matches found",
       "description": "Your latest query returned results. Open one now or continue refining the list.",
-      "action": "Open first result",
+      "actionSingle": "Open first result",
+      "actionMultiple": "Review matching passports",
       "dismissText": "Keep browsing",
       "dismissAriaLabel": "Dismiss passport search success message"
     },
     "empty": {
-      "toastTitle": "😔 Your passport is not ready yet",
+      "toastEyebrow": "Status update",
+      "toastTitle": "Your passport is not ready yet",
       "toastDescription": "We could not find a matching record right now. Please check back tomorrow for the latest update.",
+      "toastDismissText": "Keep browsing",
+      "toastDismissAriaLabel": "Dismiss passport status update",
       "inlineMessage": "Your passport is not ready yet. Our team is still processing it\u2014please check back tomorrow for an update."
     }
   },
