@@ -1,5 +1,10 @@
 import { z } from 'zod'
 
+import {
+  type PassportPresentation,
+  presentPassport,
+} from '../../shared/passport-presentation.js'
+
 const PASSPORT_SUMMARY_SCHEMA = z.object({
   id: z.number().int(),
   request_number: z.string(),
@@ -56,7 +61,7 @@ export const CHATGPT_SEARCH_INPUT_SCHEMA = SEARCH_INPUT_SCHEMA
 
 export type ChatGptSearchInput = z.infer<typeof SEARCH_INPUT_SCHEMA>
 
-export type PassportSummary = {
+type PassportSummaryInput = {
   id: string
   requestNumber: string
   fullName: string
@@ -68,6 +73,28 @@ export type PassportSummary = {
   detailUrl: string
 }
 
+export const CHATGPT_PASSPORT_RECORD_SCHEMA = z.object({
+  id: z.string(),
+  requestNumber: z.string(),
+  fullName: z.string(),
+  firstName: z.string(),
+  middleName: z.string().optional(),
+  lastName: z.string(),
+  location: z.string(),
+  publishedDate: z.string(),
+  detailUrl: z.string().url(),
+  surname: z.string(),
+  givenName: z.string(),
+  receiveAfterLabel: z.string(),
+  pickupDays: z.array(z.string()),
+  pickupDaysLabel: z.string(),
+  pickupTimeLabel: z.string(),
+  readyHeadline: z.string(),
+  pickupNotice: z.string(),
+  sourceLabel: z.string(),
+})
+
+export type PassportSummary = PassportPresentation
 export type PassportDetail = PassportSummary
 
 const API_BASE_URL = (process.env.PASSPORT_API_BASE_URL || 'https://api.passport.et').replace(
@@ -107,7 +134,7 @@ function normalizeRequestNumber(value?: string) {
 }
 
 function toSummary(item: z.infer<typeof PASSPORT_SUMMARY_SCHEMA>): PassportSummary {
-  return {
+  const summary: PassportSummaryInput = {
     id: String(item.id),
     requestNumber: item.request_number,
     fullName: item.full_name,
@@ -118,6 +145,8 @@ function toSummary(item: z.infer<typeof PASSPORT_SUMMARY_SCHEMA>): PassportSumma
     publishedDate: item.date_of_publish,
     detailUrl: `${SITE_BASE_URL}/passports/${item.id}`,
   }
+
+  return presentPassport(summary)
 }
 
 export async function searchPassports(input: ChatGptSearchInput) {

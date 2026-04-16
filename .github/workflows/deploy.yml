@@ -1,5 +1,8 @@
 name: Production Deployment to VPS
 
+env:
+  CHATGPT_APP_URL: ${{ vars.CHATGPT_APP_URL || 'https://chatgpt.passport.et' }}
+
 on:
   push:
     branches:
@@ -137,13 +140,44 @@ jobs:
             echo "💾 Disk Usage:"
             docker system df
 
+      - name: Smoke test public ChatGPT app
+        run: |
+          set -e
+
+          echo "Checking health endpoint..."
+          curl -fsS --max-time 20 "${CHATGPT_APP_URL}/healthz"
+
+          echo ""
+          echo "Running MCP initialize..."
+          curl -fsS --max-time 20 \
+            -X POST "${CHATGPT_APP_URL}/mcp" \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json, text/event-stream' \
+            --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"github-actions-smoke-test","version":"1.0.0"}}}' \
+            | tee /tmp/chatgpt-app-initialize.json
+
+          grep -q '"protocolVersion":"2025-03-26"' /tmp/chatgpt-app-initialize.json
+
+          echo ""
+          echo "Running MCP tools/list..."
+          curl -fsS --max-time 20 \
+            -X POST "${CHATGPT_APP_URL}/mcp" \
+            -H 'Content-Type: application/json' \
+            -H 'Accept: application/json, text/event-stream' \
+            --data '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' \
+            | tee /tmp/chatgpt-app-tools.json
+
+          grep -q '"search_passports"' /tmp/chatgpt-app-tools.json
+          grep -q '"get_passport_details"' /tmp/chatgpt-app-tools.json
+          grep -q '"render_passport_results"' /tmp/chatgpt-app-tools.json
+
       - name: Notify deployment status
         if: always()
         run: |
           if [ "${{ job.status }}" == "success" ]; then
             echo "✅ Deployment successful!"
             echo "🌐 Frontend: https://passport.et"
-            echo "🤖 ChatGPT MCP: https://<your-chatgpt-domain>/mcp"
+            echo "🤖 ChatGPT MCP: ${CHATGPT_APP_URL}/mcp"
             echo "📊 Analytics: https://analytics.passport.et"
           else
             echo "❌ Deployment failed!"

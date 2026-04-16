@@ -13,6 +13,7 @@ import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/
 import { z } from 'zod'
 
 import {
+  CHATGPT_PASSPORT_RECORD_SCHEMA,
   type PassportSummary,
   CHATGPT_SEARCH_INPUT_SCHEMA,
   getApiBaseUrl,
@@ -63,6 +64,27 @@ function summarizeSearch(input: z.infer<typeof CHATGPT_SEARCH_INPUT_SCHEMA>) {
   }
 
   return 'passport search'
+}
+
+function formatPassportResultText(result: PassportSummary) {
+  return [
+    `Name: ${result.fullName}`,
+    `Request number: ${result.requestNumber}`,
+    `You Can Receive After: ${result.receiveAfterLabel}`,
+    `Collection days: ${result.pickupDaysLabel}`,
+    `Exact time: ${result.pickupTimeLabel}`,
+    `Branch: ${result.location}`,
+    `Source: ${result.detailUrl}`,
+  ].join('\n')
+}
+
+function createSearchContent(searchSummary: string, results: PassportSummary[]) {
+  if (results.length === 0) {
+    return `No passport results were found for ${searchSummary}.`
+  }
+
+  const blocks = results.map((result, index) => `${index + 1}.\n${formatPassportResultText(result)}`)
+  return [`Passport publication results for ${searchSummary}:`, ...blocks].join('\n\n')
 }
 
 function createPassportServer() {
@@ -139,10 +161,7 @@ function createPassportServer() {
         content: [
           {
             type: 'text',
-            text:
-              result.results.length > 0
-                ? `Found ${result.results.length} passport result(s) for ${searchSummary}.`
-                : `No passport results were found for ${searchSummary}.`,
+            text: createSearchContent(searchSummary, result.results),
           },
         ],
       }
@@ -180,7 +199,7 @@ function createPassportServer() {
         content: [
           {
             type: 'text',
-            text: `Loaded passport details for ${detail.fullName}.`,
+            text: `Passport detail from passport.et\n\n${formatPassportResultText(detail)}`,
           },
         ],
       }
@@ -197,19 +216,7 @@ function createPassportServer() {
       inputSchema: z.object({
         searchSummary: z.string().min(1),
         results: z
-          .array(
-            z.object({
-              id: z.string(),
-              requestNumber: z.string(),
-              fullName: z.string(),
-              firstName: z.string(),
-              middleName: z.string().optional(),
-              lastName: z.string(),
-              location: z.string(),
-              publishedDate: z.string(),
-              detailUrl: z.string().url(),
-            }),
-          )
+          .array(CHATGPT_PASSPORT_RECORD_SCHEMA)
           .min(1)
           .max(10),
         selectedPassportId: z.string().optional(),
@@ -247,7 +254,7 @@ function createPassportServer() {
         content: [
           {
             type: 'text',
-            text: `Showing ${results.length} passport result(s) for ${searchSummary}.`,
+            text: createSearchContent(searchSummary, selectedDetail ? [selectedDetail] : results),
           },
         ],
         _meta: {

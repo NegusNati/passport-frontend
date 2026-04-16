@@ -30,7 +30,7 @@ pnpm chatgpt:serve
 
 3. Confirm the local endpoints:
 
-- Health: `http://localhost:8787/`
+- Health: `http://localhost:8787/healthz`
 - MCP: `http://localhost:8787/mcp`
 
 4. Test with MCP Inspector:
@@ -60,6 +60,7 @@ ngrok http 8787
 The VPS deployment now includes a dedicated `passport-chatgpt-app` Docker service built from [Dockerfile.chatgpt](/Users/negusnati/Documents/dev/personal/passport/passport-frontend/Dockerfile.chatgpt).
 
 - The GitHub Actions workflow at [.github/workflows/deploy.yml](/Users/negusnati/Documents/dev/personal/passport/passport-frontend/.github/workflows/deploy.yml) now validates the ChatGPT app build before deploy, then rebuilds and rolls out both `passport-frontend` and `passport-chatgpt-app`.
+- After deploy, GitHub Actions now smoke-tests the public ChatGPT app URL by checking `/healthz`, MCP `initialize`, and `tools/list`.
 - Docker Compose exposes the MCP server internally as `passport-chatgpt-app` on port `8787`; configure Nginx Proxy Manager to route your public ChatGPT app host to that service and forward `/mcp`.
 - Set `CHATGPT_WIDGET_DOMAIN` to your public ChatGPT app origin once that host exists.
 - Keep `PASSPORT_API_BASE_URL` aligned with the API origin you want ChatGPT to call; the widget CSP now follows that env var instead of assuming production only.

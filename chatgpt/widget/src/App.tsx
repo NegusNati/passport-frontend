@@ -16,15 +16,6 @@ type ViewState = {
   status: 'idle' | 'loading-detail'
 }
 
-function formatDate(value: string, locale: string) {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return value
-
-  return new Intl.DateTimeFormat(locale, {
-    dateStyle: 'medium',
-  }).format(date)
-}
-
 function mergePayload(current: ViewState, nextPayload: ToolPayload): ViewState {
   if (nextPayload.kind === 'passport-detail') {
     const detail = nextPayload.detail
@@ -57,6 +48,140 @@ function mergePayload(current: ViewState, nextPayload: ToolPayload): ViewState {
   }
 }
 
+function ResultCard({
+  item,
+  isSelected,
+  onSelect,
+}: {
+  item: PassportSummary
+  isSelected: boolean
+  onSelect: (passportId: string) => void
+}) {
+  return (
+    <button
+      key={item.id}
+      type="button"
+      className={`passport-result-card${isSelected ? ' is-selected' : ''}`}
+      onClick={() => onSelect(item.id)}
+    >
+      <div className="passport-result-head">
+        <span className="passport-result-label">Request number</span>
+        <strong className="passport-result-number">{item.requestNumber}</strong>
+      </div>
+      <strong className="passport-result-name">{item.fullName}</strong>
+      <span className="passport-result-branch">{item.location}</span>
+      <dl className="passport-result-summary">
+        <div>
+          <dt>You Can Receive After</dt>
+          <dd>{item.receiveAfterLabel}</dd>
+        </div>
+        <div>
+          <dt>Collection days</dt>
+          <dd>{item.pickupDaysLabel}</dd>
+        </div>
+      </dl>
+    </button>
+  )
+}
+
+function DetailCard({
+  passport,
+  status,
+  onOpenExternal,
+}: {
+  passport?: PassportSummary
+  status: ViewState['status']
+  onOpenExternal: (href: string) => Promise<void>
+}) {
+  if (!passport) {
+    return (
+      <section className="passport-detail-card passport-detail-placeholder" aria-live="polite">
+        <p className="passport-kicker">Passport.ET Detail</p>
+        <h2>{status === 'loading-detail' ? 'Loading passport details…' : 'Select a passport'}</h2>
+        <p>
+          Pick one result to see the same pickup guidance shown on the live Passport.ET detail
+          page.
+        </p>
+      </section>
+    )
+  }
+
+  return (
+    <section className="passport-detail-card" aria-live="polite">
+      <header className="passport-card-header">
+        <p className="passport-kicker">Federal Democratic Republic of Ethiopia</p>
+        <h2>Passport publication result</h2>
+        <p className="passport-card-brand">Passport.ET</p>
+      </header>
+
+      <div className="passport-ready-banner">
+        <p className="passport-ready-eyebrow">{passport.readyHeadline}</p>
+        <p>{passport.pickupNotice}</p>
+      </div>
+
+      <div className="passport-person-grid">
+        <div>
+          <span className="passport-field-label">Surname</span>
+          <strong>{passport.surname}</strong>
+        </div>
+        <div>
+          <span className="passport-field-label">Given Name</span>
+          <strong>{passport.givenName}</strong>
+        </div>
+        <div>
+          <span className="passport-field-label">Branch</span>
+          <strong>{passport.location}</strong>
+        </div>
+      </div>
+
+      <dl className="passport-info-grid">
+        <div>
+          <dt>Request number</dt>
+          <dd>{passport.requestNumber}</dd>
+        </div>
+        <div>
+          <dt>You Can Receive After</dt>
+          <dd>{passport.receiveAfterLabel}</dd>
+        </div>
+        <div>
+          <dt>Day of The Week</dt>
+          <dd>{passport.pickupDaysLabel}</dd>
+        </div>
+        <div>
+          <dt>Exact Time</dt>
+          <dd>{passport.pickupTimeLabel}</dd>
+        </div>
+      </dl>
+
+      <div className="passport-card-footer">
+        <div>
+          <p className="passport-source-label">{passport.sourceLabel}</p>
+          <a
+            className="passport-source-link"
+            href={passport.detailUrl}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(event) => {
+              event.preventDefault()
+              void onOpenExternal(passport.detailUrl)
+            }}
+          >
+            View this record on passport.et
+          </a>
+        </div>
+
+        <button
+          type="button"
+          className="passport-primary-action"
+          onClick={() => void onOpenExternal(passport.detailUrl)}
+        >
+          Open on passport.et
+        </button>
+      </div>
+    </section>
+  )
+}
+
 export function App() {
   const [state, setState] = useState<ViewState>(() => ({
     payload: null,
@@ -74,16 +199,16 @@ export function App() {
 
     const initial = bridge.getInitialPayload()
     if (initial?.structuredContent && !cancelled) {
-      setState((current) => mergePayload(current, initial.structuredContent!))
+      const initialPayload = initial.structuredContent
+      setState((current) => mergePayload(current, initialPayload))
     }
 
     return bridge.subscribe((payload) => {
       if (!payload.structuredContent || cancelled) return
-      setState((current) => mergePayload(current, payload.structuredContent!))
+      const nextPayload = payload.structuredContent
+      setState((current) => mergePayload(current, nextPayload))
     })
   }, [])
-
-  const locale = window.openai?.locale || document.documentElement.lang || 'en-US'
 
   const selectedDetail = useMemo(() => {
     if (!state.selectedPassportId) return undefined
@@ -100,9 +225,7 @@ export function App() {
     const nextWidgetState: WidgetState = { selectedPassportId: passportId }
     window.openai?.setWidgetState?.(nextWidgetState)
 
-    if (state.detailsById[passportId]) {
-      return
-    }
+    if (state.detailsById[passportId]) return
 
     try {
       const result = (await bridge.callTool<ToolResultEnvelope>('get_passport_details', {
@@ -110,7 +233,8 @@ export function App() {
       })) as ToolResultEnvelope
 
       if (result.structuredContent) {
-        setState((current) => mergePayload(current, result.structuredContent!))
+        const detailPayload = result.structuredContent
+        setState((current) => mergePayload(current, detailPayload))
       } else {
         setState((current) => ({ ...current, status: 'idle' }))
       }
@@ -133,12 +257,9 @@ export function App() {
     return (
       <main className="passport-shell">
         <section className="passport-empty">
-          <p className="passport-eyebrow">Passport</p>
-          <h1>Waiting for results</h1>
-          <p>
-            This widget appears after ChatGPT calls the passport search tools and passes a result
-            set into the iframe.
-          </p>
+          <p className="passport-kicker">Passport.ET</p>
+          <h1>Waiting for passport results</h1>
+          <p>Search for a passport in ChatGPT and the structured Passport.ET result card will appear here.</p>
         </section>
       </main>
     )
@@ -149,92 +270,33 @@ export function App() {
       <section className="passport-frame">
         <header className="passport-header">
           <div>
-            <p className="passport-eyebrow">Passport lookup</p>
+            <p className="passport-kicker">Passport.ET</p>
             <h1>{state.payload.searchSummary}</h1>
             <p className="passport-subtitle">
-              {state.payload.results.length} visible result
-              {state.payload.results.length === 1 ? '' : 's'}
+              Live publication results from passport.et for {state.payload.results.length} match
+              {state.payload.results.length === 1 ? '' : 'es'}
             </p>
           </div>
-          <div className="passport-badge">passport.et</div>
+          <div className="passport-badge">Official source</div>
         </header>
 
         <div className="passport-grid">
           <section className="passport-results" aria-label="Passport search results">
-            {state.payload.results.map((item) => {
-              const isSelected = item.id === state.selectedPassportId
-
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  className={`passport-result-card${isSelected ? ' is-selected' : ''}`}
-                  onClick={() => void handleSelect(item.id)}
-                >
-                  <div className="passport-result-topline">
-                    <span className="passport-result-number">{item.requestNumber}</span>
-                    <span className="passport-result-date">
-                      {formatDate(item.publishedDate, locale)}
-                    </span>
-                  </div>
-                  <strong>{item.fullName}</strong>
-                  <span>{item.location}</span>
-                </button>
-              )
-            })}
+            {state.payload.results.map((item) => (
+              <ResultCard
+                key={item.id}
+                item={item}
+                isSelected={item.id === state.selectedPassportId}
+                onSelect={handleSelect}
+              />
+            ))}
           </section>
 
-          <aside className="passport-detail" aria-live="polite">
-            {selectedDetail ? (
-              <>
-                <div className="passport-detail-header">
-                  <p className="passport-eyebrow">Selected passport</p>
-                  <h2>{selectedDetail.fullName}</h2>
-                  <p>{selectedDetail.location}</p>
-                </div>
-
-                <dl className="passport-meta">
-                  <div>
-                    <dt>Request number</dt>
-                    <dd>{selectedDetail.requestNumber}</dd>
-                  </div>
-                  <div>
-                    <dt>Published date</dt>
-                    <dd>{formatDate(selectedDetail.publishedDate, locale)}</dd>
-                  </div>
-                  <div>
-                    <dt>First name</dt>
-                    <dd>{selectedDetail.firstName}</dd>
-                  </div>
-                  <div>
-                    <dt>Last name</dt>
-                    <dd>{selectedDetail.lastName}</dd>
-                  </div>
-                </dl>
-
-                <div className="passport-actions">
-                  <button
-                    type="button"
-                    className="passport-primary-action"
-                    onClick={() => void handleOpenExternal(selectedDetail.detailUrl)}
-                  >
-                    Open on passport.et
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="passport-placeholder">
-                <p className="passport-eyebrow">Passport detail</p>
-                <h2>
-                  {state.status === 'loading-detail' ? 'Loading passport details…' : 'Pick a result'}
-                </h2>
-                <p>
-                  Select a passport result on the left to load the detailed record inside this
-                  widget.
-                </p>
-              </div>
-            )}
-          </aside>
+          <DetailCard
+            passport={selectedDetail}
+            status={state.status}
+            onOpenExternal={handleOpenExternal}
+          />
         </div>
       </section>
     </main>

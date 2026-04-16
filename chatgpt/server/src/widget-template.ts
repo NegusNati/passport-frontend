@@ -5,7 +5,7 @@ export function createWidgetHtml({ script, css }: { script: string; css: string 
     '  <head>',
     '    <meta charset="utf-8" />',
     '    <meta name="viewport" content="width=device-width, initial-scale=1" />',
-    '    <title>Passport Results</title>',
+    '    <title>Passport.ET Results</title>',
     `    <style>${css}</style>`,
     '  </head>',
     '  <body>',

@@ -8,6 +8,15 @@ export type PassportSummary = {
   location: string
   publishedDate: string
   detailUrl: string
+  surname: string
+  givenName: string
+  receiveAfterLabel: string
+  pickupDays: string[]
+  pickupDaysLabel: string
+  pickupTimeLabel: string
+  readyHeadline: string
+  pickupNotice: string
+  sourceLabel: string
 }
 
 export type PassportWidgetPayload = {
