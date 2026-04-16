@@ -41,7 +41,7 @@ jobs:
         run: pnpm chatgpt:build
 
       - name: Validate Docker Compose config
-        run: docker compose config
+        run: docker compose --env-file .env.example config
 
   deploy:
     name: Deploy Frontend and ChatGPT App to Server
