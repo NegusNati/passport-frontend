@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
+import Barcode from 'react-barcode'
 
+import starSeal from '../../../src/assets/landingImages/star.svg'
 import { bridge } from './bridge'
 import type {
   PassportSummary,
@@ -110,6 +112,9 @@ function DetailCard({
     <section className="passport-detail-card" aria-live="polite">
       <header className="passport-card-header">
         <p className="passport-kicker">Federal Democratic Republic of Ethiopia</p>
+        <div className="passport-seal" aria-hidden="true">
+          <img src={starSeal} alt="" />
+        </div>
         <h2>Passport publication result</h2>
         <p className="passport-card-brand">Passport.ET</p>
       </header>
@@ -177,6 +182,21 @@ function DetailCard({
         >
           Open on passport.et
         </button>
+      </div>
+
+      <div className="passport-barcode-wrap" aria-label={`Request number ${passport.requestNumber}`}>
+        <div className="passport-barcode-card">
+          <Barcode
+            value={passport.requestNumber}
+            width={1.6}
+            height={56}
+            fontSize={11}
+            margin={0}
+            background="transparent"
+            lineColor="#14110f"
+          />
+        </div>
+        <p className="passport-site-mark">www.passport.et</p>
       </div>
     </section>
   )
