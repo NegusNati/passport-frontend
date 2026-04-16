@@ -223,12 +223,12 @@ export function Hero() {
                 <Button
                   asChild
                   size="lg"
-                  className="relative z-[1] rounded-full bg-transparent py-5 text-sm md:text-base"
+                  rightIcon={<ArrowRightIcon className="h-4 w-4 shrink-0" aria-hidden />}
+                  className="relative z-[1] whitespace-nowrap rounded-full bg-transparent py-5 text-sm md:text-base "
                   onClick={() => handleCTAClick('hero', 'primary-glowing')}
                 >
                   <Link to="/passports" className="bg-transparent font-semibold text-white">
                     {t('hero.cta')}
-                    <ArrowRightIcon className="ml-2 h-4 w-4" aria-hidden />
                   </Link>
                 </Button>
               </div>
