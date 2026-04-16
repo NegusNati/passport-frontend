@@ -137,10 +137,15 @@ function createPassportServer() {
     {
       title: 'Check Passport.ET status',
       description:
-        'Use this when the user wants to check Ethiopian passport publication or pickup status on Passport.ET by request number, passport holder name, free-text query, or branch location.',
+        'Use this when the user wants to check Ethiopian passport publication or pickup status on Passport.ET by request number, passport holder name, free-text query, or branch location. After a successful match, prefer showing the Passport.ET result card instead of restating all fields in prose.',
       inputSchema: CHATGPT_SEARCH_INPUT_SCHEMA,
       annotations: TOOL_ANNOTATIONS,
       _meta: {
+        ui: {
+          resourceUri: TEMPLATE_URI,
+          visibility: ['model', 'app'],
+        },
+        'openai/outputTemplate': TEMPLATE_URI,
         'openai/toolInvocation/invoking': 'Checking Passport.ET…',
         'openai/toolInvocation/invoked': 'Passport.ET result ready.',
       },
@@ -148,12 +153,15 @@ function createPassportServer() {
     async (input) => {
       const result = await searchPassports(input)
       const searchSummary = summarizeSearch(input)
+      const selectedDetail = result.results[0]
 
       return {
         structuredContent: {
-          kind: 'passport-search-results',
+          kind: 'passport-widget',
           searchSummary,
           results: result.results,
+          selectedPassportId: selectedDetail?.id,
+          selectedDetail,
           total: result.total,
           page: result.page,
           pageSize: result.pageSize,
@@ -162,7 +170,10 @@ function createPassportServer() {
         content: [
           {
             type: 'text',
-            text: createSearchContent(searchSummary, result.results),
+            text:
+              result.results.length > 0
+                ? 'Passport.ET result card ready below. Verified using www.passport.et.'
+                : `No passport results were found for ${searchSummary}.`,
           },
         ],
       }
@@ -216,7 +227,7 @@ function createPassportServer() {
     {
       title: 'Show Passport.ET result card',
       description:
-        'Use this when you want to show the branded Passport.ET status card inside ChatGPT. Call check Passport.ET status first and pass its results array unchanged.',
+        'Use this when you want to show the branded Passport.ET status card inside ChatGPT. Call check Passport.ET status first and pass its results array unchanged. Prefer this card over repeating the same status details in plain text.',
       inputSchema: z.object({
         searchSummary: z
           .string()

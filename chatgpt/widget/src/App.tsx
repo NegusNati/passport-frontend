@@ -285,6 +285,28 @@ export function App() {
     )
   }
 
+  if (state.payload.results.length === 0) {
+    return (
+      <main className="passport-shell">
+        <section className="passport-frame">
+          <header className="passport-header">
+            <div>
+              <p className="passport-kicker">Passport.ET</p>
+              <h1>{state.payload.searchSummary}</h1>
+              <p className="passport-subtitle">Verified using www.passport.et</p>
+            </div>
+            <div className="passport-badge">No match</div>
+          </header>
+
+          <section className="passport-empty">
+            <h2>No passport result found</h2>
+            <p>Try another request number, passenger name, or branch search.</p>
+          </section>
+        </section>
+      </main>
+    )
+  }
+
   return (
     <main className="passport-shell">
       <section className="passport-frame">
