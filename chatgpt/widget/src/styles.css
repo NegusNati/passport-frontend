@@ -12,7 +12,7 @@
   --passport-gold: #c18b2b;
   --passport-green: #2c7a5f;
   font-family:
-    "Segoe UI",
+    'Segoe UI',
     ui-sans-serif,
     system-ui,
     -apple-system,
@@ -38,12 +38,7 @@ body {
     radial-gradient(circle at top left, rgba(141, 32, 65, 0.12), transparent 34%),
     linear-gradient(180deg, #faf6f0 0%, var(--passport-bg) 100%);
   color: var(--passport-ink);
-  font-family:
-    "Segoe UI",
-    "Noto Sans Ethiopic",
-    ui-sans-serif,
-    system-ui,
-    sans-serif;
+  font-family: 'Segoe UI', 'Noto Sans Ethiopic', ui-sans-serif, system-ui, sans-serif;
 }
 
 button,
@@ -261,9 +256,7 @@ a {
 .passport-card-header h2 {
   position: relative;
   z-index: 1;
-  font-family:
-    Georgia,
-    serif;
+  font-family: Georgia, serif;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-size: 1.1rem;

@@ -1,5 +1,5 @@
-import { createServer } from 'node:http'
 import { readFileSync } from 'node:fs'
+import { createServer } from 'node:http'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -14,11 +14,11 @@ import { z } from 'zod'
 
 import {
   CHATGPT_PASSPORT_RECORD_SCHEMA,
-  type PassportSummary,
   CHATGPT_SEARCH_INPUT_SCHEMA,
   getApiBaseUrl,
   getPassportDetail,
   getSiteBaseUrl,
+  type PassportSummary,
   searchPassports,
 } from './passport-api.js'
 import { createWidgetHtml } from './widget-template.js'
@@ -84,7 +84,9 @@ function createSearchContent(searchSummary: string, results: PassportSummary[]) 
     return `No passport results were found for ${searchSummary}.`
   }
 
-  const blocks = results.map((result, index) => `${index + 1}.\n${formatPassportResultText(result)}`)
+  const blocks = results.map(
+    (result, index) => `${index + 1}.\n${formatPassportResultText(result)}`,
+  )
   return [`Passport publication results for ${searchSummary}:`, ...blocks].join('\n\n')
 }
 
@@ -232,7 +234,9 @@ function createPassportServer() {
         searchSummary: z
           .string()
           .min(1)
-          .describe('Human-readable summary of the search, such as a request number or passenger name.'),
+          .describe(
+            'Human-readable summary of the search, such as a request number or passenger name.',
+          ),
         results: z
           .array(CHATGPT_PASSPORT_RECORD_SCHEMA)
           .min(1)
@@ -320,7 +324,11 @@ const httpServer = createServer(async (req, res) => {
     return
   }
 
-  if (url.pathname === MCP_PATH && req.method && new Set(['GET', 'POST', 'DELETE']).has(req.method)) {
+  if (
+    url.pathname === MCP_PATH &&
+    req.method &&
+    new Set(['GET', 'POST', 'DELETE']).has(req.method)
+  ) {
     res.setHeader('Access-Control-Allow-Origin', '*')
     res.setHeader('Access-Control-Expose-Headers', 'Mcp-Session-Id')
 

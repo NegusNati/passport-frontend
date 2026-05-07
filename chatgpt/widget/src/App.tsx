@@ -63,7 +63,7 @@ function ResultCard({
     <button
       key={item.id}
       type="button"
-      className={`passport-result-card${isSelected ? ' is-selected' : ''}`}
+      className={`passport-result-card${isSelected ? 'is-selected' : ''}`}
       onClick={() => onSelect(item.id)}
     >
       <div className="passport-result-head">
@@ -101,8 +101,7 @@ function DetailCard({
         <p className="passport-kicker">Passport.ET Detail</p>
         <h2>{status === 'loading-detail' ? 'Loading passport details…' : 'Select a passport'}</h2>
         <p>
-          Pick one result to see the same pickup guidance shown on the live Passport.ET detail
-          page.
+          Pick one result to see the same pickup guidance shown on the live Passport.ET detail page.
         </p>
       </section>
     )
@@ -184,7 +183,10 @@ function DetailCard({
         </button>
       </div>
 
-      <div className="passport-barcode-wrap" aria-label={`Request number ${passport.requestNumber}`}>
+      <div
+        className="passport-barcode-wrap"
+        aria-label={`Request number ${passport.requestNumber}`}
+      >
         <div className="passport-barcode-card">
           <Barcode
             value={passport.requestNumber}
@@ -211,7 +213,7 @@ export function App() {
   }))
 
   useEffect(() => {
-    let cancelled = false
+    const cancelled = false
 
     void bridge.initialize().catch((error) => {
       console.error('[passport-widget] Failed to initialize bridge', error)
@@ -279,7 +281,10 @@ export function App() {
         <section className="passport-empty">
           <p className="passport-kicker">Passport.ET</p>
           <h1>Waiting for passport results</h1>
-          <p>Search for a passport in ChatGPT and the structured Passport.ET result card will appear here.</p>
+          <p>
+            Search for a passport in ChatGPT and the structured Passport.ET result card will appear
+            here.
+          </p>
         </section>
       </main>
     )

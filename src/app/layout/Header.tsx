@@ -5,6 +5,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { getAuthToken } from '@/api/client'
+import passportLogoUrl from '@/assets/logos/passport/passport_logo.webp'
 import { authKeys } from '@/features/auth/api'
 import { useAuthUser } from '@/features/auth/hooks'
 import type { User } from '@/features/auth/schemas/user'
@@ -173,8 +174,21 @@ export function Header() {
     <header className="border-border bg-background/95 sm:bg-background/80 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40 w-full border-b sm:backdrop-blur">
       <Container className="flex h-16 items-center justify-between">
         <div className="flex items-center gap-3">
-          <Link to="/" preload="intent" className="text-foreground font-semibold tracking-tight">
-            Passport.ET
+          <Link
+            to="/"
+            preload="intent"
+            className="inline-flex items-center"
+            aria-label="Passport.ET homepage"
+          >
+            <img
+              src={passportLogoUrl}
+              width={2160}
+              height={2160}
+              alt=""
+              className="h-10 w-10 object-contain"
+              decoding="async"
+              fetchPriority="high"
+            />
           </Link>
           <span className="sr-only">Go to homepage</span>
         </div>

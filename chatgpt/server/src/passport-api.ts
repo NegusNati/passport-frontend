@@ -1,9 +1,6 @@
 import { z } from 'zod'
 
-import {
-  type PassportPresentation,
-  presentPassport,
-} from '../../shared/passport-presentation.js'
+import { type PassportPresentation, presentPassport } from '../../shared/passport-presentation.js'
 
 const PASSPORT_SUMMARY_SCHEMA = z.object({
   id: z.number().int(),
@@ -166,7 +163,10 @@ async function getJson(url: URL) {
 }
 
 function normalizeRequestNumber(value?: string) {
-  return value?.replace(/[^0-9A-Za-z]/g, '').toUpperCase().trim()
+  return value
+    ?.replace(/[^0-9A-Za-z]/g, '')
+    .toUpperCase()
+    .trim()
 }
 
 function toSummary(item: z.infer<typeof PASSPORT_SUMMARY_SCHEMA>): PassportSummary {

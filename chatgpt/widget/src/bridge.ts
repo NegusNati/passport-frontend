@@ -13,7 +13,10 @@ type ToolResultListener = (payload: ToolResultEnvelope) => void
 
 export class McpBridge {
   private requestId = 0
-  private readonly pending = new Map<number, { resolve: (value: unknown) => void; reject: (reason?: unknown) => void }>()
+  private readonly pending = new Map<
+    number,
+    { resolve: (value: unknown) => void; reject: (reason?: unknown) => void }
+  >()
   private readonly listeners = new Set<ToolResultListener>()
 
   constructor() {

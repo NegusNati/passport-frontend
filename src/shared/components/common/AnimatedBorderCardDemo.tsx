@@ -60,7 +60,7 @@ export function AnimatedBorderCardDemo() {
           </AnimatedBorderCard>
           <AnimatedBorderCard variant="secondary" size="sm">
             <IdCardIcon className="h-4 w-4" />
-            1,278,980+ passports confirmed
+            1,978,980+ passports confirmed
           </AnimatedBorderCard>
           <AnimatedBorderCard variant="accent" size="sm">
             <StarIcon className="h-4 w-4" />

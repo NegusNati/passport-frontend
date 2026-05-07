@@ -60,7 +60,9 @@ export function presentPassport(record: PassportPresentationInput): PassportPres
   const { givenName, surname } = splitNames(record)
   const pickupDays = getPickupDays(record.firstName)
   const pickupDaysLabel =
-    pickupDays.length > 0 ? pickupDays.map((day) => PICKUP_DAY_LABELS[day]).join(', ') : PICKUP_FALLBACK_TEXT
+    pickupDays.length > 0
+      ? pickupDays.map((day) => PICKUP_DAY_LABELS[day]).join(', ')
+      : PICKUP_FALLBACK_TEXT
   const receiveAfterLabel = formatGregorianApiDateAsEthiopian(record.publishedDate, {
     fallback: record.publishedDate,
     showGregorianInParentheses: true,
@@ -84,7 +86,9 @@ export function presentPassport(record: PassportPresentationInput): PassportPres
   }
 }
 
-function splitNames(record: Pick<PassportPresentationInput, 'fullName' | 'firstName' | 'middleName' | 'lastName'>) {
+function splitNames(
+  record: Pick<PassportPresentationInput, 'fullName' | 'firstName' | 'middleName' | 'lastName'>,
+) {
   const fullNameParts = record.fullName.trim().split(/\s+/).filter(Boolean)
   const fallbackSurname = fullNameParts.at(-1) ?? record.lastName
   const fallbackGivenName = fullNameParts.slice(0, -1).join(' ') || record.firstName
@@ -113,7 +117,8 @@ function getPickupDays(firstName: string | undefined): WeekdayId[] {
   if (['a', 'b', 'c', 'd', 'e', 'f', 'g'].includes(letter)) days.push('monday')
   if (['m', 'n', 'o', 'p', 'q', 'r', 'h', 'i', 'j', 'k', 'l'].includes(letter)) days.push('tuesday')
   if (['a', 'b', 'c', 'd', 'e', 't'].includes(letter)) days.push('wednesday')
-  if (['m', 'i', 'j', 'k', 'l', 's', 'u', 'v', 'w', 'x', 'y', 'z'].includes(letter)) days.push('thursday')
+  if (['m', 'i', 'j', 'k', 'l', 's', 'u', 'v', 'w', 'x', 'y', 'z'].includes(letter))
+    days.push('thursday')
   if (['a', 'f', 'g', 'h', 'n', 'o', 'p', 'q', 'r'].includes(letter)) days.push('friday')
   if (['m', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'].includes(letter)) days.push('saturday')
 
