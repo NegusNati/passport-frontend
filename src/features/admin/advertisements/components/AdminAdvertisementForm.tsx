@@ -1,5 +1,5 @@
 import { useForm } from '@tanstack/react-form'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
@@ -7,15 +7,19 @@ import { Label } from '@/shared/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
 import { Textarea } from '@/shared/ui/textarea'
 
+import { useAdSlotsQuery } from '../api/get-ad-slots'
+import type { AdSlot } from '../schemas/ad-slot'
 import type { AdStatus, Advertisement, PackageType, PaymentStatus } from '../schemas/advertisement'
 import type { AdvertisementCreatePayload, AdvertisementUpdatePayload } from '../schemas/create'
 import { MediaUploadPreview } from './MediaUploadPreview'
 
 type FormValues = {
+  slot_code: string
   ad_slot_number: string
   ad_title: string
+  alt_text: string
   client_name: string
-  ad_client_link: string
+  target_url: string
   advertisement_request_id: string
   ad_desc: string
   ad_excerpt: string
@@ -25,6 +29,8 @@ type FormValues = {
   ad_ending_date: string
   payment_status: PaymentStatus
   payment_amount: string
+  priority: string
+  admin_notes: string
   ad_desktop_asset_url: string
   ad_mobile_asset_url: string
   remove_ad_desktop_asset: boolean
@@ -40,6 +46,26 @@ type AdvertisementFormProps = {
   errorMessage?: string | null
 }
 
+function formatSlotDimensions(slot: AdSlot | undefined, type: 'desktop' | 'mobile') {
+  if (!slot) return undefined
+  const width = type === 'desktop' ? slot.desktop_width : slot.mobile_width
+  const height = type === 'desktop' ? slot.desktop_height : slot.mobile_height
+  return width && height ? `${width}x${height}px recommended` : undefined
+}
+
+function isPublishable(status: AdStatus) {
+  return status === 'active' || status === 'scheduled'
+}
+
+function isValidUrl(value: string) {
+  try {
+    new URL(value)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export function AdminAdvertisementForm({
   advertisement,
   onSubmit,
@@ -49,24 +75,34 @@ export function AdminAdvertisementForm({
   const [formError, setFormError] = useState<string | null>(null)
   const [desktopFile, setDesktopFile] = useState<File | null>(null)
   const [mobileFile, setMobileFile] = useState<File | null>(null)
+  const { data: slots = [], isLoading: slotsLoading, isError: slotsError } = useAdSlotsQuery()
+
+  const initialSlotCode = advertisement?.slot_code ?? advertisement?.ad_slot_number ?? ''
+  const selectedSlotByCode = useMemo(() => {
+    return new Map(slots.map((slot) => [slot.code, slot]))
+  }, [slots])
 
   const form = useForm({
     defaultValues: {
+      slot_code: initialSlotCode,
       ad_slot_number: advertisement?.ad_slot_number ?? '',
       ad_title: advertisement?.ad_title ?? '',
+      alt_text: advertisement?.alt_text ?? advertisement?.ad_title ?? '',
       client_name: advertisement?.client_name ?? '',
-      ad_client_link: advertisement?.ad_client_link ?? '',
+      target_url: advertisement?.target_url ?? advertisement?.ad_client_link ?? '',
       advertisement_request_id: advertisement?.advertisement_request_id
         ? String(advertisement.advertisement_request_id)
         : '',
       ad_desc: advertisement?.ad_desc ?? '',
       ad_excerpt: advertisement?.ad_excerpt ?? '',
-      status: advertisement?.status ?? 'active',
+      status: advertisement?.status ?? 'draft',
       package_type: advertisement?.package_type ?? 'weekly',
       ad_published_date: advertisement?.ad_published_date ?? '',
       ad_ending_date: advertisement?.ad_ending_date ?? '',
       payment_status: advertisement?.payment_status ?? 'pending',
       payment_amount: advertisement?.payment_amount ?? '0',
+      priority: String(advertisement?.priority ?? 0),
+      admin_notes: advertisement?.admin_notes ?? '',
       ad_desktop_asset_url: advertisement?.ad_desktop_asset ?? '',
       ad_mobile_asset_url: advertisement?.ad_mobile_asset ?? '',
       remove_ad_desktop_asset: false as boolean,
@@ -75,17 +111,24 @@ export function AdminAdvertisementForm({
     onSubmit: async ({ value }) => {
       setFormError(null)
 
-      // Validation
-      if (!value.ad_slot_number.trim()) {
-        setFormError('Ad slot number is required')
+      if (!value.slot_code.trim()) {
+        setFormError('Ad slot is required')
         return
       }
       if (!value.ad_title.trim()) {
         setFormError('Ad title is required')
         return
       }
+      if (!value.alt_text.trim()) {
+        setFormError('Alt text is required')
+        return
+      }
       if (!value.client_name.trim()) {
         setFormError('Client name is required')
+        return
+      }
+      if (!value.target_url.trim() || !isValidUrl(value.target_url.trim())) {
+        setFormError('A valid target URL is required')
         return
       }
       if (!value.ad_published_date) {
@@ -94,6 +137,18 @@ export function AdminAdvertisementForm({
       }
       if (!value.ad_excerpt.trim()) {
         setFormError('Ad excerpt is required')
+        return
+      }
+
+      const hasDesktopAsset = Boolean(
+        desktopFile || (value.ad_desktop_asset_url && !value.remove_ad_desktop_asset),
+      )
+      const hasMobileAsset = Boolean(
+        mobileFile || (value.ad_mobile_asset_url && !value.remove_ad_mobile_asset),
+      )
+
+      if (isPublishable(value.status) && (!hasDesktopAsset || !hasMobileAsset)) {
+        setFormError('Active and scheduled ads require both desktop and mobile assets')
         return
       }
 
@@ -108,23 +163,32 @@ export function AdminAdvertisementForm({
         advertisement_request_id = parsedId
       }
 
-      const adDesc = value.ad_desc.trim()
-      const adExcerpt = value.ad_excerpt.trim()
+      const priority = Number(value.priority || 0)
+      if (!Number.isInteger(priority) || priority < 0 || priority > 100) {
+        setFormError('Priority must be a whole number between 0 and 100')
+        return
+      }
 
+      const targetUrl = value.target_url.trim()
       const payload: AdvertisementCreatePayload | AdvertisementUpdatePayload = {
-        ad_slot_number: value.ad_slot_number.trim(),
+        slot_code: value.slot_code.trim(),
+        ad_slot_number: value.ad_slot_number.trim() || undefined,
         ad_title: value.ad_title.trim(),
+        alt_text: value.alt_text.trim(),
         client_name: value.client_name.trim(),
-        ad_client_link: value.ad_client_link.trim() || undefined,
+        target_url: targetUrl,
+        ad_client_link: targetUrl,
         advertisement_request_id,
-        ad_desc: adDesc || undefined,
-        ad_excerpt: adExcerpt,
+        ad_desc: value.ad_desc.trim() || undefined,
+        ad_excerpt: value.ad_excerpt.trim(),
         status: value.status,
         package_type: value.package_type,
         ad_published_date: value.ad_published_date,
         ad_ending_date: value.ad_ending_date || null,
         payment_status: value.payment_status,
-        payment_amount: value.payment_amount, // Send as string
+        payment_amount: value.payment_amount,
+        priority,
+        admin_notes: value.admin_notes.trim() || undefined,
         ad_desktop_asset: desktopFile ?? undefined,
         ad_mobile_asset: mobileFile ?? undefined,
         remove_ad_desktop_asset: value.remove_ad_desktop_asset,
@@ -148,10 +212,72 @@ export function AdminAdvertisementForm({
         e.preventDefault()
         form.handleSubmit()
       }}
+      noValidate
     >
       <div className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
-          {/* Client Name */}
+          <form.Field name="slot_code">
+            {(field) => (
+              <div className="space-y-2">
+                <Label htmlFor="slot_code">
+                  Ad Slot <span className="text-destructive">*</span>
+                </Label>
+                <Select
+                  value={field.state.value}
+                  onValueChange={(value) => field.handleChange(value)}
+                  disabled={slotsLoading || slotsError}
+                >
+                  <SelectTrigger id="slot_code">
+                    <SelectValue placeholder={slotsLoading ? 'Loading slots...' : 'Select slot'} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {slots.map((slot) => (
+                      <SelectItem key={slot.code} value={slot.code}>
+                        {slot.name} ({slot.code})
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {slotsError ? (
+                  <p className="text-destructive text-xs">Could not load ad slots.</p>
+                ) : null}
+              </div>
+            )}
+          </form.Field>
+
+          <form.Field name="ad_slot_number">
+            {(field) => (
+              <div className="space-y-2">
+                <Label htmlFor="ad_slot_number">Campaign Code</Label>
+                <Input
+                  id="ad_slot_number"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Auto-generated if empty"
+                />
+                <p className="text-muted-foreground text-xs">
+                  Internal unique code for this campaign.
+                </p>
+              </div>
+            )}
+          </form.Field>
+        </div>
+
+        <form.Subscribe selector={(state) => state.values.slot_code}>
+          {(slotCode) => {
+            const selectedSlot = selectedSlotByCode.get(slotCode)
+            return selectedSlot ? (
+              <div className="text-muted-foreground rounded-md border px-3 py-2 text-xs">
+                {selectedSlot.page_context ? `${selectedSlot.page_context} · ` : ''}
+                {selectedSlot.format ?? 'ad'} · Desktop{' '}
+                {formatSlotDimensions(selectedSlot, 'desktop') ?? 'flexible'} · Mobile{' '}
+                {formatSlotDimensions(selectedSlot, 'mobile') ?? 'flexible'}
+              </div>
+            ) : null
+          }}
+        </form.Subscribe>
+
+        <div className="grid gap-4 sm:grid-cols-2">
           <form.Field name="client_name">
             {(field) => (
               <div className="space-y-2">
@@ -162,72 +288,33 @@ export function AdminAdvertisementForm({
                   id="client_name"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="e.g., Acme Corporation"
+                  placeholder="e.g., Passport Alerts"
                   required
                 />
               </div>
             )}
           </form.Field>
 
-          {/* Client Link */}
-          <form.Field name="ad_client_link">
+          <form.Field name="target_url">
             {(field) => (
               <div className="space-y-2">
-                <Label htmlFor="ad_client_link">Client Link (Optional)</Label>
+                <Label htmlFor="target_url">
+                  Target URL <span className="text-destructive">*</span>
+                </Label>
                 <Input
-                  id="ad_client_link"
+                  id="target_url"
                   type="url"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="https://example.com"
-                />
-              </div>
-            )}
-          </form.Field>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Advertisement Request ID */}
-          <form.Field name="advertisement_request_id">
-            {(field) => (
-              <div className="space-y-2">
-                <Label htmlFor="advertisement_request_id">
-                  Advertisement Request ID (Optional)
-                </Label>
-                <Input
-                  id="advertisement_request_id"
-                  type="number"
-                  min="1"
-                  step="1"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Enter request ID"
-                />
-              </div>
-            )}
-          </form.Field>
-        </div>
-
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Ad Slot Number */}
-          <form.Field name="ad_slot_number">
-            {(field) => (
-              <div className="space-y-2">
-                <Label htmlFor="ad_slot_number">
-                  Ad Slot Number <span className="text-destructive">*</span>
-                </Label>
-                <Input
-                  id="ad_slot_number"
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="e.g., SLOT-001"
+                  placeholder="https://passport.et/alerts"
                   required
                 />
               </div>
             )}
           </form.Field>
+        </div>
 
-          {/* Ad Title */}
+        <div className="grid gap-4 sm:grid-cols-2">
           <form.Field name="ad_title">
             {(field) => (
               <div className="space-y-2">
@@ -238,7 +325,24 @@ export function AdminAdvertisementForm({
                   id="ad_title"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="e.g., Summer Promotion 2024"
+                  placeholder="e.g., Download the Passport.ET App"
+                  required
+                />
+              </div>
+            )}
+          </form.Field>
+
+          <form.Field name="alt_text">
+            {(field) => (
+              <div className="space-y-2">
+                <Label htmlFor="alt_text">
+                  Alt Text <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                  id="alt_text"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Describe the ad image"
                   required
                 />
               </div>
@@ -247,7 +351,6 @@ export function AdminAdvertisementForm({
         </div>
 
         <div className="space-y-4">
-          {/* Ad Excerpt */}
           <form.Field name="ad_excerpt">
             {(field) => (
               <div className="space-y-2">
@@ -258,31 +361,29 @@ export function AdminAdvertisementForm({
                   id="ad_excerpt"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Short summary shown with the ad"
+                  placeholder="Short summary for admin reference"
                   required
                 />
               </div>
             )}
           </form.Field>
 
-          {/* Ad Description */}
           <form.Field name="ad_desc">
             {(field) => (
               <div className="space-y-2">
-                <Label htmlFor="ad_desc">Ad Description (Optional)</Label>
+                <Label htmlFor="ad_desc">Ad Description</Label>
                 <Textarea
                   id="ad_desc"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  placeholder="Detailed description for internal reference"
+                  placeholder="Detailed internal description"
                 />
               </div>
             )}
           </form.Field>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Package Type */}
+        <div className="grid gap-4 sm:grid-cols-3">
           <form.Field name="package_type">
             {(field) => (
               <div className="space-y-2">
@@ -293,10 +394,7 @@ export function AdminAdvertisementForm({
                   value={field.state.value}
                   onValueChange={(value) => field.handleChange(value as PackageType)}
                 >
-                  <SelectTrigger
-                    id="package_type"
-                    className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
-                  >
+                  <SelectTrigger id="package_type">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -309,7 +407,6 @@ export function AdminAdvertisementForm({
             )}
           </form.Field>
 
-          {/* Payment Status */}
           <form.Field name="payment_status">
             {(field) => (
               <div className="space-y-2">
@@ -320,10 +417,7 @@ export function AdminAdvertisementForm({
                   value={field.state.value}
                   onValueChange={(value) => field.handleChange(value as PaymentStatus)}
                 >
-                  <SelectTrigger
-                    id="payment_status"
-                    className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
-                  >
+                  <SelectTrigger id="payment_status">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -336,10 +430,7 @@ export function AdminAdvertisementForm({
               </div>
             )}
           </form.Field>
-        </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Payment Amount */}
           <form.Field name="payment_amount">
             {(field) => (
               <div className="space-y-2">
@@ -359,8 +450,9 @@ export function AdminAdvertisementForm({
               </div>
             )}
           </form.Field>
+        </div>
 
-          {/* Published Date */}
+        <div className="grid gap-4 sm:grid-cols-3">
           <form.Field name="ad_published_date">
             {(field) => (
               <div className="space-y-2">
@@ -377,28 +469,40 @@ export function AdminAdvertisementForm({
               </div>
             )}
           </form.Field>
-        </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {/* Ending Date */}
           <form.Field name="ad_ending_date">
             {(field) => (
               <div className="space-y-2">
-                <Label htmlFor="ad_ending_date">Ending Date (Optional)</Label>
+                <Label htmlFor="ad_ending_date">Ending Date</Label>
                 <Input
                   id="ad_ending_date"
                   type="date"
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
                 />
-                <p className="text-muted-foreground text-xs">Leave empty for no end date</p>
+              </div>
+            )}
+          </form.Field>
+
+          <form.Field name="priority">
+            {(field) => (
+              <div className="space-y-2">
+                <Label htmlFor="priority">Priority</Label>
+                <Input
+                  id="priority"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="1"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
               </div>
             )}
           </form.Field>
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          {/* Status */}
           <form.Field name="status">
             {(field) => (
               <div className="space-y-2">
@@ -409,13 +513,11 @@ export function AdminAdvertisementForm({
                   value={field.state.value}
                   onValueChange={(value) => field.handleChange(value as AdStatus)}
                 >
-                  <SelectTrigger
-                    id="status"
-                    className="border-input bg-background ring-offset-background focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
-                  >
+                  <SelectTrigger id="status">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="draft">Draft</SelectItem>
                     <SelectItem value="active">Active</SelectItem>
                     <SelectItem value="paused">Paused</SelectItem>
                     <SelectItem value="scheduled">Scheduled</SelectItem>
@@ -425,44 +527,89 @@ export function AdminAdvertisementForm({
               </div>
             )}
           </form.Field>
-        </div>
 
-        {/* Media Uploads */}
-        <div className="grid gap-4 sm:grid-cols-2">
-          <form.Field name="ad_desktop_asset_url">
+          <form.Field name="advertisement_request_id">
             {(field) => (
-              <MediaUploadPreview
-                id="ad_desktop_asset"
-                label="Desktop Asset (Optional)"
-                file={desktopFile}
-                existingUrl={field.state.value}
-                onFileChange={setDesktopFile}
-                onRemoveExisting={() => {
-                  field.handleChange('')
-                  form.setFieldValue('remove_ad_desktop_asset', true)
-                }}
-                accept="image/*"
-              />
-            )}
-          </form.Field>
-
-          <form.Field name="ad_mobile_asset_url">
-            {(field) => (
-              <MediaUploadPreview
-                id="ad_mobile_asset"
-                label="Mobile Asset (Optional)"
-                file={mobileFile}
-                existingUrl={field.state.value}
-                onFileChange={setMobileFile}
-                onRemoveExisting={() => {
-                  field.handleChange('')
-                  form.setFieldValue('remove_ad_mobile_asset', true)
-                }}
-                accept="image/*"
-              />
+              <div className="space-y-2">
+                <Label htmlFor="advertisement_request_id">Advertisement Request ID</Label>
+                <Input
+                  id="advertisement_request_id"
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  placeholder="Optional request ID"
+                />
+              </div>
             )}
           </form.Field>
         </div>
+
+        <form.Field name="admin_notes">
+          {(field) => (
+            <div className="space-y-2">
+              <Label htmlFor="admin_notes">Admin Notes</Label>
+              <Textarea
+                id="admin_notes"
+                value={field.state.value}
+                onChange={(e) => field.handleChange(e.target.value)}
+                placeholder="Internal notes for scheduling, creative, or renewal"
+              />
+            </div>
+          )}
+        </form.Field>
+
+        <form.Subscribe selector={(state) => state.values.slot_code}>
+          {(slotCode) => {
+            const selectedSlot = selectedSlotByCode.get(slotCode)
+            return (
+              <div className="grid gap-4 sm:grid-cols-2">
+                <form.Field name="ad_desktop_asset_url">
+                  {(field) => (
+                    <MediaUploadPreview
+                      id="ad_desktop_asset"
+                      label="Desktop Asset"
+                      file={desktopFile}
+                      existingUrl={field.state.value}
+                      onFileChange={(file) => {
+                        setDesktopFile(file)
+                        if (file) form.setFieldValue('remove_ad_desktop_asset', false)
+                      }}
+                      onRemoveExisting={() => {
+                        field.handleChange('')
+                        form.setFieldValue('remove_ad_desktop_asset', true)
+                      }}
+                      accept="image/*"
+                      helperText={formatSlotDimensions(selectedSlot, 'desktop')}
+                    />
+                  )}
+                </form.Field>
+
+                <form.Field name="ad_mobile_asset_url">
+                  {(field) => (
+                    <MediaUploadPreview
+                      id="ad_mobile_asset"
+                      label="Mobile Asset"
+                      file={mobileFile}
+                      existingUrl={field.state.value}
+                      onFileChange={(file) => {
+                        setMobileFile(file)
+                        if (file) form.setFieldValue('remove_ad_mobile_asset', false)
+                      }}
+                      onRemoveExisting={() => {
+                        field.handleChange('')
+                        form.setFieldValue('remove_ad_mobile_asset', true)
+                      }}
+                      accept="image/*"
+                      helperText={formatSlotDimensions(selectedSlot, 'mobile')}
+                    />
+                  )}
+                </form.Field>
+              </div>
+            )
+          }}
+        </form.Subscribe>
       </div>
 
       {displayError && (
@@ -472,7 +619,7 @@ export function AdminAdvertisementForm({
       )}
 
       <div className="flex gap-3">
-        <Button type="submit" disabled={isSubmitting}>
+        <Button type="submit" disabled={isSubmitting || slotsLoading}>
           {isSubmitting
             ? 'Saving...'
             : advertisement

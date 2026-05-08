@@ -76,6 +76,9 @@ export function AdminAdvertisementsTable({
           <div>
             <div className="text-foreground font-medium">{row.original.ad_title}</div>
             <div className="text-muted-foreground text-xs">{row.original.client_name}</div>
+            <div className="text-muted-foreground text-xs">
+              Slot: <span className="font-mono">{row.original.slot_code}</span>
+            </div>
           </div>
         ),
       },
@@ -170,6 +173,7 @@ export function AdminAdvertisementsTable({
       id: 'status',
       title: 'Status',
       options: [
+        { label: 'Draft', value: 'draft' },
         { label: 'Active', value: 'active' },
         { label: 'Paused', value: 'paused' },
         { label: 'Scheduled', value: 'scheduled' },

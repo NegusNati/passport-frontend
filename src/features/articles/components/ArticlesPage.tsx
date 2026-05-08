@@ -14,7 +14,7 @@ import {
 import type { ArticleApiItem } from '@/features/articles/lib/ArticlesSchema'
 import { useDebouncedValue } from '@/shared/hooks/useDebouncedValue'
 import { useNetworkConditions } from '@/shared/hooks/useNetworkConditions'
-import { AdSlot } from '@/shared/ui/ad-slot'
+import { DynamicAdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardHeader } from '@/shared/ui/card'
 import { Container } from '@/shared/ui/container'
@@ -180,9 +180,9 @@ export function ArticlesPage() {
       <section className="py-2">
         <Container>
           <div className="my-4">
-            <AdSlot
-              orientation="vertical"
-              preset="sponsored"
+            <DynamicAdSlot
+              code="articles-list-top"
+              orientation="horizontal"
               className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
             />
           </div>

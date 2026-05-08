@@ -12,7 +12,7 @@ export const AdPlacement = z.enum([
 export type AdPlacement = z.infer<typeof AdPlacement>
 
 // Status types
-export const AdStatus = z.enum(['active', 'paused', 'scheduled', 'expired'])
+export const AdStatus = z.enum(['draft', 'active', 'paused', 'scheduled', 'expired'])
 
 export type AdStatus = z.infer<typeof AdStatus>
 
@@ -31,12 +31,19 @@ export const Advertisement = z
   .object({
     id: z.number().int().positive(),
     ad_slot_number: z.string().min(1),
+    slot_code: z.string().nullable().optional(),
     ad_title: z.string().min(1).max(255),
+    alt_text: z.string().nullable().optional(),
     ad_desc: z.string().nullable(),
     ad_excerpt: z.string().nullable(),
     ad_desktop_asset: z.string().nullable(),
+    desktop_width: z.number().nullable().optional(),
+    desktop_height: z.number().nullable().optional(),
     ad_mobile_asset: z.string().nullable(),
+    mobile_width: z.number().nullable().optional(),
+    mobile_height: z.number().nullable().optional(),
     ad_client_link: z.string().nullable(),
+    target_url: z.string().nullable().optional(),
     status: AdStatus,
     package_type: PackageType,
     ad_published_date: z.string(),
@@ -61,7 +68,8 @@ export const Advertisement = z
     // Add computed fields for compatibility
     desktop_asset_url: data.ad_desktop_asset || '',
     mobile_asset_url: data.ad_mobile_asset || '',
-    client_link: data.ad_client_link || '',
+    client_link: data.target_url || data.ad_client_link || '',
+    slot_code: data.slot_code || data.ad_slot_number,
     start_date: data.ad_published_date,
     end_date: data.ad_ending_date,
     title: data.ad_title,

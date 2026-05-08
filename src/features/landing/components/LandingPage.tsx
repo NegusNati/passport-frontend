@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
 
+import { useAdsQuery } from '@/features/advertisements/api/get-ad'
 import { Seo } from '@/shared/ui/Seo'
 
 import { AdvertiseSection } from './Advertise'
@@ -20,6 +21,9 @@ const SectionSkeleton = () => (
 )
 
 export function LandingPage() {
+  const landingAds = useAdsQuery(['home-alerts-banner', 'home-download-app'])
+  const landingAdData = landingAds.data
+
   return (
     <div className="overflow-x-hidden">
       <Seo
@@ -40,7 +44,10 @@ export function LandingPage() {
         </div>
 
         <Suspense fallback={<div className="h-32 w-full" />}>
-          <AdBanner />
+          <AdBanner
+            ad={landingAdData?.['home-alerts-banner'] ?? null}
+            isLoading={landingAds.isLoading}
+          />
         </Suspense>
 
         <Suspense fallback={<SectionSkeleton />}>
@@ -50,7 +57,10 @@ export function LandingPage() {
         <AdvertiseSection />
         <ArticleSection />
         <FAQsSection />
-        <DownloadAppSection />
+        <DownloadAppSection
+          ad={landingAdData?.['home-download-app'] ?? null}
+          isLoading={landingAds.isLoading}
+        />
 
         {/* <Footer /> */}
       </div>

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next'
 
 import ethiopic_numbers_pattern from '@/assets/landingImages/ethiopiac_num_pattern.svg'
 import ethiopic_numbers from '@/assets/landingImages/number.webp'
-import { AdSlot } from '@/shared/ui/ad-slot'
+import { DynamicAdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Container } from '@/shared/ui/container'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select'
@@ -727,18 +727,18 @@ export function CalendarPage() {
                 )}
               </div>
             </div>
-            <AdSlot
+            <DynamicAdSlot
+              code="calendar-sidebar-primary"
               orientation="vertical"
               className="bg-secondary supports-[backdrop-filter]:bg-secondary min-h-[18rem] rounded-2xl backdrop-blur-lg"
-              preset="sponsored"
             />
           </aside>
         </div>
 
-        <AdSlot
+        <DynamicAdSlot
+          code="calendar-inline"
           orientation="horizontal"
           className="bg-secondary supports-[backdrop-filter]:bg-secondary min-h-[12rem] rounded-2xl backdrop-blur-lg"
-          preset="sponsored"
         />
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)]">
           <section
@@ -832,10 +832,10 @@ export function CalendarPage() {
               <p className="mt-2">{t('readingTips.tip1')}</p>
               <p className="mt-2">{t('readingTips.tip2')}</p>
             </div>
-            <AdSlot
+            <DynamicAdSlot
+              code="calendar-sidebar-secondary"
               orientation="vertical"
               className="bg-secondary supports-[backdrop-filter]:bg-secondary min-h-[18rem] w-full rounded-2xl backdrop-blur-lg"
-              preset="sponsored"
             />
           </aside>
         </div>

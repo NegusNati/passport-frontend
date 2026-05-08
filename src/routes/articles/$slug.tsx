@@ -13,7 +13,7 @@ import {
 import type { ArticleApiItem } from '@/features/articles/lib/ArticlesSchema'
 import { loadI18nNamespaces } from '@/i18n'
 import { LexicalViewer } from '@/shared/components/rich-text/LexicalViewer'
-import { AdSlot } from '@/shared/ui/ad-slot'
+import { DynamicAdSlot } from '@/shared/ui/ad-slot'
 import { Card, CardContent, CardHeader } from '@/shared/ui/card'
 import { Container } from '@/shared/ui/container'
 import { Seo } from '@/shared/ui/Seo'
@@ -151,9 +151,9 @@ function ArticleBody({
         <div className="mx-auto max-w-6xl md:grid md:grid-cols-[minmax(0,1fr)_minmax(16rem,20rem)] md:items-start md:gap-10 lg:gap-12">
           <div className="mx-auto max-w-3xl space-y-8 md:mx-0 md:max-w-none md:pr-6 lg:pr-10">
             <div className="md:hidden">
-              <AdSlot
+              <DynamicAdSlot
+                code="article-mobile-top"
                 orientation="horizontal"
-                preset="sponsored"
                 className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
               />
             </div>
@@ -259,24 +259,24 @@ function ArticleBody({
             ) : null}
 
             <div className="lg:hidden">
-              <AdSlot
+              <DynamicAdSlot
+                code="article-inline-bottom"
                 orientation="horizontal"
-                preset="sponsored"
                 className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
               />
             </div>
           </div>
           <aside className="hidden md:sticky md:top-24 md:block">
-            <AdSlot
+            <DynamicAdSlot
+              code="article-sidebar"
               orientation="vertical"
-              preset="sponsored"
               className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
             />
           </aside>
           <div className="hidden lg:block">
-            <AdSlot
+            <DynamicAdSlot
+              code="article-sidebar"
               orientation="vertical"
-              preset="sponsored"
               className="rounded-3xl border border-emerald-100 bg-emerald-50/70"
             />
           </div>

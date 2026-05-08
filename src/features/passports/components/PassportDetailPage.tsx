@@ -9,7 +9,7 @@ import { usePassportQuery } from '@/features/passports/lib/PassportsQuery'
 import type { PassportApiItem } from '@/features/passports/lib/PassportsSchema'
 import type { Passport } from '@/features/passports/schemas/passport'
 import { useNetworkConditions } from '@/shared/hooks/useNetworkConditions'
-import { AdSlot } from '@/shared/ui/ad-slot'
+import { DynamicAdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
 import { Confetti } from '@/shared/ui/confetti'
@@ -146,7 +146,11 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
         <PassportDetailSkeleton />
         <section className="py-8">
           <div className="container mx-auto max-w-6xl px-4">
-            <AdSlot preset="sponsored" orientation="horizontal" className="rounded-lg" />
+            <DynamicAdSlot
+              code="passport-detail-result"
+              orientation="horizontal"
+              className="rounded-lg"
+            />
           </div>
         </section>
       </div>
@@ -226,7 +230,11 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
       ) : null}
       <section className="py-8">
         <div className="container mx-auto max-w-6xl px-4">
-          <AdSlot preset="sponsored" orientation="horizontal" className="rounded-lg" />
+          <DynamicAdSlot
+            code="passport-detail-result"
+            orientation="horizontal"
+            className="rounded-lg"
+          />
         </div>
       </section>
 

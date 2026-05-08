@@ -1,6 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query'
 import { createFileRoute } from '@tanstack/react-router'
 
+import { fetchAdsBySlots } from '@/features/advertisements/api/get-ad'
 import { fetchLandingArticles } from '@/features/landing/lib/LandingApi'
 import { landingKeys } from '@/features/landing/lib/LandingQuery'
 import { loadI18nNamespaces } from '@/i18n/loader'
@@ -19,6 +20,11 @@ export const Route = createFileRoute('/')({
     queryClient.prefetchQuery({
       queryKey: landingKeys.articles(),
       queryFn: fetchLandingArticles,
+      staleTime: 5 * 60_000,
+    })
+    queryClient.prefetchQuery({
+      queryKey: ['advertisements', 'slots', ['home-alerts-banner', 'home-download-app']],
+      queryFn: () => fetchAdsBySlots(['home-alerts-banner', 'home-download-app']),
       staleTime: 5 * 60_000,
     })
 

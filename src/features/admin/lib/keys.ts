@@ -28,6 +28,7 @@ export const adminKeys = {
     detail: (id: string | number) =>
       [...adminKeys.advertisements.all(), 'detail', String(id)] as const,
     stats: () => [...adminKeys.advertisements.all(), 'stats'] as const,
+    slots: () => [...adminKeys.advertisements.all(), 'slots'] as const,
   },
 }
 

@@ -8,6 +8,7 @@ type StatusBadgeProps = {
 
 export function AdminAdvertisementStatusBadge({ status }: StatusBadgeProps) {
   const variants: Record<AdStatus, 'default' | 'secondary' | 'success' | 'outline'> = {
+    draft: 'outline',
     active: 'success',
     paused: 'secondary',
     scheduled: 'default',
@@ -15,6 +16,7 @@ export function AdminAdvertisementStatusBadge({ status }: StatusBadgeProps) {
   }
 
   const labels: Record<AdStatus, string> = {
+    draft: 'Draft',
     active: 'Active',
     paused: 'Paused',
     scheduled: 'Scheduled',

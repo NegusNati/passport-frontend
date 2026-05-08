@@ -1,9 +1,10 @@
 import { Link } from '@tanstack/react-router'
-import { type HTMLAttributes } from 'react'
+import { type CSSProperties, type HTMLAttributes, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { useAdQuery } from '@/features/advertisements/api/get-ad'
 import { useAdTracking } from '@/features/advertisements/hooks/useAdTracking'
+import type { PublicAdvertisement } from '@/features/advertisements/schemas/public-advertisement'
 import { Button } from '@/shared/ui/button'
 
 interface AdSlotProps extends HTMLAttributes<HTMLDivElement> {
@@ -12,10 +13,13 @@ interface AdSlotProps extends HTMLAttributes<HTMLDivElement> {
   preset?: 'sponsored'
 }
 
-interface DynamicAdSlotProps extends HTMLAttributes<HTMLDivElement> {
-  placement: string
+interface DynamicAdSlotProps extends HTMLAttributes<HTMLAnchorElement> {
+  code?: string
+  placement?: string
   orientation?: 'horizontal' | 'vertical'
-  fallback?: React.ReactNode
+  fallback?: ReactNode
+  ad?: PublicAdvertisement | null
+  isLoading?: boolean
 }
 
 const orientationClasses = {
@@ -86,16 +90,27 @@ export function AdSlot({
 
 // Dynamic ad slot that fetches and displays real ads
 export function DynamicAdSlot({
+  code,
   placement,
   orientation = 'horizontal',
   className = '',
   fallback,
+  ad: providedAd,
+  isLoading: providedIsLoading,
+  style,
   ...props
 }: DynamicAdSlotProps) {
   const { t: tCommon } = useTranslation()
   const { t: tAds } = useTranslation('advertisements')
-  const { data: ad, isLoading } = useAdQuery(placement)
-  const { handleClick } = useAdTracking(ad?.id, placement)
+  const slotCode = code ?? placement ?? ''
+  const shouldFetch = providedAd === undefined
+  const { data: fetchedAd, isLoading: isQueryLoading } = useAdQuery(slotCode, shouldFetch)
+  const ad = shouldFetch ? fetchedAd : providedAd
+  const isLoading = shouldFetch ? isQueryLoading : Boolean(providedIsLoading)
+  const { handleClick, impressionRef } = useAdTracking(ad?.id, slotCode, {
+    impressionUrl: ad?.impression_url,
+    clickUrl: ad?.click_url,
+  })
 
   // Show loading skeleton
   if (isLoading) {
@@ -106,7 +121,6 @@ export function DynamicAdSlot({
           orientationClasses[orientation],
           className,
         ].join(' ')}
-        {...props}
       >
         <span className="text-muted-foreground text-sm">{tCommon('status.loading')}</span>
       </div>
@@ -118,46 +132,61 @@ export function DynamicAdSlot({
     if (fallback) {
       return <>{fallback}</>
     }
-    return <AdSlot preset="sponsored" orientation={orientation} className={className} {...props} />
+    return <AdSlot preset="sponsored" orientation={orientation} className={className} />
   }
 
-  // Determine which asset to show based on screen size
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  if (!ad.desktop_asset_url || !ad.target_url) {
+    return <AdSlot preset="sponsored" orientation={orientation} className={className} />
+  }
 
   const handleAdClick = () => {
     handleClick()
-    window.open(ad.client_link, '_blank', 'noopener,noreferrer')
   }
 
+  const desktopRatio = `${ad.desktop_asset.width} / ${ad.desktop_asset.height}`
+  const mobileRatio = `${ad.mobile_asset.width} / ${ad.mobile_asset.height}`
+  const adStyle = {
+    '--ad-desktop-ratio': desktopRatio,
+    '--ad-mobile-ratio': mobileRatio,
+    aspectRatio: mobileRatio,
+    ...style,
+  } as CSSProperties
+
   return (
-    <div
+    <a
+      ref={impressionRef}
+      href={ad.target_url}
+      target="_blank"
+      rel="noopener noreferrer sponsored"
       className={[
-        'border-border bg-background relative flex cursor-pointer items-center justify-center overflow-hidden rounded-lg border shadow-sm transition-shadow hover:shadow-md',
+        'border-border bg-background relative flex items-center justify-center overflow-hidden rounded-lg border shadow-sm transition-shadow hover:shadow-md md:[aspect-ratio:var(--ad-desktop-ratio)]',
         orientationClasses[orientation],
         className,
       ].join(' ')}
       onClick={handleAdClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault()
-          handleAdClick()
-        }
-      }}
-      role="button"
-      tabIndex={0}
+      style={adStyle}
       aria-label={tAds('shared.ariaLabel')}
       {...props}
     >
-      <img
-        src={isMobile ? ad.mobile_asset_url : ad.desktop_asset_url}
-        alt={tAds('shared.imageAlt')}
-        className="h-full w-full object-cover"
-        loading="lazy"
-      />
+      <picture className="h-full w-full">
+        {ad.mobile_asset_url ? (
+          <source media="(max-width: 767px)" srcSet={ad.mobile_asset_url} />
+        ) : null}
+        <img
+          src={ad.desktop_asset_url}
+          alt={ad.alt_text || tAds('shared.imageAlt')}
+          className="h-full w-full object-cover"
+          width={ad.desktop_asset.width}
+          height={ad.desktop_asset.height}
+          loading="lazy"
+          fetchPriority="low"
+          decoding="async"
+        />
+      </picture>
       <span className="bg-muted/80 text-muted-foreground absolute top-2 right-2 rounded px-2 py-1 text-xs font-medium">
         {tAds('shared.badge')}
       </span>
-    </div>
+    </a>
   )
 }
 

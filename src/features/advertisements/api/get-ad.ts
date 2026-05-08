@@ -3,13 +3,39 @@ import { useQuery } from '@tanstack/react-query'
 import { getJSON } from '@/shared/lib/api'
 import { API_ENDPOINTS } from '@/shared/lib/API_ENDPOINTS'
 
-import { PublicAdvertisementResponse } from '../schemas/public-advertisement'
+import {
+  PublicAdvertisementResponse,
+  PublicAdvertisementsBySlotResponse,
+} from '../schemas/public-advertisement'
 
-export async function fetchAdByPlacement(placement: string) {
+export async function fetchAdsBySlots(codes: string[]) {
+  const uniqueCodes = [...new Set(codes.filter(Boolean))]
+
+  if (!uniqueCodes.length) {
+    return {}
+  }
+
   try {
-    const data = await getJSON<unknown>(API_ENDPOINTS.V1.ADVERTISEMENTS.BY_PLACEMENT, {
-      placement,
+    const data = await getJSON<unknown>(API_ENDPOINTS.V1.ADVERTISEMENTS.SLOTS, {
+      codes: uniqueCodes,
     })
+    const parsed = PublicAdvertisementsBySlotResponse.safeParse(data)
+
+    if (!parsed.success) {
+      console.error('Failed to parse advertisements response:', parsed.error)
+      return {}
+    }
+
+    return parsed.data.data
+  } catch (error) {
+    console.error('Error fetching advertisements:', error)
+    return {}
+  }
+}
+
+export async function fetchAdBySlot(code: string) {
+  try {
+    const data = await getJSON<unknown>(API_ENDPOINTS.V1.ADVERTISEMENTS.SLOT_BY_CODE(code))
     const parsed = PublicAdvertisementResponse.safeParse(data)
 
     if (!parsed.success) {
@@ -24,11 +50,26 @@ export async function fetchAdByPlacement(placement: string) {
   }
 }
 
-export function useAdQuery(placement: string, enabled = true) {
+export function fetchAdByPlacement(placement: string) {
+  return fetchAdBySlot(placement)
+}
+
+export function useAdsQuery(codes: string[], enabled = true) {
+  const stableCodes = [...new Set(codes.filter(Boolean))].sort()
+
   return useQuery({
-    queryKey: ['advertisements', 'placement', placement],
-    queryFn: () => fetchAdByPlacement(placement),
+    queryKey: ['advertisements', 'slots', stableCodes],
+    queryFn: () => fetchAdsBySlots(stableCodes),
+    staleTime: 5 * 60 * 1000,
+    enabled: enabled && stableCodes.length > 0,
+  })
+}
+
+export function useAdQuery(code: string, enabled = true) {
+  return useQuery({
+    queryKey: ['advertisements', 'slot', code],
+    queryFn: () => fetchAdBySlot(code),
     staleTime: 5 * 60 * 1000, // 5 minutes
-    enabled,
+    enabled: enabled && Boolean(code),
   })
 }

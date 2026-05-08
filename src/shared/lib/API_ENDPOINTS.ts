@@ -24,12 +24,17 @@ export const API_ENDPOINTS = {
       ADMIN_BY_ID: (id: string | number) => `/api/v1/admin/advertisement-requests/${id}`,
     },
     ADVERTISEMENTS: {
+      SLOTS: '/api/v1/advertisements/slots', // GET ?codes[]=home-alerts-banner
+      SLOT_BY_CODE: (code: string) => `/api/v1/advertisements/slots/${code}`,
       BY_PLACEMENT: '/api/v1/advertisements/placement', // GET ?placement=home-hero
       IMPRESSION: '/api/v1/advertisements/impression', // POST
       CLICK: '/api/v1/advertisements/click', // POST
+      IMPRESSION_BY_ID: (id: string | number) => `/api/v1/advertisements/${id}/impression`,
+      CLICK_BY_ID: (id: string | number) => `/api/v1/advertisements/${id}/click`,
       ADMIN: '/api/v1/admin/advertisements', // GET, POST
       ADMIN_BY_ID: (id: string | number) => `/api/v1/admin/advertisements/${id}`, // GET, PATCH, DELETE
       ADMIN_STATS: '/api/v1/admin/advertisements/stats', // GET
+      ADMIN_SLOTS: '/api/v1/admin/advertisement-slots', // GET
     },
   },
   // Optional additional domains can live here later (auth, profile, etc.)

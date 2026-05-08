@@ -4,10 +4,13 @@ import { AdStatus, PackageType, PaymentStatus } from './advertisement'
 
 // Base schema for text fields - using API field names
 const BaseAdvertisementSchema = z.object({
-  ad_slot_number: z.string().min(1, 'Ad slot number is required'),
+  ad_slot_number: z.string().min(1, 'Campaign code is required').optional(),
+  slot_code: z.string().min(1, 'Ad slot is required'),
   ad_title: z.string().min(1, 'Ad title is required').max(255, 'Ad title too long'),
+  alt_text: z.string().min(1, 'Alt text is required').max(255, 'Alt text too long'),
   client_name: z.string().min(1, 'Client name is required').max(255, 'Client name too long'),
   ad_client_link: z.string().url('Must be a valid URL').optional(),
+  target_url: z.string().url('Target URL must be valid').max(255, 'Target URL too long'),
   status: AdStatus,
   package_type: PackageType,
   ad_published_date: z.string().min(1, 'Published date is required'),
@@ -18,6 +21,8 @@ const BaseAdvertisementSchema = z.object({
   advertisement_request_id: z.number().int().positive().optional(),
   ad_desc: z.string().optional(),
   ad_excerpt: z.string().min(1, 'Ad excerpt is required'),
+  priority: z.number().int().min(0).max(100).optional(),
+  admin_notes: z.string().optional(),
 })
 
 // Create payload (includes files)

@@ -11,6 +11,7 @@ type MediaUploadPreviewProps = {
   onRemoveExisting?: () => void
   accept?: string
   id: string
+  helperText?: string
 }
 
 export function MediaUploadPreview({
@@ -21,6 +22,7 @@ export function MediaUploadPreview({
   onRemoveExisting,
   accept = 'image/*',
   id,
+  helperText,
 }: MediaUploadPreviewProps) {
   const previewUrl = useMemo(() => {
     if (file) return URL.createObjectURL(file)
@@ -67,7 +69,9 @@ export function MediaUploadPreview({
         }}
         className="text-muted-foreground file:bg-primary file:text-primary-foreground hover:file:bg-primary/90 block w-full text-sm file:mr-4 file:rounded-md file:border-0 file:px-4 file:py-2 file:text-sm file:font-semibold"
       />
-      <p className="text-muted-foreground text-xs">PNG, JPG, GIF, WebP up to 5MB</p>
+      <p className="text-muted-foreground text-xs">
+        {helperText ? `${helperText} · ` : ''}PNG, JPG, GIF, WebP, AVIF up to 10MB
+      </p>
     </div>
   )
 }
