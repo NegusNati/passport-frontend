@@ -28,8 +28,9 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium
 # Increase shared memory for Chromium (default 64MB is too small)
 # This is handled by --disable-dev-shm-usage flag in puppeteer args instead
 
-# Enable pnpm via corepack
-RUN corepack enable && corepack prepare pnpm@latest --activate
+# Enable a Node 20-compatible pnpm via corepack.
+# pnpm 11 requires newer Node built-ins such as node:sqlite.
+RUN corepack enable && corepack prepare pnpm@10.23.0 --activate
 
 WORKDIR /app
 

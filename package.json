@@ -1,6 +1,7 @@
 {
   "name": "passport-frontend",
   "private": true,
+  "packageManager": "pnpm@10.23.0",
   "type": "module",
   "scripts": {
     "dev": "vite --port 3000",
