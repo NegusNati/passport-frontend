@@ -56,7 +56,7 @@ const Footer = () => {
   return (
     <motion.footer
       aria-labelledby="site-footer-title"
-      className="bg-background relative overflow-hidden pt-10 sm:pt-14 md:pt-16"
+      className="bg-footer-top relative overflow-hidden pt-10 sm:pt-14 md:pt-16"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.28, margin: '0px 0px -120px 0px' }}
@@ -65,7 +65,7 @@ const Footer = () => {
         <motion.h2
           id="site-footer-title"
           variants={brandReveal}
-          className="text-primary translate-y-[0.08em] text-center text-[clamp(3.65rem,15vw,15rem)] leading-[0.78] font-black tracking-normal text-balance select-none"
+          className="text-footer-surface translate-y-[0.08em] text-center text-[clamp(3.65rem,15vw,15rem)] leading-[0.78] font-black tracking-normal text-balance select-none"
           translate="no"
         >
           Passport.ET
@@ -74,11 +74,11 @@ const Footer = () => {
 
       <motion.div
         variants={reveal}
-        className="bg-primary text-primary-foreground relative z-10 overflow-hidden"
+        className="bg-footer-surface text-footer-surface-foreground relative z-10 overflow-hidden"
       >
         <div
           aria-hidden="true"
-          className="bg-primary-foreground/30 pointer-events-none absolute inset-x-0 top-0 h-px"
+          className="bg-footer-divider/45 pointer-events-none absolute inset-x-0 top-0 h-px"
         />
 
         <div className="mx-auto flex min-h-[28rem] max-w-[100rem] flex-col px-4 py-16 sm:px-6 sm:py-20 md:min-h-[30rem] lg:px-8">
@@ -94,7 +94,7 @@ const Footer = () => {
               href="https://t.me/passportdotet_group"
               target="_blank"
               rel="noreferrer"
-              className="bg-primary-foreground text-primary hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring focus-visible:ring-offset-primary mt-8 inline-flex h-14 min-w-0 items-center justify-center gap-3 rounded-full px-8 text-base font-bold shadow-[0_1px_0_hsl(var(--primary-foreground)_/_0.34)_inset,0_18px_42px_hsl(var(--brand-12)_/_0.18)] transition-[transform,background-color,box-shadow,color] duration-150 ease-out hover:shadow-[0_1px_0_hsl(var(--primary-foreground)_/_0.4)_inset,0_22px_48px_hsl(var(--brand-12)_/_0.22)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-[0.97]"
+              className="bg-footer-surface-foreground text-footer-surface hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring focus-visible:ring-offset-footer-surface mt-8 inline-flex h-14 min-w-0 items-center justify-center gap-3 rounded-full px-8 text-base font-bold shadow-[0_1px_0_hsl(var(--footer-surface-foreground)_/_0.34)_inset,0_18px_42px_hsl(var(--footer-top)_/_0.18)] transition-[transform,background-color,box-shadow,color] duration-150 ease-out hover:shadow-[0_1px_0_hsl(var(--footer-surface-foreground)_/_0.4)_inset,0_22px_48px_hsl(var(--footer-top)_/_0.22)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-[0.97]"
               aria-label={`${t('footer.joinTelegram')} (opens in a new tab)`}
             >
               <SendIcon className="size-6 shrink-0" aria-hidden="true" strokeWidth={2.2} />
@@ -104,7 +104,7 @@ const Footer = () => {
 
           <motion.div
             variants={itemReveal}
-            className="border-primary-foreground/30 mt-16 border-t pt-6"
+            className="border-footer-divider/55 mt-16 border-t pt-6"
           >
             <div className="flex flex-col items-center justify-between gap-4 text-center sm:flex-row sm:text-left">
               <p className="text-primary-foreground text-base leading-none font-medium sm:text-lg">
@@ -133,7 +133,7 @@ const Footer = () => {
               href="https://subasoftware.com/"
               target="_blank"
               rel="noreferrer"
-              className="group focus-visible:ring-ring focus-visible:ring-offset-primary mx-auto mt-7 flex h-14 w-fit max-w-full items-center overflow-hidden rounded-sm transition-[transform,background-color,box-shadow] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-[0.97]"
+              className="group focus-visible:ring-ring focus-visible:ring-offset-footer-surface mx-auto mt-7 flex h-14 w-fit max-w-full items-center overflow-hidden rounded-sm transition-[transform,background-color,box-shadow] duration-150 ease-out focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:scale-[0.97]"
               aria-label="A Suba Software Product (opens in a new tab)"
             >
               <img
@@ -151,8 +151,8 @@ const Footer = () => {
         </div>
       </motion.div>
 
-      <div aria-hidden="true" className="bg-brand-5 dark:bg-brand-4 h-11 md:h-12" />
-      <div aria-hidden="true" className="bg-brand-2 dark:bg-brand-2 h-10 md:h-11" />
+      <div aria-hidden="true" className="bg-footer-band h-11 md:h-12" />
+      <div aria-hidden="true" className="bg-footer-band-strong h-10 md:h-11" />
 
       <ComingSoonDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </motion.footer>

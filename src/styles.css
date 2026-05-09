@@ -97,6 +97,14 @@
   --brand-10: 160 80% 40%; /* solid on hover */
   --brand-11: 160 65% 22%; /* accessible text on brand tints */
   --brand-12: 160 70% 14%; /* highest-contrast brand text on light */
+
+  /* Footer palette from the Passport.ET Figma footer */
+  --footer-top: 158 39% 5%; /* #081512 */
+  --footer-surface: 160 100% 31%; /* #009f6a */
+  --footer-surface-foreground: 0 0% 100%;
+  --footer-divider: 160 54% 66%;
+  --footer-band: 160 100% 29%; /* #00945f */
+  --footer-band-strong: 160 100% 26%; /* #008654 */
 }
 
 .dark {
@@ -152,6 +160,14 @@
   --brand-10: 160 80% 45%; /* hover */
   --brand-11: 160 50% 70%; /* accessible text on dark brand surfaces */
   --brand-12: 160 60% 93%; /* highest-contrast minty text (seen in image) */
+
+  /* Footer keeps the same branded surfaces across themes */
+  --footer-top: 158 39% 5%;
+  --footer-surface: 160 100% 30%; /* #009966 */
+  --footer-surface-foreground: 0 0% 100%;
+  --footer-divider: 160 54% 66%;
+  --footer-band: 159 100% 28%; /* #008f5d */
+  --footer-band-strong: 158 100% 26%; /* #008654 */
 }
 
 @theme {
@@ -202,6 +218,13 @@
   --color-brand-10: hsl(var(--brand-10));
   --color-brand-11: hsl(var(--brand-11));
   --color-brand-12: hsl(var(--brand-12));
+
+  --color-footer-top: hsl(var(--footer-top));
+  --color-footer-surface: hsl(var(--footer-surface));
+  --color-footer-surface-foreground: hsl(var(--footer-surface-foreground));
+  --color-footer-divider: hsl(var(--footer-divider));
+  --color-footer-band: hsl(var(--footer-band));
+  --color-footer-band-strong: hsl(var(--footer-band-strong));
 }
 
 @layer base {
