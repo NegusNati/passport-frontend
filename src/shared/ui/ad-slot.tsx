@@ -39,9 +39,6 @@ function SponsoredContent({ orientation }: { orientation: 'horizontal' | 'vertic
         ' ',
       )}
     >
-      <span className="text-muted-foreground text-xs font-semibold tracking-[0.35em] uppercase">
-        {t('shared.sponsoredTag')}
-      </span>
       <h3 className="text-foreground text-lg font-semibold tracking-tight">
         {t('shared.ctaTitle')}
       </h3>
@@ -67,7 +64,7 @@ export function AdSlot({
   const isSponsored = preset === 'sponsored'
 
   const baseClasses = [
-    'relative flex  border border-dashed border-border bg-muted text-sm font-medium text-muted-foreground shadow-inner',
+    'relative flex bg-muted text-sm font-medium text-muted-foreground',
     orientationClasses[orientation],
     isSponsored
       ? 'items-stretch justify-between px-6 py-6 sm:px-8 sm:py-8'
@@ -117,7 +114,7 @@ export function DynamicAdSlot({
     return (
       <div
         className={[
-          'border-border bg-muted relative flex animate-pulse items-center justify-center border border-dashed',
+          'bg-muted relative flex animate-pulse items-center justify-center',
           orientationClasses[orientation],
           className,
         ].join(' ')}
@@ -162,7 +159,7 @@ export function DynamicAdSlot({
       target="_blank"
       rel="noopener noreferrer sponsored"
       className={[
-        'border-border bg-background relative flex [aspect-ratio:var(--ad-mobile-ratio)] items-center justify-center overflow-hidden rounded-lg border shadow-sm transition-shadow hover:shadow-md md:[aspect-ratio:var(--ad-desktop-ratio)]',
+        'bg-background relative flex [aspect-ratio:var(--ad-mobile-ratio)] items-center justify-center overflow-hidden rounded-lg shadow-sm transition-shadow hover:shadow-md md:[aspect-ratio:var(--ad-desktop-ratio)]',
         orientationClasses[orientation],
         className,
       ].join(' ')}
@@ -192,9 +189,6 @@ export function DynamicAdSlot({
           decoding="async"
         />
       </picture>
-      <span className="bg-muted/80 text-muted-foreground absolute top-2 right-2 rounded px-2 py-1 text-xs font-medium">
-        {tAds('shared.badge')}
-      </span>
     </a>
   )
 }
