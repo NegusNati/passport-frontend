@@ -11,7 +11,6 @@ import { Hero } from './Hero'
 import { HeroCardsMobile } from './HeroCardsMobile'
 
 const AdBanner = lazy(() => import('./AdBanner').then((m) => ({ default: m.AdBanner })))
-const Testimonials = lazy(() => import('./Testimonials').then((m) => ({ default: m.Testimonials })))
 const VideoTabs = lazy(() => import('./VideoTabs'))
 
 const SectionSkeleton = () => (
@@ -36,12 +35,6 @@ export function LandingPage() {
 
       <div className="mx-auto mt-6 flex w-full max-w-7xl flex-col gap-4 px-4 md:px-6">
         <HeroCardsMobile />
-
-        <div className="relative z-[1]">
-          <Suspense fallback={<SectionSkeleton />}>
-            <Testimonials />
-          </Suspense>
-        </div>
 
         <Suspense fallback={<div className="h-32 w-full" />}>
           <AdBanner

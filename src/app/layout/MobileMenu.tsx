@@ -106,6 +106,8 @@ export function MobileMenu({ open, onClose, nav, isAuthenticated }: MobileMenuPr
                 <a
                   key={item.label}
                   href={item.href}
+                  target={item.external ? '_blank' : undefined}
+                  rel={item.external ? 'noreferrer' : undefined}
                   onClick={() => {
                     handleComingSoonClick()
                     onClose()

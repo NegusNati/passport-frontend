@@ -55,7 +55,14 @@ function renderNavItem(item: NavItem, customOnClick?: () => void, underConstruct
 
   if (item.external || item.href.startsWith('#')) {
     return (
-      <a key={item.label} href={item.href} className={className} onClick={handleClick}>
+      <a
+        key={item.label}
+        href={item.href}
+        className={className}
+        onClick={handleClick}
+        target={item.external ? '_blank' : undefined}
+        rel={item.external ? 'noreferrer' : undefined}
+      >
         <span>{item.label}</span>
         {item.external ? <ArrowUpRight className="h-4 w-4" aria-hidden /> : null}
       </a>
