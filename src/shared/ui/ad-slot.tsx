@@ -162,7 +162,7 @@ export function DynamicAdSlot({
       target="_blank"
       rel="noopener noreferrer sponsored"
       className={[
-        'border-border bg-background relative flex items-center justify-center overflow-hidden rounded-lg border shadow-sm transition-shadow [aspect-ratio:var(--ad-mobile-ratio)] hover:shadow-md md:[aspect-ratio:var(--ad-desktop-ratio)]',
+        'border-border bg-background relative flex [aspect-ratio:var(--ad-mobile-ratio)] items-center justify-center overflow-hidden rounded-lg border shadow-sm transition-shadow hover:shadow-md md:[aspect-ratio:var(--ad-desktop-ratio)]',
         orientationClasses[orientation],
         className,
       ].join(' ')}

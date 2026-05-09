@@ -196,22 +196,25 @@ export function Hero() {
               <div className="cta-glow relative mx-auto grid h-[220px] w-full place-items-center sm:max-w-[640px]">
                 {/* Outermost ring */}
                 <div
-                  className={`bg-primary/25 pointer-events-none absolute top-1/2 left-1/2 h-[150px] w-[95%] max-w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-[9999px] blur-[3px] md:w-[130%] ${pulseEnabled ? 'animate-pulse-slow' : ''
-                    }`}
+                  className={`bg-primary/25 pointer-events-none absolute top-1/2 left-1/2 h-[150px] w-[95%] max-w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-[9999px] blur-[3px] md:w-[130%] ${
+                    pulseEnabled ? 'animate-pulse-slow' : ''
+                  }`}
                   aria-hidden
                 />
 
                 {/* Middle ring */}
                 <div
-                  className={`bg-primary/35 pointer-events-none absolute top-1/2 left-1/2 h-[120px] w-[85%] max-w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-[9999px] blur-[1.5px] md:w-[110%] ${pulseEnabled ? 'animate-pulse-medium' : ''
-                    }`}
+                  className={`bg-primary/35 pointer-events-none absolute top-1/2 left-1/2 h-[120px] w-[85%] max-w-[460px] -translate-x-1/2 -translate-y-1/2 rounded-[9999px] blur-[1.5px] md:w-[110%] ${
+                    pulseEnabled ? 'animate-pulse-medium' : ''
+                  }`}
                   aria-hidden
                 />
 
                 {/* Inner ring */}
                 <div
-                  className={`bg-primary pointer-events-none absolute top-1/2 left-1/2 h-[70px] w-[70%] max-w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-[9999px] md:w-[90%] ${pulseEnabled ? 'animate-pulse-fast' : ''
-                    }`}
+                  className={`bg-primary pointer-events-none absolute top-1/2 left-1/2 h-[70px] w-[70%] max-w-[380px] -translate-x-1/2 -translate-y-1/2 rounded-[9999px] md:w-[90%] ${
+                    pulseEnabled ? 'animate-pulse-fast' : ''
+                  }`}
                   aria-hidden
                 />
 

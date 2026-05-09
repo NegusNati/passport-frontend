@@ -5,7 +5,7 @@ services:
     image: mariadb:11.0
     restart: unless-stopped
     ports:
-      - "${AD_DEV_MYSQL_PORT:-33306}:3306"
+      - '${AD_DEV_MYSQL_PORT:-33306}:3306'
     environment:
       MYSQL_DATABASE: ${AD_DEV_DB_DATABASE:-passport_ad_dev}
       MYSQL_USER: ${AD_DEV_DB_USERNAME:-passport}
@@ -16,10 +16,7 @@ services:
       - ./docker/ad-dev/mysql-init:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test:
-        [
-          "CMD-SHELL",
-          "mariadb-admin ping -h 127.0.0.1 -u root -p$${MYSQL_ROOT_PASSWORD} --silent",
-        ]
+        ['CMD-SHELL', 'mariadb-admin ping -h 127.0.0.1 -u root -p$${MYSQL_ROOT_PASSWORD} --silent']
       interval: 10s
       timeout: 5s
       retries: 10
@@ -29,13 +26,13 @@ services:
   redis:
     image: redis:8.2-alpine
     restart: unless-stopped
-    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    command: ['redis-server', '--save', '60', '1', '--loglevel', 'warning']
     ports:
-      - "${AD_DEV_REDIS_PORT:-36379}:6379"
+      - '${AD_DEV_REDIS_PORT:-36379}:6379'
     volumes:
       - ad-dev-redis:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
       timeout: 5s
       retries: 10
@@ -60,7 +57,7 @@ services:
       APP_NAME: Passport.ET
       APP_ENV: local
       APP_KEY: ${AD_DEV_APP_KEY:-base64:6r5W0lNiRlvvGZsP1mnKLz1caFv9sNMNhxTYAlnccpo=}
-      APP_DEBUG: "true"
+      APP_DEBUG: 'true'
       APP_URL: http://localhost:${AD_DEV_API_PORT:-8080}
       LOG_CHANNEL: stack
       DB_CONNECTION: mysql
@@ -94,7 +91,7 @@ services:
         GID: ${GID:-1000}
     restart: unless-stopped
     ports:
-      - "${AD_DEV_API_PORT:-8080}:80"
+      - '${AD_DEV_API_PORT:-8080}:80'
     volumes:
       - ../../passport.et/src:/var/www/html:delegated
       - ./docker/ad-dev/nginx/ssl.conf:/etc/nginx/conf.d/ssl.conf:ro
@@ -132,7 +129,7 @@ services:
       args:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
-    profiles: ["tools"]
+    profiles: ['tools']
     working_dir: /var/www/html
     command: >
       sh -lc "composer install
@@ -159,7 +156,7 @@ services:
       args:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
-    profiles: ["tools"]
+    profiles: ['tools']
     working_dir: /var/www/html
     command: >
       sh -lc "composer install
@@ -191,7 +188,7 @@ services:
       && pnpm install --config.dangerously-allow-all-builds=true
       && pnpm dev --host 0.0.0.0 --port 3000"
     ports:
-      - "${AD_DEV_FRONTEND_PORT:-3000}:3000"
+      - '${AD_DEV_FRONTEND_PORT:-3000}:3000'
     volumes:
       - .:/app:delegated
       - ad-dev-frontend-node-modules:/app/node_modules
@@ -199,9 +196,9 @@ services:
       VITE_API_BASE_URL: http://localhost:${AD_DEV_API_PORT:-8080}
       VITE_SITE_URL: http://localhost:${AD_DEV_FRONTEND_PORT:-3000}
       VITE_SITE_NAME: Passport.ET
-      VITE_PUBLIC_POSTHOG_KEY: ""
-      VITE_PUBLIC_POSTHOG_HOST: ""
-      PUPPETEER_SKIP_DOWNLOAD: "true"
+      VITE_PUBLIC_POSTHOG_KEY: ''
+      VITE_PUBLIC_POSTHOG_HOST: ''
+      PUPPETEER_SKIP_DOWNLOAD: 'true'
     depends_on:
       - app
     networks:
