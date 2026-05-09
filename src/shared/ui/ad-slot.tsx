@@ -143,12 +143,15 @@ export function DynamicAdSlot({
     handleClick()
   }
 
+  const desktopAssetUrl = ad.desktop_asset_url
+  const mobileAssetUrl = ad.mobile_asset_url || desktopAssetUrl
+  const hasMobileCreative = Boolean(ad.mobile_asset_url && ad.mobile_asset_url !== desktopAssetUrl)
+  const defaultAsset = hasMobileCreative ? ad.mobile_asset : ad.desktop_asset
   const desktopRatio = `${ad.desktop_asset.width} / ${ad.desktop_asset.height}`
-  const mobileRatio = `${ad.mobile_asset.width} / ${ad.mobile_asset.height}`
+  const mobileRatio = `${defaultAsset.width} / ${defaultAsset.height}`
   const adStyle = {
     '--ad-desktop-ratio': desktopRatio,
     '--ad-mobile-ratio': mobileRatio,
-    aspectRatio: mobileRatio,
     ...style,
   } as CSSProperties
 
@@ -159,7 +162,7 @@ export function DynamicAdSlot({
       target="_blank"
       rel="noopener noreferrer sponsored"
       className={[
-        'border-border bg-background relative flex items-center justify-center overflow-hidden rounded-lg border shadow-sm transition-shadow hover:shadow-md md:[aspect-ratio:var(--ad-desktop-ratio)]',
+        'border-border bg-background relative flex items-center justify-center overflow-hidden rounded-lg border shadow-sm transition-shadow [aspect-ratio:var(--ad-mobile-ratio)] hover:shadow-md md:[aspect-ratio:var(--ad-desktop-ratio)]',
         orientationClasses[orientation],
         className,
       ].join(' ')}
@@ -168,16 +171,22 @@ export function DynamicAdSlot({
       aria-label={tAds('shared.ariaLabel')}
       {...props}
     >
-      <picture className="h-full w-full">
-        {ad.mobile_asset_url ? (
-          <source media="(max-width: 767px)" srcSet={ad.mobile_asset_url} />
+      <picture className="block h-full w-full">
+        {desktopAssetUrl !== mobileAssetUrl ? (
+          <source
+            media="(min-width: 768px)"
+            srcSet={desktopAssetUrl}
+            width={ad.desktop_asset.width}
+            height={ad.desktop_asset.height}
+          />
         ) : null}
         <img
-          src={ad.desktop_asset_url}
+          src={mobileAssetUrl}
           alt={ad.alt_text || tAds('shared.imageAlt')}
           className="h-full w-full object-cover"
-          width={ad.desktop_asset.width}
-          height={ad.desktop_asset.height}
+          width={defaultAsset.width}
+          height={defaultAsset.height}
+          sizes="100vw"
           loading="lazy"
           fetchPriority="low"
           decoding="async"

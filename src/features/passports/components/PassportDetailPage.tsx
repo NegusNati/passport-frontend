@@ -13,6 +13,7 @@ import { DynamicAdSlot } from '@/shared/ui/ad-slot'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent } from '@/shared/ui/card'
 import { Confetti } from '@/shared/ui/confetti'
+import { Container } from '@/shared/ui/container'
 import { PassportDetailSkeleton } from '@/shared/ui/skeleton'
 
 import { PassportDetailCard } from './PassportDetailCard'
@@ -108,7 +109,7 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
   if (requestNumber && !idIsNumeric) {
     // Detail by request number is not directly supported by API; guide user to search
     return (
-      <div className="container mx-auto py-12">
+      <Container className="py-12">
         <Card className="mx-auto max-w-md">
           <CardContent className="space-y-4 pt-6 text-center">
             <div className="bg-primary/10 mx-auto flex h-12 w-12 items-center justify-center rounded-full">
@@ -136,7 +137,7 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </Container>
     )
   }
 
@@ -145,13 +146,13 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
       <div className="min-h-screen">
         <PassportDetailSkeleton />
         <section className="py-8">
-          <div className="container mx-auto max-w-6xl px-4">
+          <Container>
             <DynamicAdSlot
               code="passport-detail-result"
               orientation="horizontal"
               className="rounded-lg"
             />
-          </div>
+          </Container>
         </section>
       </div>
     )
@@ -159,7 +160,7 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
 
   if (isError || !uiPassport) {
     return (
-      <div className="container mx-auto py-12">
+      <Container className="py-12">
         <Card className="border-destructive/50 mx-auto max-w-md">
           <CardContent className="space-y-4 pt-6 text-center">
             <div className="bg-destructive/10 mx-auto flex h-12 w-12 items-center justify-center rounded-full">
@@ -185,7 +186,7 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
             </Button>
           </CardContent>
         </Card>
-      </div>
+      </Container>
     )
   }
 
@@ -208,9 +209,9 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
             }}
             className="overflow-hidden bg-emerald-600 text-white"
           >
-            <div className="container mx-auto px-4 py-3 text-center text-base font-medium sm:text-lg">
+            <Container className="py-3 text-center text-base font-medium sm:text-lg">
               {t('detail.banner.congratulations', { city: uiPassport.city })}
-            </div>
+            </Container>
           </motion.div>
         )}
       </AnimatePresence>
@@ -229,13 +230,13 @@ export function PassportDetailPage({ passportId, requestNumber }: PassportDetail
         </div>
       ) : null}
       <section className="py-8">
-        <div className="container mx-auto max-w-6xl px-4">
+        <Container>
           <DynamicAdSlot
             code="passport-detail-result"
             orientation="horizontal"
             className="rounded-lg"
           />
-        </div>
+        </Container>
       </section>
 
       {showRelatedPassports ? (

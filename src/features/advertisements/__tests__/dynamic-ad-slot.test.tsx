@@ -55,7 +55,7 @@ describe('dynamic ad slot', () => {
     expect(parsed.data?.target_url).toBe('https://passport.et/alerts')
   })
 
-  it('renders a linked picture with desktop and mobile creatives', () => {
+  it('renders a linked mobile-first picture with desktop and mobile creatives', () => {
     const parsed = PublicAdvertisementResponse.parse({ data: adPayload })
     render(<DynamicAdSlot code="home-alerts-banner" ad={parsed.data} />)
 
@@ -65,14 +65,34 @@ describe('dynamic ad slot', () => {
     expect(link.getAttribute('rel')).toContain('sponsored')
 
     const image = screen.getByRole('img', { name: 'Passport Alerts promotion' })
-    expect(image.getAttribute('src')).toBe('https://passport.et/storage/desktop.webp')
-    expect(image.getAttribute('width')).toBe('1200')
-    expect(image.getAttribute('height')).toBe('300')
+    expect(image.getAttribute('src')).toBe('https://passport.et/storage/mobile.webp')
+    expect(image.getAttribute('width')).toBe('640')
+    expect(image.getAttribute('height')).toBe('360')
 
-    const mobileSource = link.querySelector('source[media="(max-width: 767px)"]')
-    expect(mobileSource?.getAttribute('srcset')).toBe('https://passport.et/storage/mobile.webp')
+    const desktopSource = link.querySelector('source[media="(min-width: 768px)"]')
+    expect(desktopSource?.getAttribute('srcset')).toBe('https://passport.et/storage/desktop.webp')
+    expect(desktopSource?.getAttribute('width')).toBe('1200')
+    expect(desktopSource?.getAttribute('height')).toBe('300')
 
     fireEvent.click(link)
     expect(mocks.handleClick).toHaveBeenCalledTimes(1)
+  })
+
+  it('falls back to the desktop creative when no mobile creative is available', () => {
+    const parsed = PublicAdvertisementResponse.parse({
+      data: {
+        ...adPayload,
+        mobile_asset: undefined,
+      },
+    })
+
+    render(<DynamicAdSlot code="home-alerts-banner" ad={parsed.data} />)
+
+    const link = screen.getByRole('link')
+    const image = screen.getByRole('img', { name: 'Passport Alerts promotion' })
+    expect(image.getAttribute('src')).toBe('https://passport.et/storage/desktop.webp')
+    expect(image.getAttribute('width')).toBe('1200')
+    expect(image.getAttribute('height')).toBe('300')
+    expect(link.querySelector('source[media="(min-width: 768px)"]')).toBeNull()
   })
 })

@@ -24,7 +24,11 @@
     "typecheck": "tsc --noEmit",
     "generate:sitemap": "tsx scripts/generate-sitemap.ts",
     "prerender": "tsx scripts/prerender.ts",
-    "critical-css": "tsx scripts/critical-css.ts"
+    "critical-css": "tsx scripts/critical-css.ts",
+    "ad:dev:setup": "docker compose --env-file .env.ad-dev -f docker-compose.ad-dev.yml --profile tools run --build --rm setup",
+    "ad:dev:up": "docker compose --env-file .env.ad-dev -f docker-compose.ad-dev.yml up --build frontend app php queue mysql redis",
+    "ad:dev:down": "docker compose --env-file .env.ad-dev -f docker-compose.ad-dev.yml down",
+    "ad:dev:test:backend": "docker compose --env-file .env.ad-dev -f docker-compose.ad-dev.yml --profile tools run --build --rm backend-test"
   },
   "dependencies": {
     "@lexical/code": "^0.36.2",

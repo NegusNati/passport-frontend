@@ -5,6 +5,8 @@ import { useTranslation } from 'react-i18next'
 
 import HabeshaFace from '@/assets/landingImages/habesha_face.svg'
 import { useNetworkConditions } from '@/shared/hooks/useNetworkConditions'
+import { DynamicAdSlot } from '@/shared/ui/ad-slot'
+import { Container } from '@/shared/ui/container'
 import { Seo } from '@/shared/ui/Seo'
 
 import type { PassportSearchFilters } from '../schemas/passport'
@@ -83,6 +85,16 @@ export function PassportsPage() {
 
       {/* Passports Table Section */}
       <PassportsTable ref={tableRef} searchFilters={searchFilters} searchMode={searchMode} />
+
+      <section className="py-8" aria-label="Sponsored advertisement">
+        <Container>
+          <DynamicAdSlot
+            code="passports-list-below-latest"
+            orientation="horizontal"
+            className="rounded-lg"
+          />
+        </Container>
+      </section>
     </div>
   )
 }

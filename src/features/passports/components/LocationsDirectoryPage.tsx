@@ -4,6 +4,7 @@ import * as React from 'react'
 import { useTranslation } from 'react-i18next'
 
 import HabeshaFace from '@/assets/landingImages/habesha_face.svg'
+import { DynamicAdSlot } from '@/shared/ui/ad-slot'
 import { Container } from '@/shared/ui/container'
 import { Seo } from '@/shared/ui/Seo'
 
@@ -29,12 +30,14 @@ export function LocationsDirectoryPage() {
         path="/locations"
       />
 
-      <section className="mx-2 py-12 md:py-16">
-        <Container className="border-border/60 rounded-2xl border bg-transparent p-6 text-center shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
-          <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
-            {t('locations.title')}
-          </h1>
-          <p className="text-muted-foreground mt-4 text-lg">{t('locations.subtitle')}</p>
+      <section className="py-10 sm:py-12 md:py-16">
+        <Container>
+          <div className="border-border/60 rounded-2xl border bg-transparent p-4 text-center shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent sm:p-6">
+            <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
+              {t('locations.title')}
+            </h1>
+            <p className="text-muted-foreground mt-4 text-lg">{t('locations.subtitle')}</p>
+          </div>
         </Container>
       </section>
 
@@ -50,7 +53,7 @@ export function LocationsDirectoryPage() {
 
       <section className="py-12">
         <Container>
-          <div className="rounded-lg border bg-transparent/80 p-6 shadow-sm backdrop-blur">
+          <div className="rounded-lg border bg-transparent/80 p-4 shadow-sm backdrop-blur sm:p-6">
             {locationsQuery.isLoading ? (
               <div className="text-muted-foreground flex items-center justify-center gap-2 text-sm">
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -86,6 +89,16 @@ export function LocationsDirectoryPage() {
               </ul>
             )}
           </div>
+        </Container>
+      </section>
+
+      <section className="py-8" aria-label="Sponsored advertisement">
+        <Container>
+          <DynamicAdSlot
+            code="locations-directory-bottom"
+            orientation="horizontal"
+            className="rounded-lg"
+          />
         </Container>
       </section>
     </div>

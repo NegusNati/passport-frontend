@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { api } from '@/api/client'
 import { adminKeys } from '@/features/admin/lib/keys'
+import { advertisementKeys } from '@/features/advertisements/api/get-ad'
 import { API_ENDPOINTS } from '@/shared/lib/API_ENDPOINTS'
 
 import { AdvertisementDetailResponse } from '../schemas/advertisement'
@@ -68,6 +69,7 @@ export function useUpdateAdvertisementMutation() {
       updateAdvertisement(id, data),
     onSuccess: async (advertisement) => {
       await queryClient.invalidateQueries({ queryKey: adminKeys.advertisements.all() })
+      await queryClient.invalidateQueries({ queryKey: advertisementKeys.all })
       await queryClient.invalidateQueries({
         queryKey: adminKeys.advertisements.detail(advertisement.id),
       })

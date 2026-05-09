@@ -264,188 +264,193 @@ export function PassportSearchForm({
   ])
 
   return (
-    <section className="mx-2 py-12 md:py-16">
-      <Container className="border-border/60 rounded-2xl border bg-transparent p-6 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
-        <div className="mx-auto max-w-2xl text-center">
-          {/* Header */}
-          <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
-            {t('search.title')}
-          </h1>
-          <h2 className="text-muted-foreground mt-4 text-lg">{t('search.subtitle')}</h2>
+    <section className="py-10 sm:py-12 md:py-16">
+      <Container>
+        <div className="border-border/60 rounded-2xl border bg-transparent p-4 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent sm:p-6">
+          <div className="mx-auto max-w-2xl text-center">
+            {/* Header */}
+            <h1 className="text-foreground text-3xl font-bold tracking-tight sm:text-4xl">
+              {t('search.title')}
+            </h1>
+            <h2 className="text-muted-foreground mt-4 text-lg">{t('search.subtitle')}</h2>
 
-          {/* Search Form */}
-          <div className="mt-8">
-            {searchMode === 'number' ? (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  numberForm.handleSubmit()
-                }}
-                className="space-y-4"
-              >
-                <numberForm.Field name="requestNumber">
-                  {(field) => (
-                    <div className="space-y-2">
-                      <Label htmlFor="requestNumber" className="sr-only">
-                        {t('search.form.requestNumber')}
-                      </Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="requestNumber"
-                          type="text"
-                          placeholder={t('search.form.requestNumberPlaceholder')}
-                          value={field.state.value}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            field.handleChange(v)
-                            setNumberInput(v)
-                          }}
-                          onBlur={field.handleBlur}
-                          className="flex-1"
-                          aria-invalid={field.state.meta.errors.length > 0}
-                        />
-                        <Button type="submit" className="bg-foreground hover:bg-foreground/90">
-                          {t('search.form.submit')}
-                        </Button>
-                      </div>
-                      {isDebouncing ? (
-                        <div className="text-muted-foreground flex items-center gap-2 text-xs">
-                          <Loader2 className="h-3 w-3 animate-spin" />
-                          <span>{t('search.form.searching')}</span>
+            {/* Search Form */}
+            <div className="mt-8">
+              {searchMode === 'number' ? (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    numberForm.handleSubmit()
+                  }}
+                  className="space-y-4"
+                >
+                  <numberForm.Field name="requestNumber">
+                    {(field) => (
+                      <div className="space-y-2">
+                        <Label htmlFor="requestNumber" className="sr-only">
+                          {t('search.form.requestNumber')}
+                        </Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="requestNumber"
+                            type="text"
+                            placeholder={t('search.form.requestNumberPlaceholder')}
+                            value={field.state.value}
+                            onChange={(e) => {
+                              const v = e.target.value
+                              field.handleChange(v)
+                              setNumberInput(v)
+                            }}
+                            onBlur={field.handleBlur}
+                            className="flex-1"
+                            aria-invalid={field.state.meta.errors.length > 0}
+                          />
+                          <Button type="submit" className="bg-foreground hover:bg-foreground/90">
+                            {t('search.form.submit')}
+                          </Button>
                         </div>
-                      ) : (
-                        <p className="text-muted-foreground text-xs">
-                          {t('search.form.minCharacters')}
-                        </p>
+                        {isDebouncing ? (
+                          <div className="text-muted-foreground flex items-center gap-2 text-xs">
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                            <span>{t('search.form.searching')}</span>
+                          </div>
+                        ) : (
+                          <p className="text-muted-foreground text-xs">
+                            {t('search.form.minCharacters')}
+                          </p>
+                        )}
+                      </div>
+                    )}
+                  </numberForm.Field>
+                </form>
+              ) : (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    nameForm.handleSubmit()
+                  }}
+                  className="space-y-4"
+                >
+                  <div className="grid gap-4 sm:grid-cols-3">
+                    <nameForm.Field name="firstName">
+                      {(field) => (
+                        <div className="space-y-2">
+                          <Label htmlFor="firstName">{t('search.form.firstName')}</Label>
+                          <Input
+                            id="firstName"
+                            type="text"
+                            placeholder={t('search.form.firstNamePlaceholder')}
+                            value={field.state.value}
+                            onChange={(e) => {
+                              const v = e.target.value
+                              field.handleChange(v)
+                              setFirstInput(v)
+                            }}
+                            onBlur={field.handleBlur}
+                            aria-invalid={false}
+                          />
+                        </div>
                       )}
-                    </div>
-                  )}
-                </numberForm.Field>
-              </form>
-            ) : (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  nameForm.handleSubmit()
-                }}
-                className="space-y-4"
-              >
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <nameForm.Field name="firstName">
-                    {(field) => (
-                      <div className="space-y-2">
-                        <Label htmlFor="firstName">{t('search.form.firstName')}</Label>
-                        <Input
-                          id="firstName"
-                          type="text"
-                          placeholder={t('search.form.firstNamePlaceholder')}
-                          value={field.state.value}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            field.handleChange(v)
-                            setFirstInput(v)
-                          }}
-                          onBlur={field.handleBlur}
-                          aria-invalid={false}
-                        />
-                      </div>
-                    )}
-                  </nameForm.Field>
+                    </nameForm.Field>
 
-                  {/* Middle Name (optional) */}
-                  <nameForm.Field name="middleName">
-                    {(field) => (
-                      <div className="space-y-2">
-                        <Label htmlFor="middleName">{t('search.form.middleName')}</Label>
-                        <Input
-                          id="middleName"
-                          type="text"
-                          placeholder={t('search.form.middleNamePlaceholder')}
-                          value={field.state.value}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            field.handleChange(v)
-                            setMiddleInput(v)
-                          }}
-                          onBlur={field.handleBlur}
-                          aria-invalid={false}
-                        />
-                      </div>
-                    )}
-                  </nameForm.Field>
+                    {/* Middle Name (optional) */}
+                    <nameForm.Field name="middleName">
+                      {(field) => (
+                        <div className="space-y-2">
+                          <Label htmlFor="middleName">{t('search.form.middleName')}</Label>
+                          <Input
+                            id="middleName"
+                            type="text"
+                            placeholder={t('search.form.middleNamePlaceholder')}
+                            value={field.state.value}
+                            onChange={(e) => {
+                              const v = e.target.value
+                              field.handleChange(v)
+                              setMiddleInput(v)
+                            }}
+                            onBlur={field.handleBlur}
+                            aria-invalid={false}
+                          />
+                        </div>
+                      )}
+                    </nameForm.Field>
 
-                  <nameForm.Field name="lastName">
-                    {(field) => (
-                      <div className="space-y-2">
-                        <Label htmlFor="lastName">{t('search.form.lastName')}</Label>
-                        <Input
-                          id="lastName"
-                          type="text"
-                          placeholder={t('search.form.lastNamePlaceholder')}
-                          value={field.state.value}
-                          onChange={(e) => {
-                            const v = e.target.value
-                            field.handleChange(v)
-                            setLastInput(v)
-                          }}
-                          onBlur={field.handleBlur}
-                          aria-invalid={false}
-                        />
-                      </div>
-                    )}
-                  </nameForm.Field>
-                </div>
-
-                <Button type="submit" className="bg-foreground hover:bg-foreground/90 w-full">
-                  {t('search.form.submit')}
-                </Button>
-                {isDebouncing ? (
-                  <div className="text-muted-foreground flex items-center justify-center gap-2 text-xs">
-                    <Loader2 className="h-3 w-3 animate-spin" />
-                    <span>{t('search.form.searching')}</span>
+                    <nameForm.Field name="lastName">
+                      {(field) => (
+                        <div className="space-y-2">
+                          <Label htmlFor="lastName">{t('search.form.lastName')}</Label>
+                          <Input
+                            id="lastName"
+                            type="text"
+                            placeholder={t('search.form.lastNamePlaceholder')}
+                            value={field.state.value}
+                            onChange={(e) => {
+                              const v = e.target.value
+                              field.handleChange(v)
+                              setLastInput(v)
+                            }}
+                            onBlur={field.handleBlur}
+                            aria-invalid={false}
+                          />
+                        </div>
+                      )}
+                    </nameForm.Field>
                   </div>
-                ) : (
-                  <p className="text-muted-foreground text-xs">
-                    {t('search.form.minCharactersName')}
-                  </p>
-                )}
-              </form>
-            )}
 
-            {/* Toggle Mode Button */}
-            <button
-              type="button"
-              onClick={handleToggleMode}
-              className="text-foreground mt-4 text-sm font-semibold underline underline-offset-4 hover:no-underline"
-            >
-              {' '}
-              {searchMode === 'number'
-                ? t('search.toggle.useNameInstead')
-                : t('search.toggle.useNumberInstead')}
-            </button>
+                  <Button type="submit" className="bg-foreground hover:bg-foreground/90 w-full">
+                    {t('search.form.submit')}
+                  </Button>
+                  {isDebouncing ? (
+                    <div className="text-muted-foreground flex items-center justify-center gap-2 text-xs">
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                      <span>{t('search.form.searching')}</span>
+                    </div>
+                  ) : (
+                    <p className="text-muted-foreground text-xs">
+                      {t('search.form.minCharactersName')}
+                    </p>
+                  )}
+                </form>
+              )}
 
-            {/* Sample Request Numbers (only shown in number mode) */}
-            {searchMode === 'number' && (
-              <div className="text-muted-foreground mt-6 flex flex-wrap justify-center gap-2 text-sm">
-                {SAMPLE_REQUEST_NUMBERS.map((number) => (
-                  <button
-                    key={number}
-                    type="button"
-                    onClick={() => {
-                      numberForm.setFieldValue('requestNumber', number)
-                      // ensure debounced live search is triggered
-                      setNumberInput(number)
-                      startTransition(() => {
-                        onQueryChange?.({ request_number: sanitizeRequestNumber(number) }, 'number')
-                      })
-                    }}
-                    className="border-border bg-muted/50 hover:bg-muted rounded-md border px-3 py-1 text-xs"
-                  >
-                    {number}
-                  </button>
-                ))}
-              </div>
-            )}
+              {/* Toggle Mode Button */}
+              <button
+                type="button"
+                onClick={handleToggleMode}
+                className="text-foreground mt-4 text-sm font-semibold underline underline-offset-4 hover:no-underline"
+              >
+                {' '}
+                {searchMode === 'number'
+                  ? t('search.toggle.useNameInstead')
+                  : t('search.toggle.useNumberInstead')}
+              </button>
+
+              {/* Sample Request Numbers (only shown in number mode) */}
+              {searchMode === 'number' && (
+                <div className="text-muted-foreground mt-6 flex flex-wrap justify-center gap-2 text-sm">
+                  {SAMPLE_REQUEST_NUMBERS.map((number) => (
+                    <button
+                      key={number}
+                      type="button"
+                      onClick={() => {
+                        numberForm.setFieldValue('requestNumber', number)
+                        // ensure debounced live search is triggered
+                        setNumberInput(number)
+                        startTransition(() => {
+                          onQueryChange?.(
+                            { request_number: sanitizeRequestNumber(number) },
+                            'number',
+                          )
+                        })
+                      }}
+                      className="border-border bg-muted/50 hover:bg-muted rounded-md border px-3 py-1 text-xs"
+                    >
+                      {number}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </Container>

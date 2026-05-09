@@ -1,0 +1,217 @@
+name: passport-ad-dev
+
+services:
+  mysql:
+    image: mariadb:11.0
+    restart: unless-stopped
+    ports:
+      - "${AD_DEV_MYSQL_PORT:-33306}:3306"
+    environment:
+      MYSQL_DATABASE: ${AD_DEV_DB_DATABASE:-passport_ad_dev}
+      MYSQL_USER: ${AD_DEV_DB_USERNAME:-passport}
+      MYSQL_PASSWORD: ${AD_DEV_DB_PASSWORD:-passport}
+      MYSQL_ROOT_PASSWORD: ${AD_DEV_DB_ROOT_PASSWORD:-root}
+    volumes:
+      - ad-dev-mysql:/var/lib/mysql
+      - ./docker/ad-dev/mysql-init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "mariadb-admin ping -h 127.0.0.1 -u root -p$${MYSQL_ROOT_PASSWORD} --silent",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - ad-dev
+
+  redis:
+    image: redis:8.2-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"]
+    ports:
+      - "${AD_DEV_REDIS_PORT:-36379}:6379"
+    volumes:
+      - ad-dev-redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - ad-dev
+
+  php:
+    build:
+      context: ../../passport.et/dockerfiles
+      dockerfile: php.root.dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: >
+      sh -lc "if [ ! -f vendor/autoload.php ]; then composer install; fi
+      && php-fpm -y /usr/local/etc/php-fpm.conf -R"
+    volumes:
+      - ../../passport.et/src:/var/www/html:delegated
+    environment: &laravel-env
+      APP_NAME: Passport.ET
+      APP_ENV: local
+      APP_KEY: ${AD_DEV_APP_KEY:-base64:6r5W0lNiRlvvGZsP1mnKLz1caFv9sNMNhxTYAlnccpo=}
+      APP_DEBUG: "true"
+      APP_URL: http://localhost:${AD_DEV_API_PORT:-8080}
+      LOG_CHANNEL: stack
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${AD_DEV_DB_DATABASE:-passport_ad_dev}
+      DB_USERNAME: ${AD_DEV_DB_USERNAME:-passport}
+      DB_PASSWORD: ${AD_DEV_DB_PASSWORD:-passport}
+      CACHE_STORE: redis
+      QUEUE_CONNECTION: redis
+      SESSION_DRIVER: redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      FILESYSTEM_DISK: public
+      MAIL_MAILER: log
+      SANCTUM_STATEFUL_DOMAINS: localhost:3000,127.0.0.1:3000,localhost:8080,127.0.0.1:8080
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ad-dev
+
+  app:
+    build:
+      context: ../../passport.et/dockerfiles
+      dockerfile: nginx.dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    restart: unless-stopped
+    ports:
+      - "${AD_DEV_API_PORT:-8080}:80"
+    volumes:
+      - ../../passport.et/src:/var/www/html:delegated
+      - ./docker/ad-dev/nginx/ssl.conf:/etc/nginx/conf.d/ssl.conf:ro
+    depends_on:
+      - php
+    networks:
+      - ad-dev
+
+  queue:
+    build:
+      context: ../../passport.et/dockerfiles
+      dockerfile: php.root.dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    restart: unless-stopped
+    working_dir: /var/www/html
+    command: >
+      sh -lc "if [ ! -f vendor/autoload.php ]; then composer install; fi
+      && php artisan queue:work redis --queue=default,imports,notifications --sleep=1 --tries=1"
+    volumes:
+      - ../../passport.et/src:/var/www/html:delegated
+    environment:
+      <<: *laravel-env
+    depends_on:
+      php:
+        condition: service_started
+    networks:
+      - ad-dev
+
+  setup:
+    build:
+      context: ../../passport.et/dockerfiles
+      dockerfile: php.root.dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    profiles: ["tools"]
+    working_dir: /var/www/html
+    command: >
+      sh -lc "composer install
+      && php artisan migrate --force
+      && php artisan storage:link --force
+      && php artisan db:seed --class=PermissionSeeder --force
+      && php artisan db:seed --class=AdFeatureSeeder --force"
+    volumes:
+      - ../../passport.et/src:/var/www/html:delegated
+    environment:
+      <<: *laravel-env
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ad-dev
+
+  backend-test:
+    build:
+      context: ../../passport.et/dockerfiles
+      dockerfile: php.root.dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    profiles: ["tools"]
+    working_dir: /var/www/html
+    command: >
+      sh -lc "composer install
+      && php artisan test tests/Feature/Api/Admin/AdvertisementAdminApiTest.php tests/Feature/Api/AdvertisementPublicApiTest.php"
+    volumes:
+      - ../../passport.et/src:/var/www/html:delegated
+    environment:
+      <<: *laravel-env
+      APP_ENV: testing
+      DB_DATABASE: ${AD_DEV_TEST_DB_DATABASE:-passport_ad_test}
+      CACHE_STORE: array
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - ad-dev
+
+  frontend:
+    image: node:24-slim
+    restart: unless-stopped
+    working_dir: /app
+    command: >
+      sh -lc "corepack enable
+      && corepack prepare pnpm@11.0.3 --activate
+      && pnpm install --config.dangerously-allow-all-builds=true
+      && pnpm dev --host 0.0.0.0 --port 3000"
+    ports:
+      - "${AD_DEV_FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - .:/app:delegated
+      - ad-dev-frontend-node-modules:/app/node_modules
+    environment:
+      VITE_API_BASE_URL: http://localhost:${AD_DEV_API_PORT:-8080}
+      VITE_SITE_URL: http://localhost:${AD_DEV_FRONTEND_PORT:-3000}
+      VITE_SITE_NAME: Passport.ET
+      VITE_PUBLIC_POSTHOG_KEY: ""
+      VITE_PUBLIC_POSTHOG_HOST: ""
+      PUPPETEER_SKIP_DOWNLOAD: "true"
+    depends_on:
+      - app
+    networks:
+      - ad-dev
+
+networks:
+  ad-dev:
+    driver: bridge
+
+volumes:
+  ad-dev-mysql:
+  ad-dev-redis:
+  ad-dev-frontend-node-modules:

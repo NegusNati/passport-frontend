@@ -127,7 +127,7 @@ const Footer = () => {
             </div>
 
             <a
-              href="https://suba.et/"
+              href="https://subasoftware.com/"
               target="_blank"
               rel="noreferrer"
               className="group focus-visible:ring-ring focus-visible:ring-offset-primary mx-auto mt-7 flex h-14 w-fit max-w-full items-center overflow-hidden transition-[transform,background-color,box-shadow] duration-150 ease-out"

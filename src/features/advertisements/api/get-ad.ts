@@ -8,6 +8,16 @@ import {
   PublicAdvertisementsBySlotResponse,
 } from '../schemas/public-advertisement'
 
+export const advertisementKeys = {
+  all: ['advertisements'] as const,
+  slots: (codes: string[]) => [
+    ...advertisementKeys.all,
+    'slots',
+    [...new Set(codes.filter(Boolean))].sort(),
+  ],
+  slot: (code: string) => [...advertisementKeys.all, 'slot', code] as const,
+}
+
 export async function fetchAdsBySlots(codes: string[]) {
   const uniqueCodes = [...new Set(codes.filter(Boolean))]
 
@@ -58,7 +68,7 @@ export function useAdsQuery(codes: string[], enabled = true) {
   const stableCodes = [...new Set(codes.filter(Boolean))].sort()
 
   return useQuery({
-    queryKey: ['advertisements', 'slots', stableCodes],
+    queryKey: advertisementKeys.slots(stableCodes),
     queryFn: () => fetchAdsBySlots(stableCodes),
     staleTime: 5 * 60 * 1000,
     enabled: enabled && stableCodes.length > 0,
@@ -67,7 +77,7 @@ export function useAdsQuery(codes: string[], enabled = true) {
 
 export function useAdQuery(code: string, enabled = true) {
   return useQuery({
-    queryKey: ['advertisements', 'slot', code],
+    queryKey: advertisementKeys.slot(code),
     queryFn: () => fetchAdBySlot(code),
     staleTime: 5 * 60 * 1000, // 5 minutes
     enabled: enabled && Boolean(code),

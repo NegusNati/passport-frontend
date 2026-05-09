@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 
 import { api } from '@/api/client'
 import { adminKeys } from '@/features/admin/lib/keys'
+import { advertisementKeys } from '@/features/advertisements/api/get-ad'
 import { API_ENDPOINTS } from '@/shared/lib/API_ENDPOINTS'
 
 import { extractAdvertisementErrorMessage } from './errors'
@@ -22,6 +23,7 @@ export function useDeleteAdvertisementMutation() {
     mutationFn: deleteAdvertisement,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: adminKeys.advertisements.all() })
+      await queryClient.invalidateQueries({ queryKey: advertisementKeys.all })
     },
   })
 }

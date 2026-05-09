@@ -532,7 +532,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
         />
         <Container>
           <div className="flex flex-col gap-6">
-            <div className="border-border/70 rounded-xl border bg-transparent/80 p-6 shadow-sm backdrop-blur">
+            <div className="border-border/70 rounded-xl border bg-transparent/80 p-4 shadow-sm backdrop-blur sm:p-6">
               <DataTable
                 tableTitle={tableTitle ?? t('table.title')}
                 columns={columns}
