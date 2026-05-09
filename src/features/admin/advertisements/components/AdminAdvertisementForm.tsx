@@ -32,9 +32,13 @@ type FormValues = {
   priority: string
   admin_notes: string
   ad_desktop_asset_url: string
+  ad_desktop_dark_asset_url: string
   ad_mobile_asset_url: string
+  ad_mobile_dark_asset_url: string
   remove_ad_desktop_asset: boolean
+  remove_ad_desktop_dark_asset: boolean
   remove_ad_mobile_asset: boolean
+  remove_ad_mobile_dark_asset: boolean
 }
 
 type AdvertisementFormProps = {
@@ -74,7 +78,9 @@ export function AdminAdvertisementForm({
 }: AdvertisementFormProps) {
   const [formError, setFormError] = useState<string | null>(null)
   const [desktopFile, setDesktopFile] = useState<File | null>(null)
+  const [desktopDarkFile, setDesktopDarkFile] = useState<File | null>(null)
   const [mobileFile, setMobileFile] = useState<File | null>(null)
+  const [mobileDarkFile, setMobileDarkFile] = useState<File | null>(null)
   const { data: slots = [], isLoading: slotsLoading, isError: slotsError } = useAdSlotsQuery()
 
   const initialSlotCode = advertisement?.slot_code ?? advertisement?.ad_slot_number ?? ''
@@ -104,9 +110,13 @@ export function AdminAdvertisementForm({
       priority: String(advertisement?.priority ?? 0),
       admin_notes: advertisement?.admin_notes ?? '',
       ad_desktop_asset_url: advertisement?.ad_desktop_asset ?? '',
+      ad_desktop_dark_asset_url: advertisement?.ad_desktop_dark_asset ?? '',
       ad_mobile_asset_url: advertisement?.ad_mobile_asset ?? '',
+      ad_mobile_dark_asset_url: advertisement?.ad_mobile_dark_asset ?? '',
       remove_ad_desktop_asset: false as boolean,
+      remove_ad_desktop_dark_asset: false as boolean,
       remove_ad_mobile_asset: false as boolean,
+      remove_ad_mobile_dark_asset: false as boolean,
     } satisfies FormValues,
     onSubmit: async ({ value }) => {
       setFormError(null)
@@ -190,9 +200,13 @@ export function AdminAdvertisementForm({
         priority,
         admin_notes: value.admin_notes.trim() || undefined,
         ad_desktop_asset: desktopFile ?? undefined,
+        ad_desktop_dark_asset: desktopDarkFile ?? undefined,
         ad_mobile_asset: mobileFile ?? undefined,
+        ad_mobile_dark_asset: mobileDarkFile ?? undefined,
         remove_ad_desktop_asset: value.remove_ad_desktop_asset,
+        remove_ad_desktop_dark_asset: value.remove_ad_desktop_dark_asset,
         remove_ad_mobile_asset: value.remove_ad_mobile_asset,
+        remove_ad_mobile_dark_asset: value.remove_ad_mobile_dark_asset,
       }
 
       try {
@@ -586,6 +600,27 @@ export function AdminAdvertisementForm({
                   )}
                 </form.Field>
 
+                <form.Field name="ad_desktop_dark_asset_url">
+                  {(field) => (
+                    <MediaUploadPreview
+                      id="ad_desktop_dark_asset"
+                      label="Desktop Dark Asset"
+                      file={desktopDarkFile}
+                      existingUrl={field.state.value}
+                      onFileChange={(file) => {
+                        setDesktopDarkFile(file)
+                        if (file) form.setFieldValue('remove_ad_desktop_dark_asset', false)
+                      }}
+                      onRemoveExisting={() => {
+                        field.handleChange('')
+                        form.setFieldValue('remove_ad_desktop_dark_asset', true)
+                      }}
+                      accept="image/*"
+                      helperText={formatSlotDimensions(selectedSlot, 'desktop')}
+                    />
+                  )}
+                </form.Field>
+
                 <form.Field name="ad_mobile_asset_url">
                   {(field) => (
                     <MediaUploadPreview
@@ -600,6 +635,27 @@ export function AdminAdvertisementForm({
                       onRemoveExisting={() => {
                         field.handleChange('')
                         form.setFieldValue('remove_ad_mobile_asset', true)
+                      }}
+                      accept="image/*"
+                      helperText={formatSlotDimensions(selectedSlot, 'mobile')}
+                    />
+                  )}
+                </form.Field>
+
+                <form.Field name="ad_mobile_dark_asset_url">
+                  {(field) => (
+                    <MediaUploadPreview
+                      id="ad_mobile_dark_asset"
+                      label="Mobile Dark Asset"
+                      file={mobileDarkFile}
+                      existingUrl={field.state.value}
+                      onFileChange={(file) => {
+                        setMobileDarkFile(file)
+                        if (file) form.setFieldValue('remove_ad_mobile_dark_asset', false)
+                      }}
+                      onRemoveExisting={() => {
+                        field.handleChange('')
+                        form.setFieldValue('remove_ad_mobile_dark_asset', true)
                       }}
                       accept="image/*"
                       helperText={formatSlotDimensions(selectedSlot, 'mobile')}

@@ -10,7 +10,13 @@ import { type AdvertisementCreatePayload, AdvertisementCreateSchema } from '../s
 import { extractAdvertisementErrorMessage } from './errors'
 
 function buildFormDataFromCreate(input: AdvertisementCreatePayload) {
-  const { ad_desktop_asset, ad_mobile_asset, ...rest } = input
+  const {
+    ad_desktop_asset,
+    ad_desktop_dark_asset,
+    ad_mobile_asset,
+    ad_mobile_dark_asset,
+    ...rest
+  } = input
   const parsed = AdvertisementCreateSchema.parse(rest)
   const form = new FormData()
 
@@ -26,7 +32,9 @@ function buildFormDataFromCreate(input: AdvertisementCreatePayload) {
 
   // Add files
   if (ad_desktop_asset) form.append('ad_desktop_asset', ad_desktop_asset)
+  if (ad_desktop_dark_asset) form.append('ad_desktop_dark_asset', ad_desktop_dark_asset)
   if (ad_mobile_asset) form.append('ad_mobile_asset', ad_mobile_asset)
+  if (ad_mobile_dark_asset) form.append('ad_mobile_dark_asset', ad_mobile_dark_asset)
 
   return form
 }

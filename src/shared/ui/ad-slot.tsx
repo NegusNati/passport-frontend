@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+import { useTheme } from 'next-themes'
 import { type CSSProperties, type HTMLAttributes, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -99,6 +100,7 @@ export function DynamicAdSlot({
 }: DynamicAdSlotProps) {
   const { t: tCommon } = useTranslation()
   const { t: tAds } = useTranslation('advertisements')
+  const { theme, resolvedTheme } = useTheme()
   const slotCode = code ?? placement ?? ''
   const shouldFetch = providedAd === undefined
   const { data: fetchedAd, isLoading: isQueryLoading } = useAdQuery(slotCode, shouldFetch)
@@ -140,11 +142,23 @@ export function DynamicAdSlot({
     handleClick()
   }
 
-  const desktopAssetUrl = ad.desktop_asset_url
-  const mobileAssetUrl = ad.mobile_asset_url || desktopAssetUrl
-  const hasMobileCreative = Boolean(ad.mobile_asset_url && ad.mobile_asset_url !== desktopAssetUrl)
-  const defaultAsset = hasMobileCreative ? ad.mobile_asset : ad.desktop_asset
-  const desktopRatio = `${ad.desktop_asset.width} / ${ad.desktop_asset.height}`
+  const isDarkTheme = theme === 'dark' || (theme === 'system' && resolvedTheme === 'dark')
+  const desktopAsset =
+    isDarkTheme && ad.desktop_dark_asset.url ? ad.desktop_dark_asset : ad.desktop_asset
+  const mobileAsset =
+    isDarkTheme && ad.mobile_dark_asset.url
+      ? ad.mobile_dark_asset
+      : isDarkTheme && ad.desktop_dark_asset.url
+        ? ad.desktop_dark_asset
+        : ad.mobile_asset
+
+  const desktopAssetUrl = desktopAsset.url ?? ad.desktop_asset_url
+  const mobileAssetUrl = mobileAsset.url ?? desktopAssetUrl
+  const hasMobileCreative = Boolean(
+    mobileAssetUrl && desktopAssetUrl && mobileAssetUrl !== desktopAssetUrl,
+  )
+  const defaultAsset = hasMobileCreative ? mobileAsset : desktopAsset
+  const desktopRatio = `${desktopAsset.width} / ${desktopAsset.height}`
   const mobileRatio = `${defaultAsset.width} / ${defaultAsset.height}`
   const adStyle = {
     '--ad-desktop-ratio': desktopRatio,
@@ -173,8 +187,8 @@ export function DynamicAdSlot({
           <source
             media="(min-width: 768px)"
             srcSet={desktopAssetUrl}
-            width={ad.desktop_asset.width}
-            height={ad.desktop_asset.height}
+            width={desktopAsset.width}
+            height={desktopAsset.height}
           />
         ) : null}
         <img

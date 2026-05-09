@@ -1,11 +1,15 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { PublicAdvertisementResponse } from '@/features/advertisements/schemas/public-advertisement'
 import { DynamicAdSlot } from '@/shared/ui/ad-slot'
 
 const mocks = vi.hoisted(() => ({
   handleClick: vi.fn(),
+  theme: {
+    theme: 'light',
+    resolvedTheme: 'light',
+  },
 }))
 
 vi.mock('react-i18next', () => ({
@@ -25,6 +29,10 @@ vi.mock('@/features/advertisements/hooks/useAdTracking', () => ({
   }),
 }))
 
+vi.mock('next-themes', () => ({
+  useTheme: () => mocks.theme,
+}))
+
 const adPayload = {
   id: 42,
   slot_code: 'home-alerts-banner',
@@ -41,17 +49,37 @@ const adPayload = {
     width: 640,
     height: 360,
   },
+  desktop_dark_asset: {
+    url: 'https://passport.et/storage/desktop-dark.webp',
+    width: 1200,
+    height: 300,
+  },
+  mobile_dark_asset: {
+    url: 'https://passport.et/storage/mobile-dark.webp',
+    width: 640,
+    height: 360,
+  },
   impression_url: '/api/v1/advertisements/42/impression',
   click_url: '/api/v1/advertisements/42/click',
 }
 
 describe('dynamic ad slot', () => {
+  beforeEach(() => {
+    mocks.handleClick.mockClear()
+    mocks.theme.theme = 'light'
+    mocks.theme.resolvedTheme = 'light'
+  })
+
   it('parses public advertisement responses into renderable asset URLs', () => {
     const parsed = PublicAdvertisementResponse.parse({ data: adPayload })
 
     expect(parsed.data?.slot_code).toBe('home-alerts-banner')
     expect(parsed.data?.desktop_asset_url).toBe('https://passport.et/storage/desktop.webp')
     expect(parsed.data?.mobile_asset_url).toBe('https://passport.et/storage/mobile.webp')
+    expect(parsed.data?.desktop_dark_asset_url).toBe(
+      'https://passport.et/storage/desktop-dark.webp',
+    )
+    expect(parsed.data?.mobile_dark_asset_url).toBe('https://passport.et/storage/mobile-dark.webp')
     expect(parsed.data?.target_url).toBe('https://passport.et/alerts')
   })
 
@@ -94,5 +122,24 @@ describe('dynamic ad slot', () => {
     expect(image.getAttribute('width')).toBe('1200')
     expect(image.getAttribute('height')).toBe('300')
     expect(link.querySelector('source[media="(min-width: 768px)"]')).toBeNull()
+  })
+
+  it('uses dark desktop and mobile creatives when the app theme is dark', () => {
+    mocks.theme.theme = 'dark'
+    mocks.theme.resolvedTheme = 'dark'
+
+    const parsed = PublicAdvertisementResponse.parse({ data: adPayload })
+    render(<DynamicAdSlot code="home-alerts-banner" ad={parsed.data} />)
+
+    const link = screen.getByRole('link')
+    const image = screen.getByRole('img', { name: 'Passport Alerts promotion' })
+    expect(image.getAttribute('src')).toBe('https://passport.et/storage/mobile-dark.webp')
+    expect(image.getAttribute('width')).toBe('640')
+    expect(image.getAttribute('height')).toBe('360')
+
+    const desktopSource = link.querySelector('source[media="(min-width: 768px)"]')
+    expect(desktopSource?.getAttribute('srcset')).toBe(
+      'https://passport.et/storage/desktop-dark.webp',
+    )
   })
 })

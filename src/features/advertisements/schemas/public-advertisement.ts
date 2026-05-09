@@ -17,9 +17,13 @@ export const PublicAdvertisement = z
     target_url: z.string().url().optional().nullable(),
     client_link: z.string().url().optional().nullable(),
     desktop_asset: PublicAdAsset.optional(),
+    desktop_dark_asset: PublicAdAsset.optional(),
     mobile_asset: PublicAdAsset.optional(),
+    mobile_dark_asset: PublicAdAsset.optional(),
     desktop_asset_url: z.string().url().optional(),
+    desktop_dark_asset_url: z.string().url().optional(),
     mobile_asset_url: z.string().url().optional(),
+    mobile_dark_asset_url: z.string().url().optional(),
     impression_url: z.string().optional(),
     click_url: z.string().optional(),
   })
@@ -34,6 +38,16 @@ export const PublicAdvertisement = z
       width: 640,
       height: 360,
     }
+    const desktopDarkAsset = ad.desktop_dark_asset ?? {
+      url: ad.desktop_dark_asset_url ?? null,
+      width: desktopAsset.width,
+      height: desktopAsset.height,
+    }
+    const mobileDarkAsset = ad.mobile_dark_asset ?? {
+      url: ad.mobile_dark_asset_url ?? desktopDarkAsset.url,
+      width: ad.mobile_dark_asset_url ? mobileAsset.width : desktopDarkAsset.width,
+      height: ad.mobile_dark_asset_url ? mobileAsset.height : desktopDarkAsset.height,
+    }
     const targetUrl = ad.target_url ?? ad.client_link ?? ''
 
     return {
@@ -46,8 +60,12 @@ export const PublicAdvertisement = z
       client_link: targetUrl,
       desktop_asset: desktopAsset,
       mobile_asset: mobileAsset,
+      desktop_dark_asset: desktopDarkAsset,
+      mobile_dark_asset: mobileDarkAsset,
       desktop_asset_url: desktopAsset.url ?? '',
       mobile_asset_url: mobileAsset.url ?? desktopAsset.url ?? '',
+      desktop_dark_asset_url: desktopDarkAsset.url ?? '',
+      mobile_dark_asset_url: mobileDarkAsset.url ?? desktopDarkAsset.url ?? '',
     }
   })
 

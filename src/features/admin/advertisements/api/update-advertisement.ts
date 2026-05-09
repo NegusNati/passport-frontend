@@ -12,9 +12,13 @@ import { extractAdvertisementErrorMessage } from './errors'
 function buildFormDataFromUpdate(_id: number, input: AdvertisementUpdatePayload) {
   const {
     ad_desktop_asset,
+    ad_desktop_dark_asset,
     ad_mobile_asset,
+    ad_mobile_dark_asset,
     remove_ad_desktop_asset,
+    remove_ad_desktop_dark_asset,
     remove_ad_mobile_asset,
+    remove_ad_mobile_dark_asset,
     ...rest
   } = input
   const parsed = AdvertisementCreateSchema.parse(rest)
@@ -32,11 +36,15 @@ function buildFormDataFromUpdate(_id: number, input: AdvertisementUpdatePayload)
 
   // Add files
   if (ad_desktop_asset) form.append('ad_desktop_asset', ad_desktop_asset)
+  if (ad_desktop_dark_asset) form.append('ad_desktop_dark_asset', ad_desktop_dark_asset)
   if (ad_mobile_asset) form.append('ad_mobile_asset', ad_mobile_asset)
+  if (ad_mobile_dark_asset) form.append('ad_mobile_dark_asset', ad_mobile_dark_asset)
 
   // Add removal flags
   if (remove_ad_desktop_asset) form.append('remove_ad_desktop_asset', '1')
+  if (remove_ad_desktop_dark_asset) form.append('remove_ad_desktop_dark_asset', '1')
   if (remove_ad_mobile_asset) form.append('remove_ad_mobile_asset', '1')
+  if (remove_ad_mobile_dark_asset) form.append('remove_ad_mobile_dark_asset', '1')
 
   // Laravel requires _method for PATCH with FormData
   form.append('_method', 'PATCH')

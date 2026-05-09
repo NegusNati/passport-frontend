@@ -34,8 +34,8 @@ type AppPath = '/passports' | '/articles' | '/calendar' | '/locations'
 const navKeys = [
   { labelKey: 'nav.passports', href: '/passports' },
   { labelKey: 'nav.articles', href: '/articles' },
-  { labelKey: 'nav.advertise', href: '/advertisment' },
   { labelKey: 'nav.locations', href: '/locations' },
+  { labelKey: 'nav.subaSoftware', href: 'https://subasoftware.com/', external: true },
 ] as const
 
 function renderNavItem(item: NavItem, customOnClick?: () => void, underConstructionLabel?: string) {
@@ -88,6 +88,7 @@ export function Header() {
   const nav: ReadonlyArray<NavItem> = navKeys.map((item) => ({
     label: t(item.labelKey),
     href: item.href,
+    external: 'external' in item ? item.external : undefined,
   }))
   const underConstructionLabel = t('underConstruction')
 

@@ -1,7 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 import { useTranslation } from 'react-i18next'
 
-import landingOgImage from '@/assets/landingImages/landing_og.webp'
 import { SUPPORTED_LANGUAGES } from '@/i18n/config'
 
 type Props = {
@@ -17,6 +16,7 @@ type Props = {
 
 const SITE = import.meta.env.VITE_SITE_URL as string | undefined
 const SITE_NAME = (import.meta.env.VITE_SITE_NAME as string | undefined) ?? ''
+const DEFAULT_OG_IMAGE_PATH = '/PASSPORT1.webp'
 
 export function Seo({
   title,
@@ -24,7 +24,6 @@ export function Seo({
   path = '',
   canonical,
   noindex,
-  ogImage,
   schemaJson,
   extraLinks = [],
 }: Props) {
@@ -37,12 +36,7 @@ export function Seo({
   const url = canonical || (base && normalizedPath ? `${base}${normalizedPath}` : base)
   const fullTitle = title ? (SITE_NAME ? `${title} · ${SITE_NAME}` : title) : SITE_NAME
 
-  // Default OG image with absolute URL handling
-  const ogImageUrl = ogImage
-    ? ogImage.startsWith('http')
-      ? ogImage
-      : `${base}${ogImage}`
-    : `${base}${landingOgImage}`
+  const ogImageUrl = base ? `${base}${DEFAULT_OG_IMAGE_PATH}` : DEFAULT_OG_IMAGE_PATH
 
   // Map language codes to og:locale format
   const localeMap: Record<string, string> = {

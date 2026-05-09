@@ -28,7 +28,9 @@ const BaseAdvertisementSchema = z.object({
 // Create payload (includes files)
 export const AdvertisementCreatePayload = BaseAdvertisementSchema.extend({
   ad_desktop_asset: z.instanceof(File).optional(),
+  ad_desktop_dark_asset: z.instanceof(File).optional(),
   ad_mobile_asset: z.instanceof(File).optional(),
+  ad_mobile_dark_asset: z.instanceof(File).optional(),
 })
 
 export type AdvertisementCreatePayload = z.infer<typeof AdvertisementCreatePayload>
@@ -36,9 +38,13 @@ export type AdvertisementCreatePayload = z.infer<typeof AdvertisementCreatePaylo
 // Update payload (same as create, but for updates)
 export const AdvertisementUpdatePayload = BaseAdvertisementSchema.extend({
   ad_desktop_asset: z.instanceof(File).optional(),
+  ad_desktop_dark_asset: z.instanceof(File).optional(),
   ad_mobile_asset: z.instanceof(File).optional(),
+  ad_mobile_dark_asset: z.instanceof(File).optional(),
   remove_ad_desktop_asset: z.boolean().optional(),
+  remove_ad_desktop_dark_asset: z.boolean().optional(),
   remove_ad_mobile_asset: z.boolean().optional(),
+  remove_ad_mobile_dark_asset: z.boolean().optional(),
 })
 
 export type AdvertisementUpdatePayload = z.infer<typeof AdvertisementUpdatePayload>
