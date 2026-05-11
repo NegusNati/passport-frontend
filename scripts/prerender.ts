@@ -1,7 +1,8 @@
 /**
  * Prerender Script for passport.et
  *
- * This script prerenders the landing page to static HTML for faster FCP/LCP.
+ * This script prerenders public sitemap routes to static HTML for faster FCP/LCP
+ * and reliable crawler-visible metadata/content.
  * It runs after the Vite build and uses Puppeteer to render the SPA.
  *
  * Key considerations:
@@ -12,30 +13,124 @@
  * Usage: pnpm prerender (runs after build)
  */
 
-import { existsSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { createServer } from 'node:http'
-import { resolve } from 'node:path'
+import { dirname, extname, resolve } from 'node:path'
 
 import handler from 'serve-handler'
 
 const DIST_DIR = resolve(process.cwd(), 'dist')
-const ROUTES_TO_PRERENDER = ['/']
+const SITEMAP_PATH = resolve(DIST_DIR, 'sitemap.xml')
+const SITE_URL = (process.env.VITE_SITE_URL || 'https://passport.et').replace(/\/$/, '')
 const PORT = 4567
+const TINY_TRANSPARENT_IMAGE =
+  'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
 
 // Timeouts (in ms)
 const PAGE_TIMEOUT = 30000 // 30s for page load
-const RENDER_WAIT = 3000 // 3s for React to render
-const OVERALL_TIMEOUT = 60000 // 60s total timeout for prerendering
+const RENDER_WAIT = 1000 // small settle time after route content appears
+const OVERALL_TIMEOUT = 10 * 60_000 // public sitemap routes can include many dynamic pages
 
 // Check if we should skip prerendering (CI without puppeteer, etc.)
 const SKIP_PRERENDER = process.env.SKIP_PRERENDER === 'true'
 
-async function startServer(): Promise<ReturnType<typeof createServer>> {
+type PrerenderFixtures = {
+  locations: string[]
+}
+
+function getRoutesToPrerender(): string[] {
+  const explicitRoutes = process.env.PRERENDER_ROUTES
+  if (explicitRoutes) {
+    return explicitRoutes
+      .split(',')
+      .map((route) => route.trim())
+      .filter(Boolean)
+      .map((route) => (route.startsWith('/') ? route : `/${route}`))
+  }
+
+  if (!existsSync(SITEMAP_PATH)) {
+    throw new Error('[prerender] sitemap.xml not found. Run generate-sitemap before prerender.')
+  }
+
+  const sitemap = readFileSync(SITEMAP_PATH, 'utf-8')
+  const routes = Array.from(sitemap.matchAll(/<loc>([^<]+)<\/loc>/g))
+    .map((match) => {
+      try {
+        return new URL(match[1]).pathname || '/'
+      } catch {
+        return null
+      }
+    })
+    .filter((route): route is string => Boolean(route))
+
+  const deduped = Array.from(new Set(routes))
+  if (!deduped.length) {
+    throw new Error('[prerender] No routes found in sitemap.xml')
+  }
+
+  return deduped
+}
+
+function titleCaseLocationSlug(slug: string) {
+  return slug
+    .split('-')
+    .filter(Boolean)
+    .map((part) =>
+      part.toLowerCase() === 'ics' ? 'ICS' : part.charAt(0).toUpperCase() + part.slice(1),
+    )
+    .join(' ')
+}
+
+function getFixtures(routes: string[]): PrerenderFixtures {
+  const locations = routes
+    .filter((route) => route.startsWith('/locations/') && route.length > '/locations/'.length)
+    .map((route) => titleCaseLocationSlug(route.slice('/locations/'.length)))
+
+  return {
+    locations: Array.from(new Set(locations)),
+  }
+}
+
+function emptyPassportListResponse() {
+  return {
+    data: [],
+    links: {},
+    meta: {
+      current_page: 1,
+      per_page: 25,
+      page_size: 25,
+      page_size_options: [10, 25, 50, 100],
+      total: 0,
+      last_page: 1,
+      has_more: false,
+    },
+    filters: [],
+  }
+}
+
+function emptyAdsBySlotResponse() {
+  return { data: {} }
+}
+
+function emptyAdResponse() {
+  return { data: null }
+}
+
+async function startServer(baseHtml: string): Promise<ReturnType<typeof createServer>> {
   return new Promise((resolvePromise) => {
     const server = createServer((req, res) => {
+      const pathname = req.url ? new URL(req.url, `http://localhost:${PORT}`).pathname : '/'
+      const acceptsHtml = req.headers.accept?.includes('text/html')
+      const isRouteRequest = req.method === 'GET' && (acceptsHtml || !extname(pathname))
+
+      if (isRouteRequest) {
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' })
+        res.end(baseHtml)
+        return
+      }
+
       return handler(req, res, {
         public: DIST_DIR,
-        rewrites: [{ source: '**', destination: '/index.html' }],
       })
     })
 
@@ -49,6 +144,7 @@ async function startServer(): Promise<ReturnType<typeof createServer>> {
 async function prerenderRoute(
   browser: import('puppeteer').Browser,
   route: string,
+  fixtures: PrerenderFixtures,
 ): Promise<string> {
   console.log(`[prerender] Creating new page for ${route}...`)
   const page = await browser.newPage()
@@ -69,6 +165,14 @@ async function prerenderRoute(
   // Set viewport for consistent rendering
   console.log(`[prerender] Setting viewport...`)
   await page.setViewport({ width: 1280, height: 800 })
+  await page.evaluateOnNewDocument((prerenderFixtures) => {
+    Object.defineProperty(window, '__PASSPORT_PRERENDER_FIXTURES__', {
+      configurable: false,
+      enumerable: false,
+      value: prerenderFixtures,
+      writable: false,
+    })
+  }, fixtures)
 
   // Block analytics and external resources to speed up rendering
   console.log(`[prerender] Setting up request interception...`)
@@ -77,13 +181,55 @@ async function prerenderRoute(
     const url = req.url()
     const resourceType = req.resourceType()
 
-    // Block analytics, tracking, and external API calls
+    if (url.includes('/api/v1/locations')) {
+      void req.respond({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: fixtures.locations,
+          meta: { count: fixtures.locations.length },
+        }),
+      })
+      return
+    }
+
+    if (url.includes('/api/v1/passports')) {
+      void req.respond({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(emptyPassportListResponse()),
+      })
+      return
+    }
+
+    if (
+      url.includes('/api/v1/advertisements/slots?') ||
+      url.endsWith('/api/v1/advertisements/slots')
+    ) {
+      void req.respond({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(emptyAdsBySlotResponse()),
+      })
+      return
+    }
+
+    if (url.includes('/api/v1/advertisements/slots/')) {
+      void req.respond({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify(emptyAdResponse()),
+      })
+      return
+    }
+
+    // Block analytics/tracking. Keep API calls available so prerendered pages
+    // contain real public route metadata and content.
     if (
       url.includes('posthog') ||
       url.includes('analytics.passport.et') ||
       url.includes('gtm') ||
       url.includes('googletagmanager') ||
-      url.includes('api.passport.et') || // Block API calls - we want static shell
       (resourceType === 'image' && !url.includes('localhost')) // Block external images
     ) {
       void req.abort()
@@ -106,7 +252,16 @@ async function prerenderRoute(
     throw navError
   }
 
-  // Give React time to render
+  await page.waitForFunction(
+    () => {
+      const app = document.getElementById('app')
+      if (!app) return false
+      return app.querySelector('h1') !== null
+    },
+    { timeout: PAGE_TIMEOUT },
+  )
+
+  // Give Helmet and deferred route content a short settle window.
   await new Promise((r) => setTimeout(r, RENDER_WAIT))
 
   // Check if app has content
@@ -130,62 +285,99 @@ async function prerenderRoute(
   return html
 }
 
-function processHtml(html: string, route: string): string {
-  const originalHtml = readFileSync(resolve(DIST_DIR, 'index.html'), 'utf-8')
+function getExpectedCanonical(route: string) {
+  return route === '/' ? SITE_URL : `${SITE_URL}${route}`
+}
 
-  // Extract the rendered app content from puppeteer output
-  const appStartMatch = html.match(/<div id="app"[^>]*>/)
-  if (!appStartMatch) {
-    console.warn(`[prerender] Could not find app div for ${route}, using original`)
-    return originalHtml
+function normalizeCanonical(html: string, route: string) {
+  const expectedCanonical = getExpectedCanonical(route)
+  const withoutCanonicals = html.replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>\s*/gi, '')
+
+  return withoutCanonicals.replace(
+    '</head>',
+    `    <link rel="canonical" href="${expectedCanonical}">\n  </head>`,
+  )
+}
+
+function getFirstMatch(html: string, regex: RegExp) {
+  return html.match(regex)?.[1]?.replace(/\s+/g, ' ').trim()
+}
+
+function validateRenderedHtml(html: string, route: string) {
+  if (!html.includes('<div id="app"') || html.includes('<div id="app"></div>')) {
+    throw new Error(`[prerender] Rendered app content is empty for ${route}`)
   }
 
-  const appStartIndex = html.indexOf(appStartMatch[0]) + appStartMatch[0].length
+  const title = getFirstMatch(html, /<title[^>]*>([\s\S]*?)<\/title>/i)
+  const canonical = getFirstMatch(html, /<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']*)/i)
+  const h1 = getFirstMatch(html, /<h1[^>]*>([\s\S]*?)<\/h1>/i)
+  const ogTitle = getFirstMatch(
+    html,
+    /<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']*)/i,
+  )
+  const ogUrl = getFirstMatch(html, /<meta[^>]+property=["']og:url["'][^>]+content=["']([^"']*)/i)
+  const ogDescription = getFirstMatch(
+    html,
+    /<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']*)/i,
+  )
+  const twitterTitle = getFirstMatch(
+    html,
+    /<meta[^>]+name=["']twitter:title["'][^>]+content=["']([^"']*)/i,
+  )
+  const expectedCanonical = getExpectedCanonical(route)
 
-  // Find the matching closing </div> by counting nested divs
-  let depth = 1
-  let endIndex = appStartIndex
-  const remaining = html.slice(appStartIndex)
+  if (!title) {
+    throw new Error(`[prerender] Missing title for ${route}`)
+  }
 
-  const tagRegex = /<\/?div[^>]*>/gi
-  let match
-  while ((match = tagRegex.exec(remaining)) !== null) {
-    if (match[0].startsWith('</')) {
-      depth--
-      if (depth === 0) {
-        endIndex = appStartIndex + match.index
-        break
-      }
-    } else if (!match[0].endsWith('/>')) {
-      depth++
+  if (canonical !== expectedCanonical) {
+    throw new Error(
+      `[prerender] Canonical mismatch for ${route}. Expected ${expectedCanonical}, got ${canonical || 'none'}`,
+    )
+  }
+
+  if (!h1) {
+    throw new Error(`[prerender] Missing h1 for ${route}`)
+  }
+
+  if (/Something went off course/i.test(h1)) {
+    throw new Error(`[prerender] Error boundary rendered for ${route}`)
+  }
+
+  if (!ogTitle || !ogUrl || !ogDescription || !twitterTitle) {
+    throw new Error(`[prerender] Missing social metadata for ${route}`)
+  }
+}
+
+function stripInlineImagePayloads(html: string) {
+  return html.replace(/<img\b[^>]*\bsrc=(["'])data:image\/[^"']+\1[^>]*>/gi, (tag) => {
+    const withTinySrc = tag.replace(
+      /\bsrc=(["'])data:image\/[^"']+\1/i,
+      `src="${TINY_TRANSPARENT_IMAGE}"`,
+    )
+
+    if (/\bdata-prerender-src-omitted=/.test(withTinySrc)) {
+      return withTinySrc
     }
-  }
 
-  if (depth !== 0) {
-    console.warn(`[prerender] Could not find closing app div for ${route}, using original`)
-    return originalHtml
-  }
+    return withTinySrc.replace(/>$/, ' data-prerender-src-omitted="true">')
+  })
+}
 
-  const renderedContent = html.slice(appStartIndex, endIndex)
+function processHtml(html: string, route: string): string {
+  const normalizedHtml = normalizeCanonical(stripInlineImagePayloads(html), route)
+  validateRenderedHtml(normalizedHtml, route)
 
-  if (!renderedContent || renderedContent.trim().length === 0) {
-    console.warn(`[prerender] Rendered content is empty for ${route}, using original`)
-    return originalHtml
-  }
-
-  console.log(`[prerender] Extracted ${renderedContent.length} chars of content for ${route}`)
-
-  // Replace the empty app div with the prerendered content
-  const prerenderedHtml = originalHtml.replace(
-    /<div id="app"><\/div>/,
-    `<div id="app">${renderedContent}</div>`,
+  return normalizedHtml.replace(
+    /<html([^>]*)>/,
+    `<html$1 data-prerendered="true" data-prerendered-route="${route}">`,
   )
+}
 
-  // Add a marker so we know which route was prerendered
-  return prerenderedHtml.replace(
-    '<html',
-    `<html data-prerendered="true" data-prerendered-route="${route}"`,
-  )
+function getOutputPath(route: string): string {
+  return route === '/'
+    ? resolve(DIST_DIR, 'index.html')
+    : resolve(DIST_DIR, route.replace(/^\//, ''), 'index.html')
 }
 
 async function main() {
@@ -203,9 +395,8 @@ async function main() {
 
   // Set overall timeout
   const timeoutId = setTimeout(() => {
-    console.error(`[prerender] Overall timeout (${OVERALL_TIMEOUT}ms) exceeded, exiting...`)
-    console.warn('[prerender] Prerendering skipped due to timeout - build will continue without it')
-    process.exit(0) // Exit cleanly so build doesn't fail
+    console.error(`[prerender] Overall timeout (${OVERALL_TIMEOUT}ms) exceeded`)
+    process.exit(1)
   }, OVERALL_TIMEOUT)
 
   // Dynamically import puppeteer (might not be available in all environments)
@@ -221,8 +412,13 @@ async function main() {
     return
   }
 
+  // Keep the unmodified SPA shell for every route render. The script writes
+  // prerendered files during the same process, so serving dist/index.html
+  // directly would leak one route's head/body into later route renders.
+  const baseHtml = readFileSync(resolve(DIST_DIR, 'index.html'), 'utf-8')
+
   // Start preview server
-  const server = await startServer()
+  const server = await startServer(baseHtml)
 
   // Launch browser - wrap in try/catch to handle missing Chrome gracefully
   let browser: import('puppeteer').Browser
@@ -252,34 +448,31 @@ async function main() {
     clearTimeout(timeoutId)
     server.close()
     const errorMessage = launchError instanceof Error ? launchError.message : String(launchError)
-    // Check if it's a "Chrome not found" error - skip gracefully instead of failing build
     if (
       errorMessage.includes('Could not find Chrome') ||
       errorMessage.includes('No usable sandbox')
     ) {
-      console.warn('[prerender] Chrome/Chromium not available, skipping prerender')
-      console.warn('[prerender] This is normal in Docker/CI environments without a browser')
-      console.warn(
-        '[prerender] To enable prerendering, install Chrome or set SKIP_PRERENDER=true to silence this warning',
+      console.error('[prerender] Chrome/Chromium not available')
+      console.error(
+        '[prerender] Install a browser for Puppeteer or set SKIP_PRERENDER=true explicitly for non-SEO builds.',
       )
-      return
+      process.exit(1)
     }
-    // For other errors, log and exit
     console.error('[prerender] Failed to launch browser:', errorMessage)
     process.exit(1)
   }
 
   try {
-    for (const route of ROUTES_TO_PRERENDER) {
-      const html = await prerenderRoute(browser, route)
+    const routesToPrerender = getRoutesToPrerender()
+    const fixtures = getFixtures(routesToPrerender)
+    console.log(`[prerender] Routes discovered from sitemap: ${routesToPrerender.length}`)
+
+    for (const route of routesToPrerender) {
+      const html = await prerenderRoute(browser, route, fixtures)
       const processedHtml = processHtml(html, route)
+      const outputPath = getOutputPath(route)
 
-      // Determine output path
-      const outputPath =
-        route === '/'
-          ? resolve(DIST_DIR, 'index.html')
-          : resolve(DIST_DIR, route.slice(1), 'index.html')
-
+      mkdirSync(dirname(outputPath), { recursive: true })
       writeFileSync(outputPath, processedHtml)
       console.log(`[prerender] ✅ Saved ${route} → ${outputPath}`)
     }
@@ -287,8 +480,7 @@ async function main() {
     console.log('[prerender] ✅ Prerendering complete!')
   } catch (error) {
     console.error('[prerender] Error during prerendering:', error)
-    // Don't fail the build - just skip prerendering
-    console.warn('[prerender] Prerendering failed - build will continue without it')
+    process.exitCode = 1
   } finally {
     clearTimeout(timeoutId)
     await browser.close()

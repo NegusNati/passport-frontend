@@ -74,6 +74,21 @@ ${urls}
 `
 }
 
+function generateRobotsTxt(): string {
+  return `# Robots.txt for Passport.ET
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /profile
+Disallow: /login
+Disallow: /register
+Disallow: /test
+
+Sitemap: ${SITE_URL.replace(/\/$/, '')}/sitemap.xml
+`
+}
+
 const API_BASE_URL = (() => {
   const envUrl = process.env.VITE_API_BASE_URL || process.env.API_BASE_URL
   if (envUrl) return envUrl.replace(/\/$/, '')
@@ -242,8 +257,9 @@ async function main() {
   console.log(`✅ Sitemap generated: ${sitemapPath}`)
   console.log(`   Total URLs: ${allRoutes.length}`)
 
-  // Also write robots.txt reference (optional)
-  console.log(`🤖 Robots.txt should reference: ${SITE_URL}/sitemap.xml`)
+  const robotsPath = join(DIST_DIR, 'robots.txt')
+  writeFileSync(robotsPath, generateRobotsTxt(), 'utf-8')
+  console.log(`🤖 Robots.txt generated: ${robotsPath}`)
   console.log('✅ Done!')
 }
 
@@ -255,4 +271,11 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   })
 }
 
-export { API_BASE_URL, dedupeRoutes, generateSitemapXML, getLocationRoutes, STATIC_ROUTES }
+export {
+  API_BASE_URL,
+  dedupeRoutes,
+  generateRobotsTxt,
+  generateSitemapXML,
+  getLocationRoutes,
+  STATIC_ROUTES,
+}

@@ -43,7 +43,38 @@ export const ListParams = ListParamsBase.transform((value) => {
 
 export type ListParams = z.infer<typeof ListParams>
 
+type PrerenderFixtures = {
+  locations?: string[]
+}
+
+function getPrerenderFixtures() {
+  if (typeof window === 'undefined') return undefined
+  return (window as Window & { __PASSPORT_PRERENDER_FIXTURES__?: PrerenderFixtures })
+    .__PASSPORT_PRERENDER_FIXTURES__
+}
+
+function emptyPassportListResponse() {
+  return {
+    data: [],
+    links: {},
+    meta: {
+      current_page: 1,
+      per_page: 25,
+      page_size: 25,
+      page_size_options: [10, 25, 50, 100],
+      total: 0,
+      last_page: 1,
+      has_more: false,
+    },
+    filters: [],
+  }
+}
+
 export async function fetchPassports(params: Partial<ListParams> = {}) {
+  if (getPrerenderFixtures()) {
+    return PassportListResponse.parse(emptyPassportListResponse())
+  }
+
   const parsed = ListParams.parse(params)
   const data = await getJSON<unknown>(API_ENDPOINTS.V1.PASSPORTS.ROOT, parsed)
   return PassportListResponse.parse(data)
@@ -55,6 +86,14 @@ export async function fetchPassportById(id: string | number) {
 }
 
 export async function fetchLocations() {
+  const fixtures = getPrerenderFixtures()
+  if (fixtures?.locations) {
+    return LocationsResponse.parse({
+      data: fixtures.locations,
+      meta: { count: fixtures.locations.length },
+    })
+  }
+
   const data = await getJSON<unknown>(API_ENDPOINTS.V1.LOCATIONS)
   return LocationsResponse.parse(data)
 }

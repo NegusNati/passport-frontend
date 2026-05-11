@@ -18,10 +18,22 @@ export const advertisementKeys = {
   slot: (code: string) => [...advertisementKeys.all, 'slot', code] as const,
 }
 
+function hasPrerenderFixtures() {
+  if (typeof window === 'undefined') return false
+  return Boolean(
+    (window as Window & { __PASSPORT_PRERENDER_FIXTURES__?: unknown })
+      .__PASSPORT_PRERENDER_FIXTURES__,
+  )
+}
+
 export async function fetchAdsBySlots(codes: string[]) {
   const uniqueCodes = [...new Set(codes.filter(Boolean))]
 
   if (!uniqueCodes.length) {
+    return {}
+  }
+
+  if (hasPrerenderFixtures()) {
     return {}
   }
 
@@ -44,6 +56,10 @@ export async function fetchAdsBySlots(codes: string[]) {
 }
 
 export async function fetchAdBySlot(code: string) {
+  if (hasPrerenderFixtures()) {
+    return null
+  }
+
   try {
     const data = await getJSON<unknown>(API_ENDPOINTS.V1.ADVERTISEMENTS.SLOT_BY_CODE(code))
     const parsed = PublicAdvertisementResponse.safeParse(data)

@@ -9,6 +9,7 @@ type Props = {
   path?: string // e.g., '/articles/how-to-apply'
   canonical?: string // absolute canonical URL overrides path+SITE
   noindex?: boolean
+  ogType?: 'website' | 'article'
   ogImage?: string
   schemaJson?: Record<string, unknown>
   extraLinks?: Array<{ rel: string; href: string; type?: string }>
@@ -17,6 +18,32 @@ type Props = {
 const SITE = import.meta.env.VITE_SITE_URL as string | undefined
 const SITE_NAME = (import.meta.env.VITE_SITE_NAME as string | undefined) ?? ''
 const DEFAULT_OG_IMAGE_PATH = '/PASSPORT1.webp'
+const MAX_DESCRIPTION_LENGTH = 160
+
+function normalizeDescription(description?: string) {
+  const normalized = description?.replace(/\s+/g, ' ').trim()
+  if (!normalized || normalized.length <= MAX_DESCRIPTION_LENGTH) {
+    return normalized
+  }
+
+  const clipped = normalized.slice(0, MAX_DESCRIPTION_LENGTH - 3)
+  const lastSpace = clipped.lastIndexOf(' ')
+  const trimmed = clipped.slice(0, lastSpace > 120 ? lastSpace : clipped.length).trim()
+
+  return `${trimmed}...`
+}
+
+function getAlternatePath(url: string, base: string, normalizedPath: string) {
+  if (normalizedPath) {
+    return normalizedPath
+  }
+
+  if (!url || !base || url !== base) {
+    return ''
+  }
+
+  return '/'
+}
 
 export function Seo({
   title,
@@ -24,6 +51,8 @@ export function Seo({
   path = '',
   canonical,
   noindex,
+  ogType = 'website',
+  ogImage,
   schemaJson,
   extraLinks = [],
 }: Props) {
@@ -34,9 +63,16 @@ export function Seo({
   // Normalize path: root path '/' becomes empty to avoid trailing slash
   const normalizedPath = path === '/' ? '' : path
   const url = canonical || (base && normalizedPath ? `${base}${normalizedPath}` : base)
+  const alternatePath = getAlternatePath(url, base, normalizedPath)
   const fullTitle = title ? (SITE_NAME ? `${title} · ${SITE_NAME}` : title) : SITE_NAME
+  const metaDescription = normalizeDescription(description)
 
-  const ogImageUrl = base ? `${base}${DEFAULT_OG_IMAGE_PATH}` : DEFAULT_OG_IMAGE_PATH
+  const imagePath = ogImage || DEFAULT_OG_IMAGE_PATH
+  const ogImageUrl = /^https?:\/\//i.test(imagePath)
+    ? imagePath
+    : base
+      ? `${base}${imagePath.startsWith('/') ? imagePath : `/${imagePath}`}`
+      : imagePath
 
   // Map language codes to og:locale format
   const localeMap: Record<string, string> = {
@@ -51,7 +87,7 @@ export function Seo({
     <>
       <Helmet prioritizeSeoTags>
         {title && <title>{fullTitle}</title>}
-        {description && <meta name="description" content={description} />}
+        {metaDescription && <meta name="description" content={metaDescription} />}
 
         {/* Robots meta tags - explicitly allow all bots including AI crawlers */}
         {noindex ? (
@@ -87,9 +123,9 @@ export function Seo({
 
         {/* Open Graph / Facebook */}
         {title && <meta property="og:title" content={fullTitle} />}
-        {description && <meta property="og:description" content={description} />}
+        {metaDescription && <meta property="og:description" content={metaDescription} />}
         {url && <meta property="og:url" content={url} />}
-        <meta property="og:type" content="article" />
+        <meta property="og:type" content={ogType} />
         <meta property="og:site_name" content={SITE_NAME} />
         <meta property="og:image" content={ogImageUrl} />
         <meta property="og:image:alt" content={fullTitle} />
@@ -99,22 +135,23 @@ export function Seo({
 
         {/* hreflang alternate links for SEO - each language has its own URL with ?lang= param */}
         {base &&
+          alternatePath &&
           SUPPORTED_LANGUAGES.map((lang) => (
             <link
               key={lang.code}
               rel="alternate"
               hrefLang={lang.code}
-              href={`${base}${normalizedPath || '/'}?lang=${lang.code}`}
+              href={`${base}${alternatePath}?lang=${lang.code}`}
             />
           ))}
-        {base && (
-          <link rel="alternate" hrefLang="x-default" href={`${base}${normalizedPath || '/'}`} />
+        {base && alternatePath && (
+          <link rel="alternate" hrefLang="x-default" href={`${base}${alternatePath}`} />
         )}
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
         {title && <meta name="twitter:title" content={fullTitle} />}
-        {description && <meta name="twitter:description" content={description} />}
+        {metaDescription && <meta name="twitter:description" content={metaDescription} />}
         <meta name="twitter:image" content={ogImageUrl} />
         <meta name="twitter:image:alt" content={fullTitle} />
 

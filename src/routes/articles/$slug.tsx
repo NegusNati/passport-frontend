@@ -54,6 +54,7 @@ function ArticleDetail() {
   const base =
     (import.meta as { env?: Record<string, string | undefined> }).env?.VITE_API_BASE_URL || ''
   const clean = String(base).replace(/\/$/, '')
+  const canonicalUrl = getArticleCanonicalUrl(a, slug)
   const feedLinks = [
     { rel: 'alternate', href: `${clean}/api/v1/feeds/articles.rss`, type: 'application/rss+xml' },
     { rel: 'alternate', href: `${clean}/api/v1/feeds/articles.atom`, type: 'application/atom+xml' },
@@ -64,11 +65,12 @@ function ArticleDetail() {
       <Seo
         title={a?.meta_title ?? a?.title}
         description={a?.meta_description ?? a?.excerpt ?? undefined}
-        canonical={a?.canonical_url ?? undefined}
-        path={!a?.canonical_url ? `/articles/${slug}` : undefined}
+        canonical={canonicalUrl}
+        path={`/articles/${slug}`}
+        ogType="article"
         ogImage={a?.og_image_url ?? a?.featured_image_url ?? undefined}
         extraLinks={feedLinks}
-        schemaJson={a ? buildJsonLd(a) : undefined}
+        schemaJson={a ? buildJsonLd(a, slug) : undefined}
       />
       <ArticleBody
         isLoading={isLoading}
@@ -371,16 +373,65 @@ function truncate(value: string, maxLength = 140) {
   return `${value.slice(0, maxLength - 1).trimEnd()}…`
 }
 
-function buildJsonLd(a: ArticleApiItem) {
+function getSiteUrl() {
+  return (
+    (import.meta as { env?: Record<string, string | undefined> }).env?.VITE_SITE_URL ?? ''
+  ).replace(/\/$/, '')
+}
+
+function getArticleCanonicalUrl(a: ArticleApiItem | undefined, slug: string) {
+  const siteUrl = getSiteUrl()
+  const fallback = siteUrl ? `${siteUrl}/articles/${slug}` : undefined
+  const canonical = a?.canonical_url?.trim()
+
+  if (!canonical) {
+    return fallback
+  }
+
+  try {
+    const parsed = new URL(canonical)
+    if (parsed.hostname === 'passport.et' && ['/', ''].includes(parsed.pathname)) {
+      return fallback
+    }
+    return canonical
+  } catch {
+    return fallback
+  }
+}
+
+function buildJsonLd(a: ArticleApiItem, slug: string) {
+  const siteUrl = getSiteUrl()
+  const pageUrl = getArticleCanonicalUrl(a, slug)
+  const descriptionSource =
+    a.meta_description ?? a.excerpt ?? (a.content ? stripHtml(a.content) : '')
+  const description = descriptionSource
+    ? truncate(descriptionSource.replace(/\s+/g, ' '), 300)
+    : undefined
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: a.meta_title ?? a.title,
-    description: a.meta_description ?? a.excerpt,
+    description,
     image: a.og_image_url ?? a.featured_image_url,
-    author: a.author?.name,
+    author: a.author?.name
+      ? {
+          '@type': 'Person',
+          name: a.author.name,
+        }
+      : undefined,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Passport.ET',
+      logo: siteUrl ? `${siteUrl}/passport_logo.webp` : undefined,
+    },
     datePublished: a.published_at,
     dateModified: a.updated_at,
-    mainEntityOfPage: a.canonical_url,
+    mainEntityOfPage: pageUrl
+      ? {
+          '@type': 'WebPage',
+          '@id': pageUrl,
+        }
+      : undefined,
   }
 }

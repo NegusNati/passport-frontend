@@ -56,7 +56,7 @@ const Footer = () => {
   return (
     <motion.footer
       aria-labelledby="site-footer-title"
-      className="bg-footer-top relative overflow-hidden pt-10 sm:pt-14 md:pt-16"
+      className="bg-footer-surface relative overflow-hidden pt-10 sm:pt-14 md:pt-16"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.28, margin: '0px 0px -120px 0px' }}
@@ -65,7 +65,7 @@ const Footer = () => {
         <motion.h2
           id="site-footer-title"
           variants={brandReveal}
-          className="text-footer-surface translate-y-[0.08em] text-center text-[clamp(3.65rem,15vw,15rem)] leading-[0.78] font-black tracking-normal text-balance select-none"
+          className="text-footer-top translate-y-[0.08em] text-center text-[clamp(3.65rem,15vw,15rem)] leading-[0.78] font-black tracking-normal text-balance select-none"
           translate="no"
         >
           Passport.ET

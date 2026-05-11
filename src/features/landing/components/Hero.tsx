@@ -159,9 +159,6 @@ export function Hero() {
     })
   }
 
-  // Note: LCP image preload is now handled statically in index.html
-  // for better performance (no JS execution needed)
-
   return (
     <section className="relative isolate min-h-[80svh] pb-0 md:min-h-[90svh] md:pb-[120px] lg:pb-[80px]">
       {/* Container to constrain width and center content */}
