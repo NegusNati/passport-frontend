@@ -41,7 +41,7 @@ function AdvertisementRequestPage() {
         description={t('request.seo.description')}
         path="/advertisement-requests"
       />
-      <h1 className="sr-only">{t('request.seo.title')}</h1>
+      <span className="sr-only">{t('request.seo.title')}</span>
 
       <div
         aria-hidden="true"

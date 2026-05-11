@@ -39,7 +39,7 @@
 
 @import 'tailwindcss';
 
-/* Base: teal-green accent #009966  → hsl(160 100% 30%) */
+/* Base: teal-green accent, darkened slightly for WCAG AA contrast on white */
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -54,7 +54,7 @@
   --popover-foreground: 160 10% 12%;
 
   /* Primary = brand / accent */
-  --primary: 160 100% 30%; /* #009966 */
+  --primary: 160 100% 24%;
   --primary-foreground: 0 0% 100%;
 
   /* Secondary = soft minty surfaces */
@@ -93,8 +93,8 @@
   --brand-6: 160 42% 74%;
   --brand-7: 160 30% 66%;
   --brand-8: 160 22% 58%;
-  --brand-9: 160 100% 30%; /* solid brand */
-  --brand-10: 160 80% 40%; /* solid on hover */
+  --brand-9: 160 100% 24%; /* accessible solid brand */
+  --brand-10: 160 80% 32%; /* solid on hover */
   --brand-11: 160 65% 22%; /* accessible text on brand tints */
   --brand-12: 160 70% 14%; /* highest-contrast brand text on light */
 

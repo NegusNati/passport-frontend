@@ -191,7 +191,11 @@ export function ArticlesPage() {
             <div className="flex flex-1 flex-col gap-2 sm:flex-row">
               {/* Search Input */}
               <div className="relative flex-1">
+                <label htmlFor="article-search" className="sr-only">
+                  {t('list.search.placeholder')}
+                </label>
                 <Input
+                  id="article-search"
                   placeholder={t('list.search.placeholder')}
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
@@ -223,7 +227,10 @@ export function ArticlesPage() {
 
               {/* Category Filter */}
               <Select value={filters.category} onValueChange={handleCategoryChange}>
-                <SelectTrigger className="h-11 w-full md:w-48">
+                <SelectTrigger
+                  className="h-11 w-full md:w-48"
+                  aria-label={t('list.filters.category')}
+                >
                   <SelectValue placeholder={t('list.filters.category')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -238,7 +245,10 @@ export function ArticlesPage() {
 
               {/* Tags Filter */}
               <Select value={filters.tag} onValueChange={handleTagChange}>
-                <SelectTrigger className="h-11 w-full md:w-48">
+                <SelectTrigger
+                  className="h-11 w-full md:w-48"
+                  aria-label={t('list.filters.tags')}
+                >
                   <SelectValue placeholder={t('list.filters.tags')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -257,6 +267,7 @@ export function ArticlesPage() {
 
       <section className="py-12" data-articles-grid>
         <Container>
+          <h2 className="sr-only">{t('list.title')}</h2>
           {isLoading ? (
             <ArticleGridSkeleton count={8} />
           ) : rows.length > 0 ? (

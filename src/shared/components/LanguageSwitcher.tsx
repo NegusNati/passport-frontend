@@ -87,6 +87,7 @@ export function LanguageSwitcher({ className, compact = false }: LanguageSwitche
     return (
       <Select aria-label="Select language" value={currentLang} onValueChange={handleChange}>
         <SelectTrigger
+          aria-label="Select language"
           className={cn(
             'h-8 w-auto min-w-[2.5rem] px-1 text-xs font-bold',
             'justify-center',
@@ -106,6 +107,7 @@ export function LanguageSwitcher({ className, compact = false }: LanguageSwitche
   return (
     <Select aria-label="Select language" value={currentLang} onValueChange={handleChange}>
       <SelectTrigger
+        aria-label="Select language"
         className={cn(
           'relative h-9 w-auto pr-2 pl-8 text-sm font-medium',
           isEthiopicLang && 'font-ethiopic',

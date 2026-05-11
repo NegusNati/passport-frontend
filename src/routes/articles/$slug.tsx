@@ -266,13 +266,13 @@ function ArticleBody({
               />
             </div>
           </div>
-          <aside className="hidden md:sticky md:top-24 md:block md:self-start">
+          <div className="hidden md:sticky md:top-24 md:block md:self-start">
             <DynamicAdSlot
               code="article-sidebar"
               orientation="vertical"
               className="h-auto rounded-3xl border border-emerald-100 bg-emerald-50/70"
             />
-          </aside>
+          </div>
           <div className="hidden lg:block">
             <DynamicAdSlot
               code="article-sidebar"

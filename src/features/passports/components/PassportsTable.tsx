@@ -437,7 +437,7 @@ export const PassportsTable = React.forwardRef<HTMLDivElement, PassportsTablePro
         },
         {
           id: 'actions',
-          header: '',
+          header: () => <span className="sr-only">{t('table.actions.detail')}</span>,
           enableHiding: false,
           cell: ({ row }) => (
             <Button
@@ -613,7 +613,7 @@ function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) 
         </span>
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
           <Select value={filters.date} onValueChange={(value) => onFilterChange('date', value)}>
-            <SelectTrigger className="w-full sm:w-44">
+            <SelectTrigger className="w-full sm:w-44" aria-label={dateOptions[0]?.label}>
               <SelectValue placeholder={dateOptions[0]?.label} />
             </SelectTrigger>
             <SelectContent>
@@ -630,7 +630,11 @@ function PassportsTableToolbar<TData>(props: PassportsTableToolbarProps<TData>) 
             onValueChange={(value) => onFilterChange('city', value)}
             disabled={isCitySelectDisabled}
           >
-            <SelectTrigger className="w-full sm:w-48" disabled={isCitySelectDisabled}>
+            <SelectTrigger
+              className="w-full sm:w-48"
+              disabled={isCitySelectDisabled}
+              aria-label={allLocationsLabel}
+            >
               <SelectValue placeholder={allLocationsLabel} />
             </SelectTrigger>
             <SelectContent>

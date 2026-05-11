@@ -378,7 +378,10 @@ export function CalendarPage() {
                 value={useGeezDigits ? 'geez' : 'arabic'}
                 onValueChange={(v) => setUseGeezDigits(v === 'geez')}
               >
-                <SelectTrigger className="bg-muted/80 backdrop-blur-sm">
+                <SelectTrigger
+                  className="bg-muted/80 backdrop-blur-sm"
+                  aria-label={t('digits.placeholder')}
+                >
                   <SelectValue placeholder={t('digits.placeholder')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -483,6 +486,7 @@ export function CalendarPage() {
                   >
                     <SelectTrigger
                       id="month-select"
+                      aria-label={t('selectors.monthLabel')}
                       className="border-input bg-background focus:ring-ring h-9 w-[11rem] rounded-md border px-4 text-sm shadow-sm focus:ring-2 focus:outline-none"
                     >
                       <SelectValue />
@@ -504,6 +508,7 @@ export function CalendarPage() {
                   >
                     <SelectTrigger
                       id="year-select"
+                      aria-label={t('selectors.yearLabel')}
                       className="border-input bg-background focus:ring-ring h-9 w-[8rem] rounded-md border px-4 text-sm shadow-sm focus:ring-2 focus:outline-none"
                     >
                       <SelectValue />
@@ -581,7 +586,7 @@ export function CalendarPage() {
                         <div className="mt-auto flex items-center justify-between gap-2 text-[11px] font-medium">
                           <span
                             className={
-                              isSelected ? 'text-primary-foreground/80' : 'text-muted-foreground'
+                              isSelected ? 'text-primary-foreground' : 'text-muted-foreground'
                             }
                           >
                             {gregDay}
@@ -589,7 +594,7 @@ export function CalendarPage() {
                           {hasHighlights ? (
                             <span
                               className={
-                                isSelected ? 'text-primary-foreground/80' : 'text-primary/70'
+                                isSelected ? 'text-primary-foreground' : 'text-primary'
                               }
                               aria-hidden
                               title={highlightNames}
@@ -606,12 +611,12 @@ export function CalendarPage() {
             </div>
           </div>
 
-          <aside className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6">
             {/* Holidays glass card */}
             <div className="border-border/60 rounded-2xl border bg-transparent p-6 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
-              <h3 className="text-foreground text-base font-semibold tracking-tight">
+              <h2 className="text-foreground text-base font-semibold tracking-tight">
                 {viewMode === 'month' ? t('holidays.titleMonth') : t('holidays.titleWeek')}
-              </h3>
+              </h2>
               <div className="mt-4 space-y-3">
                 {viewMode === 'month' ? (
                   monthHighlights.length ? (
@@ -629,7 +634,7 @@ export function CalendarPage() {
                             {highlight.amharicName}
                           </p>
                           {highlight.category ? (
-                            <span className="text-primary/80 text-[11px] font-medium tracking-wide">
+                            <span className="text-primary text-[11px] font-semibold tracking-wide">
                               {formatHighlightCategory(highlight.category)}
                             </span>
                           ) : null}
@@ -657,7 +662,7 @@ export function CalendarPage() {
                           {formatEthiopianDate(date, useGeezDigits)}
                         </p>
                         {highlight.category ? (
-                          <span className="text-primary/80 text-[11px] font-medium tracking-wide">
+                          <span className="text-primary text-[11px] font-semibold tracking-wide">
                             {formatHighlightCategory(highlight.category)}
                           </span>
                         ) : null}
@@ -682,9 +687,9 @@ export function CalendarPage() {
               <p className="text-muted-foreground text-xs font-semibold tracking-[0.35em] uppercase">
                 {t('selectedDate.label')}
               </p>
-              <h3 className="text-foreground mt-2 text-lg font-semibold tracking-tight">
+              <h2 className="text-foreground mt-2 text-lg font-semibold tracking-tight">
                 {formatEthiopianDate(selectedDate, useGeezDigits)}
-              </h3>
+              </h2>
               <p className="text-muted-foreground mt-1 text-sm">
                 {selectedWeekday} · {formatGregorianDate(selectedGregorian)}
               </p>
@@ -700,7 +705,7 @@ export function CalendarPage() {
                           {highlight.name}
                         </p>
                         {highlight.category ? (
-                          <span className="text-primary/80 text-[11px] font-medium tracking-wide">
+                          <span className="text-primary text-[11px] font-semibold tracking-wide">
                             {formatHighlightCategory(highlight.category)}
                           </span>
                         ) : null}
@@ -713,7 +718,7 @@ export function CalendarPage() {
                           {highlight.tags.map((tag) => (
                             <span
                               key={tag}
-                              className="bg-primary/10 text-primary/80 rounded-full px-2 py-0.5 text-[10px] font-medium tracking-wide uppercase"
+                              className="bg-primary/10 text-primary rounded-full px-2 py-0.5 text-[10px] font-semibold tracking-wide uppercase"
                             >
                               {formatHighlightTag(tag)}
                             </span>
@@ -732,7 +737,7 @@ export function CalendarPage() {
               orientation="vertical"
               className="bg-secondary supports-[backdrop-filter]:bg-secondary min-h-[18rem] rounded-2xl backdrop-blur-lg"
             />
-          </aside>
+          </div>
         </div>
 
         <DynamicAdSlot
@@ -753,7 +758,7 @@ export function CalendarPage() {
               </header>
 
               {/* small hint line */}
-              <div className="text-primary/80 -mt-2 text-right text-sm italic">
+              <div className="text-primary -mt-2 text-right text-sm italic">
                 {t('geezNumbers.tapHint')}
               </div>
 
@@ -824,11 +829,11 @@ export function CalendarPage() {
             </div>
           </section>
 
-          <aside className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6">
             <div className="border-border/60 rounded-2xl border bg-transparent p-6 shadow-sm backdrop-blur-lg supports-[backdrop-filter]:bg-transparent">
-              <h3 className="text-foreground text-base font-semibold tracking-tight">
+              <h2 className="text-foreground text-base font-semibold tracking-tight">
                 {t('readingTips.title')}
-              </h3>
+              </h2>
               <p className="mt-2">{t('readingTips.tip1')}</p>
               <p className="mt-2">{t('readingTips.tip2')}</p>
             </div>
@@ -837,7 +842,7 @@ export function CalendarPage() {
               orientation="vertical"
               className="bg-secondary supports-[backdrop-filter]:bg-secondary min-h-[18rem] w-full rounded-2xl backdrop-blur-lg"
             />
-          </aside>
+          </div>
         </div>
       </Container>
     </section>

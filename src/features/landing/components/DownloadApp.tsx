@@ -80,7 +80,7 @@ export function DownloadAppSection({ ad, isLoading }: DownloadAppSectionProps) {
   )
 
   return (
-    <section id="download" className="py-10 sm:py-12" aria-label="Sponsored advertisement">
+    <section id="download" className="py-10 sm:py-12" aria-label="Mobile app advertisement">
       <Container>
         <DynamicAdSlot
           code="home-download-app"

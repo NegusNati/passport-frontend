@@ -60,6 +60,14 @@ function ContentPlugin({ html }: { html: string }) {
         ADD_URI_SAFE_ATTR: ['src'],
       })
       const dom = parser.parseFromString(sanitizedHtml, 'text/html')
+      dom.body.querySelectorAll('h1').forEach((heading) => {
+        const replacement = dom.createElement('h2')
+        replacement.innerHTML = heading.innerHTML
+        for (const attribute of Array.from(heading.attributes)) {
+          replacement.setAttribute(attribute.name, attribute.value)
+        }
+        heading.replaceWith(replacement)
+      })
       const nodes = $generateNodesFromDOM(editor, dom)
       const root = $getRoot()
       root.clear()
@@ -89,7 +97,13 @@ export function LexicalViewer({ content }: LexicalViewerProps) {
     <LexicalComposer initialConfig={initialConfig}>
       <div className="lexical-viewer prose prose-neutral dark:prose-invert max-w-none">
         <RichTextPlugin
-          contentEditable={<ContentEditable className="outline-none" />}
+          contentEditable={
+            <ContentEditable
+              className="outline-none"
+              aria-label="Article content"
+              tabIndex={-1}
+            />
+          }
           placeholder={null}
           ErrorBoundary={LexicalErrorBoundary}
         />

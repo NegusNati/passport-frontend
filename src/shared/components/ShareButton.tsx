@@ -78,6 +78,8 @@ export function ShareButton({
         size={size}
         className="flex items-center gap-2"
         onClick={() => setShowOptions(!showOptions)}
+        aria-label="Share passport status"
+        aria-expanded={showOptions}
       >
         <p className="flex items-center gap-2">
           <Share2 className="h-4 w-4" />

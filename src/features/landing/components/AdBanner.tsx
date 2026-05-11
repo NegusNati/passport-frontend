@@ -13,7 +13,7 @@ type AdBannerProps = {
 
 export function AdBanner({ ad, isLoading }: AdBannerProps) {
   return (
-    <section className="py-10 sm:py-12" aria-label="Sponsored advertisement">
+    <section className="py-10 sm:py-12" aria-label="Passport alerts advertisement">
       <Container>
         <DynamicAdSlot
           code="home-alerts-banner"
