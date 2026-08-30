@@ -114,7 +114,7 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
           pdf_file: file,
           date: formValues.date,
           location: formValues.location.trim(),
-          start_after_text: formValues.start_after_text.trim(),
+          start_after_text: formValues.start_after_text.trim() || undefined,
           format: formValues.format,
         })
 
@@ -129,10 +129,9 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
             locationHistory,
             parsed.data.location,
           )
-          const nextStartAfterTextHistory = buildNextAutocompleteHistory(
-            startAfterTextHistory,
-            parsed.data.start_after_text,
-          )
+          const nextStartAfterTextHistory = parsed.data.start_after_text
+            ? buildNextAutocompleteHistory(startAfterTextHistory, parsed.data.start_after_text)
+            : startAfterTextHistory
 
           setLocationHistory(nextLocationHistory)
           setStartAfterTextHistory(nextStartAfterTextHistory)
@@ -198,60 +197,66 @@ export function PdfUploadForm({ onSubmit, isSubmitting, errorMessage }: PdfUploa
             ))}
           </datalist>
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor="start_after_text">Start after text</Label>
-          <Input
-            id="start_after_text"
-            name="start_after_text"
-            value={formValues.start_after_text}
-            onChange={handleChange}
-            placeholder="Application Number…"
-            autoComplete="on"
-            list="pdf-import-start-after-text-history"
-            aria-describedby="start_after_text_hint"
-            required
-          />
-          <datalist id="pdf-import-start-after-text-history">
-            {startAfterTextHistory.map((value) => (
-              <option key={value} value={value} />
-            ))}
-          </datalist>
-          <p id="start_after_text_hint" className="text-muted-foreground text-xs leading-relaxed">
-            The importer starts after the first line that contains this text. Use{' '}
-            <span className="font-mono">REQUEST_No.</span> for legacy 5-column PDFs or{' '}
-            <span className="font-mono">Application Number</span> for application 4-column PDFs.
-          </p>
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="format">Format</Label>
-          <Select
-            value={formValues.format}
-            onValueChange={(value) =>
-              setFormValues((prev) => ({
-                ...prev,
-                format: value as PdfUploadInput['format'],
-              }))
-            }
-          >
-            <SelectTrigger id="format" aria-describedby="format_hint" className="w-full">
-              <SelectValue placeholder="Select import format" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value={PdfImportFormatSchema.enum.auto}>Auto detect</SelectItem>
-              <SelectItem value={PdfImportFormatSchema.enum.legacy_5col}>
-                Legacy 5-column
-              </SelectItem>
-              <SelectItem value={PdfImportFormatSchema.enum.application_4col}>
-                Application 4-column
-              </SelectItem>
-            </SelectContent>
-          </Select>
-          <p id="format_hint" className="text-muted-foreground text-xs leading-relaxed">
-            Auto detect is the safest default unless you already know which PDF layout you are
-            importing.
-          </p>
-        </div>
       </div>
+
+      <details className="rounded-md border p-3">
+        <summary className="cursor-pointer text-sm font-medium">Advanced parser options</summary>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-2">
+            <Label htmlFor="start_after_text">Start after text (optional)</Label>
+            <Input
+              id="start_after_text"
+              name="start_after_text"
+              value={formValues.start_after_text}
+              onChange={handleChange}
+              placeholder="Normally detected from the PDF header"
+              autoComplete="on"
+              list="pdf-import-start-after-text-history"
+              aria-describedby="start_after_text_hint"
+            />
+            <datalist id="pdf-import-start-after-text-history">
+              {startAfterTextHistory.map((value) => (
+                <option key={value} value={value} />
+              ))}
+            </datalist>
+            <p id="start_after_text_hint" className="text-muted-foreground text-xs leading-relaxed">
+              Leave blank for automatic header detection. Use a marker only when a PDF has unrelated
+              text before its actual table.
+            </p>
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="format">Format override</Label>
+            <Select
+              value={formValues.format}
+              onValueChange={(value) =>
+                setFormValues((prev) => ({
+                  ...prev,
+                  format: value as PdfUploadInput['format'],
+                }))
+              }
+            >
+              <SelectTrigger id="format" aria-describedby="format_hint" className="w-full">
+                <SelectValue placeholder="Select import format" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={PdfImportFormatSchema.enum.auto}>Auto detect</SelectItem>
+                <SelectItem value={PdfImportFormatSchema.enum.legacy_5col}>
+                  Legacy 5-column
+                </SelectItem>
+                <SelectItem value={PdfImportFormatSchema.enum.application_4col}>
+                  Application 4-column
+                </SelectItem>
+                <SelectItem value={PdfImportFormatSchema.enum.application_5col_remark}>
+                  Application 5-column (Remark ignored)
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            <p id="format_hint" className="text-muted-foreground text-xs leading-relaxed">
+              Auto detect distinguishes both five-column layouts by their header names.
+            </p>
+          </div>
+        </div>
+      </details>
 
       {formError ? (
         <p role="alert" className="text-destructive text-sm">

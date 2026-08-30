@@ -16,9 +16,13 @@ export function buildPdfUploadFormData(input: PdfUploadInput) {
   formData.append('pdf_file', payload.pdf_file)
   formData.append('date', payload.date)
   formData.append('location', payload.location)
-  formData.append('start_after_text', payload.start_after_text)
   formData.append('format', payload.format)
-  formData.append('linesToSkip', payload.linesToSkip ?? payload.start_after_text)
+
+  const startAfterText = payload.start_after_text ?? payload.linesToSkip
+  if (startAfterText) {
+    formData.append('start_after_text', startAfterText)
+    formData.append('linesToSkip', startAfterText)
+  }
 
   return formData
 }

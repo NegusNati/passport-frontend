@@ -1,6 +1,11 @@
 import { z } from 'zod'
 
-export const PdfImportFormatSchema = z.enum(['auto', 'legacy_5col', 'application_4col'])
+export const PdfImportFormatSchema = z.enum([
+  'auto',
+  'legacy_5col',
+  'application_4col',
+  'application_5col_remark',
+])
 
 export const PassportImportBatchStatusSchema = z.enum([
   'queued',
@@ -62,7 +67,7 @@ export const PdfUploadSchema = z.object({
     .refine((file) => file.size <= 10 * 1024 * 1024, 'File must be 10MB or smaller.'),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Date must match YYYY-MM-DD.'),
   location: z.string().trim().min(2, 'Location must be at least 2 characters.'),
-  start_after_text: z.string().trim().min(1, 'Start after text is required.'),
+  start_after_text: z.string().trim().min(1).optional(),
   format: PdfImportFormatSchema.default('auto'),
   linesToSkip: z.string().trim().min(1).optional(),
 })

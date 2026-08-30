@@ -5,6 +5,28 @@ import { PdfUploadForm } from '../PdfUploadForm'
 
 const LOCATION_HISTORY_STORAGE_KEY = 'admin:pdf-import:location-history'
 const START_AFTER_TEXT_HISTORY_STORAGE_KEY = 'admin:pdf-import:start-after-text-history'
+const localStorageValues = new Map<string, string>()
+const localStorageMock: Storage = {
+  get length() {
+    return localStorageValues.size
+  },
+  clear: () => {
+    localStorageValues.clear()
+  },
+  getItem: (key) => localStorageValues.get(key) ?? null,
+  key: (index) => Array.from(localStorageValues.keys())[index] ?? null,
+  removeItem: (key) => {
+    localStorageValues.delete(key)
+  },
+  setItem: (key, value) => {
+    localStorageValues.set(key, value)
+  },
+}
+
+Object.defineProperty(window, 'localStorage', {
+  configurable: true,
+  value: localStorageMock,
+})
 
 describe('PdfUploadForm', () => {
   beforeEach(() => {
@@ -28,7 +50,7 @@ describe('PdfUploadForm', () => {
     render(<PdfUploadForm onSubmit={vi.fn()} />)
 
     const locationInput = screen.getByLabelText('Location')
-    const startAfterTextInput = screen.getByLabelText('Start after text')
+    const startAfterTextInput = screen.getByLabelText('Start after text (optional)')
 
     expect(locationInput.getAttribute('autocomplete')).toBe('on')
     expect(locationInput.getAttribute('list')).toBe('pdf-import-location-history')
@@ -57,6 +79,8 @@ describe('PdfUploadForm', () => {
 
     render(<PdfUploadForm onSubmit={onSubmit} />)
 
+    fireEvent.click(screen.getByText('Advanced parser options'))
+
     fireEvent.change(screen.getByLabelText('PDF file'), {
       target: {
         files: [new File(['pdf'], 'batch.pdf', { type: 'application/pdf' })],
@@ -68,7 +92,7 @@ describe('PdfUploadForm', () => {
     fireEvent.change(screen.getByLabelText('Location'), {
       target: { value: '  Addis Ababa  ' },
     })
-    fireEvent.change(screen.getByLabelText('Start after text'), {
+    fireEvent.change(screen.getByLabelText('Start after text (optional)'), {
       target: { value: '  Application Number  ' },
     })
 
@@ -89,5 +113,35 @@ describe('PdfUploadForm', () => {
     expect(
       JSON.parse(window.localStorage.getItem(START_AFTER_TEXT_HISTORY_STORAGE_KEY) ?? '[]'),
     ).toEqual(['Application Number'])
+  })
+
+  it('submits in automatic mode without parser hints', async () => {
+    const onSubmit = vi.fn().mockResolvedValue(undefined)
+
+    render(<PdfUploadForm onSubmit={onSubmit} />)
+
+    fireEvent.change(screen.getByLabelText('PDF file'), {
+      target: {
+        files: [new File(['pdf'], 'batch.pdf', { type: 'application/pdf' })],
+      },
+    })
+    fireEvent.change(screen.getByLabelText('Date (YYYY-MM-DD)'), {
+      target: { value: '2026-08-15' },
+    })
+    fireEvent.change(screen.getByLabelText('Location'), {
+      target: { value: 'Hosaena' },
+    })
+
+    fireEvent.click(screen.getByRole('button', { name: 'Upload & Queue Batch' }))
+
+    await waitFor(() => {
+      expect(onSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          location: 'Hosaena',
+          format: 'auto',
+          start_after_text: undefined,
+        }),
+      )
+    })
   })
 })

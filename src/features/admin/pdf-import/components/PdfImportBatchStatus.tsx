@@ -169,6 +169,8 @@ function formatBatchSource(value: PassportImportBatch['source_format']) {
       return 'Legacy 5-column'
     case 'application_4col':
       return 'Application 4-column'
+    case 'application_5col_remark':
+      return 'Application 5-column (Remark ignored)'
   }
 }
 

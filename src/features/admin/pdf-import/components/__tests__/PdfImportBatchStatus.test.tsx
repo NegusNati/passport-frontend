@@ -68,4 +68,15 @@ describe('PdfImportBatchStatus', () => {
     expect(screen.getByText('Failed')).toBeTruthy()
     expect(screen.getByText('The import worker crashed.')).toBeTruthy()
   })
+
+  it('labels application imports whose Remark column was ignored', () => {
+    render(
+      <PdfImportBatchStatus
+        batch={{ ...baseBatch, source_format: 'application_5col_remark' }}
+        isLoading={false}
+      />,
+    )
+
+    expect(screen.getByText('Application 5-column (Remark ignored)')).toBeTruthy()
+  })
 })
