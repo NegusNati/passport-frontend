@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { PassportDetailPage } from '@/features/passports/components/PassportDetailPage'
 import { getPassportQueryOptions } from '@/features/passports/lib/PassportsQuery'
 import { loadI18nNamespaces } from '@/i18n/loader'
+import { Seo } from '@/shared/ui/Seo'
 
 const searchSchema = z.object({
   requestNumber: z.string().optional(),
@@ -18,10 +19,14 @@ function PassportDetailRouteComponent() {
   const isRequestNumber = /^[A-Za-z]{2,}/.test(passportId)
 
   return (
-    <PassportDetailPage
-      passportId={isRequestNumber ? undefined : passportId}
-      requestNumber={isRequestNumber ? passportId : requestNumber}
-    />
+    <>
+      {/* Individual record lookups are user-private and thin — keep them out of the index */}
+      <Seo noindex path={`/passports/${passportId}`} />
+      <PassportDetailPage
+        passportId={isRequestNumber ? undefined : passportId}
+        requestNumber={isRequestNumber ? passportId : requestNumber}
+      />
+    </>
   )
 }
 

@@ -381,7 +381,7 @@ function getSiteUrl() {
 
 function getArticleCanonicalUrl(a: ArticleApiItem | undefined, slug: string) {
   const siteUrl = getSiteUrl()
-  const fallback = siteUrl ? `${siteUrl}/articles/${slug}` : undefined
+  const fallback = siteUrl ? `${siteUrl}/articles/${slug}/` : undefined
   const canonical = a?.canonical_url?.trim()
 
   if (!canonical) {
@@ -390,8 +390,10 @@ function getArticleCanonicalUrl(a: ArticleApiItem | undefined, slug: string) {
 
   try {
     const parsed = new URL(canonical)
-    if (parsed.hostname === 'passport.et' && ['/', ''].includes(parsed.pathname)) {
-      return fallback
+    if (parsed.hostname === 'passport.et') {
+      // Same-site canonicals use the trailing-slash form nginx serves;
+      // external canonicals pass through verbatim.
+      return ['/', ''].includes(parsed.pathname) ? fallback : canonical.replace(/\/?$/, '/')
     }
     return canonical
   } catch {

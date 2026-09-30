@@ -38,7 +38,7 @@ function getAlternatePath(url: string, base: string, normalizedPath: string) {
     return normalizedPath
   }
 
-  if (!url || !base || url !== base) {
+  if (!url || !base || url !== `${base}/`) {
     return ''
   }
 
@@ -62,8 +62,17 @@ export function Seo({
   const base = SITE?.replace(/\/$/, '') || ''
   // Normalize path: root path '/' becomes empty to avoid trailing slash
   const normalizedPath = path === '/' ? '' : path
-  const url = canonical || (base && normalizedPath ? `${base}${normalizedPath}` : base)
+  // Trailing slash matches the URL nginx serves for prerendered pages
+  // (<route>/index.html), so canonicals resolve without a redirect.
+  // Same-origin canonical overrides get the same treatment; external
+  // canonicals pass through untouched.
+  const canonicalUrl =
+    canonical && base && (canonical === base || canonical.startsWith(`${base}/`))
+      ? canonical.replace(/\/?$/, '/')
+      : canonical
+  const url = canonicalUrl || (base ? `${base}${normalizedPath}/` : '')
   const alternatePath = getAlternatePath(url, base, normalizedPath)
+  const alternateUrlPath = alternatePath === '/' ? '/' : `${alternatePath}/`
   const fullTitle = title ? (SITE_NAME ? `${title} · ${SITE_NAME}` : title) : SITE_NAME
   const metaDescription = normalizeDescription(description)
 
@@ -89,35 +98,41 @@ export function Seo({
         {title && <title>{fullTitle}</title>}
         {metaDescription && <meta name="description" content={metaDescription} />}
 
-        {/* Robots meta tags - explicitly allow all bots including AI crawlers */}
-        {noindex ? (
-          <>
-            <meta name="robots" content="noindex, nofollow" />
-            <meta name="googlebot" content="noindex, nofollow" />
-            <meta name="bingbot" content="noindex, nofollow" />
-          </>
-        ) : (
-          <>
-            <meta
-              name="robots"
-              content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-            />
-            <meta
-              name="googlebot"
-              content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-            />
-            <meta
-              name="bingbot"
-              content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-            />
-            {/* AI bot specific permissions */}
-            <meta name="GPTBot" content="index, follow" />
-            <meta name="Claude-Web" content="index, follow" />
-            <meta name="Google-Extended" content="index, follow" />
-            <meta name="CCBot" content="index, follow" />
-            <meta name="PerplexityBot" content="index, follow" />
-          </>
-        )}
+        {/* Robots meta tags - explicitly allow all bots including AI crawlers.
+            No fragments here: react-helmet-async@2 drops array-type children
+            nested inside fragments when siblings of the same type exist. */}
+        <meta
+          name="robots"
+          content={
+            noindex
+              ? 'noindex, nofollow'
+              : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+          }
+        />
+        <meta
+          name="googlebot"
+          content={
+            noindex
+              ? 'noindex, nofollow'
+              : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+          }
+        />
+        <meta
+          name="bingbot"
+          content={
+            noindex
+              ? 'noindex, nofollow'
+              : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+          }
+        />
+        {/* AI bot specific permissions (array, not fragment — fragments lose children in helmet) */}
+        {!noindex && [
+          <meta key="gptbot" name="GPTBot" content="index, follow" />,
+          <meta key="claude-web" name="Claude-Web" content="index, follow" />,
+          <meta key="google-ext" name="Google-Extended" content="index, follow" />,
+          <meta key="ccbot" name="CCBot" content="index, follow" />,
+          <meta key="perplexity" name="PerplexityBot" content="index, follow" />,
+        ]}
 
         {url && <link rel="canonical" href={url} />}
 
@@ -141,11 +156,11 @@ export function Seo({
               key={lang.code}
               rel="alternate"
               hrefLang={lang.code}
-              href={`${base}${alternatePath}?lang=${lang.code}`}
+              href={`${base}${alternateUrlPath}?lang=${lang.code}`}
             />
           ))}
         {base && alternatePath && (
-          <link rel="alternate" hrefLang="x-default" href={`${base}${alternatePath}`} />
+          <link rel="alternate" hrefLang="x-default" href={`${base}${alternateUrlPath}`} />
         )}
 
         {/* Twitter Card */}

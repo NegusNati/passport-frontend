@@ -54,7 +54,9 @@ function generateSitemapXML(routes: RouteConfig[]): string {
     .slice()
     .sort((a, b) => a.path.localeCompare(b.path))
     .map((route) => {
-      const url = `${SITE_URL}${route.path}`.replace(/\/$/, '') || SITE_URL
+      // Trailing slash matches what nginx serves (prerendered <route>/index.html),
+      // so sitemap URLs resolve directly instead of through a 301.
+      const url = `${SITE_URL}${route.path}`.replace(/\/?$/, '/')
       return `  <url>
     <loc>${url}</loc>
     <lastmod>${route.lastmod || now}</lastmod>
