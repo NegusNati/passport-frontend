@@ -64,7 +64,13 @@ export function Seo({
   const normalizedPath = path === '/' ? '' : path
   // Trailing slash matches the URL nginx serves for prerendered pages
   // (<route>/index.html), so canonicals resolve without a redirect.
-  const url = canonical || (base ? `${base}${normalizedPath}/` : '')
+  // Same-origin canonical overrides get the same treatment; external
+  // canonicals pass through untouched.
+  const canonicalUrl =
+    canonical && base && (canonical === base || canonical.startsWith(`${base}/`))
+      ? canonical.replace(/\/?$/, '/')
+      : canonical
+  const url = canonicalUrl || (base ? `${base}${normalizedPath}/` : '')
   const alternatePath = getAlternatePath(url, base, normalizedPath)
   const alternateUrlPath = alternatePath === '/' ? '/' : `${alternatePath}/`
   const fullTitle = title ? (SITE_NAME ? `${title} · ${SITE_NAME}` : title) : SITE_NAME
@@ -92,35 +98,41 @@ export function Seo({
         {title && <title>{fullTitle}</title>}
         {metaDescription && <meta name="description" content={metaDescription} />}
 
-        {/* Robots meta tags - explicitly allow all bots including AI crawlers */}
-        {noindex ? (
-          <>
-            <meta name="robots" content="noindex, nofollow" />
-            <meta name="googlebot" content="noindex, nofollow" />
-            <meta name="bingbot" content="noindex, nofollow" />
-          </>
-        ) : (
-          <>
-            <meta
-              name="robots"
-              content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-            />
-            <meta
-              name="googlebot"
-              content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-            />
-            <meta
-              name="bingbot"
-              content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
-            />
-            {/* AI bot specific permissions */}
-            <meta name="GPTBot" content="index, follow" />
-            <meta name="Claude-Web" content="index, follow" />
-            <meta name="Google-Extended" content="index, follow" />
-            <meta name="CCBot" content="index, follow" />
-            <meta name="PerplexityBot" content="index, follow" />
-          </>
-        )}
+        {/* Robots meta tags - explicitly allow all bots including AI crawlers.
+            No fragments here: react-helmet-async@2 drops array-type children
+            nested inside fragments when siblings of the same type exist. */}
+        <meta
+          name="robots"
+          content={
+            noindex
+              ? 'noindex, nofollow'
+              : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+          }
+        />
+        <meta
+          name="googlebot"
+          content={
+            noindex
+              ? 'noindex, nofollow'
+              : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+          }
+        />
+        <meta
+          name="bingbot"
+          content={
+            noindex
+              ? 'noindex, nofollow'
+              : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
+          }
+        />
+        {/* AI bot specific permissions (array, not fragment — fragments lose children in helmet) */}
+        {!noindex && [
+          <meta key="gptbot" name="GPTBot" content="index, follow" />,
+          <meta key="claude-web" name="Claude-Web" content="index, follow" />,
+          <meta key="google-ext" name="Google-Extended" content="index, follow" />,
+          <meta key="ccbot" name="CCBot" content="index, follow" />,
+          <meta key="perplexity" name="PerplexityBot" content="index, follow" />,
+        ]}
 
         {url && <link rel="canonical" href={url} />}
 

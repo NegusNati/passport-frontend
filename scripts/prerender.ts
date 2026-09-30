@@ -286,16 +286,19 @@ async function prerenderRoute(
 }
 
 function getExpectedCanonical(route: string) {
-  return route === '/' ? SITE_URL : `${SITE_URL}${route}`
+  // Routes end with '/' (or are '/'), matching the <route>/index.html nginx serves.
+  return `${SITE_URL}${route}`
 }
 
 function normalizeCanonical(html: string, route: string) {
   const expectedCanonical = getExpectedCanonical(route)
   const withoutCanonicals = html.replace(/<link\b(?=[^>]*\brel=["']canonical["'])[^>]*>\s*/gi, '')
 
+  // data-rh lets react-helmet-async treat the injected tag as managed, so the
+  // helmet canonical emitted on hydration replaces it instead of duplicating it.
   return withoutCanonicals.replace(
     '</head>',
-    `    <link rel="canonical" href="${expectedCanonical}">\n  </head>`,
+    `    <link rel="canonical" href="${expectedCanonical}" data-rh="true">\n  </head>`,
   )
 }
 
