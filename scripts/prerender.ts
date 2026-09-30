@@ -432,7 +432,10 @@ async function main() {
       `[prerender] Launching browser${executablePath ? ` with executable: ${executablePath}` : ''}...`,
     )
     browser = await puppeteer.default.launch({
-      headless: true,
+      // 'shell' uses chrome-headless-shell (downloaded by puppeteer's install):
+      // purpose-built headless binary with minimal system deps — the full
+      // Chrome binary needs GTK/X libraries that Vercel/CI build images lack.
+      headless: 'shell',
       executablePath: executablePath || undefined,
       args: [
         '--no-sandbox',
