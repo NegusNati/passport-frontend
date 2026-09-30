@@ -1,4 +1,5 @@
 {
+  "buildCommand": "SKIP_PRERENDER=true pnpm build",
   "rewrites": [
     {
       "source": "/((?!api|_next|_static|_vercel|favicon.ico|logo192.png|logo512.png|manifest.json|robots.txt|sitemap.xml).*)",
