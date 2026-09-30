@@ -38,7 +38,7 @@ function getAlternatePath(url: string, base: string, normalizedPath: string) {
     return normalizedPath
   }
 
-  if (!url || !base || url !== base) {
+  if (!url || !base || url !== `${base}/`) {
     return ''
   }
 
@@ -62,8 +62,11 @@ export function Seo({
   const base = SITE?.replace(/\/$/, '') || ''
   // Normalize path: root path '/' becomes empty to avoid trailing slash
   const normalizedPath = path === '/' ? '' : path
-  const url = canonical || (base && normalizedPath ? `${base}${normalizedPath}` : base)
+  // Trailing slash matches the URL nginx serves for prerendered pages
+  // (<route>/index.html), so canonicals resolve without a redirect.
+  const url = canonical || (base ? `${base}${normalizedPath}/` : '')
   const alternatePath = getAlternatePath(url, base, normalizedPath)
+  const alternateUrlPath = alternatePath === '/' ? '/' : `${alternatePath}/`
   const fullTitle = title ? (SITE_NAME ? `${title} · ${SITE_NAME}` : title) : SITE_NAME
   const metaDescription = normalizeDescription(description)
 
@@ -141,11 +144,11 @@ export function Seo({
               key={lang.code}
               rel="alternate"
               hrefLang={lang.code}
-              href={`${base}${alternatePath}?lang=${lang.code}`}
+              href={`${base}${alternateUrlPath}?lang=${lang.code}`}
             />
           ))}
         {base && alternatePath && (
-          <link rel="alternate" hrefLang="x-default" href={`${base}${alternatePath}`} />
+          <link rel="alternate" hrefLang="x-default" href={`${base}${alternateUrlPath}`} />
         )}
 
         {/* Twitter Card */}
